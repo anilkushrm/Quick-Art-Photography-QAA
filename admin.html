@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Quick Art Admin — Leads & Settings</title>
+<meta name="robots" content="noindex,nofollow" />
+<link rel="icon" href="https://customer-assets-lxgj4vgw.emergentagent.net/job_art-academy-demo/artifacts/pj82qe8v_Logo.webp" />
+<style>
+  :root {
+    --ink:#111111; --gold:#D8A153; --gold-light:#F5E5C4; --gold-dark:#B8843B;
+    --bg:#FAFAFA; --border:rgba(0,0,0,.08); --muted:#71717a;
+    --emerald:#10b981; --red:#ef4444;
+    --shadow:0 10px 30px -12px rgba(0,0,0,.15);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  a{color:inherit}
+  .container{max-width:1200px;margin:0 auto;padding:0 24px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:9999px;border:0;cursor:pointer;font-weight:600;font-size:13px;transition:.15s}
+  .btn-primary{background:var(--ink);color:#fff}
+  .btn-primary:hover{background:#000}
+  .btn-gold{background:linear-gradient(135deg,var(--gold-light),var(--gold),var(--gold-dark));color:#000}
+  .btn-outline{background:#fff;color:var(--ink);border:1px solid var(--border)}
+  .btn-outline:hover{background:#f4f4f5}
+  .btn-danger{background:var(--red);color:#fff}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .card{background:#fff;border:1px solid var(--border);border-radius:24px;padding:24px;box-shadow:var(--shadow)}
+  input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;font:inherit;background:#fff}
+  input:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(216,161,83,.15)}
+  label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.15em;font-weight:600;color:var(--muted);margin-bottom:6px}
+  .grid{display:grid;gap:16px}
+  .hidden{display:none!important}
+  .badge{display:inline-block;padding:3px 10px;border-radius:9999px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;background:var(--gold-light);color:var(--gold-dark)}
+  .tabs{display:inline-flex;background:#fff;padding:4px;border-radius:9999px;border:1px solid var(--border);gap:2px}
+  .tab{padding:8px 20px;border-radius:9999px;border:0;background:transparent;cursor:pointer;font-weight:600;font-size:13px;color:var(--muted)}
+  .tab.active{background:var(--ink);color:#fff}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}
+  th{background:#f9fafb;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
+  tr:hover td{background:#fafafa}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
+  .stat{background:#fff;border:1px solid var(--border);border-radius:20px;padding:20px}
+  .stat-value{font-size:36px;font-weight:800;line-height:1;margin-top:8px;font-family:'Poppins',sans-serif}
+  .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);font-weight:600}
+  .icon-btn{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9999px;border:0;background:#f4f4f5;cursor:pointer;color:var(--ink)}
+  .icon-btn:hover{background:var(--ink);color:#fff}
+  .icon-btn.danger:hover{background:var(--red);color:#fff}
+  .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);padding:14px 22px;border-radius:14px;font-weight:600;font-size:13px;box-shadow:0 20px 60px -20px rgba(0,0,0,.3);z-index:9999;display:none}
+  .toast.show{display:block;animation:slide .3s}
+  .toast.ok{background:var(--emerald);color:#fff}
+  .toast.err{background:var(--red);color:#fff}
+  @keyframes slide{from{transform:translate(-50%,-20px);opacity:0}to{transform:translateX(-50%);opacity:1}}
+  .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--emerald);margin-right:8px}
+  .status-dot.off{background:var(--red)}
+  .wh-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:7px;vertical-align:middle;cursor:help}
+  .wh-dot.wh-ok{background:var(--emerald)}
+  .wh-dot.wh-fail{background:var(--red)}
+  pre{background:#f4f4f5;padding:12px;border-radius:12px;font-size:11px;overflow-x:auto;max-width:100%;white-space:pre-wrap;word-break:break-all}
+  .status-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:9999px;font-size:11px;font-weight:600;text-transform:capitalize;border:1px solid transparent}
+  .st-new{background:#dbeafe;color:#1e40af}
+  .st-contacted{background:#fef3c7;color:#92400e}
+  .st-follow-up{background:#fed7aa;color:#9a3412}
+  .st-interested{background:#e9d5ff;color:#6b21a8}
+  .st-enrolled{background:#d1fae5;color:#065f46}
+  .st-not-interested{background:#fee2e2;color:#991b1b}
+  .st-junk{background:#e5e7eb;color:#374151}
+  .fu-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;margin-left:6px}
+  .fu-today{background:#fef3c7;color:#92400e}
+  .fu-overdue{background:#fee2e2;color:#991b1b}
+  .fu-future{background:#e0e7ff;color:#3730a3}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}
+  .modal.show{display:flex}
+  .modal-inner{background:#fff;max-width:640px;width:100%;border-radius:24px;max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+  .modal-hdr{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .modal-body{padding:20px 24px}
+  .note-item{background:#f9fafb;border-left:3px solid var(--gold);padding:10px 12px;border-radius:8px;margin-top:8px;font-size:12px}
+  .note-meta{color:var(--muted);font-size:10px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.1em}
+  select{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;font:inherit;background:#fff;cursor:pointer}
+  textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;font:inherit;background:#fff;resize:vertical;font-family:inherit}
+  .row-clickable{cursor:pointer}
+  .row-clickable:hover td{background:#fef7ed}
+  #login{max-width:420px;margin:100px auto}
+  .login-logo{width:56px;height:56px;border-radius:9999px;overflow:hidden;margin:0 auto 16px}
+  .login-logo img{width:100%;height:100%;object-fit:cover}
+  .header{background:#fff;border-bottom:1px solid var(--border);padding:20px 0;margin-bottom:32px}
+  .header-row{display:flex;align-items:center;justify-content:space-between}
+  .logo{display:flex;align-items:center;gap:12px}
+  .logo img{width:40px;height:40px;border-radius:9999px}
+  .logo-text{line-height:1.2}
+  .logo-name{font-weight:800;font-size:14px}
+  .logo-sub{font-size:9px;text-transform:uppercase;letter-spacing:.2em;color:var(--muted)}
+  h1{margin:0 0 4px 0;font-size:36px;font-weight:800;letter-spacing:-.02em}
+  h2{margin:0 0 8px 0;font-size:20px;font-weight:700}
+  .muted{color:var(--muted);font-size:13px}
+</style>
+<meta name="robots" content="noindex,nofollow"></head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<!-- ================ LOGIN ================ -->
+<div id="login" class="card">
+  <div class="login-logo">
+    <img src="https://customer-assets-lxgj4vgw.emergentagent.net/job_art-academy-demo/artifacts/pj82qe8v_Logo.webp" alt="QAA" />
+  </div>
+  <h2 style="text-align:center;margin-bottom:4px">Quick Art Admin</h2>
+  <p style="text-align:center;color:var(--muted);margin-top:0">Enter admin password to continue</p>
+  <form id="loginForm">
+    <label for="pw">Admin Password</label>
+    <input type="password" id="pw" required autofocus />
+    <button type="submit" class="btn btn-gold" style="width:100%;margin-top:14px;justify-content:center">Sign in →</button>
+    <p style="text-align:center;margin-top:14px"><a href="/" style="font-size:12px;color:var(--muted)">← Back to website</a></p>
+  </form>
+</div>
+
+<!-- ================ DASHBOARD ================ -->
+<div id="dashboard" class="hidden">
+  <div class="header">
+    <div class="container header-row">
+      <div class="logo">
+        <img src="https://customer-assets-lxgj4vgw.emergentagent.net/job_art-academy-demo/artifacts/pj82qe8v_Logo.webp" alt="QAA" />
+        <div class="logo-text"><div class="logo-name">Quick Art Admin</div><div class="logo-sub">Lead Console</div></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <a href="/" class="btn btn-outline">View Site</a>
+        <button onclick="logout()" class="btn btn-outline">Sign out</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Overview</h1>
+    <p class="muted" style="margin-top:0">Lead capture &amp; WhatsApp webhook settings — flat-file backend on your server.</p>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="leads">Leads</button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </div>
+
+    <!-- LEADS TAB -->
+    <div id="tab-leads" class="tab-content" style="margin-top:16px">
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap">
+        <input type="text" id="search" placeholder="Search by name, phone, city, course, notes..." style="flex:1;min-width:200px"/>
+        <select id="statusFilter" style="width:auto;min-width:160px">
+          <option value="">All statuses</option>
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="follow-up">Follow-Up</option>
+          <option value="interested">Interested</option>
+          <option value="enrolled">Enrolled ✓</option>
+          <option value="not-interested">Not Interested</option>
+          <option value="junk">Junk</option>
+        </select>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);white-space:nowrap;cursor:pointer;padding:0 8px">
+          <input type="checkbox" id="dueFilter" style="width:auto"/> Due today only
+        </label>
+        <button onclick="exportCSV()" class="btn btn-outline">⬇ CSV</button>
+        <button onclick="refresh()" class="btn btn-primary">Refresh</button>
+      </div>
+      <div class="card" style="padding:0;overflow-x:auto">
+        <table id="leadsTable">
+          <thead><tr><th>Name</th><th>Phone</th><th>Status</th><th>Follow-up</th><th>Course</th><th>Received</th><th></th></tr></thead>
+          <tbody id="leadsTbody"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div id="tab-settings" class="tab-content hidden" style="margin-top:16px">
+      <div class="card">
+        <h2>Webhook Settings</h2>
+        <p class="muted">Kisi bhi webhook service se connect karo — Aibotflow, n8n, Make.com, Zapier, custom endpoint. Har lead PHP backend pe save hoga aur webhook bhi call hoga.</p>
+
+        <div class="grid" style="margin-top:20px">
+          <div>
+            <label for="webhookUrl">Webhook URL</label>
+            <input type="text" id="webhookUrl" placeholder="https://your-webhook-url.com/..." />
+            <div class="muted" style="font-size:11px;margin-top:6px">n8n users: use the <b>Production</b> URL (not Test URL) and make sure the workflow is <b>Active</b>.</div>
+          </div>
+          <div>
+            <label for="teamPhone">Team WhatsApp Number</label>
+            <input type="text" id="teamPhone" placeholder="+919939800780" />
+          </div>
+        </div>
+
+        <details style="margin-top:20px;background:#fafafa;border:1px solid var(--border);border-radius:16px;padding:12px 16px">
+          <summary style="cursor:pointer;font-weight:600;font-size:13px;color:var(--ink)">⚙️ Advanced options (Method / Payload format / Custom headers)</summary>
+          <div class="grid" style="margin-top:16px;grid-template-columns:1fr 1fr;gap:12px">
+            <div>
+              <label for="webhookMethod">HTTP Method</label>
+              <select id="webhookMethod">
+                <option value="POST">POST (default — recommended)</option>
+                <option value="GET">GET</option>
+              </select>
+            </div>
+            <div>
+              <label for="webhookPayloadFormat">Payload Format</label>
+              <select id="webhookPayloadFormat">
+                <option value="json">JSON body (default — n8n, Make, Aibotflow)</option>
+                <option value="form">Form-encoded (application/x-www-form-urlencoded)</option>
+                <option value="query">Query string (?name=...&amp;phone=...)</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <label for="webhookHeaders">Custom Headers <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--muted)">(optional — JSON object or "Key: Value" per line)</span></label>
+            <textarea id="webhookHeaders" rows="4" placeholder='{"Authorization": "Bearer xxx", "X-API-KEY": "yyy"}'></textarea>
+            <div class="muted" style="font-size:11px;margin-top:6px">e.g. auth tokens, x-api-keys, custom identifiers your webhook expects.</div>
+          </div>
+        </details>
+
+        <div style="margin-top:20px">
+          <label for="newPw">New Admin Password (optional)</label>
+          <input type="password" id="newPw" placeholder="Leave blank to keep current" />
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap">
+          <button onclick="saveSettings()" class="btn btn-primary">💾 Save Settings</button>
+          <button onclick="sendTest()" class="btn btn-outline">🚀 Send Test Webhook</button>
+        </div>
+
+        <div id="testResult" style="margin-top:20px"></div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <h2 style="font-size:14px">Status</h2>
+        <div id="webhookStatus" class="muted">Loading…</div>
+      </div>
+
+      <div class="card" style="margin-top:20px;background:#fafafa">
+        <h2 style="font-size:14px">Sample Webhook Payload</h2>
+        <p class="muted" style="margin:6px 0 10px">Yeh JSON aapke webhook pe POST hoga:</p>
+        <pre>{
+  "name": "Rahul Kumar",
+  "phone": "+919876543210",
+  "phone_number": "+919876543210",
+  "city": "Siwan",
+  "course": "Video Editing",
+  "message": "",
+  "source": "website",
+  "lead_id": "uuid-here",
+  "submitted_at": "2026-07-19T13:30:00+00:00",
+  "team_phone": "+919939800780"
+}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================ LEAD DETAIL MODAL (CRM) ================ -->
+<div id="leadModal" class="modal" onclick="if(event.target.id==='leadModal')closeLeadModal()">
+  <div class="modal-inner">
+    <div class="modal-hdr">
+      <div>
+        <h2 id="lmName" style="margin:0;font-size:22px">—</h2>
+        <div id="lmMeta" style="color:var(--muted);font-size:12px;margin-top:4px">—</div>
+      </div>
+      <button onclick="closeLeadModal()" class="icon-btn">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        <a id="lmCall" href="#" class="btn btn-outline" style="padding:8px 14px;font-size:12px">📞 Call</a>
+        <a id="lmWA" href="#" target="_blank" class="btn btn-outline" style="padding:8px 14px;font-size:12px">💬 WhatsApp</a>
+      </div>
+
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:14px">
+        <div>
+          <label>Status</label>
+          <select id="lmStatus">
+            <option value="new">🆕 New</option>
+            <option value="contacted">📞 Contacted</option>
+            <option value="follow-up">⏰ Follow-Up</option>
+            <option value="interested">💛 Interested</option>
+            <option value="enrolled">✅ Enrolled</option>
+            <option value="not-interested">🚫 Not Interested</option>
+            <option value="junk">🗑 Junk</option>
+          </select>
+        </div>
+        <div>
+          <label>Follow-up Date</label>
+          <input type="date" id="lmFollowUp" />
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <label>Add Note</label>
+        <textarea id="lmNote" rows="3" placeholder="Called at 3pm — will decide by Friday. Interested in EMI option."></textarea>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <button onclick="saveLeadDetail()" class="btn btn-primary" style="flex:1;justify-content:center">💾 Save Changes</button>
+        <button onclick="closeLeadModal()" class="btn btn-outline">Cancel</button>
+      </div>
+
+      <div style="margin-top:22px">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.15em;font-weight:600;color:var(--muted);margin-bottom:8px">📋 Notes Timeline</div>
+        <div id="lmNotesList"></div>
+      </div>
+
+      <div style="margin-top:22px;padding-top:16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)">
+        <div><b>Course:</b> <span id="lmCourse">—</span></div>
+        <div><b>City:</b> <span id="lmCity">—</span></div>
+        <div><b>Source:</b> <span id="lmSource">—</span></div>
+        <div><b>Received:</b> <span id="lmReceived">—</span></div>
+        <div><b>Webhook:</b> <span id="lmWebhook">—</span></div>
+        <div><b>Lead ID:</b> <span id="lmId" style="font-family:monospace;font-size:10px">—</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TOKEN_KEY = 'qa_admin_token';
+let token = localStorage.getItem(TOKEN_KEY) || null;
+let allLeads = [];
+
+function toast(msg, ok=true){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='toast show '+(ok?'ok':'err');
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+async function api(action, opts={}) {
+  const url = `api/admin.php?action=${encodeURIComponent(action)}`;
+  const init = {
+    method: opts.method || 'GET',
+    headers: { 'X-Admin-Token': token || '' },
+  };
+  if (opts.body) { init.headers['Content-Type']='application/json'; init.body = JSON.stringify(opts.body); }
+  const r = await fetch(url, init);
+  const d = await r.json().catch(()=>({}));
+  if (!r.ok) throw new Error(d.error || `HTTP ${r.status}`);
+  return d;
+}
+
+// ---------- LOGIN + FIRST-RUN SETUP ----------
+async function checkSetupAndInit() {
+  try {
+    const r = await fetch('api/admin.php?action=setup-status');
+    const d = await r.json();
+    if (!r.ok || !d.ok) throw new Error(d.error || 'Backend unavailable');
+    if (!d.setupComplete) {
+      // Show setup screen (repurpose login card)
+      document.querySelector('#login h2').textContent = 'Set Admin Password';
+      document.querySelector('#login p').textContent = 'First-time setup — choose a strong password (min 8 chars).';
+      document.querySelector('#login label[for="pw"]').textContent = 'Choose Admin Password';
+      document.querySelector('#login button[type="submit"]').textContent = '🔒 Save & Sign in →';
+      document.getElementById('loginForm').dataset.mode = 'setup';
+    }
+  } catch(e) { toast('PHP backend unavailable. Check Hostinger PHP hosting, the api folder and data-folder permissions.', false); }
+}
+checkSetupAndInit();
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const pw = document.getElementById('pw').value;
+  const isSetup = e.target.dataset.mode === 'setup';
+  const action = isSetup ? 'setup-admin' : 'login';
+  try {
+    const r = await fetch('api/admin.php?action=' + action, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({password: pw})
+    });
+    const d = await r.json();
+    if (!r.ok || !d.ok) throw new Error(d.error || 'Failed');
+    token = d.token;
+    localStorage.setItem(TOKEN_KEY, token);
+    showDashboard();
+  } catch (err) { toast(err.message, false); }
+});
+
+async function logout(){
+  try { await fetch('api/admin.php?action=logout', {method:'POST', headers:{'X-Admin-Token': token||''}}); } catch{}
+  localStorage.removeItem(TOKEN_KEY);
+  location.reload();
+}
+
+// ---------- DASHBOARD ----------
+async function showDashboard(){
+  document.getElementById('login').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  await Promise.all([refresh(), loadSettings()]);
+}
+
+async function refresh(){
+  try {
+    const [leadsRes, statsRes] = await Promise.all([
+      api('leads'), api('stats')
+    ]);
+    allLeads = leadsRes.leads || [];
+    applyFilters();
+    renderStats(statsRes);
+  } catch(err){
+    if (err.message === 'Unauthorized') { logout(); return; }
+    toast(err.message, false);
+  }
+}
+
+function renderStats(s){
+  const fu = s.followUp || {};
+  document.getElementById('stats').innerHTML = `
+    <div class="stat" style="background:linear-gradient(135deg,#111,#333);color:#fff">
+      <div class="stat-label" style="color:rgba(255,255,255,.7)">Total Leads</div>
+      <div class="stat-value">${s.total}</div>
+    </div>
+    <div class="stat" style="background:${fu.dueToday>0?'#fef3c7':'#fff'};border-color:${fu.dueToday>0?'#fbbf24':'var(--border)'}">
+      <div class="stat-label">📅 Due Today</div>
+      <div class="stat-value" style="color:${fu.dueToday>0?'#92400e':'inherit'}">${fu.dueToday||0}</div>
+    </div>
+    <div class="stat" style="background:${fu.overdue>0?'#fee2e2':'#fff'};border-color:${fu.overdue>0?'#f87171':'var(--border)'}">
+      <div class="stat-label">⚠️ Overdue</div>
+      <div class="stat-value" style="color:${fu.overdue>0?'#991b1b':'inherit'}">${fu.overdue||0}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">This Week</div>
+      <div class="stat-value">${fu.dueThisWeek||0}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Last 7 Days</div>
+      <div class="stat-value">${s.last7}</div>
+    </div>
+    <div class="stat" style="background:#d1fae5">
+      <div class="stat-label">✅ Enrolled</div>
+      <div class="stat-value" style="color:#065f46">${(s.byStatus?.enrolled)||0}</div>
+    </div>`;
+}
+
+const STATUS_LABELS = {'new':'New','contacted':'Contacted','follow-up':'Follow-Up','interested':'Interested','enrolled':'Enrolled','not-interested':'Not Interested','junk':'Junk'};
+
+function fuBadge(dateStr, status){
+  if (!dateStr) return '';
+  const today = new Date().toISOString().slice(0,10);
+  const done = ['enrolled','not-interested','junk'].includes(status);
+  let cls = 'fu-future', txt = dateStr;
+  if (!done) {
+    if (dateStr === today) { cls='fu-today'; txt='Today'; }
+    else if (dateStr < today) { cls='fu-overdue'; txt='Overdue ('+dateStr+')'; }
+  }
+  return `<span class="fu-badge ${cls}">${txt}</span>`;
+}
+
+// Small dot next to the status pill showing whether this lead's webhook
+// notification (WhatsApp/CRM/n8n etc.) actually went out — so a failed or
+// unconfigured webhook doesn't sit invisible while leads pile up.
+function webhookDot(l){
+  if (l.webhookConfigured === false || l.webhookConfigured == null) return '';
+  const ok = l.webhookOk === true;
+  const title = ok ? 'Webhook sent' : 'Webhook failed: ' + (l.webhookError || 'unknown error');
+  return `<span class="wh-dot ${ok?'wh-ok':'wh-fail'}" title="${escapeHtml(title)}"></span>`;
+}
+
+function renderLeads(leads){
+  const tbody = document.getElementById('leadsTbody');
+  if (!leads.length){ tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:40px">No leads match filter.</td></tr>'; return; }
+  tbody.innerHTML = leads.map(l => {
+    const digits = safeDigits(l.phone);
+    const status = l.status || 'new';
+    return `<tr class="row-clickable" onclick="openLeadModal('${l.id}')">
+      <td><b>${escapeHtml(l.name||'')}</b>${(l.notes||[]).length?`<span style="color:var(--muted);font-size:11px"> · ${l.notes.length} note${l.notes.length>1?'s':''}</span>`:''}</td>
+      <td onclick="event.stopPropagation()">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span>${escapeHtml(l.phone||'')}</span>
+          <a href="tel:${encodeURIComponent(safePhone(l.phone))}" class="icon-btn" title="Call">📞</a>
+          <a href="https://wa.me/${digits}" target="_blank" rel="noreferrer" class="icon-btn" title="WhatsApp">💬</a>
+        </div>
+      </td>
+      <td><span class="status-pill st-${status}">${STATUS_LABELS[status]||status}</span>${webhookDot(l)}</td>
+      <td>${fuBadge(l.followUpDate, status) || '<span style="color:var(--muted)">—</span>'}</td>
+      <td>${escapeHtml(l.course||'—')}</td>
+      <td style="color:var(--muted);font-size:12px">${new Date(l.createdAt).toLocaleDateString('en-IN')}</td>
+      <td onclick="event.stopPropagation()" style="text-align:right">
+        <button class="icon-btn danger" onclick="deleteLead('${l.id}')" title="Delete">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function applyFilters(){
+  const q = document.getElementById('search').value.toLowerCase();
+  const st = document.getElementById('statusFilter').value;
+  const dueOnly = document.getElementById('dueFilter').checked;
+  const today = new Date().toISOString().slice(0,10);
+  const filtered = allLeads.filter(l => {
+    if (st && (l.status||'new') !== st) return false;
+    if (dueOnly) {
+      const done = ['enrolled','not-interested','junk'].includes(l.status);
+      if (done) return false;
+      if (!l.followUpDate) return false;
+      if (l.followUpDate > today) return false; // only today or overdue
+    }
+    if (q) {
+      const searchable = JSON.stringify(l).toLowerCase();
+      if (!searchable.includes(q)) return false;
+    }
+    return true;
+  });
+  renderLeads(filtered);
+}
+
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+// SEC-001: strict phone sanitizer — allow only digits and leading + for tel: hrefs
+function safePhone(s){ return String(s||'').replace(/[^0-9+]/g, '').slice(0, 20); }
+function safeDigits(s){ return String(s||'').replace(/\D/g, '').slice(0, 20); }
+
+document.getElementById('search').addEventListener('input', applyFilters);
+document.getElementById('statusFilter').addEventListener('change', applyFilters);
+document.getElementById('dueFilter').addEventListener('change', applyFilters);
+
+// ---------- LEAD DETAIL MODAL (CRM) ----------
+let currentLead = null;
+
+function openLeadModal(id){
+  const l = allLeads.find(x => x.id === id);
+  if (!l) return;
+  currentLead = l;
+  const digits = safeDigits(l.phone);
+  document.getElementById('lmName').textContent = l.name || '—';
+  document.getElementById('lmMeta').textContent = l.phone + ' · ' + (l.city || 'No city');
+  document.getElementById('lmCall').href = 'tel:' + encodeURIComponent(safePhone(l.phone));
+  document.getElementById('lmWA').href = 'https://wa.me/' + safeDigits(l.phone) + '?text=' + encodeURIComponent('Hi ' + (l.name||'') + ', thanks for reaching out to Quick Art Academy!');
+  document.getElementById('lmStatus').value = l.status || 'new';
+  document.getElementById('lmFollowUp').value = l.followUpDate || '';
+  document.getElementById('lmNote').value = '';
+  document.getElementById('lmCourse').textContent = l.course || '—';
+  document.getElementById('lmCity').textContent = l.city || '—';
+  document.getElementById('lmSource').textContent = l.source || '—';
+  document.getElementById('lmReceived').textContent = new Date(l.createdAt).toLocaleString('en-IN');
+  const lmWebhook = document.getElementById('lmWebhook');
+  if (l.webhookConfigured === false || l.webhookConfigured == null) {
+    lmWebhook.textContent = 'Not configured';
+    lmWebhook.style.color = 'var(--muted)';
+  } else if (l.webhookOk) {
+    lmWebhook.textContent = '✅ Sent';
+    lmWebhook.style.color = 'var(--emerald)';
+  } else {
+    lmWebhook.textContent = '⚠️ Failed — ' + (l.webhookError || 'unknown error');
+    lmWebhook.style.color = 'var(--red)';
+  }
+  document.getElementById('lmId').textContent = l.id;
+  // Render notes timeline (newest first)
+  const notes = (l.notes || []).slice().reverse();
+  document.getElementById('lmNotesList').innerHTML = notes.length
+    ? notes.map(n => `<div class="note-item"><div class="note-meta">${new Date(n.at).toLocaleString('en-IN')}</div>${escapeHtml(n.text)}</div>`).join('')
+    : '<div style="color:var(--muted);font-size:12px;font-style:italic">Koi notes nahi hain — pehla note upar add karo aur Save karo.</div>';
+  document.getElementById('leadModal').classList.add('show');
+}
+
+function closeLeadModal(){
+  document.getElementById('leadModal').classList.remove('show');
+  currentLead = null;
+}
+
+async function saveLeadDetail(){
+  if (!currentLead) return;
+  const body = {
+    id: currentLead.id,
+    status: document.getElementById('lmStatus').value,
+    followUpDate: document.getElementById('lmFollowUp').value || null,
+  };
+  const note = document.getElementById('lmNote').value.trim();
+  if (note) body.note = note;
+  try {
+    const r = await api('update-lead', {method:'POST', body});
+    toast('✅ Lead updated');
+    // Update local + re-render
+    const idx = allLeads.findIndex(x => x.id === currentLead.id);
+    if (idx >= 0) allLeads[idx] = r.lead;
+    applyFilters();
+    // Refresh stats too
+    api('stats').then(renderStats).catch(()=>{});
+    closeLeadModal();
+  } catch(e){ toast(e.message, false); }
+}
+
+async function deleteLead(id){
+  if (!confirm('Delete this lead?')) return;
+  try {
+    // Build the URL directly (with id as its own query param) instead of going
+    // through api(), which would double-encode "lead&id=..." as a single
+    // "action" value and lose the id — that was the bug (always 404'd).
+    const url = `api/admin.php?action=lead&id=${encodeURIComponent(id)}`;
+    const r = await fetch(url, {method:'DELETE', headers:{'X-Admin-Token': token||''}});
+    const d = await r.json().catch(()=>({}));
+    if (!r.ok || !d.ok) throw new Error(d.error || `HTTP ${r.status}`);
+    toast('Lead deleted');
+    refresh();
+  } catch(e){ toast(e.message,false); }
+}
+
+function exportCSV(){
+  if (!allLeads.length){ toast('No leads to export', false); return; }
+  const cols = ['name','phone','city','course','source','message','createdAt'];
+  const rows = [cols.join(','), ...allLeads.map(l => cols.map(c => `"${String(l[c]||'').replace(/"/g,'""')}"`).join(','))];
+  const blob = new Blob([rows.join('\n')], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'leads-'+Date.now()+'.csv';
+  a.click();
+}
+
+// ---------- TABS ----------
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  e.target.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(x => x.classList.add('hidden'));
+  document.getElementById('tab-'+e.target.dataset.tab).classList.remove('hidden');
+}));
+
+// ---------- SETTINGS ----------
+async function loadSettings(){
+  try {
+    const s = await api('settings');
+    document.getElementById('webhookUrl').value = s.webhookUrl || '';
+    document.getElementById('teamPhone').value = s.teamPhone || '';
+    document.getElementById('webhookMethod').value = s.webhookMethod || 'POST';
+    document.getElementById('webhookPayloadFormat').value = s.webhookPayloadFormat || 'json';
+    document.getElementById('webhookHeaders').value = s.webhookHeaders || '';
+    const isConfigured = !!(s.webhookUrl && s.webhookUrl.trim());
+    document.getElementById('webhookStatus').innerHTML =
+      `<span class="status-dot ${isConfigured?'':'off'}"></span> ` +
+      (isConfigured
+        ? `<b>Webhook Active</b> — <code>${escapeHtml(s.webhookMethod||'POST')} ${escapeHtml(s.webhookPayloadFormat||'json')}</code> → ${escapeHtml(s.webhookUrl.slice(0,60))}${s.webhookUrl.length>60?'…':''}`
+        : '<b style="color:var(--red)">Webhook Not Configured</b> — leads save ho rahe hain lekin notification kahin nahi ja rahi. Upar URL fill karo.');
+  } catch(e){}
+}
+
+async function saveSettings(){
+  const body = {
+    webhookUrl: document.getElementById('webhookUrl').value.trim(),
+    teamPhone: document.getElementById('teamPhone').value.trim(),
+    webhookMethod: document.getElementById('webhookMethod').value,
+    webhookPayloadFormat: document.getElementById('webhookPayloadFormat').value,
+    webhookHeaders: document.getElementById('webhookHeaders').value.trim(),
+  };
+  const newPw = document.getElementById('newPw').value.trim();
+  if (newPw) body.newAdminPassword = newPw;
+  try {
+    await api('settings', {method:'POST', body});
+    document.getElementById('newPw').value = '';
+    if (newPw) {
+      // Changing the password invalidates every existing session (server-side
+      // destroy_all_sessions()), including the one we're using right now. The
+      // old bug set token = newPw (the plaintext password) which is never a
+      // valid session token — every request after that silently 401'd until
+      // the admin manually logged out and back in. Re-login with the new
+      // password to get a real session token instead.
+      const r = await fetch('api/admin.php?action=login', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({password: newPw})
+      });
+      const d = await r.json().catch(()=>({}));
+      if (!r.ok || !d.ok) throw new Error(d.error || 'Password changed, but re-login failed — please sign in again with the new password.');
+      token = d.token;
+      localStorage.setItem(TOKEN_KEY, token);
+    }
+    toast('✅ Settings saved!');
+    loadSettings();
+  } catch(e){ toast(e.message,false); }
+}
+
+async function sendTest(){
+  const box = document.getElementById('testResult');
+  box.innerHTML='<div class="muted">Sending…</div>';
+  try {
+    const r = await api('test-webhook', {method:'POST', body:{}});
+    const ok = r.result?.ok;
+    box.innerHTML = `<div class="card" style="background:${ok?'#dcfce7':'#fee2e2'};border-color:${ok?'#86efac':'#fca5a5'}">
+      <b>${ok?'✅ Test Success':'❌ Test Failed'}</b>
+      <pre style="margin-top:8px">${escapeHtml(JSON.stringify(r.result, null, 2))}</pre>
+    </div>`;
+    toast(ok?'Test webhook sent':'Webhook failed', ok);
+  } catch(e){ toast(e.message,false); box.innerHTML=''; }
+}
+
+// ---------- BOOTSTRAP ----------
+if (token) {
+  api('leads').then(showDashboard).catch(() => {
+    localStorage.removeItem(TOKEN_KEY);
+    token=null;
+  });
+}
+</script>
+
+</body>
+</html>

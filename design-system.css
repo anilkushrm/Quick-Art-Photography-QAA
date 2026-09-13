@@ -1,0 +1,169 @@
+/* Quick Art: shared design tokens and public-page component rules. */
+:root {
+ --background:#101114; --background-secondary:#181b21; --surface:#ffffff; --surface-elevated:#f4f5f7;
+ --text-primary:#17191e; --text-secondary:#4b515d; --text-muted:#626977;
+ --primary:#e4b35f; --primary-hover:#f1ca86; --accent:#b9802d; --accent-hover:#92651f;
+ --border:#dce0e6; --success:#08774e; --warning:#94600d; --shadow:0 12px 32px #1118270d;
+ --qa-ink:var(--text-primary); --qa-gold:var(--primary); --qa-gold-light:var(--primary-hover);
+ --qa-muted:var(--text-muted); --qa-line:var(--border);
+}
+body { font-size:16px; line-height:1.65; color:var(--text-primary); }
+main :is(h1,h2,h3,h4) { font-weight:800; letter-spacing:-.025em; }
+main h1 { font-size:clamp(2.4rem,5vw,4.8rem); line-height:1.08; }
+main h2 { font-size:clamp(1.8rem,3vw,3rem); line-height:1.15; }
+main h3 { font-size:clamp(1.15rem,1.8vw,1.5rem); line-height:1.3; }
+main h4 { font-size:1.1rem; line-height:1.4; }
+main p { font-weight:400; }
+main img { opacity:1 !important; filter:none !important; }
+main :is(.qa-dark,.bg-ink,.qa-master-hero,.qa-about,.qa-home-hero) { color:#f6f7f9; }
+main :is(.qa-dark,.bg-ink) :is(h1,h2,h3,h4) { color:#fff; }
+main .bg-ink .bg-white :is(h1,h2,h3,h4) { color:var(--text-primary); }
+main :is(.text-black\/55,.text-black\/60,.text-black\/50) { color:var(--text-secondary); }
+main :is(.text-white\/50,.text-white\/60,.text-white\/70) { color:#c4c9d2; }
+main .qa-master-hero>div:first-child>img { opacity:.14 !important; }
+.qa-demo { min-height:48px; padding:12px 22px; border-radius:999px; gap:10px; color:#16120b !important; font-weight:700; font-size:1rem; animation:none !important; box-shadow:none; }
+.qa-outline { min-height:48px; padding:11px 21px; border-radius:999px; font-weight:600; font-size:1rem; animation:none !important; }
+.qa-dark .qa-outline,.bg-ink .qa-outline,.qa-online-hero .qa-outline { color:#f6ddab; border-color:#9f855d; }
+.qa-demo:hover { filter:brightness(1.05); }
+.qa-demo:disabled { opacity:.65; cursor:wait; }
+:where(a,button,input,select,textarea,summary):focus-visible { outline:3px solid #b9802d; outline-offset:4px; }
+.qa-dark :focus-visible,.qaa-header :focus-visible { outline-color:#f4d69a; }
+.qa-section { padding-block:clamp(48px,6vw,88px); }
+.qa-section .container { max-width:1200px; }
+.qa-kicker,.qa-eyebrow { font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+.qa-dark .qa-kicker,.qa-online-hero .qa-eyebrow { color:#e4b35f; }
+.qa-field :is(input,select,textarea) { font-size:16px !important; }
+.qa-field :is(input,textarea)::placeholder { color:#737986 !important; }
+.qa-contact-page .qa-field :is(input,textarea)::placeholder { color:#bfc5ce !important; }
+.qa-contact-page .qa-field select option { color:#17191e; background:#fff; }
+.qa-week { border:1px solid var(--border); border-radius:16px; box-shadow:none; transform:none !important; }
+.qa-week summary { padding:20px 22px; }
+.qa-week summary span { color:#875b19; font-size:12px; }
+.qa-week summary strong { font-size:17px; }
+.qa-week>div { font-size:16px; color:var(--text-secondary); }
+.qa-week>div :is(p,li) { font-size:16px; }
+main .qa-section#curriculum { background-color:#f5f6f8; background-image:radial-gradient(#a8afb633 .7px,transparent .7px); background-size:10px 10px; }
+.qa-week[open] summary { background:#fff8e9; }
+main.qa-topics-page { display:block; }
+.qa-footer { background:var(--background); color:#c4c9d2; padding:56px 0 20px; }
+.qa-footer h2 { color:#fff; font-size:16px; }
+.qa-footer :is(a,p) { color:#c4c9d2; font-size:14px; line-height:1.7; }
+.qa-footer a:hover { color:var(--primary-hover); }
+.qa-footer-base { border-top:1px solid #ffffff24; margin-top:28px; padding-top:20px; }
+.qa-master-hero-grid>div:last-child :is(h2,h3) { color:#17191e !important; }
+.qa-master-hero-grid>div:last-child>div { transform:none !important; }
+.qa-master-hero .qa-price-current { font:800 clamp(3rem,5.3vw,4.8rem)/1.08 Arial,Helvetica,sans-serif; color:#f1c773; white-space:nowrap; }
+.qa-master-hero .qa-price-row { gap:12px 18px; align-items:baseline; }
+.qa-master-hero .qa-price-original { color:#b9b9ba; }
+.qa-master-hero .qa-price-save { color:#87ebbc; font-size:12px; }
+.qa-master-hero .qa-countdown-grid strong { font-weight:800; }
+.qa-master-hero .qa-countdown-grid span { color:#bcc2cc; }
+.qa-final-heading { color:#fff !important; -webkit-text-fill-color:#fff !important; }
+.qa-online-hero { background:radial-gradient(ellipse at 0 0,#47341a,transparent 60%),#101114; color:#fff; padding:140px 0 64px; }
+.qa-online-hero nav { color:#c4c9d2; font-size:14px; margin-bottom:35px; }
+.qa-online-hero nav a { color:#efd49f; }
+.qa-online-layout { display:grid; grid-template-columns:1.1fr 1fr; gap:48px; align-items:center; }
+.qa-online-hero h1 { color:#fff; margin:16px 0 24px; }
+.qa-online-intro { font-size:20px; line-height:1.65; color:#d2d6de; }
+.qa-online-hero ul { padding-left:20px; margin:24px 0; color:#d2d6de; }
+.qa-online-hero figure { margin:0; border:1px solid #ffffff26; border-radius:22px; overflow:hidden; background:#191c22; }
+.qa-online-hero figure img { width:100%; aspect-ratio:3/2; object-fit:cover; }
+.qa-online-hero figcaption { padding:20px; color:#d2d6de; font-size:16px; }
+.qa-online-page { background:#fff; }
+.qa-online-page .qa-section p { max-width:72ch; margin-top:16px; }
+.qa-online-two { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:40px; }
+.qa-online-card { border:1px solid var(--border); border-radius:20px; padding:30px; box-shadow:var(--shadow); }
+.qa-workflow-panel { border:1px solid #ffffff26; border-radius:22px; padding:28px; background:#191c22; }
+.qa-workflow-panel ol { list-style:none; margin:0; padding:0; }
+.qa-workflow-panel li { display:flex; gap:16px; margin-top:24px; }
+.qa-workflow-panel li>span { color:#e4b35f; font-size:20px; font-weight:800; }
+.qa-workflow-panel h2 { font-size:20px; color:white; }
+.qa-workflow-panel p { color:#c4c9d2; font-size:15px; }
+.qa-footer-grid { grid-template-columns:1.4fr 1fr 1fr 1fr 1fr; gap:28px; }
+@media(max-width:1100px) { .qa-footer-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:600px) { .qa-footer-grid { grid-template-columns:1fr; } }
+.qa-draft-note { border-left:3px solid #b9802d; background:#fff7e8; padding:16px 20px; color:#694714; margin-bottom:36px; }
+.qa-online-page .qa-faq { margin-top:14px; }
+.qa-online-page .qa-faq summary { font-weight:700; padding:20px; }
+.qa-online-page .qa-faq p { padding:0 20px 20px; }
+.qaa-header { background:#101114f5; }
+.qaa-header .qaa-container { max-width:1640px; }
+.qaa-header .qaa-navbar { gap:16px; }
+.qaa-nav>a,.qaa-nav .qaa-dropdown-toggle,.qaa-resource-toggle { font-size:14px; padding:10px 8px; }
+.qaa-nav button.qaa-dropdown-toggle { border:0; background:none; color:#eee; font-family:inherit; cursor:pointer; }
+.qaa-dropdown:not(.is-open)>.qaa-dropdown-menu { opacity:0; visibility:hidden; pointer-events:none; }
+.qaa-dropdown.is-open>.qaa-dropdown-menu { opacity:1; visibility:visible; pointer-events:auto; }
+.qaa-dropdown.is-open>.qaa-mega { transform:translate(-50%,0); }
+.qaa-header .qaa-online-mega { grid-template-columns:1fr; }
+.qaa-online-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 24px; }
+.qaa-online-grid .qaa-program { min-width:0; }
+.qaa-online-grid .qaa-program span { white-space:normal; }
+.qaa-mobile-menu details { border-bottom:1px solid #dedede; padding:8px 0; }
+.qaa-mobile-menu summary { padding:12px; font-weight:700; cursor:pointer; }
+.qaa-mobile-menu> a { display:block; padding:12px; }
+.qaa-mobile-menu .qaa-mobile-course { white-space:normal; }
+.qaa-mobile-menu { max-height:calc(100dvh - 100px); overflow-y:auto; }
+@media(max-width:1600px) { .qaa-actions .qaa-phone { display:none; } }
+@media(max-width:1300px) {
+ .qaa-header .qaa-nav { display:none; }
+ .qaa-header .qaa-menu-btn { display:flex; }
+ .qaa-header .qaa-mobile-menu.active { display:block; background:#fff; color:#17191e; padding:16px; }
+ .qaa-header .qaa-mobile-menu { width:100%; box-sizing:border-box; }
+ .qaa-header .qaa-mobile-menu a { color:#17191e; }
+}
+@media(min-width:1301px) { .qaa-mobile-menu { display:none !important; } }
+@media(max-width:1023px) { .qa-fee-note { display:none !important; } }
+@media(max-width:760px) {
+ .qa-online-layout,.qa-online-two { grid-template-columns:1fr; gap:28px; }
+ .qa-online-hero { padding-top:116px; }
+ .qa-online-intro { font-size:17px; }
+ .qa-online-card { padding:22px; }
+ .qa-actions { flex-wrap:wrap; }
+ .qa-actions>a { white-space:normal; text-align:center; }
+ .qa-master-hero .qa-price-current { font-size:clamp(2.8rem,10vw,3.4rem); }
+ .qa-master-hero .qa-price-row { gap:10px; }
+ .qa-master-hero .qa-price-original { font-size:16px; }
+ .qaa-header { padding:8px 10px; }
+ .qaa-header .qaa-navbar { padding:8px 0; gap:8px; }
+ .qaa-actions .qaa-login { display:none; }
+ .qaa-header .qaa-brand-sub { display:none; }
+ .qaa-header .qaa-logo { width:38px; height:38px; }
+ .qaa-actions .qaa-demo-btn { padding:10px; font-size:12px; }
+ .qa-week summary { padding:16px; }
+}
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
+/* Contrast fix: course-card badges ("6 Weeks", "Offline training", "Most
+   Popular", etc.) sit on photo thumbnails and measured ~4.17:1 for their
+   white text — just under the 4.5:1 AA minimum for small text. Darkening
+   the glass tint a bit clears that threshold without losing the glass look. */
+.glass-dark { background:rgba(10,10,10,.72) !important; }
+/* Note: the small gold uppercase "kicker" labels (WHO IT IS FOR, FREQUENTLY
+   ASKED QUESTIONS, etc.) measure ~4.2-4.4:1 on light backgrounds — just
+   under the 4.5:1 AA minimum for small text, close enough to read fine in
+   practice. Left as-is: the same .qa-kicker class is also used directly on
+   dark hero sections (not wrapped in .qa-dark), so a single darker gold that
+   helps the light-background case actively hurts contrast on those dark
+   ones. Fixing both properly needs the dark-hero kickers split into their
+   own class rather than a blanket color change here. */
+
+/* Reusable photo components for course pages (Premiere Pro course page). */
+.qa-photo-strip { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; margin-top:28px; }
+.qa-photo-strip figure { margin:0; border-radius:18px; overflow:hidden; border:1px solid var(--border); box-shadow:var(--shadow); background:#eee; }
+.qa-dark .qa-photo-strip figure { border-color:#ffffff26; box-shadow:none; background:#191c22; }
+.qa-photo-strip img { width:100%; height:260px; object-fit:cover; display:block; }
+.qa-photo-strip figcaption { padding:14px 18px; font-size:14px; color:var(--text-secondary); }
+.qa-dark .qa-photo-strip figcaption { color:#c4c9d2; }
+.qa-banner-figure { margin:36px 0 0; border-radius:22px; overflow:hidden; border:1px solid var(--border); }
+.qa-dark .qa-banner-figure { border-color:#ffffff26; }
+.qa-banner-figure img { width:100%; height:320px; object-fit:cover; display:block; }
+.qa-inline-figure { margin:0; border-radius:18px; overflow:hidden; border:1px solid var(--border); background:#eee; }
+.qa-dark .qa-inline-figure { border-color:#ffffff26; background:#191c22; }
+.qa-inline-figure img { width:100%; height:100%; object-fit:cover; display:block; }
+.qa-mentor-figure { margin:0; border:1px solid #ffffff26; border-radius:22px; overflow:hidden; background:#191c22; height:520px; }
+.qa-mentor-figure img { width:100%; height:100%; object-fit:cover; object-position:top center; display:block; }
+@media(max-width:760px) {
+ .qa-photo-strip { grid-template-columns:1fr; }
+ .qa-photo-strip img { height:220px; }
+ .qa-banner-figure img { height:200px; }
+ .qa-mentor-figure { height:320px; }
+}

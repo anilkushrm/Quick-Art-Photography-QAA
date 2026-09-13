@@ -1,0 +1,35 @@
+.qa-learning-overview{padding-bottom:42px;margin-bottom:40px;border-bottom:1px solid #e5e1d9}
+.qa-learning-overview h2{max-width:760px;margin:12px 0 26px}
+.qa-learning-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.qa-learning-cards article{background:#fff;border:1px solid #e7dfd1;border-radius:14px;padding:22px}
+.qa-learning-cards article>span{display:inline-block;color:#946524;font-size:13px;font-weight:700;margin-bottom:16px}
+.qa-learning-cards h3{font-size:18px;color:#17191e;line-height:1.35}
+.qa-online-page .qa-learning-cards p{font-size:15px;color:#505765;line-height:1.6;margin-top:10px}
+.qa-online-page .qa-photo-strip{grid-template-columns:repeat(2,minmax(0,370px));justify-content:center}
+.qa-online-page figure.qa-native-photo{width:100%;max-width:var(--photo-width);height:auto;margin-inline:auto;align-self:start}
+.qa-online-page figure.qa-native-photo img{width:100%;height:auto;object-fit:contain;display:block}
+.qa-online-page .qa-mentor-layout{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);align-items:center;gap:48px}
+.qa-online-page .qa-mentor-figure{width:100%;height:auto;max-width:440px;margin:0 auto;border-radius:20px;overflow:hidden;border:1px solid #d9b76d45}
+.qa-online-page .qa-mentor-figure img{width:100%;height:auto;aspect-ratio:1;object-fit:contain;display:block}
+@media(max-width:760px){.qa-online-page .qa-mentor-layout{grid-template-columns:1fr;gap:28px}.qa-online-page .qa-mentor-figure{max-width:360px}}
+@media(max-width:1000px){.qa-learning-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.qa-online-page .qa-photo-strip{grid-template-columns:minmax(0,370px)}}
+@media(max-width:480px){.qa-learning-cards{grid-template-columns:1fr;gap:12px}.qa-learning-cards article{padding:18px}.qa-learning-overview{padding-bottom:28px;margin-bottom:28px}}
+.qa-online-page .qa-online-hero{position:relative;background:#050604 url('assets/premiere-course-background.webp') center right/cover no-repeat;padding:112px 0 64px;min-height:650px}
+.qa-online-page .qa-online-hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.25),transparent 75%);pointer-events:none}
+.qa-online-page .qa-online-hero>.container{position:relative;z-index:1}
+.qa-online-page .qa-online-layout{display:block}
+.qa-online-page .qa-online-layout>div{max-width:620px;width:48%}
+.qa-online-page .qa-online-layout>figure{display:none}
+.qa-online-page .qa-online-hero h1{font-size:clamp(2.2rem,4.2vw,4rem);line-height:1.12;max-width:610px;color:#f3d48e;margin:14px 0 22px}
+.qa-online-page .qa-online-intro{font-size:18px;line-height:1.65;color:#d5d5d2}
+.qa-online-page .qa-online-hero ul{font-size:15px;line-height:1.8;margin:22px 0}
+@media(max-width:1000px){.qa-online-page .qa-online-layout>div{width:58%}.qa-online-page .qa-online-hero:before{background:linear-gradient(90deg,#000c 20%,#0005 65%,transparent)}}
+@media(max-width:760px){.qa-online-page .qa-online-hero{padding:100px 0 260px;min-height:0;background-size:auto 410px;background-position:right bottom}.qa-online-page .qa-online-hero:before{background:linear-gradient(180deg,#050604 0%,#050604 56%,#050604bb 68%,transparent 88%)}.qa-online-page .qa-online-layout>div{width:100%;max-width:none}.qa-online-page .qa-online-hero h1{font-size:clamp(2rem,8vw,2.8rem)}.qa-online-page .qa-online-intro{font-size:16px}.qa-online-page .qa-online-hero nav{margin-bottom:26px;font-size:12px}}
+.qa-online-page .qa-online-hero .qa-online-layout>div>ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;list-style:none;padding:0;margin:24px 0 26px}
+.qa-online-page .qa-online-hero .qa-online-layout>div>ul>li{display:flex;align-items:center;gap:11px;min-height:70px;padding:13px 14px;border:1px solid #d5ac6340;border-radius:12px;background:linear-gradient(120deg,#dbb86613,#111111b3);color:#eee9df;font-size:14px;line-height:1.5;box-shadow:0 4px 14px #00000015}
+.qa-online-page .qa-online-hero .qa-online-layout>div>ul>li:before{content:"✓";display:grid;place-items:center;width:28px;height:28px;flex:0 0 28px;border-radius:8px;background:#e4b35f1f;border:1px solid #e4b35f45;color:#efcd88;font-size:16px;font-weight:700}
+@media(max-width:480px){.qa-online-page .qa-online-hero .qa-online-layout>div>ul{gap:8px}.qa-online-page .qa-online-hero .qa-online-layout>div>ul>li{padding:11px 10px;gap:8px;align-items:flex-start;font-size:13px;min-height:84px}.qa-online-page .qa-online-hero .qa-online-layout>div>ul>li:before{width:24px;height:24px;flex-basis:24px;font-size:14px}}
+@media(max-width:350px){.qa-online-page .qa-online-hero .qa-online-layout>div>ul{grid-template-columns:1fr}.qa-online-page .qa-online-hero .qa-online-layout>div>ul>li{min-height:56px;align-items:center;font-size:14px}}
+.qa-premiere-ai{background:#121517;color:#fff}.qa-premiere-ai p{color:#c6c9ce}.qa-premiere-ai .qa-kicker{color:#ddb76f}.qa-premiere-ai .qa-card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px}.qa-premiere-ai article{border:1px solid #3b3e42;border-radius:14px;padding:22px;background:#1a1d20}.qa-premiere-ai article h3{color:#f2d499;margin:0 0 10px;font-size:18px}.qa-premiere-ai article p{margin:0;font-size:15px}@media(max-width:800px){.qa-premiere-ai .qa-card-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:480px){.qa-premiere-ai .qa-card-grid{grid-template-columns:1fr}}
+.qa-online-hero{background:linear-gradient(115deg,#101113 0%,#151719 55%,#111820 100%);padding-top:116px!important;border-bottom:1px solid #35302a}.qa-online-hero h1{letter-spacing:-.045em}.qa-online-hero h1 strong,.qa-online-hero h1 span{background:linear-gradient(110deg,#f4d99f,#bb873d);-webkit-background-clip:text;background-clip:text;color:transparent}.qa-online-intro{max-width:720px}.qa-learning-cards{gap:18px}.qa-learning-cards article,.qa-online-card{border-color:#d9c7a4;box-shadow:0 10px 28px #1e1b1410}.qa-online-page .qa-kicker{letter-spacing:.16em;color:#9b743e}.qa-online-page .qa-section h2{letter-spacing:-.04em}.qa-online-page .qa-demo{background:linear-gradient(110deg,#f2d497,#bb873e);color:#17130d;border:0;box-shadow:0 8px 22px #c49a5033}.qa-online-page .qa-outline{border-color:#b28b50}.qa-online-page .qa-draft-note{display:none}@media(max-width:700px){.qa-online-hero{padding-top:96px!important}.qa-online-page .qa-section{padding-block:52px}.qa-online-page .qa-online-two{grid-template-columns:1fr}.qa-online-page .qa-learning-cards{grid-template-columns:1fr}.qa-online-page h1{font-size:clamp(36px,11vw,52px)}}

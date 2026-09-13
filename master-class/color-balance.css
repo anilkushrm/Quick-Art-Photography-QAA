@@ -1,0 +1,23 @@
+/* Master Class palette: warm ivory surfaces, deep ink sections and one restrained gold accent. */
+.qa-master-hero{background:#111315!important}
+.qa-master-hero .qa-heading-gradient{background:linear-gradient(110deg,#f8e8c7 0%,#e8bd6c 55%,#ba8035 100%)!important;background-clip:text!important;-webkit-background-clip:text!important}
+.qa-master-hero .qa-master-form{background:#fbfaf8!important;border-color:#e6ddd0!important;box-shadow:0 26px 70px rgba(0,0,0,.26)!important}
+.qa-master-hero .qa-master-form h2{color:#191715!important}
+.mc-bonuses,.mc-reviews{position:relative;isolation:isolate}
+.mc-bonuses{background:linear-gradient(180deg,#faf9f6 0%,#f6f2eb 100%)!important}
+.mc-bonuses::before{content:"";position:absolute;top:0;left:50%;width:min(88%,1120px);height:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,#d9bb86aa,transparent);box-shadow:0 1px 8px #d9bb8618;pointer-events:none}
+.mc-bonus-card{background:#fff!important;border-color:#e9e1d5!important;box-shadow:0 5px 18px rgba(57,39,17,.045)}
+.mc-bonus-card:hover{border-color:#d4ad6d!important;box-shadow:0 12px 26px rgba(57,39,17,.09)}
+.mc-price{background:#fffdf9!important;border-color:#eadfce!important}
+.mc-reviews{background:#fff!important}
+.mc-review-card{background:#faf9f7!important;border-color:#e9e4dc!important}
+.mc-review-card:nth-child(2){background:#fff!important;border-color:#e2d3bb!important}
+.mc-review-author{border-color:#ece7df!important}
+.mc-reviews-heading h2,.mc-bonus-intro h2{color:#171717}
+.mc-reviews-heading>p,.mc-bonus-intro>p{color:#6f6b64!important}
+.mc-review-stars,.mc-reviews-kicker,.mc-bonus-kicker{color:#a97832!important}
+@media(max-width:760px){
+ .qa-master-hero .qa-master-form{box-shadow:0 16px 36px rgba(0,0,0,.2)!important}
+ .mc-bonuses,.mc-reviews{padding-top:48px!important;padding-bottom:48px!important}
+ .mc-bonus-card,.mc-review-card{box-shadow:0 3px 12px rgba(57,39,17,.04)}
+}

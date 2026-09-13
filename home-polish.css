@@ -1,0 +1,43 @@
+.home-page #faq .qa-faq{margin:14px 0;border:1px solid #ebe8e3;border-radius:20px;background:#fff;padding:0 24px;box-shadow:0 5px 18px rgba(20,16,10,.04)}
+.home-page #faq .qa-faq summary{padding:24px 0;font-size:17px}
+.home-page #faq .qa-faq p{padding:0 0 20px}
+.home-page #faq .qa-faq summary span{transition:transform .2s}
+.home-page #faq .qa-faq[open] summary span{transform:rotate(45deg)}
+.home-contact{background:radial-gradient(circle at 12% 8%,#3b2d1d,transparent 48%),#171513;color:#fff}
+.home-contact-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:48px;align-items:stretch}
+.home-contact-copy h2,.home-contact-form h2{color:#fff}
+.home-contact-card,.home-contact-form{border:1px solid rgba(229,202,155,.25);border-radius:24px;background:rgba(255,255,255,.035);padding:24px}
+.home-contact-card{margin:16px 0}
+.home-contact-card p{margin:4px 0 10px;color:#d0cbc3}
+.home-contact-card a{color:#f1c879}
+.home-contact-form{padding:38px}
+.home-contact-form .qa-enquiry{background:transparent;color:#fff;border:0;box-shadow:none;padding:0}
+.home-contact-form .qa-enquiry h2{color:#fff;grid-column:1/-1;font-size:clamp(20px,2.4vw,34px);line-height:1.25;letter-spacing:-.035em;white-space:nowrap}
+.home-contact-form .qa-enquiry>p:not(.qa-kicker){color:#c8c3bb}
+.home-contact-form .qa-enquiry .qa-field label{color:#c8c3bb}
+.home-contact-form .qa-enquiry .qa-field input,.home-contact-form .qa-enquiry .qa-field select,.home-contact-form .qa-enquiry .qa-field textarea{background:rgba(255,255,255,.08);border-color:rgba(229,202,155,.25);color:#fff}
+.home-contact-form .qa-enquiry .qa-consent{color:#bdb7ad}
+.home-contact-copy>.qa-outline{background:#16b878;border-color:#16b878;color:#fff;box-shadow:0 10px 24px rgba(22,184,120,.2)}
+.home-contact-copy>.qa-outline:hover{background:#12a86d;border-color:#12a86d;color:#fff}
+.home-contact-form .qa-enquiry{display:grid;grid-template-columns:1fr 1fr;column-gap:22px}
+.home-contact-form .qa-enquiry>p,.home-contact-form .qa-enquiry>.qa-consent,.home-contact-form .qa-enquiry>.qa-demo,.home-contact-form .qa-enquiry>.qa-form-status{grid-column:1/-1}
+.home-contact-form .qa-enquiry .qa-field:has(textarea){grid-column:1/-1}
+.home-contact-form>p:not(.qa-kicker){color:#c8c3bb;max-width:620px}
+.home-contact-form .qa-demo{margin-top:26px;text-decoration:none}
+#faq{background:#fff;padding-block:72px}
+#faq .qa-split{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:48px;align-items:start}
+#faq .qa-kicker{display:inline-flex;align-items:center;gap:8px;border:1px solid #e8c98f;border-radius:999px;background:#fbf6ec;padding:6px 12px;font-size:12px;letter-spacing:.12em;color:#946b30;margin:0 0 20px}
+#faq .qa-kicker::before{content:"";width:6px;height:6px;border-radius:50%;background:#d4a04c}
+#faq h2{font-size:clamp(32px,3.6vw,52px);font-weight:800;line-height:1.08;letter-spacing:-.04em;margin:0 0 22px}
+#faq .qa-split>div:first-child>p:not(.qa-kicker){font-size:17px;line-height:1.65;color:#777;margin-bottom:28px}
+#faq .qa-faq{margin:0 0 12px;border:1px solid #e9e9e9;border-radius:16px;background:#fafafa;padding:0 20px;box-shadow:none}
+#faq .qa-faq summary{display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:76px;padding:20px 0;font-size:16px;font-weight:700;line-height:1.4;list-style:none}
+#faq .qa-faq summary::-webkit-details-marker{display:none}
+#faq .qa-faq summary span{font-size:0;flex-shrink:0;width:8px;height:8px;border-right:1.5px solid #708096;border-bottom:1.5px solid #708096;transform:rotate(45deg)}
+#faq .qa-faq[open] summary span{transform:rotate(225deg)}
+#faq .qa-faq p{padding:0 0 20px;margin:0;line-height:1.7;font-size:15px}
+.home-faq-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.home-faq-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 20px;border:1px solid #ddd;border-radius:999px;color:#222;text-decoration:none;font-size:14px;font-weight:600;box-shadow:0 2px 4px #00000009}
+.home-faq-actions a:first-child{background:#10b981;border-color:#10b981;color:white}
+@media(max-width:800px){#faq .qa-split{grid-template-columns:1fr;gap:28px}#faq{padding-block:44px}.home-contact-form .qa-enquiry h2{font-size:clamp(17px,4.8vw,30px)}}
+@media(max-width:800px){.home-contact-grid{grid-template-columns:1fr;gap:28px}.home-contact-form{padding:26px}.home-contact-form .qa-enquiry{grid-template-columns:1fr}.home-contact-form .qa-enquiry .qa-field:has(textarea){grid-column:auto}.home-page #faq .qa-faq{padding:0 18px}.home-page #faq .qa-faq summary{font-size:15px}}

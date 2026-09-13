@@ -1,0 +1,590 @@
+
+/* ==============================
+   QUICK ART HEADER
+================================ */
+
+.qaa-header,.qaa-header *{box-sizing:border-box;margin:0;padding:0}
+
+.qaa-header{font-family:Arial,Helvetica,sans-serif;line-height:1.5}
+
+/* Header */
+.qaa-header{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    width:100%;
+    z-index:9999;
+    padding:16px 20px;
+    transition:all .35s ease;
+}
+
+.qaa-header.scrolled{
+    padding:10px 20px;
+    background:rgba(10,10,10,.92);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.qaa-container{
+    width:100%;
+    max-width:1280px;
+    margin:auto;
+}
+
+.qaa-navbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+    padding:9px 15px;
+    border-radius:18px;
+    transition:.35s ease;
+}
+
+.qaa-header.scrolled .qaa-navbar{
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 15px 50px rgba(0,0,0,.25);
+}
+
+/* ==============================
+   LOGO
+================================ */
+
+.qaa-brand{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    text-decoration:none;
+    flex-shrink:0;
+}
+
+.qaa-logo{
+    width:46px;
+    height:46px;
+    object-fit:contain;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.12);
+}
+
+.qaa-brand-text{
+    line-height:1.05;
+}
+
+.qaa-brand-name{
+    color:#fff;
+    font-size:15px;
+    font-weight:800;
+    letter-spacing:-.3px;
+}
+
+.qaa-brand-name span{
+    color:#e7b96e;
+}
+
+.qaa-brand-sub{
+    color:rgba(255,255,255,.55);
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:1.7px;
+    margin-top:4px;
+    white-space:nowrap;
+}
+
+/* ==============================
+   NAVIGATION
+================================ */
+
+.qaa-nav{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+}
+
+.qaa-nav a{
+    color:rgba(255,255,255,.78);
+    font-size:13px;
+    font-weight:500;
+    text-decoration:none;
+    padding:10px 12px;
+    border-radius:9px;
+    transition:.25s ease;
+    white-space:nowrap;
+}
+
+.qaa-nav a:hover{
+    color:#fff;
+    background:rgba(255,255,255,.08);
+}
+
+/* Course Dropdown */
+
+.qaa-dropdown{
+    position:relative;
+}
+
+.qaa-dropdown-toggle{
+    display:flex !important;
+    align-items:center;
+    gap:5px;
+}
+
+.qaa-dropdown-toggle svg{
+    width:14px;
+    transition:.25s;
+}
+
+.qaa-dropdown:hover .qaa-dropdown-toggle svg{
+    transform:rotate(180deg);
+}
+
+.qaa-dropdown-menu{
+    position:absolute;
+    top:calc(100% + 14px);
+    left:0;
+    width:235px;
+
+    padding:8px;
+
+    background:rgba(18,18,18,.97);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:16px;
+
+    box-shadow:0 25px 65px rgba(0,0,0,.45);
+
+    backdrop-filter:blur(18px);
+
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(8px);
+
+    transition:.25s ease;
+}
+
+.qaa-dropdown:hover .qaa-dropdown-menu{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+}
+
+.qaa-dropdown-menu a{
+    display:block;
+    width:100%;
+    padding:11px 13px;
+}
+
+.qaa-dropdown-menu a:hover{
+    background:rgba(231,185,110,.10);
+    color:#e7b96e;
+}
+
+/* Master Class */
+
+.qaa-master{
+    display:flex !important;
+    align-items:center;
+    gap:5px;
+
+    color:#eac77e !important;
+
+    padding:9px 14px !important;
+
+    border-radius:30px !important;
+
+    border:1px solid rgba(224,174,89,.40);
+
+    background:rgba(255,255,255,.07);
+}
+
+.qaa-master:hover{
+    background:rgba(255,255,255,.12) !important;
+}
+
+/* ==============================
+   RIGHT SIDE
+================================ */
+
+.qaa-actions{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    flex-shrink:0;
+}
+
+.qaa-phone,
+.qaa-login{
+    display:flex;
+    align-items:center;
+    gap:7px;
+
+    color:rgba(255,255,255,.88);
+    text-decoration:none;
+
+    font-size:13px;
+}
+
+.qaa-phone{
+    padding:9px 8px;
+}
+
+.qaa-phone svg,
+.qaa-login svg{
+    width:16px;
+    height:16px;
+}
+
+.qaa-login{
+    padding:9px 13px;
+    border-radius:30px;
+
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.15);
+
+    transition:.25s;
+}
+
+.qaa-login:hover{
+    background:rgba(255,255,255,.1);
+}
+
+/* Demo button */
+
+.qaa-demo-btn{
+    display:flex;
+    align-items:center;
+    gap:7px;
+
+    border:none;
+    outline:none;
+
+    padding:11px 19px;
+
+    border-radius:30px;
+
+    color:#111;
+    text-decoration:none;
+
+    font-size:13px;
+    font-weight:700;
+
+    background:linear-gradient(
+        135deg,
+        #f3d290,
+        #d89f49
+    );
+
+    box-shadow:
+        0 8px 28px rgba(216,159,73,.28);
+
+    transition:.25s ease;
+}
+
+.qaa-demo-btn:hover{
+    transform:translateY(-1px);
+    box-shadow:
+        0 10px 34px rgba(216,159,73,.38);
+}
+
+.qaa-demo-btn svg{
+    width:16px;
+}
+
+/* ==============================
+   MOBILE BUTTON
+================================ */
+
+.qaa-menu-btn{
+    display:none;
+
+    width:42px;
+    height:42px;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:12px;
+
+    color:#fff;
+
+    background:rgba(255,255,255,.06);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    cursor:pointer;
+}
+
+.qaa-menu-btn svg{
+    width:21px;
+}
+
+/* ==============================
+   MOBILE MENU
+================================ */
+
+.qaa-mobile-menu{
+    display:none;
+
+    margin-top:10px;
+    padding:13px;
+
+    border-radius:18px;
+
+    background:rgba(15,15,15,.97);
+
+    border:1px solid rgba(255,255,255,.09);
+
+    box-shadow:0 25px 60px rgba(0,0,0,.45);
+
+    backdrop-filter:blur(18px);
+}
+
+.qaa-mobile-menu.active{
+    display:block;
+}
+
+.qaa-mobile-menu a{
+    display:block;
+
+    color:rgba(255,255,255,.80);
+
+    text-decoration:none;
+
+    padding:12px 13px;
+
+    font-size:14px;
+
+    border-radius:9px;
+}
+
+.qaa-mobile-menu a:hover{
+    background:rgba(255,255,255,.07);
+    color:#fff;
+}
+
+.qaa-mobile-demo{
+    margin-top:8px;
+
+    text-align:center;
+
+    color:#111 !important;
+    font-weight:700;
+
+    background:linear-gradient(
+        135deg,
+        #f3d290,
+        #d89f49
+    );
+}
+
+/* ==============================
+   RESPONSIVE
+================================ */
+
+@media(max-width:1180px){
+
+    .qaa-phone{
+        display:none;
+    }
+
+    .qaa-nav a{
+        padding-left:9px;
+        padding-right:9px;
+    }
+}
+
+@media(max-width:1024px){
+
+    .qaa-nav{
+        display:none;
+    }
+
+    .qaa-login{
+        display:none;
+    }
+
+    .qaa-menu-btn{
+        display:flex;
+    }
+}
+
+@media(max-width:640px){
+
+    .qaa-header{
+        padding:10px;
+    }
+
+    .qaa-navbar{
+        padding:7px 9px;
+    }
+
+    .qaa-demo-btn{
+        display:none;
+    }
+
+    .qaa-logo{
+        width:42px;
+        height:42px;
+    }
+
+    .qaa-brand-name{
+        font-size:14px;
+    }
+
+    .qaa-brand-sub{
+        font-size:8px;
+        letter-spacing:1.2px;
+    }
+}
+
+.qaa-dropdown::after{content:"";position:absolute;left:0;right:0;top:100%;height:16px}
+.qaa-dropdown:focus-within .qaa-dropdown-menu{opacity:1;visibility:visible;transform:none}
+.qaa-header a:focus-visible,.qaa-header button:focus-visible{outline:2px solid #e7b96e;outline-offset:3px}
+.qaa-header .qaa-logo{opacity:1;filter:none;flex-shrink:0}
+.qaa-mobile-menu{max-height:calc(100dvh - 100px);overflow:auto}
+.qaa-header .qaa-nav>a[aria-current=page]{color:#e7b96e}
+.qaa-header~main{padding-top:100px}
+.qaa-header~main .qa-home-hero{padding-top:0}
+@media(prefers-reduced-motion:reduce){.qaa-header,.qaa-header *{transition:none!important}}
+/* Full content-width header and restored Courses mega menu. */
+.qaa-container{max-width:1640px}
+.qaa-navbar{position:relative}
+.qaa-dropdown{position:static}
+.qaa-dropdown::after{display:none}
+.qaa-header .qaa-mega{left:50%;right:auto;top:calc(100% - 1px);width:min(1280px,100%);display:grid;grid-template-columns:3fr 2fr;padding:0;background:#fff;color:#181818;transform:translate(-50%,8px);max-height:calc(100dvh - 115px);overflow:auto;border-radius:24px}
+.qaa-dropdown:hover .qaa-mega,.qaa-dropdown:focus-within .qaa-mega{transform:translate(-50%,0)}
+.qaa-programs,.qaa-explore{padding:30px}
+.qaa-explore{background:#f8f8f8;border-left:1px solid #e9e9e9}
+.qaa-mega-title{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
+.qaa-mega-title small{font-size:10px;letter-spacing:.16em;color:#95682e;font-weight:700}
+.qaa-header .qaa-mega h2{font-size:22px;line-height:1.2;color:#161616;margin-top:8px}
+.qaa-header .qaa-mega-title>a{color:#95682e;width:auto}
+.qaa-header .qaa-program{display:flex;align-items:center;gap:18px;padding:18px 10px;margin:4px 0;border-radius:14px;color:#181818;white-space:normal}
+.qaa-header .qaa-program:hover{background:#faf5eb}
+.qaa-icon{width:58px;height:58px;display:grid;place-items:center;flex-shrink:0;border-radius:14px;color:white;font-size:30px}
+.qaa-program>span:nth-child(2){flex:1;min-width:0}
+.qaa-program strong{display:block;font-size:17px;line-height:1.35;color:#161616}
+.qaa-program span span{display:block;font-size:13px;line-height:1.6;color:#696969;margin-top:3px}
+.qaa-program small{display:block;font-size:12px;color:#777;margin-top:5px}
+.qaa-program>b{color:#888;font-size:20px}
+.qaa-header .qaa-explore h3{font-size:10px;letter-spacing:.16em;color:#757575;margin-bottom:10px}
+.qaa-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px}
+.qaa-header .qaa-tags a{width:auto;padding:5px 11px;border:1px solid #e8e8e8;border-radius:30px;background:#fff;color:#555;font-size:12px}
+.qaa-header .qaa-mega-cta{display:block;background:linear-gradient(110deg,#111,#302617);padding:20px;border-radius:16px;color:#e7b96e}
+.qaa-mega-cta small,.qaa-mega-cta strong,.qaa-mega-cta span{display:block}
+.qaa-mega-cta strong{color:#fff;margin:8px 0 12px;font-size:18px}
+.qaa-mega-cta small{font-size:10px;letter-spacing:.1em}
+@media(min-width:1181px) and (max-width:1350px){.qaa-navbar{gap:12px}.qaa-nav a{padding-inline:8px}.qaa-phone{display:none}}
+/* Contained, readable header in both scroll states. */
+.qaa-header,.qaa-header.scrolled{padding:12px 24px;background:transparent;border:0;backdrop-filter:none;-webkit-backdrop-filter:none}
+.qaa-container{max-width:1440px}
+.qaa-navbar,.qaa-header.scrolled .qaa-navbar{background:rgba(18,17,15,.97);border:1px solid #ffffff18;box-shadow:0 8px 28px #0002;padding:10px 18px;gap:16px}
+.qaa-header .qaa-mega{width:min(1080px,100%);border-radius:20px;grid-template-columns:1.25fr 1fr}
+.qaa-programs,.qaa-explore{padding:24px}
+.qaa-header .qaa-mega h2{font-size:19px}
+.qaa-header .qaa-program{gap:13px;padding:14px 8px}
+.qaa-program strong{font-size:15px}.qaa-program span span{font-size:12px}.qaa-program small{font-size:11px}
+.qaa-icon{width:46px;height:46px;border-radius:12px;box-shadow:0 5px 12px #0001}
+.qaa-header .qaa-tags a{font-size:11px;padding:4px 9px}
+.qaa-tags{margin-bottom:18px}.qaa-mega-title{margin-bottom:14px}
+.qaa-resource{position:relative}
+.qaa-resource-toggle{font:500 13px Arial,sans-serif;display:flex;align-items:center;gap:6px;padding:10px 12px;color:#ffffffde;border:0;background:transparent;cursor:pointer;border-radius:9px}
+.qaa-resource-menu{display:none;position:absolute;right:0;top:100%;width:230px;padding:8px;background:#181715;border:1px solid #ffffff20;border-radius:14px;box-shadow:0 15px 35px #0005}
+.qaa-resource:hover .qaa-resource-menu,.qaa-resource:focus-within .qaa-resource-menu,.qaa-resource.is-open .qaa-resource-menu{display:block}
+.qaa-header .qaa-resource-menu a{display:block;white-space:normal;font-size:13px;padding:11px 12px;color:#eee}
+@media(max-width:1180px){.qaa-navbar{gap:10px}.qaa-nav a{padding-inline:8px}}
+@media(max-width:640px){.qaa-header,.qaa-header.scrolled{padding:10px}.qaa-navbar,.qaa-header.scrolled .qaa-navbar{padding:8px 10px}}
+/* Match the header's initial surface to each page, including its reserved space.
+   Note: background-color intentionally removed — each page/section already sets
+   its own correct background, and this rule's higher specificity (class+element)
+   was overriding them (e.g. .qa-online-page{background:#fff}), painting the
+   entire <main> element black behind any section without its own background. */
+.qaa-theme-dark~main{color:inherit}
+.qaa-theme-light~main{}
+.qaa-theme-dark:not(.scrolled) .qaa-navbar{background:#111;border-color:transparent;box-shadow:none}
+.qaa-theme-light:not(.scrolled) .qaa-navbar{background:#fafafa;border-color:transparent;box-shadow:none}
+.qaa-theme-light:not(.scrolled) .qaa-brand-name{color:#171717}
+.qaa-theme-light:not(.scrolled) .qaa-brand-sub{color:#666}
+.qaa-theme-light:not(.scrolled) .qaa-nav>a,.qaa-theme-light:not(.scrolled) .qaa-dropdown-toggle,.qaa-theme-light:not(.scrolled) .qaa-resource-toggle,.qaa-theme-light:not(.scrolled) .qaa-phone,.qaa-theme-light:not(.scrolled) .qaa-login{color:#34312c}
+.qaa-theme-light:not(.scrolled) .qaa-login,.qaa-theme-light:not(.scrolled) .qaa-menu-btn{border-color:#d7d1c7;color:#25221d;background:#efede8}
+.qaa-theme-light:not(.scrolled) .qaa-master{color:#825a21!important;background:#f4ead9;border-color:#d7bc90}
+.qaa-theme-light:not(.scrolled) .qaa-nav>a:hover{background:#eae5dc}
+.qaa-header.scrolled .qaa-navbar{background:rgba(18,17,15,.96);border-color:#ffffff18;box-shadow:0 8px 28px #0002}
+/* Softer charcoal glass with a restrained warm highlight. */
+.qaa-theme-dark:not(.scrolled) .qaa-navbar,.qaa-header.scrolled .qaa-navbar{background:linear-gradient(115deg,rgba(65,58,47,.95),rgba(35,35,34,.96) 60%,rgba(46,43,38,.95));border:1px solid rgba(226,204,165,.18);box-shadow:0 6px 22px rgba(0,0,0,.13);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.qaa-theme-light:not(.scrolled) .qaa-navbar{background:linear-gradient(115deg,#f5f1e9,#f4f4f2);border:1px solid #e4ddd1;box-shadow:0 5px 18px #30281809}
+/* Reserve header space inside the hero so its background reaches the page top. */
+.qaa-header~main{padding-top:0!important}
+.qaa-header~main>section:first-of-type{padding-top:120px!important}
+.qaa-header~main.qa-about>section:first-of-type{padding-top:150px!important}
+.qaa-header .qaa-resource-menu{background:linear-gradient(115deg,#413a2f,#232322 60%,#2e2b26);border-color:#e2cca52e}
+.qaa-resource-toggle:hover,.qaa-resource.is-open .qaa-resource-toggle{background:rgba(255,255,255,.08)}
+.qaa-resource-toggle svg{width:14px;height:14px;transition:transform .25s}
+.qaa-resource:hover .qaa-resource-toggle svg{transform:rotate(180deg)}
+.qa-popup{max-height:calc(100dvh - 32px);overflow-y:auto}
+@media(max-width:640px){.qaa-header~main>section:first-of-type{padding-top:100px!important}}
+/* Blend into the opening hero; use a light glass surface after scrolling. */
+.qaa-theme-dark:not(.scrolled) .qaa-navbar{background:transparent;border-color:transparent;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.qaa-theme-light:not(.scrolled) .qaa-navbar{background:rgba(250,250,250,.94);border-color:transparent;box-shadow:none}
+.qaa-header.scrolled .qaa-navbar{background:rgba(250,248,243,.94);border:1px solid rgba(218,210,196,.7);box-shadow:0 6px 24px rgba(48,40,25,.1);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.qaa-header.scrolled .qaa-brand-name{color:#25221d}
+.qaa-header.scrolled .qaa-brand-sub{color:#66615a}
+.qaa-header.scrolled .qaa-nav>a,.qaa-header.scrolled .qaa-dropdown-toggle,.qaa-header.scrolled .qaa-resource-toggle,.qaa-header.scrolled .qaa-phone,.qaa-header.scrolled .qaa-login{color:#35312b}
+.qaa-header.scrolled .qaa-nav>a:hover,.qaa-header.scrolled .qaa-dropdown-toggle:hover,.qaa-header.scrolled .qaa-resource-toggle:hover{background:#eae4d9;color:#241e15}
+.qaa-header.scrolled .qaa-master{background:linear-gradient(135deg,#f3d290,#d89f49);color:#30220d!important;border-color:#d6b57c}
+.qaa-header.scrolled .qaa-login,.qaa-header.scrolled .qaa-menu-btn{background:#eeebe5;border-color:#d8d0c3;color:#35312b}
+.qaa-header.scrolled .qaa-resource-menu{background:rgba(250,248,243,.98);border-color:#ddd5c8;box-shadow:0 12px 30px #30281818}
+.qaa-header.scrolled .qaa-resource-menu a{color:#35312b}
+.qaa-header.scrolled .qaa-resource-menu a:hover{background:#eee5d6;color:#74511e}
+.qaa-header.scrolled .qaa-resource.is-open .qaa-resource-toggle{background:#eae4d9}
+/* Translucent scroll surface; dropdown opens towards the opposite side. */
+.qaa-header.scrolled .qaa-navbar{background:rgba(250,248,243,.80);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.qaa-resource-menu{left:0;right:auto}
+/* Mobile header: balanced gutters and a scrollable, grouped navigation panel. */
+@media(max-width:1024px){
+ .qaa-header,.qaa-header.scrolled{padding:12px 18px}
+ .qaa-navbar,.qaa-header.scrolled .qaa-navbar{padding:10px 14px;gap:12px;min-height:64px}
+ .qaa-brand{min-width:0;gap:9px}
+ .qaa-actions{margin-left:auto;gap:10px}
+ .qaa-menu-btn{flex:0 0 42px;margin:0;outline-offset:3px}
+ .qaa-mobile-menu{margin:10px 0 0;padding:12px;border-radius:18px;max-height:calc(100dvh - 110px);overscroll-behavior:contain}
+ .qaa-mobile-menu a{padding:12px 14px;line-height:1.45;min-height:44px;border-radius:10px}
+ .qaa-mobile-menu a+a{margin-top:3px}
+ .qaa-mobile-menu .qaa-mobile-demo{margin-top:12px}
+ .qaa-header.scrolled .qaa-mobile-menu{background:rgba(250,248,243,.97);border-color:#ddd5c8}
+ .qaa-header.scrolled .qaa-mobile-menu a{color:#35312b}
+ .qaa-header.scrolled .qaa-mobile-menu a:hover{background:#eee5d6}
+}
+@media(max-width:640px){
+ .qaa-header,.qaa-header.scrolled{padding:10px 16px}
+ .qaa-navbar,.qaa-header.scrolled .qaa-navbar{padding:9px 12px;gap:8px}
+ .qaa-brand-sub{font-size:8px;letter-spacing:1px;white-space:normal}
+ .qaa-logo{flex:0 0 40px;width:40px;height:40px}
+ .qaa-actions{flex-shrink:0}
+ .qaa-menu-btn{width:42px;height:42px}
+}
+@media(max-width:1024px){
+ .qaa-mobile-menu.active{background:rgba(239,237,230,.72);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid #ffffff80;padding:14px;box-shadow:0 20px 55px #0004}
+ .qaa-mobile-programs{background:#fff;border-radius:18px;overflow:hidden}
+ .qaa-mobile-heading{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;gap:10px}
+ .qaa-mobile-heading small{display:block;font-size:10px;font-weight:700;letter-spacing:.16em;color:#8d6938}
+ .qaa-mobile-heading strong{display:block;font-size:17px;color:#151515}
+ .qaa-mobile-menu .qaa-mobile-heading a{font-size:12px;color:#89632e;padding:4px;min-height:0;white-space:nowrap}
+ .qaa-mobile-menu a.qaa-mobile-course{display:flex;gap:12px;align-items:center;margin:0;padding:18px 14px;border-radius:0;border-top:1px solid #eee;color:#171717}
+ .qaa-mobile-course>.qaa-icon{width:48px;height:48px;border-radius:13px}
+ .qaa-mobile-course>span:nth-child(2){flex:1;min-width:0}
+ .qaa-mobile-course strong{display:block;color:#151515;font-size:15px;line-height:1.3}
+ .qaa-mobile-course span span{display:none}
+ .qaa-mobile-course small{display:block;margin-top:6px;color:#707070;font-size:12px}
+ .qaa-mobile-course>b{color:#999}
+ .qaa-mobile-links{display:grid;grid-template-columns:1fr 1fr;padding:12px 0;gap:0 10px}
+ .qaa-mobile-menu .qaa-mobile-links a{color:#222;font-size:15px;margin:0}
+ .qaa-mobile-menu a.qaa-mobile-demo{background:#111;color:#fff!important;text-align:center;border-radius:13px;font-size:16px;padding:14px;margin:0 0 9px}
+ .qaa-mobile-menu a.qaa-mobile-login{background:#fff;color:#171717;text-align:center;border-radius:13px;font-size:15px;padding:14px;margin:0}
+ .qaa-menu-btn[aria-expanded=true] svg{display:none}
+ .qaa-menu-btn[aria-expanded=true]::after{content:'×';font-size:30px;line-height:1}
+}
+
+@media(max-width:1024px){.qaa-mobile-badge{display:table;margin-top:5px;padding:2px 7px;border:1px solid #e8cfa3;border-radius:20px;background:#faf5eb;color:#88632e;font-size:9px;font-style:normal;font-weight:600;letter-spacing:.07em}.qaa-mobile-course .qaa-icon svg{width:25px;height:25px}.qaa-mobile-menu a.qaa-mobile-login{color:#171717!important}}

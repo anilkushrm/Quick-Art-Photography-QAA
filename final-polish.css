@@ -1,0 +1,25 @@
+/* Shared finishing touches; retain the established black, ivory and gold palette. */
+:root{--qaa-finish-gold:#bd9147;--qaa-finish-focus:#bd9147}
+html{scroll-padding-top:88px}
+main{overflow-x:clip}
+main :is(section[id],form[id]){scroll-margin-top:88px}
+main :is(a,button,input,textarea,select,summary):focus-visible{outline:2px solid var(--qaa-finish-focus);outline-offset:4px}
+main :is(.qa-demo,.qa-outline,.ec-button,.ec-secondary,.qaa-play-download){transition:box-shadow .2s ease,background-color .2s ease,transform .2s ease}
+.qaa-examples-grid figure{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.qa-faq{transition:border-color .2s ease,background-color .2s ease}
+.qa-faq[open]{border-color:#d7bd8d;background:#fffcf6}
+.qa-enquiry :is(input,select,textarea){transition:border-color .2s ease,box-shadow .2s ease}
+.qa-enquiry :is(input,select,textarea):focus{border-color:#bd9147;box-shadow:0 0 0 3px #bd914718}
+.qa-footer{border-top:1px solid #d6ac6229}
+@media(hover:hover) and (pointer:fine){
+ .qaa-examples-grid figure:hover{transform:translateY(-4px);border-color:#d7bd8d;box-shadow:0 16px 34px #3a2a0c10}
+ main :is(.qa-demo,.ec-button):hover{box-shadow:0 8px 22px #bd914724}
+}
+@media(max-width:700px){
+ html{scroll-padding-top:80px}
+ main :is(section[id],form[id]){scroll-margin-top:80px}
+ .qa-footer .container{width:calc(100% - 36px)}
+ .qa-footer-grid{gap:28px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}main *,main *::before,main *::after{animation:none!important;transition:none!important}.qa-pending{opacity:1!important;transform:none!important}}
+@media print{.qa-pending{opacity:1!important;transform:none!important}.ref-header,.ref-drawer-backdrop,.fixed.bottom-5.right-5{display:none!important}}

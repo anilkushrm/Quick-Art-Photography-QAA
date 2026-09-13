@@ -1,0 +1,10 @@
+.dr-course .ec-hero{position:relative;isolation:isolate;overflow:hidden;background:#080b0d;padding:132px 0 72px}
+.dr-course .ec-hero::before{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;background:url("assets/premiere-course-background.webp") center right/cover no-repeat;opacity:.82}
+.dr-course .ec-hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#080b0df5 0%,#080b0ddd 30%,#080b0d88 53%,#080b0d10 80%),linear-gradient(0deg,#080b0d,transparent 30%)}
+.dr-course .ec-hero-grid{display:block;min-height:440px}
+.dr-course .ec-hero-grid>div{width:57%;max-width:650px}
+.dr-course .dr-hero-description{max-width:580px;font-size:17px;line-height:1.7}
+.dr-course .dr-panel-figure{max-width:1050px;margin:36px auto 0}
+.dr-course .dr-panel-figure img{width:100%;height:auto;border-radius:12px;box-shadow:0 14px 40px #12151720}
+@media(max-width:900px){.dr-course .ec-hero-grid>div{width:70%}}
+@media(max-width:700px){.dr-course .ec-hero{padding:104px 0 46px}.dr-course .ec-hero-grid{min-height:0}.dr-course .ec-hero-grid>div{width:100%;max-width:none}.dr-course .ec-hero::before{background-position:72% center;opacity:.3}.dr-course .ec-hero::after{background:linear-gradient(90deg,#080b0de8,#080b0d99),linear-gradient(0deg,#080b0d,transparent 60%)}.dr-course .dr-hero-description{font-size:16px;line-height:1.7}.dr-course .dr-panel-figure{margin-top:24px}}

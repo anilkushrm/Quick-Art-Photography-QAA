@@ -1,0 +1,14 @@
+.qa-page-hero.qa-texture-hero{position:relative;isolation:isolate;overflow:hidden;background:#111315;min-height:390px;display:flex;align-items:center;padding-block:76px}
+.qa-page-hero.qa-texture-hero::before{content:"";position:absolute;inset:0;z-index:-2;background:url('../assets/contact-hero.webp') center right/cover no-repeat;opacity:.20;pointer-events:none}
+.qa-page-hero.qa-texture-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#111315e8 0%,#111315a6 43%,#11131520 100%);pointer-events:none}
+.qa-page-hero .container{position:relative;z-index:1;width:100%}
+.qa-page-hero h1{max-width:800px;color:#fff;text-shadow:0 2px 20px #0005}
+.qa-page-hero .qa-kicker{color:#e2bd77}
+.qa-page-hero .qa-intro{max-width:620px;color:#dedbd5}
+@media(max-width:700px){
+ .qa-page-hero.qa-texture-hero{min-height:340px;padding-block:48px}
+ .qa-page-hero.qa-texture-hero::before{background-position:65% center;opacity:.14}
+ .qa-page-hero.qa-texture-hero::after{background:linear-gradient(90deg,#111315df,#11131580)}
+ .qa-page-hero h1{font-size:clamp(30px,8vw,42px);line-height:1.15}
+ .qa-page-hero .qa-intro{font-size:16px;line-height:1.65}
+}

@@ -1,0 +1,8 @@
+.pp-exact .ec-hero{position:relative;isolation:isolate;background:#0b0d0f;padding:132px 0 72px;overflow:hidden}
+.pp-exact .ec-hero::before{content:"";position:absolute;inset:0;z-index:-2;background:url("assets/premiere-course-background.webp") center right/cover no-repeat;opacity:.72;pointer-events:none}
+.pp-exact .ec-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#0b0d0ff5 0%,#0b0d0fe6 28%,#0b0d0f9e 52%,#0b0d0f12 80%),linear-gradient(0deg,#0b0d0f 0%,transparent 28%);pointer-events:none}
+.pp-exact .ec-hero-grid{display:block;min-height:480px}
+.pp-exact .ec-hero-grid>div{max-width:660px;width:58%}
+.pp-exact .ec-hero .ec-lead{max-width:580px}
+@media(max-width:900px){.pp-exact .ec-hero-grid>div{width:70%}.pp-exact .ec-hero::after{background:linear-gradient(90deg,#0b0d0ff5,#0b0d0fba 65%,#0b0d0f55)}}
+@media(max-width:700px){.pp-exact .ec-hero{padding:106px 0 44px}.pp-exact .ec-hero-grid{min-height:0}.pp-exact .ec-hero-grid>div{width:100%;max-width:none}.pp-exact .ec-hero::before{background-position:72% center;opacity:.3}.pp-exact .ec-hero::after{background:linear-gradient(90deg,#0b0d0fea,#0b0d0fa6),linear-gradient(0deg,#0b0d0f,transparent 55%)}}

@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Supplied visual examples complement, but never impersonate, student reviews.
 (() => {
  const main=document.querySelector('main');
- if(!main||/\/(?:thank-you\/|404\.html|admin\.html|sitemap\.html)/.test(location.pathname))return;
+ if(!main||/\/(?:thank-you\/|404\.html|admin\.html|sitemap\.html)/.test(location.pathname)||(location.pathname||'').includes('/blog')||document.querySelector('link[rel="canonical"][href*="/blog/"]'))return;
  const script=[...document.scripts].find(s=>/\/site\.js(?:\?|$)/.test(s.src));
  if(!script||document.getElementById('qaa-editing-examples'))return;
  const root=new URL('.',script.src);

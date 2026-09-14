@@ -383,3 +383,50 @@ document.addEventListener('DOMContentLoaded', () => {
  }));
  reduced.addEventListener('change',()=>{if(reduced.matches){observer.disconnect();animations.forEach(animation=>animation.cancel());animations.clear();}});
 })();
+
+// Premium Scroll Reveal & Stagger Animation Controller
+(() => {
+ if (typeof window === 'undefined') return;
+ const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+ if (reduced.matches) return;
+
+ const initScrollAnimation = () => {
+  document.documentElement.classList.add('qa-animations-active');
+
+  const targets = document.querySelectorAll('.qa-scroll-reveal, .qa-scroll-stagger, .qa-scroll-zoom, .qa-scroll-left, .qa-scroll-right');
+  if (!targets.length) return;
+
+  if (!('IntersectionObserver' in window)) {
+   targets.forEach(el => el.classList.add('is-revealed'));
+   return;
+  }
+
+  const observer = new IntersectionObserver((entries, obs) => {
+   entries.forEach(entry => {
+    if (entry.isIntersecting) {
+     entry.target.classList.add('is-revealed');
+     obs.unobserve(entry.target);
+    }
+   });
+  }, {
+   root: null,
+   threshold: 0.08,
+   rootMargin: '0px 0px -40px 0px'
+  });
+
+  targets.forEach(el => {
+   const rect = el.getBoundingClientRect();
+   if (rect.top < window.innerHeight && rect.bottom > 0) {
+    el.classList.add('is-revealed');
+   } else {
+    observer.observe(el);
+   }
+  });
+ };
+
+ if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initScrollAnimation);
+ } else {
+  initScrollAnimation();
+ }
+})();

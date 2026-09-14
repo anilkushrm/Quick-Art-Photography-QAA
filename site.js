@@ -112,7 +112,7 @@
  // Keep the software showcase compact so the tools support the page instead of dominating it.
  document.querySelectorAll('section').forEach(section => {
   if (section.querySelector('h2')?.textContent.includes('Pro tools used by industry leaders')) section.classList.add('qa-tools-section');
-  if (section.querySelector('[data-thanks-heading]')) section.classList.add('qa-thanks-page');
+  if (section.querySelector('[data-thanks-heading]') || section.querySelector('[data-thanks-message]')) section.classList.add('qa-thanks-page');
  });
  const homeBadge = document.querySelector('.qa-home-hero .qa-hero-badge');
  if (homeBadge) homeBadge.textContent = 'New Batch Starting Soon · Wedding Editing & Album Design';
@@ -229,10 +229,15 @@
    wrap.append(link, map); contactLayout.append(wrap);
   }
  }
- const thanks = document.querySelector('[data-thanks-heading]');
- if (thanks) {
-  try {if (sessionStorage.getItem('qa-enquiry-received') === 'true') {thanks.textContent='Application received';const message=document.querySelector('[data-thanks-message]');if(message)message.textContent='Aapka form successfully submit ho gaya hai. Hamari team aapki enquiry ke baare mein aapse sampark karegi.';sessionStorage.removeItem('qa-enquiry-received');}} catch (_) {}
- }
+ try {
+  if (sessionStorage.getItem('qa-enquiry-received') === 'true') {
+   const thanks = document.querySelector('[data-thanks-heading]');
+   if (thanks) thanks.textContent = 'Application received';
+   const message = document.querySelector('[data-thanks-message]');
+   if (message) message.textContent = 'Aapka form successfully submit ho gaya hai. Hamari team aapki enquiry ke baare mein aapse sampark karegi.';
+   sessionStorage.removeItem('qa-enquiry-received');
+  }
+ } catch (_) {}
 })();
 document.addEventListener('DOMContentLoaded', () => {
  const hero = document.querySelector('.qa-master-hero');

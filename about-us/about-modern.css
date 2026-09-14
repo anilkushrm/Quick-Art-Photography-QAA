@@ -1,0 +1,74 @@
+/* Quick Art Photography Academy — Modern About Us Styles */
+.about-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 9999px;
+  background: #fbf7ee;
+  border: 1px solid rgba(216, 179, 106, 0.4);
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8f6723;
+}
+
+/* Hero Background Texture System */
+.about-hero-texture {
+  position: relative;
+  isolation: isolate;
+}
+.about-hero-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.32;
+  background-image: 
+    radial-gradient(circle at 50% 25%, rgba(216, 179, 106, 0.24), transparent 70%),
+    repeating-linear-gradient(115deg, transparent 0 6px, rgba(185, 153, 99, 0.12) 6px 7px),
+    linear-gradient(rgba(185, 153, 99, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(185, 153, 99, 0.09) 1px, transparent 1px);
+  background-size: 100% 100%, auto, 30px 30px, 30px 30px;
+  mask-image: radial-gradient(ellipse at center, #000 55%, transparent 95%);
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 55%, transparent 95%);
+}
+
+.about-card-hover {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+.about-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08);
+  border-color: rgba(216, 179, 106, 0.45);
+}
+
+.about-quote-box {
+  position: relative;
+  border-left: 3px solid #d8b36a;
+  background: linear-gradient(135deg, rgba(251, 247, 238, 0.8), rgba(255, 255, 255, 0.9));
+}
+
+@media (max-width: 640px) {
+  .about-hero-badge {
+    font-size: 10px;
+    padding: 5px 12px;
+    letter-spacing: 0.1em;
+  }
+}
+
+/* Responsive Mentor Header Toggle */
+@media (min-width: 1024px) {
+  .mentor-mobile-only {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .mentor-desktop-only {
+    display: none !important;
+  }
+}
+

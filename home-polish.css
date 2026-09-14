@@ -20,7 +20,7 @@
 .home-contact-copy>.qa-outline{background:#16b878;border-color:#16b878;color:#fff;box-shadow:0 10px 24px rgba(22,184,120,.2)}
 .home-contact-copy>.qa-outline:hover{background:#12a86d;border-color:#12a86d;color:#fff}
 .home-contact-form .qa-enquiry{display:grid;grid-template-columns:1fr 1fr;column-gap:22px}
-.home-contact-form .qa-enquiry>p,.home-contact-form .qa-enquiry>.qa-consent,.home-contact-form .qa-enquiry>.qa-demo,.home-contact-form .qa-enquiry>.qa-form-status{grid-column:1/-1}
+.home-contact-form .qa-enquiry>p,.home-contact-form .qa-enquiry>.qa-consent,.home-contact-form .qa-enquiry>.qa-demo,.home-contact-form .qa-enquiry>.qa-form-status,.home-contact-form .qa-enquiry>.qa-form-proof{grid-column:1/-1}
 .home-contact-form .qa-enquiry .qa-field:has(textarea){grid-column:1/-1}
 .home-contact-form>p:not(.qa-kicker){color:#c8c3bb;max-width:620px}
 .home-contact-form .qa-demo{margin-top:26px;text-decoration:none}

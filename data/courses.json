@@ -25,8 +25,14 @@
             "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
             "summary": "Introduction to wedding film editing workflows and your learning journey with mentor Anil Sharma.",
             "resources": [
-              { "name": "Course Syllabus PDF", "url": "downloads/course-details.pdf" },
-              { "name": "Quick Art Cinematic Wedding LUT (.cube)", "url": "downloads/QuickArt_Wedding_LUT.cube" }
+              {
+                "name": "Course Syllabus PDF",
+                "url": "downloads/course-details.pdf"
+              },
+              {
+                "name": "Quick Art Cinematic Wedding LUT (.cube)",
+                "url": "downloads/QuickArt_Wedding_LUT.cube"
+              }
             ]
           },
           {
@@ -37,7 +43,10 @@
             "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
             "summary": "How to handle 4K 10-bit wedding footage smoothly without lag using ProRes / CineForm proxies.",
             "resources": [
-              { "name": "Official Quick Art Course Guide (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Official Quick Art Course Guide (PDF)",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           },
           {
@@ -48,7 +57,10 @@
             "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
             "summary": "Syncing bride and groom mic audio with 3+ camera angles accurately using waveform sync.",
             "resources": [
-              { "name": "Multi-Cam Setup Checklist (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Multicam Sync Checklist (PDF)",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
@@ -60,23 +72,29 @@
           {
             "id": "les-pr-2-1",
             "title": "2.1 J-Cuts, L-Cuts & Invisible Transitions",
-            "duration": "21:15",
+            "duration": "18:20",
             "videoId": "demo-jcuts",
             "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-            "summary": "Techniques used in Bollywood and luxury wedding films to bridge scenes seamlessly.",
+            "summary": "Master emotional pacing and seamless narrative transitions during wedding rituals.",
             "resources": [
-              { "name": "Quick Art Cinematic 3D LUT (.cube)", "url": "downloads/QuickArt_Wedding_LUT.cube" }
+              {
+                "name": "Transition Pack Shortcuts",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           },
           {
             "id": "les-pr-2-2",
             "title": "2.2 Music Selection, Beat Matching & Pacing",
-            "duration": "28:40",
+            "duration": "21:15",
             "videoId": "demo-beatmatch",
             "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-            "summary": "How to pick romantic vs energetic wedding tracks and cut on beat without making it look robotic.",
+            "summary": "Choosing copyright-safe royal wedding tracks and cutting precisely on waveform rhythm peaks.",
             "resources": [
-              { "name": "Curated Wedding Music Tracklist (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Wedding Music Playlist Guide",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
@@ -88,23 +106,63 @@
           {
             "id": "les-pr-3-1",
             "title": "3.1 Indian Wedding Skin Tone Correction",
-            "duration": "26:50",
+            "duration": "28:40",
             "videoId": "demo-skintone",
             "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
-            "summary": "Mastering the HSL secondary qualifier to get glowing, natural Indian bride & groom skin tones.",
+            "summary": "Balancing yellow haldi light and harsh stage flashes with HSL secondary curves in Lumetri.",
             "resources": [
-              { "name": "Download Master 3D LUT (.cube)", "url": "downloads/QuickArt_Wedding_LUT.cube" }
+              {
+                "name": "Skin Tone Calibration Cheat Sheet",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           },
           {
             "id": "les-pr-3-2",
             "title": "3.2 Essential Sound & Audio Mastering",
-            "duration": "22:15",
+            "duration": "16:50",
             "videoId": "demo-audio",
             "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-            "summary": "Noise removal, vocal clarity, EQ, compression, and loudness normalization (-14 LUFS).",
+            "summary": "Cleaning background noise, applying dynamic audio ducking, and leveling bride/groom speeches.",
             "resources": [
-              { "name": "Audio Mixing Presets Reference (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Premiere Audio Presets (.prfpset)",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-pr-4",
+        "title": "Module 4: Wedding Teasers, Reels & Client Delivery",
+        "lessons": [
+          {
+            "id": "les-pr-4-1",
+            "title": "4.1 Complete 60-Second Viral Wedding Teaser Project",
+            "duration": "32:10",
+            "videoId": "demo-pr-teaser",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "summary": "Step-by-step editing of an authentic high-budget wedding teaser from scratch using raw multicam clips.",
+            "resources": [
+              {
+                "name": "Teaser Project Timeline Template",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-pr-4-2",
+            "title": "4.2 High-Retention Instagram 9:16 Reels & Export Presets",
+            "duration": "22:15",
+            "videoId": "demo-pr-reels",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "summary": "Vertical storytelling hooks, animated typography, and pristine 4K export presets for maximum client delight.",
+            "resources": [
+              {
+                "name": "Quick Art Instagram Export Preset",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
@@ -113,12 +171,22 @@
     "quiz": [
       {
         "question": "What is the primary benefit of creating proxies for 4K 10-bit wedding footage?",
-        "options": ["Faster exports", "Smooth timeline playback without dropped frames", "Higher dynamic range", "Automatic color grading"],
+        "options": [
+          "Faster exports",
+          "Smooth timeline playback without dropped frames",
+          "Higher dynamic range",
+          "Automatic color grading"
+        ],
         "answer": 1
       },
       {
         "question": "Which transition cuts the audio before the video changes in emotional wedding dialogue?",
-        "options": ["Cross Dissolve", "J-Cut", "L-Cut", "Dip to Black"],
+        "options": [
+          "Cross Dissolve",
+          "J-Cut",
+          "L-Cut",
+          "Dip to Black"
+        ],
         "answer": 1
       }
     ]
@@ -139,45 +207,102 @@
     "modules": [
       {
         "id": "mod-ed-1",
-        "title": "Module 1: EDIUS Core Setup & Ultra-Fast Workflow",
+        "title": "Module 1: EDIUS Pro Setup, GUI & Keyboard Speed Master",
         "lessons": [
           {
             "id": "les-ed-1-1",
             "title": "1.1 EDIUS Interface & Custom Keyboard Layout",
-            "duration": "16:20",
+            "duration": "18:40",
             "videoId": "demo-ed-interface",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-            "summary": "Configuring EDIUS for maximum timeline playback speed without dropping frames.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "summary": "Workspace customization, bin window organization, project settings (FHD/4K), and essential single-hand cutting shortcuts.",
             "resources": [
-              { "name": "Course Curriculum Brochure (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "EDIUS Pro Keyboard Map PDF",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           },
           {
             "id": "les-ed-1-2",
             "title": "1.2 Fast Cutting with Ripple & Quick Titler",
-            "duration": "25:40",
+            "duration": "22:15",
             "videoId": "demo-ed-titler",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4",
-            "summary": "Creating Hindi/English wedding title cards and fast cutting techniques for 2-3 hour long wedding functions.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "summary": "Real-time trimming without rendering, fast ripple edit mode, and designing elegant Hindi/English gold wedding titles.",
             "resources": [
-              { "name": "Titling & Layout Shortcuts Guide (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Quick Titler Gold Presets",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
       },
       {
         "id": "mod-ed-2",
-        "title": "Module 2: Wedding Song Projects & Mixing",
+        "title": "Module 2: Multi-Camera Wedding Cutting & Mixing",
         "lessons": [
           {
             "id": "les-ed-2-1",
-            "title": "2.1 Song Project Replacement & Auto-Sync",
-            "duration": "30:10",
-            "videoId": "demo-ed-songs",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-            "summary": "How to replace clips in pre-built wedding song projects in seconds for high-volume studio deliveries.",
+            "title": "2.1 Multi-Cam Setup & Realtime Switching",
+            "duration": "26:30",
+            "videoId": "demo-ed-multicam",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "summary": "Setting up 2 to 4 camera angles, audio waveform matching, and switching angles on the fly using numeric keys.",
             "resources": [
-              { "name": "Song Project Template Reference (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "EDIUS Multi-Cam Setup Guide",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-ed-2-2",
+            "title": "2.2 Song Project Replacement & Auto-Sync",
+            "duration": "24:10",
+            "videoId": "demo-ed-songs",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            "summary": "How to swap footage inside ready-made Indian wedding song project templates in seconds for same-day delivery.",
+            "resources": [
+              {
+                "name": "Wedding Song Project Structure",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-ed-3",
+        "title": "Module 3: Ceremony Sequences, Color & Fast Pendrive Delivery",
+        "lessons": [
+          {
+            "id": "les-ed-3-1",
+            "title": "3.1 Ceremony Sequences: Haldi, Mehndi & Baarat Entry",
+            "duration": "28:15",
+            "videoId": "demo-ed-ceremonies",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+            "summary": "Managing high-energy wedding events, song beat syncing, speed ramping for groom entry, and seamless transitions.",
+            "resources": [
+              {
+                "name": "Event Pacing Guide (PDF)",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-ed-3-2",
+            "title": "3.2 Intel Quick Sync Hardware Acceleration & USB Export",
+            "duration": "19:40",
+            "videoId": "demo-ed-export",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+            "summary": "Configuring GPU rendering, optimal H.264/H.265 bitrates for TV & mobile playback, and error-free pendrive structuring.",
+            "resources": [
+              {
+                "name": "EDIUS Hardware Render Settings",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
@@ -186,7 +311,12 @@
     "quiz": [
       {
         "question": "Why is EDIUS Pro preferred for full wedding function editing in India?",
-        "options": ["Real-time multi-track playback without rendering", "Cloud collaboration", "Web design support", "Subscription pricing"],
+        "options": [
+          "Real-time multi-track playback without rendering",
+          "Cloud collaboration",
+          "Web design support",
+          "Subscription pricing"
+        ],
         "answer": 0
       }
     ]
@@ -207,29 +337,102 @@
     "modules": [
       {
         "id": "mod-dr-1",
-        "title": "Module 1: Color Science & Node Architecture",
+        "title": "Module 1: DaVinci Color Management (RCM) & Node Architecture",
         "lessons": [
           {
             "id": "les-dr-1-1",
-            "title": "1.1 DaVinci Color Management (RCM) & Color Space Transform (CST)",
-            "duration": "22:15",
+            "title": "1.1 Color Management (RCM) & Color Space Transform (CST)",
+            "duration": "25:30",
             "videoId": "demo-dr-cst",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
-            "summary": "Converting Sony S-Log3, Canon C-Log, and Panasonic V-Log into Rec.709 with maximum dynamic range.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "summary": "Setting up DaVinci YRGB Color Managed timeline, converting Sony S-Log3, Canon C-Log, and Panasonic V-Log into Rec.709 cleanly.",
             "resources": [
-              { "name": "DaVinci LUT (.cube)", "url": "downloads/QuickArt_Wedding_LUT.cube" },
-              { "name": "Camera CST Cheatsheet (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "DaVinci Project Template (.drp)",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           },
           {
             "id": "les-dr-1-2",
-            "title": "1.2 Professional Node Tree Structure for Weddings",
-            "duration": "27:40",
+            "title": "1.2 Professional Fixed Node Tree Structure for Weddings",
+            "duration": "28:15",
             "videoId": "demo-dr-nodes",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
-            "summary": "Step-by-step fixed node tree: Exposure → Balance → Contrast → Look → Film Grain.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "summary": "Building a standardized 8-node workflow: Exposure, White Balance, Contrast, Skin Qualifier, Looks, and Grain.",
             "resources": [
-              { "name": "Quick Art PowerGrade Guide (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Quick Art PowerGrade Node Tree (.drx)",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-dr-2",
+        "title": "Module 2: Primary Wheels, Curves & Scopes Monitoring",
+        "lessons": [
+          {
+            "id": "les-dr-2-1",
+            "title": "2.1 Primary Wheels, Log Wheels & Waveform Scopes",
+            "duration": "22:45",
+            "videoId": "demo-dr-wheels",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "summary": "Master lift, gamma, gain, contrast, pivot, and RGB parade / waveform monitoring for accurate shadow and highlight roll-off.",
+            "resources": [
+              {
+                "name": "Scopes Reading Guide",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-dr-2-2",
+            "title": "2.2 Indian Wedding Skin Tone Matching on Vectorscope",
+            "duration": "30:20",
+            "videoId": "demo-dr-skintone",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            "summary": "Balancing complex Indian skin tones affected by yellow haldi, red lehengas, and colorful stage lighting with HSL qualifiers.",
+            "resources": [
+              {
+                "name": "Vectorscope Skin Calibration Chart",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-dr-3",
+        "title": "Module 3: Film Emulation, Magic Mask & Selling Custom LUTs",
+        "lessons": [
+          {
+            "id": "les-dr-3-1",
+            "title": "3.1 Power Windows, 3D Tracking & Magic Mask Face Refinement",
+            "duration": "24:50",
+            "videoId": "demo-dr-tracking",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+            "summary": "Subject isolation, face retouching, eye sharpening, and dynamic tracking on moving couples during wedding rituals.",
+            "resources": [
+              {
+                "name": "Tracking & Masking Hotkeys",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-dr-3-2",
+            "title": "3.2 Kodak 2383 Film Look, Halation & Custom 3D LUT Export",
+            "duration": "26:10",
+            "videoId": "demo-dr-lutexport",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+            "summary": "Crafting rich analog warmth, highlight glows, custom film grain, and exporting .cube LUTs to sell or use on set.",
+            "resources": [
+              {
+                "name": "Quick Art 3D Wedding LUT Pack (.cube)",
+                "url": "downloads/QuickArt_Wedding_LUT.cube"
+              }
             ]
           }
         ]
@@ -238,7 +441,12 @@
     "quiz": [
       {
         "question": "In DaVinci Resolve, what does CST stand for?",
-        "options": ["Color Saturation Tone", "Color Space Transform", "Cinematic Scene Texture", "Camera Sensor Timing"],
+        "options": [
+          "Color Saturation Tone",
+          "Color Space Transform",
+          "Cinematic Scene Texture",
+          "Camera Sensor Timing"
+        ],
         "answer": 1
       }
     ]
@@ -259,17 +467,20 @@
     "modules": [
       {
         "id": "mod-cw-1",
-        "title": "Module 1: Story Planning & Teaser Structure",
+        "title": "Module 1: Story Planning, Music Pacing & Teaser Architecture",
         "lessons": [
           {
             "id": "les-cw-1-1",
             "title": "1.1 The 60-Second Viral Wedding Reel Blueprint",
-            "duration": "20:30",
+            "duration": "21:30",
             "videoId": "demo-cw-reels",
             "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-            "summary": "How to hook the viewer in the first 3 seconds and maintain engagement throughout the wedding reel.",
+            "summary": "The exact structure that hooks viewers in 3 seconds: audio hooks, couple portrait reveal, ritual crescendo, and grand finale.",
             "resources": [
-              { "name": "Reel Storyboard Guide (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Wedding Teaser Storyboard Template",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           },
           {
@@ -278,9 +489,80 @@
             "duration": "23:45",
             "videoId": "demo-cw-drone",
             "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-            "summary": "Integrating aerial landscape shots with slow-motion gimbal bride entries smoothly.",
+            "summary": "Choreographing camera movement, parallax motion, speed ramping, and invisible cuts between aerial and ground footage.",
             "resources": [
-              { "name": "Cinematic Warm LUT (.cube)", "url": "downloads/QuickArt_Wedding_LUT.cube" }
+              {
+                "name": "Gimbal Shot Checklist",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-cw-2",
+        "title": "Module 2: Emotional Storytelling & Dialogue Layering",
+        "lessons": [
+          {
+            "id": "les-cw-2-1",
+            "title": "2.1 Vows, Speeches & Emotional Dialogue Layering",
+            "duration": "27:10",
+            "videoId": "demo-cw-vows",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "summary": "Weaving father-daughter speeches, bride vows, and priest chants into the visual timeline for deep emotional resonance.",
+            "resources": [
+              {
+                "name": "Dialogue Ducking Audio Presets",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-cw-2-2",
+            "title": "2.2 Grand Bride & Groom Entry Editing Masterclass",
+            "duration": "25:35",
+            "videoId": "demo-cw-entry",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            "summary": "Sound design impact, pyro smoke reveal pacing, beat drops, and multi-angle switching for unforgettable couple entries.",
+            "resources": [
+              {
+                "name": "Sound Effects (SFX) Wedding Starter Pack",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-cw-3",
+        "title": "Module 3: Complete 2-Minute Luxury Film & High-Ticket Delivery",
+        "lessons": [
+          {
+            "id": "les-cw-3-1",
+            "title": "3.1 Complete 2-Minute Luxury Wedding Film Edit from Scratch",
+            "duration": "35:40",
+            "videoId": "demo-cw-project",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+            "summary": "Real-world project walkthrough from opening drone shot to emotional credits roll using genuine Indian royal wedding raw clips.",
+            "resources": [
+              {
+                "name": "Project Project Media Guide",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-cw-3-2",
+            "title": "3.2 Luxury Presentation Packaging & Pendrive Delivery Standards",
+            "duration": "18:20",
+            "videoId": "demo-cw-delivery",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+            "summary": "Custom wooden box branding, personalized client video players, and upselling cinematic albums to increase booking value.",
+            "resources": [
+              {
+                "name": "Client Delivery Contract Template",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
@@ -289,7 +571,12 @@
     "quiz": [
       {
         "question": "What is the recommended duration for an Instagram wedding teaser reel?",
-        "options": ["30 to 60 seconds", "5 minutes", "15 minutes", "45 seconds minimum"],
+        "options": [
+          "30 to 60 seconds",
+          "5 minutes",
+          "15 minutes",
+          "45 seconds minimum"
+        ],
         "answer": 0
       }
     ]
@@ -310,39 +597,48 @@
     "modules": [
       {
         "id": "mod-ad-1",
-        "title": "Module 1: Layout Fundamentals & Grid Systems",
+        "title": "Module 1: Layout Fundamentals, Grid Systems & Safe Bleed",
         "lessons": [
           {
             "id": "les-ad-1-1",
             "title": "1.1 Album Sheet Sizes, Margins & Safe Bleed",
-            "duration": "18:20",
+            "duration": "18:40",
             "videoId": "demo-ad-margins",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-            "summary": "Setting up 12x36, 12x30 and 14x40 inch spreads with accurate safe margins for printing labs.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "summary": "Standard sizes: 12x36, 12x30, 14x40 at 300 DPI. Setting center fold creases and safe zones to ensure heads never get cut in the binding.",
             "resources": [
-              { "name": "Album Design Specifications Guide (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Standard Spread Ruler Templates (.psd)",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           },
           {
             "id": "les-ad-1-2",
             "title": "1.2 Modern Minimalist vs Traditional Designer Spread",
-            "duration": "24:15",
+            "duration": "22:15",
             "videoId": "demo-ad-minimalist",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-            "summary": "How modern luxury clients prefer clean negative space, storytelling collages, and elegant typography.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "summary": "Balancing negative space, typography, hero images, and supporting candid thumbnails without visual clutter.",
             "resources": [
-              { "name": "Quick Art Wedding Color Palette (.cube)", "url": "downloads/QuickArt_Wedding_LUT.cube" }
+              {
+                "name": "Minimalist Layout Grid Guides",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           },
           {
             "id": "les-ad-1-3",
             "title": "1.3 Reusable Photoshop Grid Templates & Smart Object Framework",
-            "duration": "21:40",
+            "duration": "25:30",
             "videoId": "demo-ad-grids",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-            "summary": "Creating fast drag-and-drop templates using smart objects and non-destructive layer masks.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "summary": "Building drag-and-drop Smart Object placeholders that allow you to design a 30-sheet album in under 2 hours.",
             "resources": [
-              { "name": "12x36 Master PSD Grid Template", "url": "downloads/course-details.pdf" }
+              {
+                "name": "50+ Free PSD 12x36 Wedding Spreads",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
@@ -356,21 +652,27 @@
             "title": "2.1 Frequency Separation & High-End Skin Retouching",
             "duration": "28:10",
             "videoId": "demo-ad-freqsep",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
-            "summary": "Separating skin texture from tone to clean blemishes while preserving natural Indian skin pores.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            "summary": "Separating skin texture from tone to remove blemishes and shine while retaining natural pores for razor-sharp album printing.",
             "resources": [
-              { "name": "Photoshop Frequency Separation Action (.atn)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Quick Art Frequency Separation Action (.atn)",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           },
           {
             "id": "les-ad-2-2",
             "title": "2.2 Color Matching Multiple Cameras Across the Spread",
-            "duration": "22:45",
+            "duration": "22:30",
             "videoId": "demo-ad-colormatch",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-            "summary": "Ensuring bride, groom and family skin tones match consistently across indoor and outdoor lighting.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+            "summary": "Ensuring bride lehenga color and skin tones look 100% consistent across different cameras and stage lighting on the same sheet.",
             "resources": [
-              { "name": "Print Color Calibration Guide (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Color Matching Calibration Action",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
@@ -382,23 +684,29 @@
           {
             "id": "les-ad-3-1",
             "title": "3.1 Haldi, Mehndi, Sangeet & Jaimala Sequence Pacing",
-            "duration": "25:50",
+            "duration": "26:40",
             "videoId": "demo-ad-sequence",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-            "summary": "Building emotion and chronology across a 40-sheet luxury wedding album.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+            "summary": "Story flow that moves naturally from playful haldi splashes to regal wedding vows with high emotional impact.",
             "resources": [
-              { "name": "Ritual Sequence Storyboard (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Ceremony Storyboard Blueprint",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           },
           {
             "id": "les-ad-3-2",
             "title": "3.2 Premium Acrylic, Leatherette & Foil Emboss Cover Design",
-            "duration": "20:15",
+            "duration": "24:15",
             "videoId": "demo-ad-covers",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4",
-            "summary": "Designing front covers, spines, and back wraps with bleed margins for acrylic and velvet binding.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+            "summary": "Designing luxury front covers, spine sizing calculations based on sheet thickness, and foil embossing vectors.",
             "resources": [
-              { "name": "Emboss & Spine Margin Spec Sheet (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Spine & Cover Dimension Calculator",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
@@ -410,23 +718,29 @@
           {
             "id": "les-ad-4-1",
             "title": "4.1 Canvera, Suba & Karizma Lab Color Profiles (sRGB vs CMYK)",
-            "duration": "16:30",
+            "duration": "23:50",
             "videoId": "demo-ad-profiles",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-            "summary": "Choosing correct ICC color profiles and soft proofing to ensure zero print darkening.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "summary": "Installing lab ICC profiles, soft-proofing on screen, avoiding dark printouts, and setting exact DPI output.",
             "resources": [
-              { "name": "Lab ICC Profile Cheatsheet (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Lab ICC Profiles & Soft Proofing Guide",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           },
           {
             "id": "les-ad-4-2",
             "title": "4.2 Digital Proofing via PDF & Client Approval Workflow",
-            "duration": "18:50",
+            "duration": "17:30",
             "videoId": "demo-ad-proofing",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
-            "summary": "Generating watermarked flipbook PDFs and client review links to speed up revisions.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "summary": "Creating password-protected digital flipbook PDFs so clients can approve page by page with zero reprint disputes.",
             "resources": [
-              { "name": "Client Album Contract & Approval Form (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Client Approval Sign-off Contract",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
@@ -435,27 +749,52 @@
     "quiz": [
       {
         "question": "What is the standard DPI resolution required for professional wedding album printing?",
-        "options": ["72 DPI", "150 DPI", "300 DPI", "600 DPI"],
+        "options": [
+          "72 DPI",
+          "150 DPI",
+          "300 DPI",
+          "600 DPI"
+        ],
         "answer": 2
       },
       {
         "question": "What is the most common full-spread sheet dimension used by Indian photo labs?",
-        "options": ["12x36 inches", "8x10 inches", "4x6 inches", "18x24 inches"],
+        "options": [
+          "12x36 inches",
+          "8x10 inches",
+          "4x6 inches",
+          "18x24 inches"
+        ],
         "answer": 0
       },
       {
         "question": "Which color profile is standard for Canvera and Karizma digital printing labs?",
-        "options": ["sRGB IEC61966-2.1", "ProPhoto RGB", "CMYK Generic Web", "Apple RGB"],
+        "options": [
+          "sRGB IEC61966-2.1",
+          "ProPhoto RGB",
+          "CMYK Generic Web",
+          "Apple RGB"
+        ],
         "answer": 0
       },
       {
         "question": "Why is Frequency Separation used in bridal portrait retouching?",
-        "options": ["To separate texture from color/tone for clean skin without blur", "To change background sky", "To compress JPEG size", "To apply watermarks"],
+        "options": [
+          "To separate texture from color/tone for clean skin without blur",
+          "To change background sky",
+          "To compress JPEG size",
+          "To apply watermarks"
+        ],
         "answer": 0
       },
       {
         "question": "How much bleed margin should be kept in the center gutter of an album sheet?",
-        "options": ["At least 0.5 inch safe zone to prevent faces getting cut in the fold", "Zero bleed is needed", "3 inches", "5 inches"],
+        "options": [
+          "At least 0.5 inch safe zone to prevent faces getting cut in the fold",
+          "Zero bleed is needed",
+          "3 inches",
+          "5 inches"
+        ],
         "answer": 0
       }
     ]
@@ -476,17 +815,102 @@
     "modules": [
       {
         "id": "mod-pw-1",
-        "title": "Module 1: Story Concept, Mood Boards & Location Recce",
+        "title": "Module 1: Story Concept, Mood Boards & Location Scouting",
         "lessons": [
           {
             "id": "les-pw-1-1",
             "title": "1.1 Client Consultation & Couple Personality Brief",
-            "duration": "16:40",
+            "duration": "20:30",
             "videoId": "demo-pw-concept",
             "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-            "summary": "Understanding client expectations and creating a customized thematic concept for pre-wedding films.",
+            "summary": "Brainstorming romantic vs dramatic concepts, creating client mood boards, and scouting budget locations in and around your city.",
             "resources": [
-              { "name": "Pre-Wedding Shoot Planner (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Pre-Wedding Client Brief Questionnaire",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-pw-1-2",
+            "title": "1.2 Wardrobe, Styling & Props That Enhance Romance",
+            "duration": "18:45",
+            "videoId": "demo-pw-wardrobe",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "summary": "Guiding couples on color harmony with backgrounds, avoiding busy patterns, and using smoke bombs, guitars, and vintage cars tastefully.",
+            "resources": [
+              {
+                "name": "Couple Wardrobe Color Palette Guide",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-pw-2",
+        "title": "Module 2: Posing Non-Models & Natural Couple Direction",
+        "lessons": [
+          {
+            "id": "les-pw-2-1",
+            "title": "2.1 50+ Natural, Candid & Romantic Poses",
+            "duration": "27:15",
+            "videoId": "demo-pw-poses",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "summary": "Techniques to break camera shyness, prompt natural laughter, dynamic walking shots, forehead kiss, and gentle hand placements.",
+            "resources": [
+              {
+                "name": "50 Printable Couple Posing Cards (PDF)",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-pw-2-2",
+            "title": "2.2 Golden Hour Lighting & Low-Light Sunset Silhouettes",
+            "duration": "24:30",
+            "videoId": "demo-pw-goldenhour",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            "summary": "Backlighting couples with natural rim sun flare, managing harsh afternoon light with diffusers, and exposing sunset silhouettes.",
+            "resources": [
+              {
+                "name": "Sun Flare Lighting Diagram",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-pw-3",
+        "title": "Module 3: Gimbal Movement, Teaser Editing & High-Ticket Packages",
+        "lessons": [
+          {
+            "id": "les-pw-3-1",
+            "title": "3.1 Gimbal Parallax, 360-Orbit & Reveal Movements",
+            "duration": "25:40",
+            "videoId": "demo-pw-gimbal",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+            "summary": "Executing butter-smooth walking balance, foreground reveals through trees, and fast tracking without camera micro-jitters.",
+            "resources": [
+              {
+                "name": "Gimbal Movement Cheatsheet",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-pw-3-2",
+            "title": "3.2 Packaging & Upselling Pre-Wedding Shoots (₹25k to ₹75k)",
+            "duration": "22:10",
+            "videoId": "demo-pw-pricing",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+            "summary": "How to package pre-wedding films as must-have additions to main wedding contracts and close clients at premium rates.",
+            "resources": [
+              {
+                "name": "Pre-Wedding Proposal PDF Template",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
@@ -495,7 +919,12 @@
     "quiz": [
       {
         "question": "When is the optimal natural lighting condition for pre-wedding outdoor romantic shots?",
-        "options": ["Mid-day 12 PM sun", "Golden Hour (Early Morning / Sunset)", "Pitch Dark", "Indoor Flash"],
+        "options": [
+          "Mid-day 12 PM sun",
+          "Golden Hour (Early Morning / Sunset)",
+          "Pitch Dark",
+          "Indoor Flash"
+        ],
         "answer": 1
       }
     ]
@@ -516,17 +945,68 @@
     "modules": [
       {
         "id": "mod-web-1",
-        "title": "Module 1: Domain, Hosting & Modern Portfolio Layouts",
+        "title": "Module 1: Domain, Fast Cloud Hosting & SSL Setup",
         "lessons": [
           {
             "id": "les-web-1-1",
             "title": "1.1 Choosing Brand Domains & High-Speed Hosting Setup",
-            "duration": "15:20",
+            "duration": "19:20",
             "videoId": "demo-web-domain",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-            "summary": "Step-by-step setup of your brand domain, SSL, and mobile responsive photography templates.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "summary": "Selecting .in vs .com brand names, configuring DNS records, activating free SSL certificates, and setting up professional business emails.",
             "resources": [
-              { "name": "Studio Website Blueprint (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Studio Website Launch Checklist",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-web-1-2",
+            "title": "1.2 High-Converting Portfolio Architecture & Hero Section",
+            "duration": "24:45",
+            "videoId": "demo-web-hero",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "summary": "Designing a homepage that hooks couples in 5 seconds: background video reels, clear value proposition, and prominent WhatsApp booking button.",
+            "resources": [
+              {
+                "name": "Photography Website Wireframe Kit",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-web-2",
+        "title": "Module 2: Client Proofing Galleries, WhatsApp Funnel & Local SEO",
+        "lessons": [
+          {
+            "id": "les-web-2-1",
+            "title": "2.1 Client Photo Proofing & Password-Protected Galleries",
+            "duration": "26:30",
+            "videoId": "demo-web-proofing",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "summary": "Creating private client portals where couples can view watermarked photos, select favorites with heart icons, and submit selection for album printing.",
+            "resources": [
+              {
+                "name": "Client Gallery Feature Code",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-web-2-2",
+            "title": "2.2 Local Google SEO (Ranking #1 for Wedding Photographers in Your City)",
+            "duration": "28:15",
+            "videoId": "demo-web-seo",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            "summary": "Google Business Profile optimization, ranking for local wedding keywords, meta tags, schema markup, and image WebP compression for sub-second speeds.",
+            "resources": [
+              {
+                "name": "Local SEO Ranking Action Plan",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
@@ -535,7 +1015,12 @@
     "quiz": [
       {
         "question": "Why is image compression crucial for photography website portfolios?",
-        "options": ["To lower photo quality", "To load pages instantly on mobile without lag", "It is not needed", "To prevent viewing"],
+        "options": [
+          "To lower photo quality",
+          "To load pages instantly on mobile without lag",
+          "It is not needed",
+          "To prevent viewing"
+        ],
         "answer": 1
       }
     ]
@@ -561,12 +1046,63 @@
           {
             "id": "les-dm-1-1",
             "title": "1.1 Running Wedding Lead Generation Ads with Positive ROI",
-            "duration": "21:30",
+            "duration": "25:40",
             "videoId": "demo-dm-meta",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-            "summary": "Targeting newly engaged couples, families, and high-income households within a 50km radius.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "summary": "Creating business ad accounts, pixel setup, targeting 'Newly Engaged (3 months)' life events, and radius targeting luxury wedding venues in your state.",
             "resources": [
-              { "name": "Ad Copy & Creative Templates (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "Meta Ads Audience Targeting Blueprint",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-dm-1-2",
+            "title": "1.2 Designing High-Converting Video Ads & Carousel Posters",
+            "duration": "23:15",
+            "videoId": "demo-dm-creatives",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "summary": "Scroll-stopping hooks, headline copy templates that filter out low-budget leads, and creating 15-second teaser reels specifically optimized for ad conversions.",
+            "resources": [
+              {
+                "name": "20+ Ready-to-Use Photoshop Ad Creative Templates",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-dm-2",
+        "title": "Module 2: Direct WhatsApp Ad Campaigns & Client Closing Scripts",
+        "lessons": [
+          {
+            "id": "les-dm-2-1",
+            "title": "2.1 Click-to-WhatsApp Ads Generating ₹15-₹30 Qualified Inquiries",
+            "duration": "26:50",
+            "videoId": "demo-dm-whatsapp",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "summary": "Setting up campaigns that send engaged couples straight to your WhatsApp inbox with pre-filled event dates and venue details.",
+            "resources": [
+              {
+                "name": "WhatsApp Ad Campaign Setup Guide",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-dm-2-2",
+            "title": "2.2 Closing High-Budget Clients on Call & Chat (Sales Scripts)",
+            "duration": "29:30",
+            "videoId": "demo-dm-sales",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            "summary": "Exact word-for-word scripts to answer 'What is your price?', overcoming budget objections, booking studio consultations, and collecting token advances.",
+            "resources": [
+              {
+                "name": "Studio Sales Objection Handler Script",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
@@ -575,7 +1111,12 @@
     "quiz": [
       {
         "question": "Which audience targeting feature is best for booking wedding photography clients?",
-        "options": ["Recently Engaged Life Event on Meta", "Random age targeting", "Gaming interests", "Travel blogs"],
+        "options": [
+          "Recently Engaged Life Event on Meta",
+          "Random age targeting",
+          "Gaming interests",
+          "Travel blogs"
+        ],
         "answer": 0
       }
     ]
@@ -600,13 +1141,64 @@
         "lessons": [
           {
             "id": "les-au-1-1",
-            "title": "1.1 Instant WhatsApp Reply & Inquiry Qualification",
-            "duration": "14:50",
+            "title": "1.1 Instant WhatsApp Reply & Inquiry Qualification Bot",
+            "duration": "24:15",
             "videoId": "demo-au-whatsapp",
-            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-            "summary": "Sending instant price quotation PDFs and booking calendars automatically when a client enquires.",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "summary": "Setting up Meta Cloud API, automated welcome messages, instant portfolio delivery within 5 seconds, and qualifying event dates without manual typing.",
             "resources": [
-              { "name": "Automation Funnel Scripts (PDF)", "url": "downloads/course-details.pdf" }
+              {
+                "name": "WhatsApp Bot Flow Chart (.json / diagram)",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-au-1-2",
+            "title": "1.2 Dynamic Quotation & PDF Invoice Generator on WhatsApp",
+            "duration": "22:40",
+            "videoId": "demo-au-quotes",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "summary": "Letting clients select their functions (Haldi, Sangeet, Wedding) and automatically sending them a customized, branded PDF quotation on WhatsApp.",
+            "resources": [
+              {
+                "name": "Automated Quote Template",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-au-2",
+        "title": "Module 2: Payment Reminders, Google Review Collectors & CRM Integration",
+        "lessons": [
+          {
+            "id": "les-au-2-1",
+            "title": "2.1 Automated Payment Reminders & Advance Token Tracking",
+            "duration": "21:30",
+            "videoId": "demo-au-payments",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "summary": "Friendly automated reminders 7 days before the wedding for token payments, and balance alerts upon teaser approval with zero awkwardness.",
+            "resources": [
+              {
+                "name": "Payment Follow-up Message Templates",
+                "url": "downloads/course-details.pdf"
+              }
+            ]
+          },
+          {
+            "id": "les-au-2-2",
+            "title": "2.2 Automated Post-Wedding 5-Star Google Review Collector",
+            "duration": "19:10",
+            "videoId": "demo-au-reviews",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            "summary": "Sending congratulatory messages 3 days after the event with a direct Google review link, scaling your studio to 100+ five-star ratings effortlessly.",
+            "resources": [
+              {
+                "name": "Review Collection Funnel Guide",
+                "url": "downloads/course-details.pdf"
+              }
             ]
           }
         ]
@@ -615,7 +1207,12 @@
     "quiz": [
       {
         "question": "What is the primary benefit of automated WhatsApp lead follow-ups for a photography business?",
-        "options": ["Higher conversion rate within 5 minutes of inquiry", "Higher phone bills", "Less communication", "More confusion"],
+        "options": [
+          "Higher conversion rate within 5 minutes of inquiry",
+          "Higher phone bills",
+          "Less communication",
+          "More confusion"
+        ],
         "answer": 0
       }
     ]

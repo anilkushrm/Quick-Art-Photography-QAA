@@ -338,6 +338,98 @@
             <!-- Dynamically populated collections -->
           </div>
         </div>
+
+        <!-- DIRECT VIDEO UPLOADER -->
+        <div style="margin-top:28px;border-top:1px solid var(--border);padding-top:20px">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div>
+              <h3 style="font-size:16px;margin:0">🚀 Direct Video Uploader to Bunny.net Stream</h3>
+              <p class="muted" style="margin:4px 0 0;font-size:12px">Apne computer se koi bhi MP4/MOV video seedhe Bunny.net CDN pe upload karein. Real-time progress bar ke sath upload hoga aur anti-piracy token lag jayega.</p>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;padding:20px;background:#fff;border:1px solid var(--border);border-radius:16px">
+            <div class="grid" style="grid-template-columns:1fr 1fr;gap:14px">
+              <div>
+                <label for="uploadCourseSelect">Select Target Course *</label>
+                <select id="uploadCourseSelect" onchange="onUploadCourseChange()">
+                  <option value="">-- Select Course --</option>
+                </select>
+              </div>
+              <div>
+                <label for="uploadLessonSelect">Target Lesson to Auto-Assign (Optional)</label>
+                <select id="uploadLessonSelect">
+                  <option value="">-- Don't assign automatically (just upload) --</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid" style="grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+              <div>
+                <label for="uploadVideoTitle">Video / Lesson Title *</label>
+                <input type="text" id="uploadVideoTitle" placeholder="e.g. 1.1 Premiere Pro Setup &amp; Ingestion" />
+              </div>
+              <div>
+                <label for="uploadVideoFile">Choose Video File (.mp4, .mov, .mkv) *</label>
+                <input type="file" id="uploadVideoFile" accept="video/*" onchange="onVideoFileChosen()" />
+              </div>
+            </div>
+
+            <!-- Upload Progress Bar & Status -->
+            <div id="uploadProgressBox" style="display:none;margin-top:16px;padding:14px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:12px">
+              <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:6px">
+                <span id="uploadStatusText">Uploading to Bunny.net CDN…</span>
+                <span id="uploadPercentText">0%</span>
+              </div>
+              <div style="width:100%;height:10px;background:#e2e8f0;border-radius:10px;overflow:hidden">
+                <div id="uploadProgressBar" style="width:0%;height:100%;background:linear-gradient(90deg, #c99738, #10b981);transition:width 0.2s"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:#64748b;margin-top:6px">
+                <span id="uploadBytesText">0 MB / 0 MB</span>
+                <span id="uploadSpeedText">-- MB/s</span>
+              </div>
+            </div>
+
+            <div style="margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+              <button type="button" onclick="startBunnyDirectUpload()" class="btn btn-gold" id="btnStartUpload" style="padding:10px 22px">
+                🚀 Start Upload to Bunny.net
+              </button>
+              <span class="muted" style="font-size:11.5px">⚡ Direct client-to-Bunny edge upload (VPS ki bandwidth bilkul use nahi hoti).</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- UPLOADED BUNNY VIDEOS LIST -->
+        <div style="margin-top:32px;border-top:1px solid var(--border);padding-top:20px">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div>
+              <h3 style="font-size:16px;margin:0">📹 Live Videos on Bunny.net Stream</h3>
+              <p class="muted" style="margin:4px 0 0;font-size:12px">All transcode-ready videos in your library. Preview them, copy IDs, or assign to any course lesson with 1-click.</p>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button type="button" onclick="loadBunnyVideosTable()" class="btn btn-outline" style="font-size:12px;padding:6px 14px">
+                🔄 Refresh Videos
+              </button>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:14px">
+            <table style="width:100%;font-size:12.5px;border-collapse:collapse">
+              <thead>
+                <tr style="background:#f8fafc;border-bottom:1px solid var(--border);text-align:left">
+                  <th style="padding:10px 14px">Video Title</th>
+                  <th style="padding:10px 14px">Duration</th>
+                  <th style="padding:10px 14px">Status</th>
+                  <th style="padding:10px 14px">Course / Folder</th>
+                  <th style="padding:10px 14px">Video ID (GUID)</th>
+                  <th style="padding:10px 14px;text-align:right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="bunnyVideosTbody">
+                <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">Click "Test Bunny.net Connection" or "Refresh Videos" to load videos.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -463,9 +555,30 @@
       </div>
 
       <div style="margin-top:20px;border-top:1px solid var(--border);padding-top:16px">
-        <h3 style="font-size:14px;margin-bottom:8px">Curriculum JSON Structure</h3>
-        <p class="muted" style="font-size:11px;margin-top:0">Modules and lessons (including videoId, duration, resources):</p>
-        <textarea id="courseModulesJson" rows="8" style="font-family:monospace;font-size:12px"></textarea>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          <div>
+            <h3 style="font-size:14px;margin:0">📚 Course Curriculum &amp; Video Lessons</h3>
+            <p class="muted" style="font-size:11px;margin:2px 0 0">Add modules and lessons. Paste Bunny video GUIDs directly into each lesson.</p>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button type="button" id="btnCurriculumVisual" onclick="switchCurriculumTab('visual')" class="btn-sm btn-gold" style="font-size:11px;padding:4px 10px">📝 Visual Builder</button>
+            <button type="button" id="btnCurriculumJson" onclick="switchCurriculumTab('json')" class="btn-sm btn-outline" style="font-size:11px;padding:4px 10px">{ } Raw JSON</button>
+          </div>
+        </div>
+
+        <!-- Visual Builder Container -->
+        <div id="curriculumVisualView">
+          <div id="curriculumModulesContainer" style="display:flex;flex-direction:column;gap:12px"></div>
+          <button type="button" onclick="addVisualModule()" class="btn btn-outline" style="margin-top:12px;font-size:11.5px;width:100%;justify-content:center;border-style:dashed">
+            + Add New Module
+          </button>
+        </div>
+
+        <!-- Raw JSON Container -->
+        <div id="curriculumJsonView" style="display:none">
+          <p class="muted" style="font-size:11px;margin-top:0">Advanced JSON editor (syncs automatically with Visual Builder):</p>
+          <textarea id="courseModulesJson" rows="10" style="font-family:monospace;font-size:11.5px"></textarea>
+        </div>
       </div>
 
       <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
@@ -573,6 +686,62 @@
         <div><b>Received:</b> <span id="lmReceived">—</span></div>
         <div><b>Webhook:</b> <span id="lmWebhook">—</span></div>
         <div><b>Lead ID:</b> <span id="lmId" style="font-family:monospace;font-size:10px">—</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bunny Video Preview Modal -->
+<div id="bunnyPreviewModal" class="modal" onclick="if(event.target.id==='bunnyPreviewModal')closeBunnyPreviewModal()">
+  <div class="modal-inner" style="max-width:820px;background:#0f172a;color:#fff;border:1px solid #334155">
+    <div class="modal-hdr" style="border-bottom:1px solid #334155">
+      <div>
+        <h2 id="previewModalTitle" style="margin:0;font-size:18px;color:#fff">▶ Bunny.net Video Stream Preview</h2>
+        <div id="previewModalSubtitle" style="color:#94a3b8;font-size:11.5px;margin-top:4px">Real-time anti-piracy signed token stream</div>
+      </div>
+      <button onclick="closeBunnyPreviewModal()" class="icon-btn" style="color:#fff;background:rgba(255,255,255,0.1)">✕</button>
+    </div>
+    <div class="modal-body" style="padding:16px">
+      <div style="position:relative;padding-top:56.25%;width:100%;border-radius:12px;overflow:hidden;background:#000;border:1px solid #1e293b">
+        <iframe id="bunnyPreviewIframe" src="" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:12px;color:#94a3b8;flex-wrap:wrap;gap:8px">
+        <span>Video GUID: <code id="previewModalVideoId" style="color:#c99738;background:#1e293b;padding:3px 8px;border-radius:6px;font-family:monospace"></code></span>
+        <button type="button" onclick="copyPreviewVideoId()" class="btn btn-outline" style="font-size:11px;padding:4px 12px;color:#fff;border-color:#475569">📋 Copy Video GUID</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Assign Bunny Video to Lesson Modal -->
+<div id="assignLessonModal" class="modal" onclick="if(event.target.id==='assignLessonModal')closeAssignLessonModal()">
+  <div class="modal-inner" style="max-width:560px">
+    <div class="modal-hdr">
+      <div>
+        <h2 style="margin:0;font-size:18px">⚡ Assign Video to Course Lesson</h2>
+        <div class="muted" style="font-size:12px;margin-top:4px">Attach Bunny.net video directly to curriculum</div>
+      </div>
+      <button onclick="closeAssignLessonModal()" class="icon-btn">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="assignVideoId" />
+      <input type="hidden" id="assignVideoDuration" />
+      <div style="padding:12px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:14px">
+        <div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;font-weight:600">Selected Bunny Video</div>
+        <div id="assignVideoTitleDisplay" style="font-weight:700;font-size:14px;color:var(--ink);margin-top:4px">—</div>
+        <div id="assignVideoIdDisplay" style="font-family:monospace;font-size:11px;color:#c99738;margin-top:2px">—</div>
+      </div>
+      <div>
+        <label>1. Select Course *</label>
+        <select id="assignCourseSelect" onchange="onAssignCourseChange()"></select>
+      </div>
+      <div style="margin-top:14px">
+        <label>2. Select Target Lesson *</label>
+        <select id="assignLessonSelect"></select>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+        <button type="button" onclick="closeAssignLessonModal()" class="btn btn-outline">Cancel</button>
+        <button type="button" onclick="confirmAssignVideoToLesson()" class="btn btn-gold" id="btnConfirmAssign">💾 Assign Video to Lesson</button>
       </div>
     </div>
   </div>
@@ -976,7 +1145,156 @@ function openAddCourseModal() {
       ]
     }
   ], null, 2);
+  switchCurriculumTab('visual');
   document.getElementById('lmsCourseModal').classList.add('show');
+}
+
+let currentCurriculumMode = 'visual';
+let currentEditingModules = [];
+
+function switchCurriculumTab(mode) {
+  currentCurriculumMode = mode;
+  const btnV = document.getElementById('btnCurriculumVisual');
+  const btnJ = document.getElementById('btnCurriculumJson');
+  const viewV = document.getElementById('curriculumVisualView');
+  const viewJ = document.getElementById('curriculumJsonView');
+
+  if (mode === 'visual') {
+    if (btnV) btnV.className = 'btn-sm btn-gold';
+    if (btnJ) btnJ.className = 'btn-sm btn-outline';
+    try {
+      const parsed = JSON.parse(document.getElementById('courseModulesJson').value.trim() || '[]');
+      currentEditingModules = parsed;
+      renderVisualCurriculum(currentEditingModules);
+    } catch(e){}
+    if (viewV) viewV.style.display = 'block';
+    if (viewJ) viewJ.style.display = 'none';
+  } else {
+    if (btnV) btnV.className = 'btn-sm btn-outline';
+    if (btnJ) btnJ.className = 'btn-sm btn-gold';
+    currentEditingModules = collectVisualCurriculum();
+    document.getElementById('courseModulesJson').value = JSON.stringify(currentEditingModules, null, 2);
+    if (viewV) viewV.style.display = 'none';
+    if (viewJ) viewJ.style.display = 'block';
+  }
+}
+
+function renderVisualCurriculum(modules) {
+  currentEditingModules = modules || [];
+  const container = document.getElementById('curriculumModulesContainer');
+  if (!container) return;
+
+  if (!currentEditingModules.length) {
+    container.innerHTML = '<div style="padding:16px;text-align:center;color:var(--muted);background:#f8fafc;border-radius:10px">No modules added yet. Click "+ Add New Module" below.</div>';
+    return;
+  }
+
+  container.innerHTML = currentEditingModules.map((m, mIdx) => {
+    const lessons = m.lessons || [];
+    return `
+      <div class="visual-module-card" data-midx="${mIdx}" style="border:1px solid var(--border);border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.03)">
+        <div style="background:#f8fafc;padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+          <span style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase">M${mIdx + 1}</span>
+          <input type="text" value="${escapeHtml(m.title || '')}" onchange="currentEditingModules[${mIdx}].title = this.value" placeholder="Module Title (e.g. Module 1: Getting Started)" style="flex:1;padding:6px 10px;font-size:12.5px;font-weight:600" />
+          <button type="button" onclick="removeVisualModule(${mIdx})" class="icon-btn" title="Delete Module" style="color:var(--red);font-size:13px">🗑</button>
+        </div>
+        <div style="padding:12px 14px">
+          <div style="display:flex;flex-direction:column;gap:8px" id="module-lessons-${mIdx}">
+            ${lessons.map((l, lIdx) => `
+              <div style="padding:10px;background:#fafafa;border:1px solid #f1f5f9;border-radius:8px;font-size:12px">
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                  <span style="font-weight:700;color:#64748b;min-width:28px">#${lIdx + 1}</span>
+                  <input type="text" value="${escapeHtml(l.title || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'title', this.value)" placeholder="Lesson Title" style="flex:2;min-width:180px;padding:6px 8px;font-size:12px" />
+                  <input type="text" value="${escapeHtml(l.duration || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'duration', this.value)" placeholder="Duration (e.g. 15:30)" style="width:90px;padding:6px 8px;font-size:12px" />
+                  <div style="display:flex;gap:4px;flex:2;min-width:180px">
+                    <input type="text" value="${escapeHtml(l.videoId || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'videoId', this.value)" placeholder="Bunny Video GUID" style="font-family:monospace;font-size:11px;padding:6px 8px;flex:1" />
+                    <button type="button" onclick="quickPickBunnyVideo(${mIdx}, ${lIdx})" class="btn btn-outline" style="padding:4px 8px;font-size:10px" title="Pick from Bunny library">⚡ Pick</button>
+                  </div>
+                  <button type="button" onclick="removeVisualLesson(${mIdx}, ${lIdx})" class="icon-btn" style="color:var(--red);font-size:12px" title="Remove lesson">✕</button>
+                </div>
+                <div style="margin-top:6px">
+                  <input type="text" value="${escapeHtml(l.summary || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'summary', this.value)" placeholder="Brief Lesson Summary / what is covered" style="width:100%;padding:4px 8px;font-size:11px;color:#475569" />
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <button type="button" onclick="addVisualLesson(${mIdx})" class="btn-sm btn-outline" style="margin-top:10px;font-size:11px;padding:4px 10px">
+            + Add Lesson to Module ${mIdx + 1}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateVisualLesson(mIdx, lIdx, key, val) {
+  if (currentEditingModules[mIdx] && currentEditingModules[mIdx].lessons[lIdx]) {
+    currentEditingModules[mIdx].lessons[lIdx][key] = val;
+  }
+}
+
+function addVisualModule() {
+  currentEditingModules.push({
+    id: 'mod-' + Date.now().toString(36),
+    title: 'New Module',
+    lessons: []
+  });
+  renderVisualCurriculum(currentEditingModules);
+}
+
+function removeVisualModule(mIdx) {
+  if (!confirm('Are you sure you want to remove this module and all its lessons?')) return;
+  currentEditingModules.splice(mIdx, 1);
+  renderVisualCurriculum(currentEditingModules);
+}
+
+function addVisualLesson(mIdx) {
+  if (!currentEditingModules[mIdx]) return;
+  if (!currentEditingModules[mIdx].lessons) currentEditingModules[mIdx].lessons = [];
+  const num = currentEditingModules[mIdx].lessons.length + 1;
+  currentEditingModules[mIdx].lessons.push({
+    id: 'les-' + Date.now().toString(36) + '-' + num,
+    title: `${mIdx + 1}.${num} New Lesson`,
+    duration: '15:00',
+    videoId: '',
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    summary: '',
+    resources: []
+  });
+  renderVisualCurriculum(currentEditingModules);
+}
+
+function removeVisualLesson(mIdx, lIdx) {
+  if (currentEditingModules[mIdx] && currentEditingModules[mIdx].lessons) {
+    currentEditingModules[mIdx].lessons.splice(lIdx, 1);
+    renderVisualCurriculum(currentEditingModules);
+  }
+}
+
+function collectVisualCurriculum() {
+  return currentEditingModules;
+}
+
+function quickPickBunnyVideo(mIdx, lIdx) {
+  if (!allBunnyVideos.length) {
+    toast('No Bunny videos loaded yet. Open Bunny.net tab and click Refresh Videos.', false);
+    return;
+  }
+  const titles = allBunnyVideos.map((v, i) => `${i + 1}. ${v.title} (${v.guid.slice(0, 8)}…)`).join('\n');
+  const sel = prompt(`Select video number to attach to this lesson:\n\n${titles}\n\nEnter number (1-${allBunnyVideos.length}):`);
+  if (!sel) return;
+  const idx = parseInt(sel.trim(), 10) - 1;
+  if (allBunnyVideos[idx]) {
+    const chosen = allBunnyVideos[idx];
+    updateVisualLesson(mIdx, lIdx, 'videoId', chosen.guid);
+    if (chosen.length) {
+      const m = Math.floor(chosen.length / 60);
+      const s = chosen.length % 60;
+      updateVisualLesson(mIdx, lIdx, 'duration', `${m}:${s < 10 ? '0' : ''}${s}`);
+    }
+    renderVisualCurriculum(currentEditingModules);
+    toast(`Attached video: ${chosen.title}`);
+  }
 }
 
 function openEditCourseModal(courseId) {
@@ -990,6 +1308,8 @@ function openEditCourseModal(courseId) {
   document.getElementById('courseThumbInput').value = course.thumbnail || '';
   document.getElementById('courseDescInput').value = course.description || '';
   document.getElementById('courseModulesJson').value = JSON.stringify(course.modules || [], null, 2);
+  currentEditingModules = JSON.parse(JSON.stringify(course.modules || []));
+  switchCurriculumTab('visual');
   document.getElementById('lmsCourseModal').classList.add('show');
 }
 
@@ -1003,11 +1323,15 @@ async function saveCourseModal() {
   if (!title) { toast('Please enter a course title', false); return; }
 
   let modules = [];
-  try {
-    modules = JSON.parse(document.getElementById('courseModulesJson').value.trim() || '[]');
-  } catch (e) {
-    toast('Invalid JSON syntax in modules/lessons field', false);
-    return;
+  if (currentCurriculumMode === 'visual') {
+    modules = collectVisualCurriculum();
+  } else {
+    try {
+      modules = JSON.parse(document.getElementById('courseModulesJson').value.trim() || '[]');
+    } catch (e) {
+      toast('Invalid JSON syntax in modules/lessons field', false);
+      return;
+    }
   }
 
   const courseData = {
@@ -1225,6 +1549,8 @@ async function testBunnyConnection(silent = false) {
       document.getElementById('bunny-video-count').textContent = res.videoCount ?? 0;
       document.getElementById('bunny-trial-bal').textContent = res.trialBalance || '$50.00';
       loadBunnyCollections();
+      loadBunnyVideosTable();
+      populateUploadCourseDropdown();
       if (!silent) toast('✅ Successfully verified Bunny.net Stream connection!');
     } else {
       badge.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444"></span> Connection Issue';
@@ -1273,6 +1599,353 @@ async function loadBunnyCollections() {
     `).join('');
   } catch (e) {
     grid.innerHTML = `<p class="muted" style="color:var(--red)">Failed to load folders: ${e.message}</p>`;
+  }
+}
+
+// 4.1 Bunny.net Video Management & Direct Upload
+let allBunnyVideos = [];
+
+async function loadBunnyVideosTable() {
+  const tbody = document.getElementById('bunnyVideosTbody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">Loading live videos from Bunny.net…</td></tr>';
+  try {
+    const res = await lmsAdmin('list-bunny-videos');
+    allBunnyVideos = res.videos || [];
+    renderBunnyVideosTable();
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--red)">Failed to load Bunny videos: ${escapeHtml(err.message)}</td></tr>`;
+  }
+}
+
+function renderBunnyVideosTable() {
+  const tbody = document.getElementById('bunnyVideosTbody');
+  if (!tbody) return;
+  if (!allBunnyVideos.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">Abhi tak Bunny.net pe koi video upload nahi hui hai. Upar diye uploader se video upload karein.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = allBunnyVideos.map(v => {
+    let durStr = '--';
+    if (v.length) {
+      const mins = Math.floor(v.length / 60);
+      const secs = v.length % 60;
+      durStr = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    let statusBadge = '<span class="badge" style="background:#e2e8f0;color:#334155">Draft</span>';
+    if (v.status === 1) {
+      statusBadge = '<span class="badge" style="background:#dbeafe;color:#1e40af">Uploaded</span>';
+    } else if (v.status === 2 || v.status === 3) {
+      statusBadge = '<span class="badge" style="background:#fef3c7;color:#92400e">⚡ Transcoding</span>';
+    } else if (v.status === 4) {
+      statusBadge = '<span class="badge" style="background:#dcfce7;color:#166534">✓ Ready &amp; Encoded</span>';
+    } else if (v.status === 5) {
+      statusBadge = '<span class="badge" style="background:#fee2e2;color:#991b1b">Failed</span>';
+    }
+
+    let courseName = v.courseKey || 'General Library';
+    if (allLmsCourses.length) {
+      const matchC = allLmsCourses.find(c => c.id === v.courseKey);
+      if (matchC) courseName = matchC.title;
+    }
+
+    const thumbUrl = v.thumbnailFileName ? `https://vz-4b5caf84-253.b-cdn.net/${v.guid}/${v.thumbnailFileName}` : '';
+
+    return `
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:10px 14px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:48px;height:32px;background:#0f172a;border-radius:6px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+              ${thumbUrl ? `<img src="${escapeHtml(thumbUrl)}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'" />` : '<span style="font-size:14px">📹</span>'}
+            </div>
+            <div>
+              <b style="color:var(--ink)">${escapeHtml(v.title || 'Untitled Video')}</b>
+              <div class="muted" style="font-size:11px">${v.views || 0} views · ${( (v.storageSize||0) / (1024*1024) ).toFixed(1)} MB</div>
+            </div>
+          </div>
+        </td>
+        <td style="padding:10px 14px"><b>${durStr}</b></td>
+        <td style="padding:10px 14px">${statusBadge}</td>
+        <td style="padding:10px 14px"><span style="font-size:11.5px;color:#475569">${escapeHtml(courseName)}</span></td>
+        <td style="padding:10px 14px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <code style="font-family:monospace;font-size:11px;background:#f1f5f9;padding:2px 6px;border-radius:4px" title="${v.guid}">${v.guid.slice(0, 8)}…</code>
+            <button type="button" class="btn-sm btn-outline" style="font-size:10px;padding:2px 6px" onclick="navigator.clipboard.writeText('${v.guid}');toast('📋 Video GUID Copied!')">Copy</button>
+          </div>
+        </td>
+        <td style="padding:10px 14px;text-align:right">
+          <div style="display:inline-flex;gap:6px">
+            <button type="button" onclick="openBunnyPreviewModal('${v.guid}', '${escapeHtml(v.title || '')}')" class="btn-sm btn-outline" style="font-size:11px;padding:4px 10px">▶ Preview</button>
+            <button type="button" onclick="openAssignLessonModal('${v.guid}', '${escapeHtml(v.title || '')}', '${v.length || 0}')" class="btn-sm btn-gold" style="font-size:11px;padding:4px 10px">⚡ Assign</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function populateUploadCourseDropdown() {
+  const sel = document.getElementById('uploadCourseSelect');
+  if (!sel) return;
+  if (!allLmsCourses.length) {
+    lmsAdmin('get-courses').then(res => {
+      allLmsCourses = res.courses || [];
+      populateUploadCourseDropdown();
+    }).catch(()=>{});
+    return;
+  }
+  sel.innerHTML = '<option value="">-- Select Target Course --</option>' + allLmsCourses.map(c => `
+    <option value="${c.id}">${escapeHtml(c.title)}</option>
+  `).join('');
+}
+
+function onUploadCourseChange() {
+  const courseId = document.getElementById('uploadCourseSelect').value;
+  const lessonSel = document.getElementById('uploadLessonSelect');
+  if (!lessonSel) return;
+  lessonSel.innerHTML = '<option value="">-- Don\'t assign automatically (just upload) --</option>';
+  if (!courseId) return;
+
+  const course = allLmsCourses.find(c => c.id === courseId);
+  if (!course || !course.modules) return;
+
+  course.modules.forEach(m => {
+    (m.lessons || []).forEach(l => {
+      lessonSel.innerHTML += `<option value="${l.id}">${escapeHtml(m.title)} → ${escapeHtml(l.title)}</option>`;
+    });
+  });
+}
+
+function onVideoFileChosen() {
+  const fileInput = document.getElementById('uploadVideoFile');
+  const titleInput = document.getElementById('uploadVideoTitle');
+  if (fileInput && fileInput.files && fileInput.files[0] && !titleInput.value.trim()) {
+    const name = fileInput.files[0].name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+    titleInput.value = name;
+  }
+}
+
+async function startBunnyDirectUpload() {
+  const courseId = document.getElementById('uploadCourseSelect').value;
+  const lessonId = document.getElementById('uploadLessonSelect').value;
+  const title = document.getElementById('uploadVideoTitle').value.trim();
+  const fileInput = document.getElementById('uploadVideoFile');
+  const file = fileInput.files ? fileInput.files[0] : null;
+
+  if (!title) { toast('Please enter a video or lesson title', false); return; }
+  if (!file) { toast('Please select an MP4 / MOV video file to upload', false); return; }
+
+  let collectionId = '';
+  try {
+    const sRes = await lmsAdmin('get-lms-settings');
+    const cols = sRes.settings?.collections || {};
+    if (courseId && cols[courseId]) collectionId = cols[courseId];
+  } catch(e){}
+
+  const btn = document.getElementById('btnStartUpload');
+  const progressBox = document.getElementById('uploadProgressBox');
+  const progressBar = document.getElementById('uploadProgressBar');
+  const statusText = document.getElementById('uploadStatusText');
+  const percentText = document.getElementById('uploadPercentText');
+  const bytesText = document.getElementById('uploadBytesText');
+  const speedText = document.getElementById('uploadSpeedText');
+
+  btn.disabled = true;
+  btn.textContent = 'Initializing Bunny Upload…';
+  progressBox.style.display = 'block';
+  progressBar.style.width = '2%';
+  statusText.textContent = 'Creating video container on Bunny.net Stream…';
+
+  try {
+    const createRes = await lmsAdmin('create-bunny-video', {
+      method: 'POST',
+      body: { title, collectionId }
+    });
+
+    if (!createRes.ok || !createRes.videoId) {
+      throw new Error(createRes.error || 'Could not create video on Bunny.net');
+    }
+
+    const videoId = createRes.videoId;
+    const libraryId = createRes.libraryId || '755385';
+    const uploadApiKey = createRes.uploadApiKey;
+
+    statusText.textContent = `Uploading ${(file.size / (1024*1024)).toFixed(1)} MB to Bunny.net CDN…`;
+
+    await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      const startTime = Date.now();
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const percent = Math.round((e.loaded / e.total) * 100);
+          progressBar.style.width = percent + '%';
+          percentText.textContent = percent + '%';
+
+          const loadedMB = (e.loaded / (1024 * 1024)).toFixed(1);
+          const totalMB = (e.total / (1024 * 1024)).toFixed(1);
+          bytesText.textContent = `${loadedMB} MB / ${totalMB} MB`;
+
+          const elapsedSec = (Date.now() - startTime) / 1000;
+          if (elapsedSec > 0.5) {
+            const speedMbps = ((e.loaded / (1024 * 1024)) / elapsedSec).toFixed(1);
+            speedText.textContent = `${speedMbps} MB/s`;
+          }
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(xhr.response);
+        } else {
+          reject(new Error(`Bunny direct upload failed with status HTTP ${xhr.status}`));
+        }
+      };
+
+      xhr.onerror = () => reject(new Error('Network error during direct video upload'));
+      xhr.ontimeout = () => reject(new Error('Upload timed out'));
+
+      xhr.open('PUT', `https://video.bunnycdn.com/library/${libraryId}/videos/${videoId}`);
+      xhr.setRequestHeader('AccessKey', uploadApiKey);
+      xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+      xhr.send(file);
+    });
+
+    if (courseId && lessonId) {
+      statusText.textContent = 'Assigning video to course lesson…';
+      await lmsAdmin('assign-lesson-video', {
+        method: 'POST',
+        body: { courseId, lessonId, videoId }
+      });
+      toast(`🎉 Video uploaded and assigned to lesson!`);
+    } else {
+      toast(`🎉 Video uploaded successfully to Bunny.net! (ID: ${videoId})`);
+    }
+
+    progressBar.style.width = '100%';
+    percentText.textContent = '100%';
+    statusText.textContent = '✅ Upload Complete! Bunny is now transcoding to 360p, 720p, 1080p.';
+
+    fileInput.value = '';
+    document.getElementById('uploadVideoTitle').value = '';
+
+    loadBunnyVideosTable();
+    loadBunnyCollections();
+    loadLmsCourses();
+
+  } catch (err) {
+    statusText.textContent = `❌ Upload failed: ${err.message}`;
+    progressBar.style.background = '#ef4444';
+    toast(`Upload failed: ${err.message}`, false);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🚀 Start Upload to Bunny.net';
+  }
+}
+
+// Preview Modal
+async function openBunnyPreviewModal(videoId, title) {
+  const modal = document.getElementById('bunnyPreviewModal');
+  const iframe = document.getElementById('bunnyPreviewIframe');
+  document.getElementById('previewModalTitle').textContent = `▶ ${title || 'Video Preview'}`;
+  document.getElementById('previewModalVideoId').textContent = videoId;
+  iframe.src = 'about:blank';
+  modal.classList.add('show');
+
+  try {
+    const res = await lmsAdmin(`get-bunny-preview&videoId=${encodeURIComponent(videoId)}`);
+    if (res.ok && res.embedUrl) {
+      iframe.src = res.embedUrl;
+    } else {
+      toast(res.error || 'Failed to generate preview URL', false);
+    }
+  } catch (err) {
+    toast(`Preview error: ${err.message}`, false);
+  }
+}
+
+function closeBunnyPreviewModal() {
+  const iframe = document.getElementById('bunnyPreviewIframe');
+  if (iframe) iframe.src = 'about:blank';
+  document.getElementById('bunnyPreviewModal').classList.remove('show');
+}
+
+function copyPreviewVideoId() {
+  const vid = document.getElementById('previewModalVideoId').textContent;
+  if (vid) {
+    navigator.clipboard.writeText(vid);
+    toast('📋 Video GUID Copied!');
+  }
+}
+
+// Assign Modal
+function openAssignLessonModal(videoId, title, duration) {
+  document.getElementById('assignVideoId').value = videoId;
+  document.getElementById('assignVideoDuration').value = duration || '';
+  document.getElementById('assignVideoTitleDisplay').textContent = title || 'Untitled Video';
+  document.getElementById('assignVideoIdDisplay').textContent = videoId;
+
+  const selC = document.getElementById('assignCourseSelect');
+  selC.innerHTML = '<option value="">-- Select Course --</option>' + allLmsCourses.map(c => `
+    <option value="${c.id}">${escapeHtml(c.title)}</option>
+  `).join('');
+
+  onAssignCourseChange();
+  document.getElementById('assignLessonModal').classList.add('show');
+}
+
+function onAssignCourseChange() {
+  const courseId = document.getElementById('assignCourseSelect').value;
+  const selL = document.getElementById('assignLessonSelect');
+  selL.innerHTML = '';
+  if (!courseId) {
+    selL.innerHTML = '<option value="">-- Select a course first --</option>';
+    return;
+  }
+  const course = allLmsCourses.find(c => c.id === courseId);
+  if (!course || !course.modules) return;
+
+  course.modules.forEach(m => {
+    (m.lessons || []).forEach(l => {
+      selL.innerHTML += `<option value="${l.id}">${escapeHtml(m.title)} → ${escapeHtml(l.title)} ${l.videoId ? `[Current: ${l.videoId.slice(0,8)}…]` : '[No Video]'}</option>`;
+    });
+  });
+}
+
+function closeAssignLessonModal() {
+  document.getElementById('assignLessonModal').classList.remove('show');
+}
+
+async function confirmAssignVideoToLesson() {
+  const courseId = document.getElementById('assignCourseSelect').value;
+  const lessonId = document.getElementById('assignLessonSelect').value;
+  const videoId = document.getElementById('assignVideoId').value;
+  const duration = document.getElementById('assignVideoDuration').value;
+
+  if (!courseId || !lessonId || !videoId) {
+    toast('Please select both a course and a lesson', false);
+    return;
+  }
+
+  const btn = document.getElementById('btnConfirmAssign');
+  btn.disabled = true;
+  btn.textContent = 'Assigning…';
+
+  try {
+    await lmsAdmin('assign-lesson-video', {
+      method: 'POST',
+      body: { courseId, lessonId, videoId, duration }
+    });
+    toast('✅ Video successfully assigned to lesson!');
+    closeAssignLessonModal();
+    loadLmsCourses();
+  } catch (err) {
+    toast(`Failed to assign: ${err.message}`, false);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💾 Assign Video to Lesson';
   }
 }
 

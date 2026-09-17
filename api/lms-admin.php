@@ -273,21 +273,28 @@ if ($action === 'list-bunny-videos' && $method === 'GET') {
     $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
     $libraryId = $settings['bunnyLibraryId'] ?? '755385';
     $apiKey = $settings['bunnyApiKey'] ?? '';
+    $collectionMap = array_flip($settings['collections'] ?? []);
 
-    $ch = curl_init("https://video.bunnycdn.com/library/{$libraryId}/videos?page=1&itemsPerPage=50");
+    $ch = curl_init("https://video.bunnycdn.com/library/{$libraryId}/videos?page=1&itemsPerPage=100");
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         "AccessKey: {$apiKey}",
         "Accept: application/json"
     ]);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 12);
     $res = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
     if ($httpCode === 200 && $res) {
         $data = json_decode($res, true);
-        json_ok(['videos' => $data['items'] ?? [], 'total' => $data['totalItems'] ?? 0]);
+        $items = $data['items'] ?? [];
+        foreach ($items as &$item) {
+            $colId = $item['collectionId'] ?? '';
+            $item['courseKey'] = $collectionMap[$colId] ?? '';
+        }
+        unset($item);
+        json_ok(['videos' => $items, 'total' => $data['totalItems'] ?? count($items)]);
     } else {
         json_ok(['videos' => [], 'total' => 0]);
     }
@@ -337,7 +344,7 @@ if ($action === 'create-bunny-video' && $method === 'POST') {
         "Content-Type: application/json",
         "Accept: application/json"
     ]);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 12);
     $res = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
@@ -348,11 +355,75 @@ if ($action === 'create-bunny-video' && $method === 'POST') {
             'created' => true,
             'videoId' => $video['guid'] ?? '',
             'libraryId' => $libraryId,
+            'uploadApiKey' => $apiKey,
             'title' => $video['title'] ?? $title
         ]);
     } else {
         json_err('Failed to create video on Bunny.net (HTTP ' . $httpCode . ')', 500);
     }
+}
+
+// 13. Assign Bunny Video to Course Lesson
+if ($action === 'assign-lesson-video' && $method === 'POST') {
+    $body = read_json_body();
+    $courseId = trim($body['courseId'] ?? '');
+    $lessonId = trim($body['lessonId'] ?? '');
+    $videoId  = trim($body['videoId'] ?? '');
+    $duration = trim($body['duration'] ?? '');
+
+    if (!$courseId || !$lessonId || !$videoId) {
+        json_err('courseId, lessonId, and videoId are required', 400);
+    }
+
+    $courses = get_all_courses();
+    $updated = false;
+    foreach ($courses as &$c) {
+        if ($c['id'] === $courseId) {
+            foreach ($c['modules'] as &$m) {
+                foreach ($m['lessons'] as &$l) {
+                    if ($l['id'] === $lessonId) {
+                        $l['videoId'] = $videoId;
+                        if ($duration) $l['duration'] = $duration;
+                        $updated = true;
+                        break 3;
+                    }
+                }
+            }
+        }
+    }
+    unset($c, $m, $l);
+
+    if (!$updated) {
+        json_err('Course or Lesson not found', 404);
+    }
+
+    save_all_courses($courses);
+    json_ok(['updated' => true, 'message' => "Video {$videoId} successfully assigned to {$lessonId}"]);
+}
+
+// 14. Get Signed Bunny Video Preview for Admin
+if ($action === 'get-bunny-preview' && ($method === 'GET' || $method === 'POST')) {
+    $videoId = trim($_GET['videoId'] ?? ($_POST['videoId'] ?? ''));
+    if (!$videoId) {
+        $body = read_json_body();
+        $videoId = trim($body['videoId'] ?? '');
+    }
+    if (!$videoId) json_err('videoId is required', 400);
+
+    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $libraryId = $settings['bunnyLibraryId'] ?? '755385';
+    $tokenKey  = $settings['bunnyTokenAuthKey'] ?? '';
+
+    $expires = time() + 3600 * 4; // 4 hours
+    $hashString = $tokenKey . $videoId . $expires;
+    $token = hash('sha256', $hashString);
+    $embedUrl = "https://iframe.mediadelivery.net/embed/{$libraryId}/{$videoId}?token={$token}&expires={$expires}";
+
+    json_ok([
+        'videoId' => $videoId,
+        'embedUrl' => $embedUrl,
+        'expires' => $expires
+    ]);
 }
 
 json_err('Unknown action', 404);

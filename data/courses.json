@@ -1,0 +1,348 @@
+[
+  {
+    "id": "course-premiere-pro",
+    "slug": "premiere-pro-course",
+    "title": "Adobe Premiere Pro Masterclass",
+    "subtitle": "Professional Wedding Filmmaking & Video Editing Workflow",
+    "category": "Video Editing",
+    "level": "Beginner to Advanced",
+    "duration": "18 Hours",
+    "price": 4999,
+    "originalPrice": 9999,
+    "thumbnail": "assets/premiere-pro-hero-640.webp",
+    "badge": "Flagship Course",
+    "description": "Master Adobe Premiere Pro from setup to client delivery. Learn cutting techniques, multicam sync, audio cleaning, color correction, wedding teasers, and reel creation.",
+    "modules": [
+      {
+        "id": "mod-pr-1",
+        "title": "Module 1: Interface, Project Setup & Media Organization",
+        "lessons": [
+          {
+            "id": "les-pr-1-1",
+            "title": "1.1 Welcome & Course Roadmap",
+            "duration": "12:45",
+            "videoId": "demo-intro",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "summary": "Introduction to wedding film editing workflows and your learning journey with mentor Anil Sharma.",
+            "resources": [
+              { "name": "Course Syllabus PDF", "url": "downloads/course-details.pdf" },
+              { "name": "Quick Art Cinematic Wedding LUT (.cube)", "url": "downloads/QuickArt_Wedding_LUT.cube" }
+            ]
+          },
+          {
+            "id": "les-pr-1-2",
+            "title": "1.2 Project Setup, Ingestion & Proxy Workflow",
+            "duration": "24:10",
+            "videoId": "demo-proxy",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "summary": "How to handle 4K 10-bit wedding footage smoothly without lag using ProRes / CineForm proxies.",
+            "resources": [
+              { "name": "Official Quick Art Course Guide (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          },
+          {
+            "id": "les-pr-1-3",
+            "title": "1.3 Multi-Camera Audio & Video Synchronization",
+            "duration": "19:30",
+            "videoId": "demo-multicam",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "summary": "Syncing bride and groom mic audio with 3+ camera angles accurately using waveform sync.",
+            "resources": [
+              { "name": "Multi-Cam Setup Checklist (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-pr-2",
+        "title": "Module 2: Cinematic Cutting & Storytelling Techniques",
+        "lessons": [
+          {
+            "id": "les-pr-2-1",
+            "title": "2.1 J-Cuts, L-Cuts & Invisible Transitions",
+            "duration": "21:15",
+            "videoId": "demo-jcuts",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            "summary": "Techniques used in Bollywood and luxury wedding films to bridge scenes seamlessly.",
+            "resources": [
+              { "name": "Quick Art Cinematic 3D LUT (.cube)", "url": "downloads/QuickArt_Wedding_LUT.cube" }
+            ]
+          },
+          {
+            "id": "les-pr-2-2",
+            "title": "2.2 Music Selection, Beat Matching & Pacing",
+            "duration": "28:40",
+            "videoId": "demo-beatmatch",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+            "summary": "How to pick romantic vs energetic wedding tracks and cut on beat without making it look robotic.",
+            "resources": [
+              { "name": "Curated Wedding Music Tracklist (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-pr-3",
+        "title": "Module 3: Lumetri Color & Sound Design",
+        "lessons": [
+          {
+            "id": "les-pr-3-1",
+            "title": "3.1 Indian Wedding Skin Tone Correction",
+            "duration": "26:50",
+            "videoId": "demo-skintone",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+            "summary": "Mastering the HSL secondary qualifier to get glowing, natural Indian bride & groom skin tones.",
+            "resources": [
+              { "name": "Download Master 3D LUT (.cube)", "url": "downloads/QuickArt_Wedding_LUT.cube" }
+            ]
+          },
+          {
+            "id": "les-pr-3-2",
+            "title": "3.2 Essential Sound & Audio Mastering",
+            "duration": "22:15",
+            "videoId": "demo-audio",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+            "summary": "Noise removal, vocal clarity, EQ, compression, and loudness normalization (-14 LUFS).",
+            "resources": [
+              { "name": "Audio Mixing Presets Reference (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          }
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "What is the primary benefit of creating proxies for 4K 10-bit wedding footage?",
+        "options": ["Faster exports", "Smooth timeline playback without dropped frames", "Higher dynamic range", "Automatic color grading"],
+        "answer": 1
+      },
+      {
+        "question": "Which transition cuts the audio before the video changes in emotional wedding dialogue?",
+        "options": ["Cross Dissolve", "J-Cut", "L-Cut", "Dip to Black"],
+        "answer": 1
+      }
+    ]
+  },
+  {
+    "id": "course-edius-pro",
+    "slug": "edius-course",
+    "title": "EDIUS Pro Fast Wedding Editing",
+    "subtitle": "High-Speed Full Wedding & Event Editing Mastery",
+    "category": "Video Editing",
+    "level": "Beginner to Pro",
+    "duration": "14 Hours",
+    "price": 3999,
+    "originalPrice": 7999,
+    "thumbnail": "assets/edius-classroom.webp",
+    "badge": "Industry Standard",
+    "description": "Learn EDIUS Pro for ultra-fast full wedding function editing, titling, song project presets, multicam mixing, and same-day delivery.",
+    "modules": [
+      {
+        "id": "mod-ed-1",
+        "title": "Module 1: EDIUS Core Setup & Ultra-Fast Workflow",
+        "lessons": [
+          {
+            "id": "les-ed-1-1",
+            "title": "1.1 EDIUS Interface & Custom Keyboard Layout",
+            "duration": "16:20",
+            "videoId": "demo-ed-interface",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+            "summary": "Configuring EDIUS for maximum timeline playback speed without dropping frames.",
+            "resources": [
+              { "name": "Course Curriculum Brochure (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          },
+          {
+            "id": "les-ed-1-2",
+            "title": "1.2 Fast Cutting with Ripple & Quick Titler",
+            "duration": "25:40",
+            "videoId": "demo-ed-titler",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4",
+            "summary": "Creating Hindi/English wedding title cards and fast cutting techniques for 2-3 hour long wedding functions.",
+            "resources": [
+              { "name": "Titling & Layout Shortcuts Guide (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-ed-2",
+        "title": "Module 2: Wedding Song Projects & Mixing",
+        "lessons": [
+          {
+            "id": "les-ed-2-1",
+            "title": "2.1 Song Project Replacement & Auto-Sync",
+            "duration": "30:10",
+            "videoId": "demo-ed-songs",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+            "summary": "How to replace clips in pre-built wedding song projects in seconds for high-volume studio deliveries.",
+            "resources": [
+              { "name": "Song Project Template Reference (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          }
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "Why is EDIUS Pro preferred for full wedding function editing in India?",
+        "options": ["Real-time multi-track playback without rendering", "Cloud collaboration", "Web design support", "Subscription pricing"],
+        "answer": 0
+      }
+    ]
+  },
+  {
+    "id": "course-davinci-resolve",
+    "slug": "davinci-resolve-course",
+    "title": "DaVinci Resolve Color Grading & Studio Finishing",
+    "subtitle": "Node-Based Hollywood Color Grading for Wedding Films",
+    "category": "Color Grading",
+    "level": "Intermediate to Advanced",
+    "duration": "16 Hours",
+    "price": 4999,
+    "originalPrice": 8999,
+    "thumbnail": "assets/resolve-color-panel.webp",
+    "badge": "Advanced Color",
+    "description": "Hollywood-grade color grading for wedding cinematographers. Color management, CST, node architecture, shot matching, and film emulations.",
+    "modules": [
+      {
+        "id": "mod-dr-1",
+        "title": "Module 1: Color Science & Node Architecture",
+        "lessons": [
+          {
+            "id": "les-dr-1-1",
+            "title": "1.1 DaVinci Color Management (RCM) & Color Space Transform (CST)",
+            "duration": "22:15",
+            "videoId": "demo-dr-cst",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+            "summary": "Converting Sony S-Log3, Canon C-Log, and Panasonic V-Log into Rec.709 with maximum dynamic range.",
+            "resources": [
+              { "name": "DaVinci LUT (.cube)", "url": "downloads/QuickArt_Wedding_LUT.cube" },
+              { "name": "Camera CST Cheatsheet (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          },
+          {
+            "id": "les-dr-1-2",
+            "title": "1.2 Professional Node Tree Structure for Weddings",
+            "duration": "27:40",
+            "videoId": "demo-dr-nodes",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+            "summary": "Step-by-step fixed node tree: Exposure → Balance → Contrast → Look → Film Grain.",
+            "resources": [
+              { "name": "Quick Art PowerGrade Guide (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          }
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "In DaVinci Resolve, what does CST stand for?",
+        "options": ["Color Saturation Tone", "Color Space Transform", "Cinematic Scene Texture", "Camera Sensor Timing"],
+        "answer": 1
+      }
+    ]
+  },
+  {
+    "id": "course-cinematic-wedding",
+    "slug": "cinematic-editing-course",
+    "title": "Cinematic Wedding Filmmaking & Teasers",
+    "subtitle": "Turn Raw Wedding Footage into Emotional Stories",
+    "category": "Filmmaking",
+    "level": "All Levels",
+    "duration": "20 Hours",
+    "price": 5999,
+    "originalPrice": 11999,
+    "thumbnail": "assets/editing-example-landscape.webp",
+    "badge": "Most Popular",
+    "description": "Complete wedding film post-production: Storyboarding, teaser cutting, Instagram reel strategies, dialogue layering, sound effects, and client delivery.",
+    "modules": [
+      {
+        "id": "mod-cw-1",
+        "title": "Module 1: Story Planning & Teaser Structure",
+        "lessons": [
+          {
+            "id": "les-cw-1-1",
+            "title": "1.1 The 60-Second Viral Wedding Reel Blueprint",
+            "duration": "20:30",
+            "videoId": "demo-cw-reels",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "summary": "How to hook the viewer in the first 3 seconds and maintain engagement throughout the wedding reel.",
+            "resources": [
+              { "name": "Reel Storyboard Guide (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          },
+          {
+            "id": "les-cw-1-2",
+            "title": "1.2 Drone & Gimbal Pacing in Wedding Highlights",
+            "duration": "23:45",
+            "videoId": "demo-cw-drone",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "summary": "Integrating aerial landscape shots with slow-motion gimbal bride entries smoothly.",
+            "resources": [
+              { "name": "Cinematic Warm LUT (.cube)", "url": "downloads/QuickArt_Wedding_LUT.cube" }
+            ]
+          }
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "What is the recommended duration for an Instagram wedding teaser reel?",
+        "options": ["30 to 60 seconds", "5 minutes", "15 minutes", "45 seconds minimum"],
+        "answer": 0
+      }
+    ]
+  },
+  {
+    "id": "course-album-design",
+    "slug": "album-design",
+    "title": "Wedding Album Design Masterclass",
+    "subtitle": "Photoshop Layouts, Retouching & Print Lab Preparation",
+    "category": "Photo & Design",
+    "level": "Beginner to Advanced",
+    "duration": "12 Hours",
+    "price": 3499,
+    "originalPrice": 6999,
+    "thumbnail": "assets/edius-practice.webp",
+    "badge": "Studio Essential",
+    "description": "Professional Photobook & Karizma/Canvera wedding album creation in Adobe Photoshop. Grid systems, skin retouching, color harmonizing, and print lab export specs.",
+    "modules": [
+      {
+        "id": "mod-ad-1",
+        "title": "Module 1: Layout Fundamentals & Grid Systems",
+        "lessons": [
+          {
+            "id": "les-ad-1-1",
+            "title": "1.1 Album Sheet Sizes, Margins & Safe Bleed",
+            "duration": "18:20",
+            "videoId": "demo-ad-margins",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "summary": "Setting up 12x36, 12x30 and 14x40 inch spreads with accurate safe margins for printing labs.",
+            "resources": [
+              { "name": "Album Design Specifications Guide (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          },
+          {
+            "id": "les-ad-1-2",
+            "title": "1.2 Modern Minimalist vs Traditional Designer Spread",
+            "duration": "24:15",
+            "videoId": "demo-ad-minimalist",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            "summary": "How modern luxury clients prefer clean negative space, storytelling collages, and elegant typography.",
+            "resources": [
+              { "name": "Quick Art Wedding Color Palette (.cube)", "url": "downloads/QuickArt_Wedding_LUT.cube" }
+            ]
+          }
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "What is the standard DPI resolution required for professional wedding album printing?",
+        "options": ["72 DPI", "150 DPI", "300 DPI", "600 DPI"],
+        "answer": 2
+      }
+    ]
+  }
+]

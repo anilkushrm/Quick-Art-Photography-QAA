@@ -1,0 +1,230 @@
+<?php
+// api/lms-admin.php — LMS Admin Console API
+// Quick Art Photography Academy
+// Requires Admin Authentication (X-Admin-Pass or X-Admin-Token)
+
+require_once __DIR__ . '/_helpers.php';
+send_cors();
+
+const LMS_COURSES_FILE  = DATA_DIR . '/courses.json';
+const LMS_STUDENTS_FILE = DATA_DIR . '/students.json';
+const LMS_SETTINGS_FILE = DATA_DIR . '/lms-settings.json';
+
+// Ensure admin is logged in
+$settings = require_admin();
+
+$action = $_GET['action'] ?? '';
+$method = $_SERVER['REQUEST_METHOD'];
+
+// Helper functions
+function get_all_courses() {
+    if (!file_exists(LMS_COURSES_FILE)) return [];
+    return json_decode(file_get_contents(LMS_COURSES_FILE), true) ?: [];
+}
+
+function save_all_courses($courses) {
+    if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+    file_put_contents(LMS_COURSES_FILE, json_encode($courses, JSON_PRETTY_PRINT), LOCK_EX);
+}
+
+function get_all_students() {
+    if (!file_exists(LMS_STUDENTS_FILE)) return [];
+    return json_decode(file_get_contents(LMS_STUDENTS_FILE), true) ?: [];
+}
+
+function save_all_students($students) {
+    if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+    file_put_contents(LMS_STUDENTS_FILE, json_encode($students, JSON_PRETTY_PRINT), LOCK_EX);
+}
+
+// 1. Get Courses List
+if ($action === 'get-courses' && $method === 'GET') {
+    json_ok(['courses' => get_all_courses()]);
+}
+
+// 2. Save Course (Create / Edit)
+if ($action === 'save-course' && $method === 'POST') {
+    $body = read_json_body();
+    $course = $body['course'] ?? null;
+    if (!is_array($course) || empty($course['title'])) {
+        json_err('Course title is required', 400);
+    }
+
+    $courses = get_all_courses();
+    $id = !empty($course['id']) ? $course['id'] : ('course-' . substr(md5(uniqid($course['title'], true)), 0, 8));
+    $course['id'] = $id;
+    if (empty($course['slug'])) {
+        $course['slug'] = preg_replace('/[^a-z0-9]+/', '-', strtolower($course['title']));
+    }
+
+    $found = false;
+    foreach ($courses as &$c) {
+        if ($c['id'] === $id) {
+            $c = $course;
+            $found = true;
+            break;
+        }
+    }
+    unset($c);
+
+    if (!$found) {
+        $courses[] = $course;
+    }
+
+    save_all_courses($courses);
+    json_ok(['course' => $course]);
+}
+
+// 3. Delete Course
+if ($action === 'delete-course' && $method === 'POST') {
+    $body = read_json_body();
+    $id = $body['id'] ?? '';
+    if (!$id) json_err('Course ID required', 400);
+
+    $courses = get_all_courses();
+    $filtered = array_values(array_filter($courses, function($c) use ($id) {
+        return $c['id'] !== $id;
+    }));
+
+    save_all_courses($filtered);
+    json_ok(['deleted' => true, 'id' => $id]);
+}
+
+// 4. Get Students List
+if ($action === 'get-students' && $method === 'GET') {
+    $students = get_all_students();
+    $courses = get_all_courses();
+    $courseMap = [];
+    foreach ($courses as $c) {
+        $courseMap[$c['id']] = $c['title'];
+    }
+
+    // Augment students with progress metrics
+    foreach ($students as &$stu) {
+        $enrolledNames = [];
+        foreach ($stu['enrolledCourses'] ?? [] as $cid) {
+            if (isset($courseMap[$cid])) $enrolledNames[] = $courseMap[$cid];
+        }
+        $stu['enrolledCourseNames'] = $enrolledNames;
+        $totalCompleted = 0;
+        foreach ($stu['completedLessons'] ?? [] as $lesList) {
+            $totalCompleted += count($lesList);
+        }
+        $stu['totalCompletedLessons'] = $totalCompleted;
+    }
+    unset($stu);
+
+    json_ok(['students' => $students, 'courses' => $courses]);
+}
+
+// 5. Enroll / Create Student
+if ($action === 'enroll-student' && $method === 'POST') {
+    $body = read_json_body();
+    $phone = preg_replace('/[^0-9]/', '', (string)($body['phone'] ?? ''));
+    if (strlen($phone) === 12 && substr($phone, 0, 2) === '91') $phone = substr($phone, 2);
+
+    if (strlen($phone) < 10) {
+        json_err('Valid 10-digit mobile number required', 400);
+    }
+
+    $name = trim($body['name'] ?? ('Student ' . substr($phone, -4)));
+    $coursesToEnroll = $body['enrolledCourses'] ?? [];
+
+    $students = get_all_students();
+    $found = false;
+    $targetStudent = null;
+
+    foreach ($students as &$stu) {
+        if ($stu['phone'] === $phone) {
+            $stu['name'] = $name;
+            $stu['enrolledCourses'] = array_values(array_unique(array_merge($stu['enrolledCourses'] ?? [], $coursesToEnroll)));
+            $targetStudent = $stu;
+            $found = true;
+            break;
+        }
+    }
+    unset($stu);
+
+    if (!$found) {
+        $targetStudent = [
+            'id' => 'stu_' . substr(md5(uniqid($phone, true)), 0, 8),
+            'phone' => $phone,
+            'name' => $name,
+            'email' => trim($body['email'] ?? ''),
+            'city' => trim($body['city'] ?? ''),
+            'enrolledAt' => date('c'),
+            'enrolledCourses' => $coursesToEnroll,
+            'completedLessons' => [],
+            'lastActive' => date('c')
+        ];
+        $students[] = $targetStudent;
+    }
+
+    save_all_students($students);
+    json_ok(['student' => $targetStudent]);
+}
+
+// 6. Delete Student
+if ($action === 'delete-student' && $method === 'POST') {
+    $body = read_json_body();
+    $phone = $body['phone'] ?? '';
+    if (!$phone) json_err('Phone required', 400);
+
+    $students = get_all_students();
+    $filtered = array_values(array_filter($students, function($s) use ($phone) {
+        return $s['phone'] !== $phone;
+    }));
+
+    save_all_students($filtered);
+    json_ok(['deleted' => true, 'phone' => $phone]);
+}
+
+// 7. Get LMS Settings
+if ($action === 'get-lms-settings' && $method === 'GET') {
+    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    json_ok(['settings' => $settings]);
+}
+
+// 8. Save LMS Settings
+if ($action === 'save-lms-settings' && $method === 'POST') {
+    $body = read_json_body();
+    $newSettings = [
+        'bunnyLibraryId' => trim($body['bunnyLibraryId'] ?? ''),
+        'bunnyApiKey' => trim($body['bunnyApiKey'] ?? ''),
+        'bunnyTokenAuthKey' => trim($body['bunnyTokenAuthKey'] ?? ''),
+        'bunnyHostname' => trim($body['bunnyHostname'] ?? 'iframe.mediadelivery.net'),
+        'watermarkEnabled' => !empty($body['watermarkEnabled']),
+        'watermarkOpacity' => floatval($body['watermarkOpacity'] ?? 0.35),
+        'otpDemoMode' => !empty($body['otpDemoMode']),
+        'defaultOtp' => trim($body['defaultOtp'] ?? '123456'),
+        'fast2smsApiKey' => trim($body['fast2smsApiKey'] ?? ''),
+        'academyName' => 'Quick Art Photography Academy',
+        'mentorName' => 'Anil Sharma',
+        'updatedAt' => date('c')
+    ];
+
+    if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+    file_put_contents(LMS_SETTINGS_FILE, json_encode($newSettings, JSON_PRETTY_PRINT), LOCK_EX);
+
+    json_ok(['settings' => $newSettings]);
+}
+
+const LMS_TRANSACTIONS_FILE = DATA_DIR . '/transactions.json';
+
+// 9. Get Transactions / Orders
+if ($action === 'get-transactions' && $method === 'GET') {
+    $txs = file_exists(LMS_TRANSACTIONS_FILE) ? json_decode(file_get_contents(LMS_TRANSACTIONS_FILE), true) : [];
+    if (!is_array($txs)) $txs = [];
+    $totalRevenue = 0;
+    foreach ($txs as $t) {
+        $totalRevenue += intval($t['amount'] ?? 0);
+    }
+    json_ok([
+        'transactions' => array_reverse($txs),
+        'totalRevenue' => $totalRevenue,
+        'count' => count($txs)
+    ]);
+}
+
+json_err('Unknown action', 404);
+

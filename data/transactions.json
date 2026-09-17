@@ -1,0 +1,13 @@
+[
+  {
+    "id": "tx_demo_01",
+    "courseId": "course-premiere-pro",
+    "courseTitle": "Adobe Premiere Pro Masterclass",
+    "amount": 4999,
+    "studentName": "Anil Sharma",
+    "studentPhone": "9939800780",
+    "paymentMethod": "UPI (Instant)",
+    "status": "completed",
+    "date": "2026-09-17T04:30:00Z"
+  }
+]

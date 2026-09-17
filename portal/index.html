@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Portal — Quick Art Photography Academy</title>
+  <meta name="description" content="Access your Quick Art Photography Academy courses, video lectures, practice project files, and certifications." />
+  <link rel="icon" href="../home-assets/ec55a6be3747a9.webp" type="image/webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="portal.css" />
+</head>
+<body>
+
+  <!-- Toast Notifications -->
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <!-- Header -->
+  <header class="portal-header">
+    <div class="portal-container header-content">
+      <a href="../index.html" class="portal-brand">
+        <img src="../home-assets/ec55a6be3747a9.webp" alt="Quick Art Academy" width="40" height="40" />
+        <div>
+          <span class="brand-title">Quick <b>Art</b></span>
+          <span class="brand-tag">LEARNING PORTAL</span>
+        </div>
+      </a>
+
+      <div id="header-user-nav" class="user-nav hidden">
+        <div class="user-pill">
+          <div class="user-avatar" id="nav-user-avatar">QA</div>
+          <div class="user-info">
+            <span class="user-name" id="nav-user-name">Student</span>
+            <span class="user-phone" id="nav-user-phone">+91 ••••••••••</span>
+          </div>
+        </div>
+        <button id="btn-logout" class="btn-sm btn-outline" onclick="logoutStudent()">Logout</button>
+      </div>
+
+      <div id="header-guest-nav" class="guest-nav">
+        <a href="../index.html" class="btn-sm btn-ghost">← Back to Academy</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="portal-main">
+    <div class="portal-container">
+
+      <!-- ================= 1. LOGIN VIEW ================= -->
+      <section id="view-login" class="portal-view">
+        <div class="login-card">
+          <div class="login-header">
+            <div class="login-badge">STUDENT LOGIN</div>
+            <h1>Welcome to Your Classroom</h1>
+            <p>Enter your 10-digit mobile number to receive a secure OTP and access your enrolled courses.</p>
+          </div>
+
+          <!-- Step 1: Phone Input -->
+          <form id="form-phone" class="login-form">
+            <label for="input-phone">Mobile Number (WhatsApp)</label>
+            <div class="input-phone-group">
+              <span class="phone-prefix">+91</span>
+              <input type="tel" id="input-phone" placeholder="98765 43210" maxlength="10" autocomplete="tel" required autofocus />
+            </div>
+            <button type="submit" id="btn-send-otp" class="btn btn-gold btn-block">
+              Send OTP Code <span aria-hidden="true">→</span>
+            </button>
+          </form>
+
+          <!-- Step 2: OTP Input (Hidden initially) -->
+          <form id="form-otp" class="login-form hidden">
+            <div class="otp-sent-info">
+              <span>Code sent to <b id="otp-phone-display">+91 ••••••••••</b></span>
+              <button type="button" class="btn-link" onclick="resetToPhoneStep()">Change</button>
+            </div>
+
+            <label for="input-otp">6-Digit Verification Code</label>
+            <input type="text" id="input-otp" class="input-otp" placeholder="••••••" maxlength="6" inputmode="numeric" required />
+            
+            <div id="dev-otp-banner" class="dev-otp-banner hidden">
+              <span>Demo OTP: <strong id="dev-otp-val">123456</strong></span>
+            </div>
+
+            <button type="submit" id="btn-verify-otp" class="btn btn-gold btn-block">
+              Verify &amp; Enter Classroom <span aria-hidden="true">✓</span>
+            </button>
+
+            <div class="otp-resend">
+              Didn't receive code? 
+              <button type="button" id="btn-resend-otp" class="btn-link" onclick="resendOtp()">Resend OTP</button>
+            </div>
+          </form>
+
+          <div class="login-footer">
+            <p>New student? Enquire at <a href="tel:+919939800780">+91 9939800780</a> or <a href="../contact-us/index.html">Book Demo</a> to enroll.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. DASHBOARD VIEW ================= -->
+      <section id="view-dashboard" class="portal-view hidden">
+        <div class="dashboard-hero">
+          <div class="hero-text">
+            <span class="eyebrow">YOUR EDITING JOURNEY</span>
+            <h1 id="dash-greeting">Namaste, Student!</h1>
+            <p>Pick up right where you left off. Watch lessons, download practice project files, and earn your certification.</p>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-card">
+              <span class="stat-num" id="stat-enrolled-count">0</span>
+              <span class="stat-lbl">Enrolled Courses</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-num" id="stat-completed-count">0</span>
+              <span class="stat-lbl">Completed Lessons</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title-bar">
+          <div>
+            <h2>My Enrolled Courses</h2>
+            <span class="muted" id="courses-count-label">Active Enrollments</span>
+          </div>
+          <button type="button" class="btn-sm btn-gold" onclick="openCatalogModal()">
+            + Explore &amp; Enroll in Courses
+          </button>
+        </div>
+
+        <div id="courses-grid" class="courses-grid">
+          <div class="loading-state">Loading your courses…</div>
+        </div>
+      </section>
+
+      <!-- ================= 3. CLASSROOM VIEW ================= -->
+      <section id="view-classroom" class="portal-view hidden">
+        
+        <!-- Navigation bar -->
+        <div class="classroom-topbar">
+          <button type="button" class="btn-sm btn-outline" onclick="showDashboard()">
+            <span aria-hidden="true">←</span> Back to Dashboard
+          </button>
+          <div class="topbar-course-info">
+            <span class="course-mini-cat" id="player-course-category">VIDEO EDITING</span>
+            <h2 class="course-mini-title" id="player-course-title">Adobe Premiere Pro Masterclass</h2>
+          </div>
+          <div class="topbar-progress-pill" id="player-progress-badge">
+            0% Complete
+          </div>
+        </div>
+
+        <!-- Main Classroom Grid -->
+        <div class="classroom-layout">
+          
+          <!-- LEFT: Video Player & Lesson Details -->
+          <div class="player-main-column">
+            
+            <!-- Video Container -->
+            <div class="video-wrapper">
+              <div class="video-container" id="video-box">
+                <!-- Watermark Layer (Anti-Piracy) -->
+                <div id="watermark-overlay" class="watermark-overlay">
+                  <span id="watermark-text" class="watermark-tag">+91 ••••••••••</span>
+                </div>
+
+                <!-- Video Element or Iframe will be injected here -->
+                <div id="video-mount"></div>
+              </div>
+            </div>
+
+            <!-- Video Quick Controls Bar -->
+            <div class="video-playback-controls">
+              <div class="playback-speed-group">
+                <span class="speed-lbl">Playback Speed:</span>
+                <button type="button" class="speed-btn" onclick="setVideoSpeed(0.75)">0.75x</button>
+                <button type="button" class="speed-btn active" onclick="setVideoSpeed(1)">1.0x</button>
+                <button type="button" class="speed-btn" onclick="setVideoSpeed(1.25)">1.25x</button>
+                <button type="button" class="speed-btn" onclick="setVideoSpeed(1.5)">1.5x</button>
+                <button type="button" class="speed-btn" onclick="setVideoSpeed(2)">2.0x</button>
+              </div>
+              <div class="playback-skip-group">
+                <button type="button" class="skip-btn" onclick="skipVideo(-10)" title="Rewind 10 seconds">↺ 10s</button>
+                <button type="button" class="skip-btn" onclick="skipVideo(10)" title="Forward 10 seconds">10s ↻</button>
+              </div>
+            </div>
+
+            <!-- Lesson Control Bar -->
+            <div class="lesson-ctrl-bar">
+              <div class="lesson-hdr-info">
+                <span class="lesson-meta-badge" id="lesson-duration-badge">⏱ 15m</span>
+                <h3 id="lesson-title" class="lesson-active-title">1.1 Welcome &amp; Course Roadmap</h3>
+              </div>
+              <div class="lesson-actions">
+                <button type="button" id="btn-toggle-complete" class="btn-sm btn-outline" onclick="toggleLessonComplete()">
+                  <span id="complete-btn-icon">○</span> <span id="complete-btn-text">Mark as Complete</span>
+                </button>
+                <button type="button" id="btn-next-lesson" class="btn-sm btn-gold" onclick="goToNextLesson()">
+                  Next Lesson →
+                </button>
+              </div>
+            </div>
+
+            <!-- Lesson Content Tabs -->
+            <div class="lesson-tabs">
+              <button class="lesson-tab active" data-ltab="notes">Lesson Notes</button>
+              <button class="lesson-tab" data-ltab="resources">Practice Files &amp; LUTs</button>
+              <button class="lesson-tab" data-ltab="quiz">Module Quiz</button>
+              <button class="lesson-tab" data-ltab="support">Ask Mentor (WhatsApp)</button>
+            </div>
+
+            <div id="ltab-notes" class="lesson-tab-content">
+              <div class="notes-card" id="lesson-notes-text">
+                <p>Loading lesson notes…</p>
+              </div>
+            </div>
+
+            <div id="ltab-resources" class="lesson-tab-content hidden">
+              <div class="resources-card">
+                <h4>Practice Assets &amp; Downloadables</h4>
+                <div id="lesson-resources-list" class="resources-list">
+                  <p class="muted">No downloadable attachments for this lesson.</p>
+                </div>
+              </div>
+            </div>
+
+            <div id="ltab-quiz" class="lesson-tab-content hidden">
+              <div class="quiz-card" id="quiz-container">
+                <h4>Knowledge Check &amp; Certification Quiz</h4>
+                <p class="muted" style="margin-bottom:16px">Test your editing knowledge to earn your course certificate.</p>
+                <div id="quiz-questions-wrap">
+                  <!-- Dynamically injected questions -->
+                </div>
+                <button type="button" id="btn-submit-quiz" class="btn btn-gold" style="margin-top:16px" onclick="submitQuiz()">
+                  Submit Answers &amp; Check Score ✓
+                </button>
+                <div id="quiz-result-banner" class="quiz-result-banner hidden"></div>
+              </div>
+            </div>
+
+            <div id="ltab-support" class="lesson-tab-content hidden">
+              <div class="support-card">
+                <h4>Have a question about this lesson?</h4>
+                <p>Direct mentor support is available for enrolled students at Quick Art Photography Academy.</p>
+                <a id="btn-whatsapp-doubt" href="https://wa.me/919939800780" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+                  <span>💬 Chat on WhatsApp with Anil Sir</span>
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: Curriculum Sidebar -->
+          <aside class="curriculum-sidebar">
+            <div class="curriculum-header">
+              <h3>Course Curriculum</h3>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" id="curriculum-bar-fill" style="width: 0%"></div>
+              </div>
+              <span class="curriculum-stat" id="curriculum-stat-text">0 / 0 Completed</span>
+            </div>
+
+            <div id="curriculum-accordion" class="curriculum-accordion">
+              <div class="loading-state">Loading lessons…</div>
+            </div>
+
+            <div id="certificate-unlock-box" class="certificate-unlock-box hidden">
+              <div class="cert-icon">🎓</div>
+              <h4>Course Completed!</h4>
+              <p>You have finished 100% of this course.</p>
+              <button type="button" class="btn btn-gold btn-block" onclick="openCertificateModal()">
+                View Certificate →
+              </button>
+            </div>
+          </aside>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================= 4. CERTIFICATE MODAL ================= -->
+  <div id="modal-certificate" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-dialog cert-dialog">
+      <div class="modal-content cert-content">
+        <button type="button" class="modal-close" onclick="closeCertificateModal()" aria-label="Close">×</button>
+        
+        <div id="certificate-print-area" class="certificate-frame">
+          <div class="cert-inner">
+            <div class="cert-top">
+              <img src="../home-assets/ec55a6be3747a9.webp" alt="Quick Art Logo" width="64" height="64" class="cert-logo" />
+              <div class="cert-academy-title">QUICK ART PHOTOGRAPHY ACADEMY</div>
+              <div class="cert-subtitle">CENTRE FOR CINEMATIC FILMMAKING &amp; VIDEO EDITING EXCELLENCE</div>
+            </div>
+
+            <div class="cert-badge-gold">CERTIFICATE OF COMPLETION</div>
+            <p class="cert-presented-to">This is proudly presented to</p>
+            <h2 id="cert-student-name" class="cert-name">Student Name</h2>
+            <p class="cert-body-text">
+              for successfully mastering the comprehensive curriculum, practical projects, and professional workflow of
+            </p>
+            <h3 id="cert-course-name" class="cert-course">Adobe Premiere Pro Masterclass</h3>
+
+            <div class="cert-footer">
+              <div class="cert-sig-block">
+                <div class="cert-sig-line">Anil Sharma</div>
+                <div class="cert-sig-role">Founder &amp; Master Trainer</div>
+                <div class="cert-sig-org">Quick Art Photography Academy</div>
+              </div>
+              <div class="cert-seal-block">
+                <div class="cert-seal">
+                  <span>OFFICIAL</span>
+                  <b>SEAL</b>
+                  <span>QAA</span>
+                </div>
+              </div>
+              <div class="cert-date-block">
+                <div class="cert-date-val" id="cert-date-val">September 2026</div>
+                <div class="cert-sig-role">Date of Completion</div>
+                <div class="cert-sig-id" id="cert-id-val">ID: QAA-2026-CERT</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cert-modal-actions">
+          <button type="button" class="btn btn-gold" onclick="window.print()">🖨 Print / Save as PDF</button>
+          <button type="button" class="btn btn-outline" onclick="closeCertificateModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 5. COURSE CATALOG & ENROLL MODAL ================= -->
+  <div id="modal-catalog" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 900px">
+      <div class="modal-content">
+        <button type="button" class="modal-close" onclick="closeCatalogModal()" aria-label="Close">×</button>
+        <div style="margin-bottom: 24px">
+          <span class="eyebrow" style="color:var(--gold);font-size:11px;font-weight:700;letter-spacing:0.15em">EXPAND YOUR CRAFT</span>
+          <h2 style="font-size: 24px; font-weight: 700; margin: 4px 0">Available Courses &amp; Masterclasses</h2>
+          <p class="muted" style="font-size: 13px">Enroll in professional filmmaking, video editing, and album design courses with instant access.</p>
+        </div>
+
+        <div id="catalog-courses-grid" class="catalog-grid">
+          <!-- Dynamically populated from API -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 6. INSTANT CHECKOUT / ENROLL MODAL ================= -->
+  <div id="modal-checkout" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 540px">
+      <div class="modal-content">
+        <button type="button" class="modal-close" onclick="closeCheckoutModal()" aria-label="Close">×</button>
+        <div style="margin-bottom: 20px">
+          <span class="eyebrow" style="color:var(--gold);font-size:10px;font-weight:700;letter-spacing:0.15em">INSTANT ENROLLMENT</span>
+          <h2 id="checkout-course-title" style="font-size: 20px; font-weight: 700; margin: 4px 0">Adobe Premiere Pro Masterclass</h2>
+          <div class="checkout-price-bar">
+            <span class="checkout-price" id="checkout-course-price">₹4,999</span>
+            <span class="checkout-orig-price" id="checkout-course-orig">₹9,999</span>
+            <span class="checkout-save-pill">SAVE 50%</span>
+          </div>
+        </div>
+
+        <form id="form-checkout" class="login-form">
+          <input type="hidden" id="checkout-course-id" />
+          
+          <div style="margin-bottom: 12px">
+            <label for="checkout-name">Your Full Name *</label>
+            <input type="text" id="checkout-name" placeholder="e.g. Rahul Sharma" required />
+          </div>
+
+          <div style="margin-bottom: 12px">
+            <label for="checkout-phone">WhatsApp Mobile Number *</label>
+            <div class="input-phone-group" style="margin-bottom: 0">
+              <span class="phone-prefix">+91</span>
+              <input type="tel" id="checkout-phone" placeholder="98765 43210" maxlength="10" required />
+            </div>
+            <span class="muted" style="font-size: 11px">Course access will be linked to this number for OTP login.</span>
+          </div>
+
+          <div style="margin-bottom: 16px; margin-top: 12px">
+            <label for="checkout-email">Email Address (for invoice)</label>
+            <input type="email" id="checkout-email" placeholder="rahul@gmail.com" />
+          </div>
+
+          <div class="payment-method-box">
+            <label>Select Payment Option</label>
+            <div class="payment-options-grid">
+              <label class="pay-option active">
+                <input type="radio" name="payment_method" value="UPI / QR Code" checked />
+                <span>⚡ UPI / GPay / PhonePe</span>
+              </label>
+              <label class="pay-option">
+                <input type="radio" name="payment_method" value="Credit/Debit Card" />
+                <span>💳 Card / NetBanking</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="checkout-perks">
+            <div>✓ Instant Lifetime Access to All Lessons</div>
+            <div>✓ Downloadable RAW Footage &amp; Cinematic LUTs</div>
+            <div>✓ Direct WhatsApp Support with Mentor Anil Sharma</div>
+            <div>✓ Official Academy Completion Certificate</div>
+          </div>
+
+          <button type="submit" id="btn-complete-enroll" class="btn btn-gold btn-block" style="margin-top: 16px">
+            Pay <span id="btn-pay-amount">₹4,999</span> &amp; Start Learning Now →
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="portal.js"></script>
+</body>
+</html>

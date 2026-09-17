@@ -135,9 +135,13 @@
 
     <div class="stats" id="stats"></div>
 
-    <div class="tabs">
-      <button class="tab active" data-tab="leads">Leads</button>
-      <button class="tab" data-tab="settings">Settings</button>
+    <div class="tabs" style="flex-wrap:wrap;gap:4px">
+      <button class="tab active" data-tab="leads">📋 Leads &amp; CRM</button>
+      <button class="tab" data-tab="lms-courses">📚 Courses (LMS)</button>
+      <button class="tab" data-tab="lms-students">🎓 Students (LMS)</button>
+      <button class="tab" data-tab="lms-transactions">💰 Orders / Revenue (LMS)</button>
+      <button class="tab" data-tab="lms-settings">🎥 Bunny.net &amp; LMS</button>
+      <button class="tab" data-tab="settings">⚙️ Webhook &amp; Password</button>
     </div>
 
     <!-- LEADS TAB -->
@@ -165,6 +169,136 @@
           <thead><tr><th>Name</th><th>Phone</th><th>Status</th><th>Follow-up</th><th>Course</th><th>Received</th><th></th></tr></thead>
           <tbody id="leadsTbody"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px">Loading…</td></tr></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- LMS COURSES TAB -->
+    <div id="tab-lms-courses" class="tab-content hidden" style="margin-top:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+        <div>
+          <h2 style="margin:0;font-size:18px">Course Curriculum Management</h2>
+          <p class="muted" style="margin:4px 0 0">Add courses, modules, lessons, and Bunny.net video IDs for student streaming.</p>
+        </div>
+        <button onclick="openAddCourseModal()" class="btn btn-gold">+ Add New Course</button>
+      </div>
+      <div class="card" style="padding:0;overflow-x:auto">
+        <table>
+          <thead>
+            <tr><th>Course</th><th>Category</th><th>Modules</th><th>Total Lessons</th><th>Level</th><th>Action</th></tr>
+          </thead>
+          <tbody id="lmsCoursesTbody">
+            <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">Loading courses…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LMS STUDENTS TAB -->
+    <div id="tab-lms-students" class="tab-content hidden" style="margin-top:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+        <div>
+          <h2 style="margin:0;font-size:18px">Enrolled Students &amp; Progress</h2>
+          <p class="muted" style="margin:4px 0 0">Grant course access to students by mobile number and track completed lessons.</p>
+        </div>
+        <button onclick="openEnrollStudentModal()" class="btn btn-gold">+ Enroll Student</button>
+      </div>
+      <div class="card" style="padding:0;overflow-x:auto">
+        <table>
+          <thead>
+            <tr><th>Student Name</th><th>Mobile (Login)</th><th>Enrolled Courses</th><th>Completed Lessons</th><th>Enrolled On</th><th>Action</th></tr>
+          </thead>
+          <tbody id="lmsStudentsTbody">
+            <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">Loading students…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LMS TRANSACTIONS / ORDERS TAB -->
+    <div id="tab-lms-transactions" class="tab-content hidden" style="margin-top:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+        <div>
+          <h2 style="margin:0;font-size:18px">Course Orders &amp; Revenue</h2>
+          <p class="muted" style="margin:4px 0 0">All student online enrollments and payment transaction logs.</p>
+        </div>
+        <button onclick="loadLmsTransactions()" class="btn btn-outline">🔄 Refresh Orders</button>
+      </div>
+
+      <div class="grid" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:16px;margin-bottom:16px">
+        <div class="card" style="padding:16px;border-left:4px solid #10b981">
+          <div class="muted" style="font-size:12px">Total Revenue Collected</div>
+          <div id="lmsRevTotal" style="font-size:26px;font-weight:700;color:var(--gold);margin-top:4px">₹0</div>
+        </div>
+        <div class="card" style="padding:16px;border-left:4px solid var(--accent)">
+          <div class="muted" style="font-size:12px">Total Orders / Enrollments</div>
+          <div id="lmsOrdersCount" style="font-size:26px;font-weight:700;color:var(--ink);margin-top:4px">0</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:0;overflow-x:auto">
+        <table>
+          <thead>
+            <tr><th>Date &amp; Time</th><th>Student Name</th><th>Mobile</th><th>Course</th><th>Amount</th><th>Payment Mode</th><th>Status</th></tr>
+          </thead>
+          <tbody id="lmsTransactionsTbody">
+            <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px">Loading transactions…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LMS BUNNY.NET SETTINGS TAB -->
+    <div id="tab-lms-settings" class="tab-content hidden" style="margin-top:16px">
+      <div class="card">
+        <h2>Bunny.net Stream &amp; Video Security Settings</h2>
+        <p class="muted">Apne Bunny.net Stream account ki details yahan paste karein. Isse students ke video player me Bunny.net ka high-speed anti-piracy streaming lag jayega.</p>
+        
+        <div class="grid" style="margin-top:20px;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <label for="bunnyLibraryId">Bunny.net Stream Library ID</label>
+            <input type="text" id="bunnyLibraryId" placeholder="e.g. 123456" />
+            <div class="muted" style="font-size:11px;margin-top:4px">Bunny.net Dashboard → Stream → Library ID</div>
+          </div>
+          <div>
+            <label for="bunnyApiKey">Bunny.net API Key (Read/Write)</label>
+            <input type="password" id="bunnyApiKey" placeholder="e.g. xxxxxxxx-xxxx-xxxx" />
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:16px;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <label for="bunnyTokenAuthKey">Token Authentication Key (Anti-Piracy)</label>
+            <input type="password" id="bunnyTokenAuthKey" placeholder="Optional security key for signed embed URLs" />
+          </div>
+          <div>
+            <label for="bunnyHostname">Bunny Hostname / CDN</label>
+            <input type="text" id="bunnyHostname" value="iframe.mediadelivery.net" />
+          </div>
+        </div>
+
+        <div style="margin-top:24px;padding:16px;background:#fafafa;border:1px solid var(--border);border-radius:16px">
+          <h3 style="font-size:14px;margin:0 0 10px">🛡️ Screen Recording &amp; Video Protection</h3>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600">
+            <input type="checkbox" id="watermarkEnabled" style="width:auto" checked />
+            Floating Watermark On Video (Displays student mobile number randomly to stop piracy)
+          </label>
+        </div>
+
+        <div style="margin-top:20px;padding:16px;background:#fafafa;border:1px solid var(--border);border-radius:16px">
+          <h3 style="font-size:14px;margin:0 0 10px">📱 Mobile Number OTP Login</h3>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600">
+            <input type="checkbox" id="otpDemoMode" style="width:auto" checked />
+            OTP Demo / Test Mode Enabled (Default OTP: 123456 — testing ke liye bina SMS charge ke chalega)
+          </label>
+          <div style="margin-top:12px">
+            <label for="fast2smsApiKey">Fast2SMS API Key (Optional — real SMS bhejne ke liye)</label>
+            <input type="password" id="fast2smsApiKey" placeholder="Leave empty for demo OTP mode" />
+          </div>
+        </div>
+
+        <div style="margin-top:24px">
+          <button onclick="saveLmsSettingsForm()" class="btn btn-gold">💾 Save LMS &amp; Bunny Settings</button>
+        </div>
       </div>
     </div>
 
@@ -247,6 +381,99 @@
 }</pre>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ================ LMS MODALS ================ -->
+
+<!-- Course Modal -->
+<div id="lmsCourseModal" class="modal" onclick="if(event.target.id==='lmsCourseModal')closeCourseModal()">
+  <div class="modal-inner" style="max-width:720px">
+    <div class="modal-hdr">
+      <div>
+        <h2 id="courseModalTitle" style="margin:0;font-size:20px">Add / Edit Course</h2>
+        <div class="muted" style="font-size:12px;margin-top:4px">Course details &amp; curriculum</div>
+      </div>
+      <button onclick="closeCourseModal()" class="icon-btn">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editCourseId" />
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label>Course Title *</label>
+          <input type="text" id="courseTitleInput" placeholder="e.g. Adobe Premiere Pro Masterclass" required />
+        </div>
+        <div>
+          <label>Category</label>
+          <input type="text" id="courseCategoryInput" placeholder="e.g. Video Editing" />
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+        <div>
+          <label>Duration / Badge</label>
+          <input type="text" id="courseDurationInput" placeholder="e.g. 18 Hours" />
+        </div>
+        <div>
+          <label>Thumbnail Path</label>
+          <input type="text" id="courseThumbInput" placeholder="e.g. assets/premiere-pro-hero-640.webp" />
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <label>Course Subtitle / Description</label>
+        <textarea id="courseDescInput" rows="2" placeholder="Brief overview of what students will learn"></textarea>
+      </div>
+
+      <div style="margin-top:20px;border-top:1px solid var(--border);padding-top:16px">
+        <h3 style="font-size:14px;margin-bottom:8px">Curriculum JSON Structure</h3>
+        <p class="muted" style="font-size:11px;margin-top:0">Modules and lessons (including videoId, duration, resources):</p>
+        <textarea id="courseModulesJson" rows="8" style="font-family:monospace;font-size:12px"></textarea>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+        <button onclick="closeCourseModal()" class="btn btn-outline">Cancel</button>
+        <button onclick="saveCourseModal()" class="btn btn-gold">Save Course</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Enroll Student Modal -->
+<div id="lmsStudentModal" class="modal" onclick="if(event.target.id==='lmsStudentModal')closeStudentModal()">
+  <div class="modal-inner" style="max-width:540px">
+    <div class="modal-hdr">
+      <div>
+        <h2 style="margin:0;font-size:20px">Enroll Student in Courses</h2>
+        <div class="muted" style="font-size:12px;margin-top:4px">Give student instant access via mobile number</div>
+      </div>
+      <button onclick="closeStudentModal()" class="icon-btn">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:14px">
+        <label>Student Full Name</label>
+        <input type="text" id="enrollStudentName" placeholder="e.g. Rohit Kumar" required />
+      </div>
+      <div style="margin-bottom:14px">
+        <label>Mobile Number (10 digits) *</label>
+        <input type="tel" id="enrollStudentPhone" placeholder="9876543210" maxlength="10" required />
+        <div class="muted" style="font-size:11px;margin-top:4px">Student will use this phone number to login via OTP.</div>
+      </div>
+
+      <div style="margin-bottom:14px">
+        <label>Select Courses to Grant Access</label>
+        <div id="enrollCoursesCheckboxes" style="display:flex;flex-direction:column;gap:8px;max-height:180px;overflow-y:auto;padding:8px;border:1px solid var(--border);border-radius:12px">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+        <button onclick="closeStudentModal()" class="btn btn-outline">Cancel</button>
+        <button onclick="saveStudentModal()" class="btn btn-gold">Enroll Student ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
   </div>
 </div>
 
@@ -606,10 +833,358 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) =
   document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
   e.target.classList.add('active');
   document.querySelectorAll('.tab-content').forEach(x => x.classList.add('hidden'));
-  document.getElementById('tab-'+e.target.dataset.tab).classList.remove('hidden');
+  const tabName = e.target.dataset.tab;
+  document.getElementById('tab-'+tabName).classList.remove('hidden');
+
+  if (tabName === 'lms-courses') loadLmsCourses();
+  if (tabName === 'lms-students') loadLmsStudents();
+  if (tabName === 'lms-transactions') loadLmsTransactions();
+  if (tabName === 'lms-settings') loadLmsSettings();
+  if (tabName === 'settings') loadSettings();
 }));
 
-// ---------- SETTINGS ----------
+// ---------- LMS ADMIN LOGIC ----------
+let allLmsCourses = [];
+let allLmsStudents = [];
+
+async function lmsAdmin(action, opts = {}) {
+  const url = `api/lms-admin.php?action=${encodeURIComponent(action)}`;
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-Admin-Token': token || '',
+    'X-Admin-Pass': token || ''
+  };
+  const res = await fetch(url, {
+    method: opts.method || 'GET',
+    headers,
+    body: opts.body ? JSON.stringify(opts.body) : undefined
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.ok) throw new Error(data.error || 'Request failed');
+  return data;
+}
+
+// 1. Courses
+async function loadLmsCourses() {
+  const tbody = document.getElementById('lmsCoursesTbody');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">Loading courses…</td></tr>';
+  try {
+    const res = await lmsAdmin('get-courses');
+    allLmsCourses = res.courses || [];
+    renderLmsCourses();
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--red)">Failed to load courses: ${escapeHtml(err.message)}</td></tr>`;
+  }
+}
+
+function renderLmsCourses() {
+  const tbody = document.getElementById('lmsCoursesTbody');
+  if (!allLmsCourses.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">No courses created yet. Click "+ Add New Course" to create one.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = allLmsCourses.map(c => {
+    let lessonCount = 0;
+    (c.modules || []).forEach(m => lessonCount += (m.lessons || []).length);
+    return `
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:12px">
+            <img src="${escapeHtml(c.thumbnail || 'assets/editing-timeline.jpg')}" style="width:48px;height:32px;object-fit:cover;border-radius:6px" />
+            <div>
+              <b>${escapeHtml(c.title)}</b>
+              <div class="muted" style="font-size:11px">${escapeHtml(c.subtitle || '')}</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge">${escapeHtml(c.category || 'General')}</span></td>
+        <td>${(c.modules || []).length} Modules</td>
+        <td><b>${lessonCount}</b> Lessons</td>
+        <td>${escapeHtml(c.level || 'All Levels')}</td>
+        <td>
+          <div style="display:flex;gap:6px">
+            <button onclick="openEditCourseModal('${c.id}')" class="btn btn-outline" style="padding:6px 12px;font-size:11px">Edit</button>
+            <button onclick="deleteCourse('${c.id}')" class="btn btn-danger" style="padding:6px 10px;font-size:11px">✕</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function openAddCourseModal() {
+  document.getElementById('courseModalTitle').textContent = 'Add New Course';
+  document.getElementById('editCourseId').value = '';
+  document.getElementById('courseTitleInput').value = '';
+  document.getElementById('courseCategoryInput').value = 'Video Editing';
+  document.getElementById('courseDurationInput').value = '15 Hours';
+  document.getElementById('courseThumbInput').value = 'assets/premiere-pro-hero-640.webp';
+  document.getElementById('courseDescInput').value = '';
+  document.getElementById('courseModulesJson').value = JSON.stringify([
+    {
+      "id": "mod-1",
+      "title": "Module 1: Getting Started",
+      "lessons": [
+        {
+          "id": "les-1-1",
+          "title": "1.1 Introduction & Setup",
+          "duration": "15:00",
+          "videoId": "",
+          "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          "summary": "Overview of this module",
+          "resources": []
+        }
+      ]
+    }
+  ], null, 2);
+  document.getElementById('lmsCourseModal').classList.add('show');
+}
+
+function openEditCourseModal(courseId) {
+  const course = allLmsCourses.find(c => c.id === courseId);
+  if (!course) return;
+  document.getElementById('courseModalTitle').textContent = `Edit Course: ${course.title}`;
+  document.getElementById('editCourseId').value = course.id;
+  document.getElementById('courseTitleInput').value = course.title;
+  document.getElementById('courseCategoryInput').value = course.category || '';
+  document.getElementById('courseDurationInput').value = course.duration || '';
+  document.getElementById('courseThumbInput').value = course.thumbnail || '';
+  document.getElementById('courseDescInput').value = course.description || '';
+  document.getElementById('courseModulesJson').value = JSON.stringify(course.modules || [], null, 2);
+  document.getElementById('lmsCourseModal').classList.add('show');
+}
+
+function closeCourseModal() {
+  document.getElementById('lmsCourseModal').classList.remove('show');
+}
+
+async function saveCourseModal() {
+  const id = document.getElementById('editCourseId').value;
+  const title = document.getElementById('courseTitleInput').value.trim();
+  if (!title) { toast('Please enter a course title', false); return; }
+
+  let modules = [];
+  try {
+    modules = JSON.parse(document.getElementById('courseModulesJson').value.trim() || '[]');
+  } catch (e) {
+    toast('Invalid JSON syntax in modules/lessons field', false);
+    return;
+  }
+
+  const courseData = {
+    id: id || undefined,
+    title,
+    category: document.getElementById('courseCategoryInput').value.trim(),
+    duration: document.getElementById('courseDurationInput').value.trim(),
+    thumbnail: document.getElementById('courseThumbInput').value.trim(),
+    description: document.getElementById('courseDescInput').value.trim(),
+    modules
+  };
+
+  try {
+    await lmsAdmin('save-course', { method: 'POST', body: { course: courseData } });
+    toast('✅ Course saved successfully!');
+    closeCourseModal();
+    loadLmsCourses();
+  } catch (err) {
+    toast(`Save failed: ${err.message}`, false);
+  }
+}
+
+async function deleteCourse(courseId) {
+  if (!confirm('Are you sure you want to delete this course? Enrolled students will lose access.')) return;
+  try {
+    await lmsAdmin('delete-course', { method: 'POST', body: { id: courseId } });
+    toast('Course deleted');
+    loadLmsCourses();
+  } catch (err) {
+    toast(err.message, false);
+  }
+}
+
+// 2. Students
+async function loadLmsStudents() {
+  const tbody = document.getElementById('lmsStudentsTbody');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">Loading students…</td></tr>';
+  try {
+    const res = await lmsAdmin('get-students');
+    allLmsStudents = res.students || [];
+    allLmsCourses = res.courses || [];
+    renderLmsStudents();
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--red)">Failed to load students: ${escapeHtml(err.message)}</td></tr>`;
+  }
+}
+
+function renderLmsStudents() {
+  const tbody = document.getElementById('lmsStudentsTbody');
+  if (!allLmsStudents.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">No students enrolled yet. Click "+ Enroll Student" to add one.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = allLmsStudents.map(s => {
+    const coursesList = (s.enrolledCourseNames || []).length
+      ? s.enrolledCourseNames.map(cn => `<span class="badge" style="margin:2px">${escapeHtml(cn)}</span>`).join('')
+      : '<span class="muted" style="font-size:11px">No courses assigned</span>';
+    return `
+      <tr>
+        <td>
+          <b>${escapeHtml(s.name || 'Student')}</b>
+          ${s.city ? `<div class="muted" style="font-size:11px">📍 ${escapeHtml(s.city)}</div>` : ''}
+        </td>
+        <td>
+          <a href="tel:+91${s.phone}" style="font-family:monospace;font-weight:600">+91 ${escapeHtml(s.phone)}</a>
+        </td>
+        <td>${coursesList}</td>
+        <td><b>${s.totalCompletedLessons || 0}</b> lessons completed</td>
+        <td style="font-size:11px;color:var(--muted)">${s.enrolledAt ? new Date(s.enrolledAt).toLocaleDateString() : '—'}</td>
+        <td>
+          <div style="display:flex;gap:6px">
+            <button onclick="openEditStudentModal('${s.phone}')" class="btn btn-outline" style="padding:6px 12px;font-size:11px">Edit Courses</button>
+            <button onclick="deleteStudent('${s.phone}')" class="btn btn-danger" style="padding:6px 10px;font-size:11px">✕</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function openEnrollStudentModal() {
+  document.getElementById('enrollStudentName').value = '';
+  document.getElementById('enrollStudentPhone').value = '';
+  document.getElementById('enrollStudentPhone').removeAttribute('readonly');
+  populateCourseCheckboxes([]);
+  document.getElementById('lmsStudentModal').classList.add('show');
+}
+
+function openEditStudentModal(phone) {
+  const stu = allLmsStudents.find(s => s.phone === phone);
+  if (!stu) return;
+  document.getElementById('enrollStudentName').value = stu.name || '';
+  document.getElementById('enrollStudentPhone').value = stu.phone;
+  document.getElementById('enrollStudentPhone').setAttribute('readonly', 'true');
+  populateCourseCheckboxes(stu.enrolledCourses || []);
+  document.getElementById('lmsStudentModal').classList.add('show');
+}
+
+function populateCourseCheckboxes(selectedIds) {
+  const container = document.getElementById('enrollCoursesCheckboxes');
+  if (!allLmsCourses.length) {
+    container.innerHTML = '<span class="muted">No courses available. Create a course first.</span>';
+    return;
+  }
+  container.innerHTML = allLmsCourses.map(c => `
+    <label style="display:flex;align-items:center;gap:8px;font-size:12px;text-transform:none;letter-spacing:0;color:var(--ink);cursor:pointer">
+      <input type="checkbox" value="${c.id}" class="enroll-course-cb" ${selectedIds.includes(c.id) ? 'checked' : ''} style="width:auto" />
+      <span>${escapeHtml(c.title)}</span>
+    </label>
+  `).join('');
+}
+
+function closeStudentModal() {
+  document.getElementById('lmsStudentModal').classList.remove('show');
+}
+
+async function saveStudentModal() {
+  const name = document.getElementById('enrollStudentName').value.trim();
+  const phone = document.getElementById('enrollStudentPhone').value.replace(/\D/g, '');
+  if (phone.length < 10) { toast('Please enter a 10-digit mobile number', false); return; }
+
+  const checkedBoxes = document.querySelectorAll('.enroll-course-cb:checked');
+  const enrolledCourses = Array.from(checkedBoxes).map(cb => cb.value);
+
+  try {
+    await lmsAdmin('enroll-student', {
+      method: 'POST',
+      body: { name, phone, enrolledCourses }
+    });
+    toast('✅ Student enrolled successfully!');
+    closeStudentModal();
+    loadLmsStudents();
+  } catch (err) {
+    toast(`Enroll failed: ${err.message}`, false);
+  }
+}
+
+async function deleteStudent(phone) {
+  if (!confirm(`Remove student with phone +91 ${phone}?`)) return;
+  try {
+    await lmsAdmin('delete-student', { method: 'POST', body: { phone } });
+    toast('Student removed');
+    loadLmsStudents();
+  } catch (err) {
+    toast(err.message, false);
+  }
+}
+
+// 3. LMS Transactions / Orders
+async function loadLmsTransactions() {
+  const tbody = document.getElementById('lmsTransactionsTbody');
+  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">Loading transactions…</td></tr>';
+  try {
+    const res = await lmsAdmin('get-transactions');
+    const txs = res.transactions || [];
+    document.getElementById('lmsRevTotal').textContent = '₹' + (res.totalRevenue || 0).toLocaleString();
+    document.getElementById('lmsOrdersCount').textContent = (res.count || 0);
+
+    if (!txs.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">No orders yet.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = txs.map(t => `
+      <tr>
+        <td style="font-size:12px;color:var(--muted)">${t.date ? new Date(t.date).toLocaleString() : '—'}</td>
+        <td><b>${escapeHtml(t.studentName || 'Student')}</b></td>
+        <td><a href="tel:+91${t.studentPhone}" style="font-family:monospace;font-weight:600">+91 ${escapeHtml(t.studentPhone)}</a></td>
+        <td><span class="badge">${escapeHtml(t.courseTitle || t.courseId)}</span></td>
+        <td style="font-weight:700;color:#10b981">₹${Number(t.amount || 0).toLocaleString()}</td>
+        <td><span class="badge" style="background:#f1f5f9;color:#475569">${escapeHtml(t.paymentMethod || 'UPI')}</span></td>
+        <td><span class="badge" style="background:#dcfce7;color:#166534">✓ ${escapeHtml(t.status || 'completed')}</span></td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--red)">Failed to load orders: ${escapeHtml(err.message)}</td></tr>`;
+  }
+}
+
+// 4. LMS & Bunny Settings
+async function loadLmsSettings() {
+  try {
+    const res = await lmsAdmin('get-lms-settings');
+    const s = res.settings || {};
+    document.getElementById('bunnyLibraryId').value = s.bunnyLibraryId || '';
+    document.getElementById('bunnyApiKey').value = s.bunnyApiKey || '';
+    document.getElementById('bunnyTokenAuthKey').value = s.bunnyTokenAuthKey || '';
+    document.getElementById('bunnyHostname').value = s.bunnyHostname || 'iframe.mediadelivery.net';
+    document.getElementById('watermarkEnabled').checked = s.watermarkEnabled !== false;
+    document.getElementById('otpDemoMode').checked = s.otpDemoMode !== false;
+    document.getElementById('fast2smsApiKey').value = s.fast2smsApiKey || '';
+  } catch (err) {
+    toast(`Could not load LMS settings: ${err.message}`, false);
+  }
+}
+
+async function saveLmsSettingsForm() {
+  const body = {
+    bunnyLibraryId: document.getElementById('bunnyLibraryId').value.trim(),
+    bunnyApiKey: document.getElementById('bunnyApiKey').value.trim(),
+    bunnyTokenAuthKey: document.getElementById('bunnyTokenAuthKey').value.trim(),
+    bunnyHostname: document.getElementById('bunnyHostname').value.trim(),
+    watermarkEnabled: document.getElementById('watermarkEnabled').checked,
+    otpDemoMode: document.getElementById('otpDemoMode').checked,
+    fast2smsApiKey: document.getElementById('fast2smsApiKey').value.trim()
+  };
+
+  try {
+    await lmsAdmin('save-lms-settings', { method: 'POST', body });
+    toast('✅ Bunny.net & LMS settings saved!');
+  } catch (err) {
+    toast(`Failed to save: ${err.message}`, false);
+  }
+}
+
+// ---------- SETTINGS (WEBHOOK) ----------
 async function loadSettings(){
   try {
     const s = await api('settings');
@@ -641,12 +1216,6 @@ async function saveSettings(){
     await api('settings', {method:'POST', body});
     document.getElementById('newPw').value = '';
     if (newPw) {
-      // Changing the password invalidates every existing session (server-side
-      // destroy_all_sessions()), including the one we're using right now. The
-      // old bug set token = newPw (the plaintext password) which is never a
-      // valid session token — every request after that silently 401'd until
-      // the admin manually logged out and back in. Re-login with the new
-      // password to get a real session token instead.
       const r = await fetch('api/admin.php?action=login', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},

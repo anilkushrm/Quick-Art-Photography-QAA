@@ -1,0 +1,14 @@
+{
+  "bunnyLibraryId": "",
+  "bunnyApiKey": "",
+  "bunnyTokenAuthKey": "",
+  "bunnyHostname": "iframe.mediadelivery.net",
+  "watermarkEnabled": true,
+  "watermarkOpacity": 0.35,
+  "otpDemoMode": true,
+  "defaultOtp": "123456",
+  "fast2smsApiKey": "",
+  "academyName": "Quick Art Photography Academy",
+  "mentorName": "Anil Sharma",
+  "updatedAt": "2026-09-17T04:30:00Z"
+}

@@ -10,8 +10,83 @@ const LMS_STUDENTS_FILE = DATA_DIR . '/students.json';
 const LMS_SETTINGS_FILE = DATA_DIR . '/lms-settings.json';
 const LMS_OTPS_FILE     = DATA_DIR . '/otps.json';
 const LMS_SESSIONS_FILE = DATA_DIR . '/student-sessions.json';
+const LMS_COUPONS_FILE  = DATA_DIR . '/coupons.json';
+const LMS_TRANSACTIONS_FILE = DATA_DIR . '/transactions.json';
 
 // ---------- Helper Functions ----------
+
+function load_coupons() {
+    if (!file_exists(LMS_COUPONS_FILE)) return [];
+    return json_decode(file_get_contents(LMS_COUPONS_FILE), true) ?: [];
+}
+
+function save_coupons($coupons) {
+    if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+    file_put_contents(LMS_COUPONS_FILE, json_encode($coupons, JSON_PRETTY_PRINT), LOCK_EX);
+}
+
+function evaluate_coupon($code, $courseId, $coursePrice) {
+    $coupons = load_coupons();
+    $code = strtoupper(trim((string)$code));
+    if (!$code) return ['valid' => false, 'message' => 'Please enter a coupon code'];
+
+    $matched = null;
+    $matchedIndex = -1;
+    foreach ($coupons as $idx => $c) {
+        if (strtoupper($c['code']) === $code) {
+            $matched = $c;
+            $matchedIndex = $idx;
+            break;
+        }
+    }
+
+    if (!$matched) {
+        return ['valid' => false, 'message' => "Coupon code '{$code}' is invalid"];
+    }
+
+    if (isset($matched['active']) && !$matched['active']) {
+        return ['valid' => false, 'message' => "This coupon is no longer active"];
+    }
+
+    if (!empty($matched['expiry']) && strtotime($matched['expiry']) < strtotime(date('Y-m-d'))) {
+        return ['valid' => false, 'message' => "This coupon expired on " . date('d M Y', strtotime($matched['expiry']))];
+    }
+
+    if (!empty($matched['courseId']) && $matched['courseId'] !== 'all' && $matched['courseId'] !== $courseId) {
+        return ['valid' => false, 'message' => "This coupon is not valid for the selected course"];
+    }
+
+    $minAmount = intval($matched['minAmount'] ?? 0);
+    if ($coursePrice < $minAmount) {
+        return ['valid' => false, 'message' => "Minimum order amount of ₹{$minAmount} required for this coupon"];
+    }
+
+    $discount = 0;
+    if (($matched['type'] ?? 'percent') === 'percent') {
+        $pct = floatval($matched['discount'] ?? 0);
+        $discount = round(($coursePrice * $pct) / 100);
+        if (!empty($matched['maxDiscount']) && $discount > intval($matched['maxDiscount'])) {
+            $discount = intval($matched['maxDiscount']);
+        }
+    } else {
+        $discount = intval($matched['discount'] ?? 0);
+    }
+
+    $discount = min($discount, $coursePrice);
+    $finalPrice = max(0, $coursePrice - $discount);
+
+    return [
+        'valid' => true,
+        'code' => $matched['code'],
+        'type' => $matched['type'] ?? 'percent',
+        'discount' => $matched['discount'],
+        'discountAmount' => $discount,
+        'originalPrice' => $coursePrice,
+        'finalPrice' => $finalPrice,
+        'description' => $matched['description'] ?? "Savings of ₹{$discount}",
+        'matchedIndex' => $matchedIndex
+    ];
+}
 
 function load_lms_settings() {
     if (!file_exists(LMS_SETTINGS_FILE)) {
@@ -487,8 +562,6 @@ if ($action === 'logout' && $method === 'POST') {
     json_ok(['loggedOut' => true]);
 }
 
-const LMS_TRANSACTIONS_FILE = DATA_DIR . '/transactions.json';
-
 // 9. Course Catalog (Public)
 if ($action === 'catalog' && $method === 'GET') {
     $courses = load_courses();
@@ -511,6 +584,49 @@ if ($action === 'catalog' && $method === 'GET') {
     json_ok(['catalog' => $publicList]);
 }
 
+// 9.1 Apply & Validate Coupon (Public)
+if ($action === 'apply-coupon' && ($method === 'GET' || $method === 'POST')) {
+    $code = trim($_GET['code'] ?? ($_GET['couponCode'] ?? ''));
+    $courseId = trim($_GET['courseId'] ?? '');
+    $price = isset($_GET['price']) ? intval($_GET['price']) : null;
+
+    if ($method === 'POST') {
+        $body = read_json_body();
+        $code = trim($body['code'] ?? ($body['couponCode'] ?? $code));
+        $courseId = trim($body['courseId'] ?? $courseId);
+        if (isset($body['price'])) $price = intval($body['price']);
+    }
+
+    if (!$code) json_err('Please provide a coupon code', 400);
+
+    if ($courseId && $price === null) {
+        $courses = load_courses();
+        foreach ($courses as $c) {
+            if ($c['id'] === $courseId) {
+                $price = intval($c['price'] ?? 4999);
+                break;
+            }
+        }
+    }
+    if ($price === null) $price = 4999;
+
+    $eval = evaluate_coupon($code, $courseId, $price);
+    if (!$eval['valid']) {
+        json_err($eval['message'], 400);
+    }
+
+    json_ok([
+        'valid' => true,
+        'code' => $eval['code'],
+        'type' => $eval['type'],
+        'discount' => $eval['discount'],
+        'discountAmount' => $eval['discountAmount'],
+        'originalPrice' => $eval['originalPrice'],
+        'finalPrice' => $eval['finalPrice'],
+        'description' => $eval['description']
+    ]);
+}
+
 // 10. Instant Course Checkout & Auto-Enrollment (Public)
 if ($action === 'checkout-enroll' && $method === 'POST') {
     $body = read_json_body();
@@ -519,6 +635,7 @@ if ($action === 'checkout-enroll' && $method === 'POST') {
     $name = trim($body['name'] ?? '');
     $email = trim($body['email'] ?? '');
     $courseId = trim($body['courseId'] ?? '');
+    $couponCode = trim($body['couponCode'] ?? ($body['coupon'] ?? ''));
     $paymentMethod = trim($body['paymentMethod'] ?? 'UPI');
 
     if (strlen($phone) < 10) json_err('Valid 10-digit mobile number required', 400);
@@ -533,6 +650,28 @@ if ($action === 'checkout-enroll' && $method === 'POST') {
         }
     }
     if (!$selectedCourse) json_err('Course not found', 404);
+
+    $basePrice = intval($selectedCourse['price'] ?? 4999);
+    $finalAmount = $basePrice;
+    $discountApplied = 0;
+    $appliedCouponCode = '';
+
+    // Evaluate coupon if provided
+    if ($couponCode) {
+        $eval = evaluate_coupon($couponCode, $courseId, $basePrice);
+        if ($eval['valid']) {
+            $discountApplied = $eval['discountAmount'];
+            $finalAmount = $eval['finalPrice'];
+            $appliedCouponCode = $eval['code'];
+
+            // Increment coupon usage count
+            $coupons = load_coupons();
+            if (isset($eval['matchedIndex']) && isset($coupons[$eval['matchedIndex']])) {
+                $coupons[$eval['matchedIndex']]['uses'] = ($coupons[$eval['matchedIndex']]['uses'] ?? 0) + 1;
+                save_coupons($coupons);
+            }
+        }
+    }
 
     // Save/Update student account
     $students = load_students();
@@ -578,7 +717,10 @@ if ($action === 'checkout-enroll' && $method === 'POST') {
         'id' => 'tx_' . substr(md5(uniqid(microtime(), true)), 0, 10),
         'courseId' => $courseId,
         'courseTitle' => $selectedCourse['title'],
-        'amount' => $selectedCourse['price'] ?? 4999,
+        'amount' => $finalAmount,
+        'originalPrice' => $basePrice,
+        'discount' => $discountApplied,
+        'couponCode' => $appliedCouponCode,
         'studentName' => $targetStudent['name'],
         'studentPhone' => $phone,
         'paymentMethod' => $paymentMethod,

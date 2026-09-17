@@ -135,10 +135,19 @@
 
     <div class="stats" id="stats"></div>
 
+    <!-- LMS KPI STATS ROW (Dynamic overview of academy LMS performance) -->
+    <div id="lmsKpiRow" class="stats hidden" style="margin-top:16px">
+      <div class="card stat"><div class="stat-num" id="kpiLmsStudents" style="color:var(--gold)">0</div><div class="stat-lbl">Enrolled Students</div></div>
+      <div class="card stat"><div class="stat-num" id="kpiLmsRevenue" style="color:#10b981">₹0</div><div class="stat-lbl">Total LMS Revenue</div></div>
+      <div class="card stat"><div class="stat-num" id="kpiLmsCourses">0</div><div class="stat-lbl">Active Courses</div></div>
+      <div class="card stat"><div class="stat-num" id="kpiLmsCoupons" style="color:#6366f1">0</div><div class="stat-lbl">Active Coupons</div></div>
+    </div>
+
     <div class="tabs" style="flex-wrap:wrap;gap:4px">
       <button class="tab active" data-tab="leads">📋 Leads &amp; CRM</button>
       <button class="tab" data-tab="lms-courses">📚 Courses (LMS)</button>
       <button class="tab" data-tab="lms-students">🎓 Students (LMS)</button>
+      <button class="tab" data-tab="lms-coupons">🎟️ Coupons &amp; Offers (LMS)</button>
       <button class="tab" data-tab="lms-transactions">💰 Orders / Revenue (LMS)</button>
       <button class="tab" data-tab="lms-settings">🎥 Bunny.net &amp; LMS</button>
       <button class="tab" data-tab="settings">⚙️ Webhook &amp; Password</button>
@@ -177,14 +186,14 @@
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
         <div>
           <h2 style="margin:0;font-size:18px">Course Curriculum Management</h2>
-          <p class="muted" style="margin:4px 0 0">Add courses, modules, lessons, and Bunny.net video IDs for student streaming.</p>
+          <p class="muted" style="margin:4px 0 0">Create new courses, set pricing, modules, lessons, and Bunny.net video IDs.</p>
         </div>
-        <button onclick="openAddCourseModal()" class="btn btn-gold">+ Add New Course</button>
+        <button onclick="openAddCourseModal()" class="btn btn-gold">+ Create New Course</button>
       </div>
       <div class="card" style="padding:0;overflow-x:auto">
         <table>
           <thead>
-            <tr><th>Course</th><th>Category</th><th>Modules</th><th>Total Lessons</th><th>Level</th><th>Action</th></tr>
+            <tr><th>Course</th><th>Category</th><th>Fee / Pricing</th><th>Modules &amp; Lessons</th><th>Badge / Level</th><th>Action</th></tr>
           </thead>
           <tbody id="lmsCoursesTbody">
             <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">Loading courses…</td></tr>
@@ -198,17 +207,50 @@
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
         <div>
           <h2 style="margin:0;font-size:18px">Enrolled Students &amp; Progress</h2>
-          <p class="muted" style="margin:4px 0 0">Grant course access to students by mobile number and track completed lessons.</p>
+          <p class="muted" style="margin:4px 0 0">Grant instant course access, track lesson completion, send WhatsApp logins, and verify certificates.</p>
         </div>
-        <button onclick="openEnrollStudentModal()" class="btn btn-gold">+ Enroll Student</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="exportStudentsCSV()" class="btn btn-outline">📥 Export Students CSV</button>
+          <button onclick="openEnrollStudentModal()" class="btn btn-gold">+ Enroll Student</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap">
+        <input type="text" id="studentSearch" oninput="filterLmsStudents()" placeholder="Search student by name, phone, city..." style="flex:1;min-width:200px" />
+        <select id="studentCourseFilter" onchange="filterLmsStudents()" style="width:auto;min-width:180px">
+          <option value="">All Courses</option>
+        </select>
+        <button onclick="loadLmsStudents()" class="btn btn-outline" style="padding:10px 14px">🔄 Refresh</button>
+      </div>
+
+      <div class="card" style="padding:0;overflow-x:auto">
+        <table>
+          <thead>
+            <tr><th>Student Name</th><th>Mobile (Login)</th><th>Enrolled Courses</th><th>Progress</th><th>Enrolled On</th><th>Action</th></tr>
+          </thead>
+          <tbody id="lmsStudentsTbody">
+            <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">Loading students…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LMS COUPONS TAB -->
+    <div id="tab-lms-coupons" class="tab-content hidden" style="margin-top:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+        <div>
+          <h2 style="margin:0;font-size:18px">Coupons &amp; Promotional Discounts</h2>
+          <p class="muted" style="margin:4px 0 0">Create promo codes for percentage or flat instant discounts at student checkout.</p>
+        </div>
+        <button onclick="openAddCouponModal()" class="btn btn-gold">+ Create New Coupon</button>
       </div>
       <div class="card" style="padding:0;overflow-x:auto">
         <table>
           <thead>
-            <tr><th>Student Name</th><th>Mobile (Login)</th><th>Enrolled Courses</th><th>Completed Lessons</th><th>Enrolled On</th><th>Action</th></tr>
+            <tr><th>Promo Code</th><th>Discount</th><th>Min Order</th><th>Applicable Course</th><th>Expiry</th><th>Times Used</th><th>Status</th><th>Action</th></tr>
           </thead>
-          <tbody id="lmsStudentsTbody">
-            <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">Loading students…</td></tr>
+          <tbody id="lmsCouponsTbody">
+            <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:32px">Loading coupons…</td></tr>
           </tbody>
         </table>
       </div>
@@ -505,9 +547,6 @@
   "city": "Siwan",
   "course": "Video Editing",
   "message": "",
-  "source": "website",
-  "lead_id": "uuid-here",
-  "submitted_at": "2026-07-19T13:30:00+00:00",
   "team_phone": "+919939800780"
 }</pre>
       </div>
@@ -519,11 +558,11 @@
 
 <!-- Course Modal -->
 <div id="lmsCourseModal" class="modal" onclick="if(event.target.id==='lmsCourseModal')closeCourseModal()">
-  <div class="modal-inner" style="max-width:720px">
+  <div class="modal-inner" style="max-width:760px">
     <div class="modal-hdr">
       <div>
         <h2 id="courseModalTitle" style="margin:0;font-size:20px">Add / Edit Course</h2>
-        <div class="muted" style="font-size:12px;margin-top:4px">Course details &amp; curriculum</div>
+        <div class="muted" style="font-size:12px;margin-top:4px">Course pricing, details &amp; curriculum builder</div>
       </div>
       <button onclick="closeCourseModal()" class="icon-btn">✕</button>
     </div>
@@ -536,31 +575,75 @@
         </div>
         <div>
           <label>Category</label>
-          <input type="text" id="courseCategoryInput" placeholder="e.g. Video Editing" />
+          <select id="courseCategoryInput">
+            <option value="Video Editing">Video Editing</option>
+            <option value="Cinematography &amp; Filmmaking">Cinematography &amp; Filmmaking</option>
+            <option value="Wedding Filmmaking &amp; Teaser">Wedding Filmmaking &amp; Teaser</option>
+            <option value="Photography &amp; Lighting">Photography &amp; Lighting</option>
+            <option value="Album Designing">Album Designing</option>
+            <option value="Color Grading &amp; DaVinci">Color Grading &amp; DaVinci</option>
+            <option value="Digital Marketing &amp; Business">Digital Marketing &amp; Business</option>
+            <option value="General Filmmaking">General Filmmaking</option>
+          </select>
         </div>
       </div>
-      <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+
+      <div class="grid" style="grid-template-columns:repeat(3, 1fr);gap:12px;margin-top:12px">
         <div>
-          <label>Duration / Badge</label>
-          <input type="text" id="courseDurationInput" placeholder="e.g. 18 Hours" />
+          <label>Course Duration</label>
+          <input type="text" id="courseDurationInput" placeholder="e.g. 18 Hours" value="18 Hours" />
         </div>
         <div>
-          <label>Thumbnail Path</label>
-          <input type="text" id="courseThumbInput" placeholder="e.g. assets/premiere-pro-hero-640.webp" />
+          <label>Skill Level</label>
+          <select id="courseLevelInput">
+            <option value="All Levels">All Levels (Beginner to Pro)</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+            <option value="Masterclass">Masterclass</option>
+          </select>
+        </div>
+        <div>
+          <label>Display Badge</label>
+          <select id="courseBadgeInput">
+            <option value="Flagship Masterclass">Flagship Masterclass</option>
+            <option value="Best Seller">Best Seller</option>
+            <option value="Popular">Popular</option>
+            <option value="New Launch">New Launch</option>
+            <option value="Trending">Trending</option>
+            <option value="">None</option>
+          </select>
         </div>
       </div>
+
+      <div class="grid" style="grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px">
+        <div>
+          <label>Sale Price (₹) *</label>
+          <input type="number" id="coursePriceInput" placeholder="e.g. 4999" value="4999" required />
+        </div>
+        <div>
+          <label>Regular MRP (₹)</label>
+          <input type="number" id="courseOrigPriceInput" placeholder="e.g. 9999" value="9999" />
+        </div>
+        <div>
+          <label>Thumbnail Path / URL</label>
+          <input type="text" id="courseThumbInput" placeholder="assets/premiere-pro-hero-640.webp" />
+        </div>
+      </div>
+
       <div style="margin-top:12px">
-        <label>Course Subtitle / Description</label>
-        <textarea id="courseDescInput" rows="2" placeholder="Brief overview of what students will learn"></textarea>
+        <label>Course Subtitle / Overview</label>
+        <textarea id="courseDescInput" rows="2" placeholder="Comprehensive practical training for high-paying studio work"></textarea>
       </div>
 
       <div style="margin-top:20px;border-top:1px solid var(--border);padding-top:16px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
           <div>
             <h3 style="font-size:14px;margin:0">📚 Course Curriculum &amp; Video Lessons</h3>
-            <p class="muted" style="font-size:11px;margin:2px 0 0">Add modules and lessons. Paste Bunny video GUIDs directly into each lesson.</p>
+            <p class="muted" style="font-size:11px;margin:2px 0 0">Add modules and lessons. Assign Bunny.net stream video GUIDs directly.</p>
           </div>
-          <div style="display:flex;gap:6px">
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <button type="button" onclick="loadStarterCurriculumTemplate()" class="btn-sm btn-outline" style="font-size:11px;padding:4px 10px;color:var(--gold);border-color:var(--gold)">⚡ 5-Module Starter Template</button>
             <button type="button" id="btnCurriculumVisual" onclick="switchCurriculumTab('visual')" class="btn-sm btn-gold" style="font-size:11px;padding:4px 10px">📝 Visual Builder</button>
             <button type="button" id="btnCurriculumJson" onclick="switchCurriculumTab('json')" class="btn-sm btn-outline" style="font-size:11px;padding:4px 10px">{ } Raw JSON</button>
           </div>
@@ -583,7 +666,7 @@
 
       <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
         <button onclick="closeCourseModal()" class="btn btn-outline">Cancel</button>
-        <button onclick="saveCourseModal()" class="btn btn-gold">Save Course</button>
+        <button onclick="saveCourseModal()" class="btn btn-gold">Save Course ✓</button>
       </div>
     </div>
   </div>
@@ -591,35 +674,154 @@
 
 <!-- Enroll Student Modal -->
 <div id="lmsStudentModal" class="modal" onclick="if(event.target.id==='lmsStudentModal')closeStudentModal()">
-  <div class="modal-inner" style="max-width:540px">
+  <div class="modal-inner" style="max-width:560px">
     <div class="modal-hdr">
       <div>
-        <h2 style="margin:0;font-size:20px">Enroll Student in Courses</h2>
-        <div class="muted" style="font-size:12px;margin-top:4px">Give student instant access via mobile number</div>
+        <h2 id="studentModalTitle" style="margin:0;font-size:20px">Enroll Student in Courses</h2>
+        <div class="muted" style="font-size:12px;margin-top:4px">Give student instant access &amp; send WhatsApp welcome login</div>
       </div>
       <button onclick="closeStudentModal()" class="icon-btn">✕</button>
     </div>
     <div class="modal-body">
-      <div style="margin-bottom:14px">
-        <label>Student Full Name</label>
-        <input type="text" id="enrollStudentName" placeholder="e.g. Rohit Kumar" required />
-      </div>
-      <div style="margin-bottom:14px">
-        <label>Mobile Number (10 digits) *</label>
-        <input type="tel" id="enrollStudentPhone" placeholder="9876543210" maxlength="10" required />
-        <div class="muted" style="font-size:11px;margin-top:4px">Student will use this phone number to login via OTP.</div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label>Student Full Name *</label>
+          <input type="text" id="enrollStudentName" placeholder="e.g. Rahul Sharma" required />
+        </div>
+        <div>
+          <label>Mobile Number (10 digits) *</label>
+          <input type="tel" id="enrollStudentPhone" placeholder="9876543210" maxlength="10" required />
+        </div>
       </div>
 
-      <div style="margin-bottom:14px">
-        <label>Select Courses to Grant Access</label>
-        <div id="enrollCoursesCheckboxes" style="display:flex;flex-direction:column;gap:8px;max-height:180px;overflow-y:auto;padding:8px;border:1px solid var(--border);border-radius:12px">
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+        <div>
+          <label>Email Address (optional)</label>
+          <input type="email" id="enrollStudentEmail" placeholder="rahul@gmail.com" />
+        </div>
+        <div>
+          <label>City / Location</label>
+          <input type="text" id="enrollStudentCity" placeholder="e.g. Patna, Siwan" />
+        </div>
+      </div>
+
+      <div style="margin-top:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <label style="margin:0">Select Courses to Grant Access *</label>
+          <div style="font-size:11px">
+            <a href="javascript:void(0)" onclick="toggleAllEnrollCourses(true)" style="color:var(--gold);font-weight:600">Select All</a> | 
+            <a href="javascript:void(0)" onclick="toggleAllEnrollCourses(false)" style="color:var(--muted)">Clear</a>
+          </div>
+        </div>
+        <div id="enrollCoursesCheckboxes" style="display:flex;flex-direction:column;gap:8px;max-height:160px;overflow-y:auto;padding:10px;border:1px solid var(--border);border-radius:12px;background:#f8fafc">
           <!-- Dynamically populated -->
         </div>
       </div>
 
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:14px">
+        <div>
+          <label>Payment Method</label>
+          <select id="enrollStudentPaymentMode">
+            <option value="UPI / QR Code">UPI / GPay / PhonePe</option>
+            <option value="Cash">Cash at Academy</option>
+            <option value="Bank Transfer / NEFT">Bank Transfer / NEFT</option>
+            <option value="Scholarship / Free">Scholarship / Free Grant</option>
+          </select>
+        </div>
+        <div>
+          <label>Amount Collected (₹)</label>
+          <input type="number" id="enrollStudentAmount" placeholder="4999" value="4999" />
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Payment Notes / Transaction UTR</label>
+        <input type="text" id="enrollStudentNotes" placeholder="e.g. GPay Ref: 3289412781 or Paid at Siwan office" />
+      </div>
+
+      <div style="margin-top:14px;padding:10px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;gap:10px">
+        <input type="checkbox" id="enrollStudentSendWA" checked style="width:auto" />
+        <label for="enrollStudentSendWA" style="margin:0;cursor:pointer;font-size:12px;color:#166534;font-weight:600">
+          💬 Open WhatsApp with Welcome message &amp; Portal login instructions immediately
+        </label>
+      </div>
+
       <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
         <button onclick="closeStudentModal()" class="btn btn-outline">Cancel</button>
-        <button onclick="saveStudentModal()" class="btn btn-gold">Enroll Student ✓</button>
+        <button onclick="saveStudentModal()" class="btn btn-gold" id="btnSaveStudent">Enroll Student &amp; Grant Access ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LMS Coupon Modal -->
+<div id="lmsCouponModal" class="modal" onclick="if(event.target.id==='lmsCouponModal')closeCouponModal()">
+  <div class="modal-inner" style="max-width:560px">
+    <div class="modal-hdr">
+      <div>
+        <h2 id="couponModalTitle" style="margin:0;font-size:20px">Create Discount Coupon</h2>
+        <div class="muted" style="font-size:12px;margin-top:4px">Offer promo codes to prospective students</div>
+      </div>
+      <button onclick="closeCouponModal()" class="icon-btn">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="couponOriginalCode" />
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label>Coupon Code *</label>
+          <input type="text" id="couponCodeInput" placeholder="e.g. QUICKART50, FLAT1000" style="text-transform:uppercase;font-weight:700" required />
+        </div>
+        <div>
+          <label>Discount Type</label>
+          <select id="couponTypeSelect" onchange="handleCouponTypeChange()">
+            <option value="percent">Percentage (%)</option>
+            <option value="flat">Flat Amount (₹)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+        <div>
+          <label id="lblCouponDiscount">Discount Value (%) *</label>
+          <input type="number" id="couponDiscountInput" placeholder="e.g. 50" min="1" required />
+        </div>
+        <div id="wrapCouponMaxDiscount">
+          <label>Max Discount Cap (₹)</label>
+          <input type="number" id="couponMaxDiscountInput" placeholder="e.g. 2500 (blank for unlimited)" />
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+        <div>
+          <label>Minimum Order Amount (₹)</label>
+          <input type="number" id="couponMinAmountInput" placeholder="e.g. 1000" value="1000" />
+        </div>
+        <div>
+          <label>Expiry Date</label>
+          <input type="date" id="couponExpiryInput" />
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Applicable Course</label>
+        <select id="couponCourseSelect">
+          <option value="all">All Online Courses</option>
+        </select>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Description / Promo Headline</label>
+        <input type="text" id="couponDescInput" placeholder="e.g. 50% Special Festive Discount on all online courses" />
+      </div>
+
+      <div style="margin-top:14px;display:flex;align-items:center;gap:8px">
+        <input type="checkbox" id="couponActiveCheck" checked style="width:auto" />
+        <label for="couponActiveCheck" style="margin:0;cursor:pointer;font-weight:600">Active (Students can apply this promo code)</label>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+        <button onclick="closeCouponModal()" class="btn btn-outline">Cancel</button>
+        <button onclick="saveCouponModal()" class="btn btn-gold">Save Coupon ✓</button>
       </div>
     </div>
   </div>
@@ -1044,8 +1246,20 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) =
   const tabName = e.target.dataset.tab;
   document.getElementById('tab-'+tabName).classList.remove('hidden');
 
+  const isLmsTab = ['lms-courses', 'lms-students', 'lms-coupons', 'lms-transactions', 'lms-settings'].includes(tabName);
+  const lmsKpiRow = document.getElementById('lmsKpiRow');
+  if (lmsKpiRow) {
+    if (isLmsTab) {
+      lmsKpiRow.classList.remove('hidden');
+      updateLmsKpis();
+    } else {
+      lmsKpiRow.classList.add('hidden');
+    }
+  }
+
   if (tabName === 'lms-courses') loadLmsCourses();
   if (tabName === 'lms-students') loadLmsStudents();
+  if (tabName === 'lms-coupons') loadLmsCoupons();
   if (tabName === 'lms-transactions') loadLmsTransactions();
   if (tabName === 'lms-settings') loadLmsSettings();
   if (tabName === 'settings') loadSettings();
@@ -1054,6 +1268,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) =
 // ---------- LMS ADMIN LOGIC ----------
 let allLmsCourses = [];
 let allLmsStudents = [];
+let allLmsCoupons = [];
 
 async function lmsAdmin(action, opts = {}) {
   const url = `api/lms-admin.php?action=${encodeURIComponent(action)}`;
@@ -1072,6 +1287,32 @@ async function lmsAdmin(action, opts = {}) {
   return data;
 }
 
+// Update LMS KPI Counters
+async function updateLmsKpis() {
+  try {
+    const [cRes, sRes, cpRes, txRes] = await Promise.all([
+      allLmsCourses.length ? { courses: allLmsCourses } : lmsAdmin('get-courses').catch(() => ({ courses: [] })),
+      allLmsStudents.length ? { students: allLmsStudents } : lmsAdmin('get-students').catch(() => ({ students: [] })),
+      allLmsCoupons.length ? { coupons: allLmsCoupons } : lmsAdmin('get-coupons').catch(() => ({ coupons: [] })),
+      lmsAdmin('get-transactions').catch(() => ({ totalRevenue: 0 }))
+    ]);
+
+    if (cRes.courses) allLmsCourses = cRes.courses;
+    if (sRes.students) allLmsStudents = sRes.students;
+    if (cpRes.coupons) allLmsCoupons = cpRes.coupons;
+
+    const elStu = document.getElementById('kpiLmsStudents');
+    const elRev = document.getElementById('kpiLmsRevenue');
+    const elCrs = document.getElementById('kpiLmsCourses');
+    const elCpn = document.getElementById('kpiLmsCoupons');
+
+    if (elStu) elStu.textContent = allLmsStudents.length;
+    if (elRev) elRev.textContent = '₹' + (txRes.totalRevenue || 0).toLocaleString();
+    if (elCrs) elCrs.textContent = allLmsCourses.length;
+    if (elCpn) elCpn.textContent = allLmsCoupons.filter(c => c.active !== false).length;
+  } catch(e){}
+}
+
 // 1. Courses
 async function loadLmsCourses() {
   const tbody = document.getElementById('lmsCoursesTbody');
@@ -1080,6 +1321,7 @@ async function loadLmsCourses() {
     const res = await lmsAdmin('get-courses');
     allLmsCourses = res.courses || [];
     renderLmsCourses();
+    updateLmsKpis();
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--red)">Failed to load courses: ${escapeHtml(err.message)}</td></tr>`;
   }
@@ -1088,31 +1330,40 @@ async function loadLmsCourses() {
 function renderLmsCourses() {
   const tbody = document.getElementById('lmsCoursesTbody');
   if (!allLmsCourses.length) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">No courses created yet. Click "+ Add New Course" to create one.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">No courses created yet. Click "+ Create New Course" to build one.</td></tr>';
     return;
   }
   tbody.innerHTML = allLmsCourses.map(c => {
     let lessonCount = 0;
     (c.modules || []).forEach(m => lessonCount += (m.lessons || []).length);
+    const price = c.price ? `₹${Number(c.price).toLocaleString()}` : 'Free';
+    const origPrice = c.originalPrice ? `<span style="text-decoration:line-through;color:var(--muted);font-size:11px;margin-left:4px">₹${Number(c.originalPrice).toLocaleString()}</span>` : '';
+    const badgeHtml = c.badge ? `<span class="badge" style="background:#fef3c7;color:#92400e;margin-right:4px">${escapeHtml(c.badge)}</span>` : '';
+
     return `
       <tr>
         <td>
           <div style="display:flex;align-items:center;gap:12px">
-            <img src="${escapeHtml(c.thumbnail || 'assets/editing-timeline.jpg')}" style="width:48px;height:32px;object-fit:cover;border-radius:6px" />
+            <img src="${escapeHtml(c.thumbnail || 'assets/premiere-pro-hero-640.webp')}" style="width:52px;height:36px;object-fit:cover;border-radius:6px;background:#1e293b" onerror="this.src='assets/premiere-pro-hero-640.webp'" />
             <div>
-              <b>${escapeHtml(c.title)}</b>
-              <div class="muted" style="font-size:11px">${escapeHtml(c.subtitle || '')}</div>
+              <b style="font-size:13.5px">${escapeHtml(c.title)}</b>
+              <div class="muted" style="font-size:11px">${escapeHtml(c.subtitle || c.duration || '')}</div>
             </div>
           </div>
         </td>
         <td><span class="badge">${escapeHtml(c.category || 'General')}</span></td>
-        <td>${(c.modules || []).length} Modules</td>
-        <td><b>${lessonCount}</b> Lessons</td>
-        <td>${escapeHtml(c.level || 'All Levels')}</td>
+        <td>
+          <b style="color:#10b981;font-size:14px">${price}</b>${origPrice}
+        </td>
+        <td><b>${(c.modules || []).length}</b> Modules (${lessonCount} Lessons)</td>
+        <td>
+          ${badgeHtml}
+          <span style="font-size:11.5px;color:var(--muted)">${escapeHtml(c.level || 'All Levels')}</span>
+        </td>
         <td>
           <div style="display:flex;gap:6px">
             <button onclick="openEditCourseModal('${c.id}')" class="btn btn-outline" style="padding:6px 12px;font-size:11px">Edit</button>
-            <button onclick="deleteCourse('${c.id}')" class="btn btn-danger" style="padding:6px 10px;font-size:11px">✕</button>
+            <button onclick="deleteCourse('${c.id}')" class="btn btn-danger" style="padding:6px 10px;font-size:11px" title="Delete Course">✕</button>
           </div>
         </td>
       </tr>
@@ -1121,32 +1372,125 @@ function renderLmsCourses() {
 }
 
 function openAddCourseModal() {
-  document.getElementById('courseModalTitle').textContent = 'Add New Course';
+  document.getElementById('courseModalTitle').textContent = 'Create New Online Course';
   document.getElementById('editCourseId').value = '';
   document.getElementById('courseTitleInput').value = '';
   document.getElementById('courseCategoryInput').value = 'Video Editing';
-  document.getElementById('courseDurationInput').value = '15 Hours';
+  document.getElementById('courseDurationInput').value = '18 Hours';
+  document.getElementById('courseLevelInput').value = 'All Levels';
+  document.getElementById('courseBadgeInput').value = 'New Launch';
+  document.getElementById('coursePriceInput').value = 4999;
+  document.getElementById('courseOrigPriceInput').value = 9999;
   document.getElementById('courseThumbInput').value = 'assets/premiere-pro-hero-640.webp';
-  document.getElementById('courseDescInput').value = '';
-  document.getElementById('courseModulesJson').value = JSON.stringify([
+  document.getElementById('courseDescInput').value = 'Professional comprehensive masterclass with real studio footage, sound design, and client-ready workflows.';
+  
+  loadStarterCurriculumTemplate(false);
+  switchCurriculumTab('visual');
+  document.getElementById('lmsCourseModal').classList.add('show');
+}
+
+function loadStarterCurriculumTemplate(notify = true) {
+  const starter = [
     {
-      "id": "mod-1",
-      "title": "Module 1: Getting Started",
-      "lessons": [
+      id: "mod-1",
+      title: "Module 1: Interface, Workspace & Industry Foundations",
+      lessons: [
         {
-          "id": "les-1-1",
-          "title": "1.1 Introduction & Setup",
-          "duration": "15:00",
-          "videoId": "",
-          "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          "summary": "Overview of this module",
-          "resources": []
+          id: "les-1-1",
+          title: "1.1 Introduction, System Specs & Codec Setup",
+          duration: "15:00",
+          videoId: "",
+          summary: "Essential software preferences, scratch disks, and media organization",
+          resources: []
+        },
+        {
+          id: "les-1-2",
+          title: "1.2 Pro Shortcuts & High-Speed Editing Workspace",
+          duration: "18:30",
+          videoId: "",
+          summary: "Speed cut layout and hotkey muscle memory for high turnaround",
+          resources: []
+        }
+      ]
+    },
+    {
+      id: "mod-2",
+      title: "Module 2: Timeline Architecture & Narrative Storytelling",
+      lessons: [
+        {
+          id: "les-2-1",
+          title: "2.1 Story Ingest, Multi-Camera Sync & Audio Aligning",
+          duration: "24:10",
+          videoId: "",
+          summary: "Organizing footage like high-end production studios",
+          resources: []
+        },
+        {
+          id: "les-2-2",
+          title: "2.2 The Rough Cut: Pacing, Emotion, J-Cuts & L-Cuts",
+          duration: "30:00",
+          videoId: "",
+          summary: "Creating engagement and seamless transitions across scenes",
+          resources: []
+        }
+      ]
+    },
+    {
+      id: "mod-3",
+      title: "Module 3: Advanced Visual Effects & Dynamic Motion",
+      lessons: [
+        {
+          id: "les-3-1",
+          title: "3.1 Smooth Speed Ramping, Optical Flow & Whip Cuts",
+          duration: "26:40",
+          videoId: "",
+          summary: "Modern cinematic speed ramps synchronized with musical beat drops",
+          resources: []
+        }
+      ]
+    },
+    {
+      id: "mod-4",
+      title: "Module 4: Hollywood Color Grading & Sound Engineering",
+      lessons: [
+        {
+          id: "les-4-1",
+          title: "4.1 Log Normalization, Rec.709 & Cinematic LUTs",
+          duration: "32:15",
+          videoId: "",
+          summary: "Working with Sony S-Log3, Canon Log, and skin tone vectorscopes",
+          resources: []
+        },
+        {
+          id: "les-4-2",
+          title: "4.2 Dialogue Clarity, EQ, Compression & Sound FX Impact",
+          duration: "22:50",
+          videoId: "",
+          summary: "Noise reduction, broadcast audio loudness, and impactful background scoring",
+          resources: []
+        }
+      ]
+    },
+    {
+      id: "mod-5",
+      title: "Module 5: Studio Delivery, Social Reels & Client Monetization",
+      lessons: [
+        {
+          id: "les-5-1",
+          title: "5.1 4K Master Export Settings & 9:16 Viral Reels",
+          duration: "18:20",
+          videoId: "",
+          summary: "Sharpest bitrate compression without quality loss for YouTube & Instagram",
+          resources: []
         }
       ]
     }
-  ], null, 2);
-  switchCurriculumTab('visual');
-  document.getElementById('lmsCourseModal').classList.add('show');
+  ];
+
+  currentEditingModules = starter;
+  document.getElementById('courseModulesJson').value = JSON.stringify(starter, null, 2);
+  renderVisualCurriculum(currentEditingModules);
+  if (notify) toast('⚡ 5-Module Starter Curriculum loaded!');
 }
 
 let currentCurriculumMode = 'visual';
@@ -1185,7 +1529,7 @@ function renderVisualCurriculum(modules) {
   if (!container) return;
 
   if (!currentEditingModules.length) {
-    container.innerHTML = '<div style="padding:16px;text-align:center;color:var(--muted);background:#f8fafc;border-radius:10px">No modules added yet. Click "+ Add New Module" below.</div>';
+    container.innerHTML = '<div style="padding:16px;text-align:center;color:var(--muted);background:#f8fafc;border-radius:10px">No modules added yet. Click "+ Add New Module" below or load a starter template.</div>';
     return;
   }
 
@@ -1303,10 +1647,14 @@ function openEditCourseModal(courseId) {
   document.getElementById('courseModalTitle').textContent = `Edit Course: ${course.title}`;
   document.getElementById('editCourseId').value = course.id;
   document.getElementById('courseTitleInput').value = course.title;
-  document.getElementById('courseCategoryInput').value = course.category || '';
-  document.getElementById('courseDurationInput').value = course.duration || '';
-  document.getElementById('courseThumbInput').value = course.thumbnail || '';
-  document.getElementById('courseDescInput').value = course.description || '';
+  document.getElementById('courseCategoryInput').value = course.category || 'Video Editing';
+  document.getElementById('courseDurationInput').value = course.duration || '18 Hours';
+  document.getElementById('courseLevelInput').value = course.level || 'All Levels';
+  document.getElementById('courseBadgeInput').value = course.badge || '';
+  document.getElementById('coursePriceInput').value = course.price || 4999;
+  document.getElementById('courseOrigPriceInput').value = course.originalPrice || 9999;
+  document.getElementById('courseThumbInput').value = course.thumbnail || 'assets/premiere-pro-hero-640.webp';
+  document.getElementById('courseDescInput').value = course.description || course.subtitle || '';
   document.getElementById('courseModulesJson').value = JSON.stringify(course.modules || [], null, 2);
   currentEditingModules = JSON.parse(JSON.stringify(course.modules || []));
   switchCurriculumTab('visual');
@@ -1339,8 +1687,13 @@ async function saveCourseModal() {
     title,
     category: document.getElementById('courseCategoryInput').value.trim(),
     duration: document.getElementById('courseDurationInput').value.trim(),
-    thumbnail: document.getElementById('courseThumbInput').value.trim(),
+    level: document.getElementById('courseLevelInput').value.trim(),
+    badge: document.getElementById('courseBadgeInput').value.trim(),
+    price: parseInt(document.getElementById('coursePriceInput').value.trim(), 10) || 4999,
+    originalPrice: parseInt(document.getElementById('courseOrigPriceInput').value.trim(), 10) || 9999,
+    thumbnail: document.getElementById('courseThumbInput').value.trim() || 'assets/premiere-pro-hero-640.webp',
     description: document.getElementById('courseDescInput').value.trim(),
+    subtitle: document.getElementById('courseDescInput').value.trim(),
     modules
   };
 
@@ -1365,7 +1718,7 @@ async function deleteCourse(courseId) {
   }
 }
 
-// 2. Students
+// 2. Students & Manual Enrollment
 async function loadLmsStudents() {
   const tbody = document.getElementById('lmsStudentsTbody');
   tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">Loading students…</td></tr>';
@@ -1373,10 +1726,26 @@ async function loadLmsStudents() {
     const res = await lmsAdmin('get-students');
     allLmsStudents = res.students || [];
     allLmsCourses = res.courses || [];
+    populateStudentCourseFilter();
     renderLmsStudents();
+    updateLmsKpis();
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--red)">Failed to load students: ${escapeHtml(err.message)}</td></tr>`;
   }
+}
+
+function populateStudentCourseFilter() {
+  const sel = document.getElementById('studentCourseFilter');
+  if (!sel) return;
+  const currVal = sel.value;
+  sel.innerHTML = '<option value="">All Enrolled Courses</option>' + allLmsCourses.map(c => `
+    <option value="${c.id}">${escapeHtml(c.title)}</option>
+  `).join('');
+  if (currVal) sel.value = currVal;
+}
+
+function filterLmsStudents() {
+  renderLmsStudents();
 }
 
 function renderLmsStudents() {
@@ -1385,26 +1754,60 @@ function renderLmsStudents() {
     tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">No students enrolled yet. Click "+ Enroll Student" to add one.</td></tr>';
     return;
   }
-  tbody.innerHTML = allLmsStudents.map(s => {
+
+  const query = (document.getElementById('studentSearch')?.value || '').trim().toLowerCase();
+  const filterCourseId = document.getElementById('studentCourseFilter')?.value || '';
+
+  const filtered = allLmsStudents.filter(s => {
+    if (filterCourseId && !(s.enrolledCourses || []).includes(filterCourseId)) return false;
+    if (!query) return true;
+    const nameMatch = (s.name || '').toLowerCase().includes(query);
+    const phoneMatch = (s.phone || '').includes(query);
+    const cityMatch = (s.city || '').toLowerCase().includes(query);
+    const courseMatch = (s.enrolledCourseNames || []).some(cn => cn.toLowerCase().includes(query));
+    return nameMatch || phoneMatch || cityMatch || courseMatch;
+  });
+
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">No students found matching your search.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(s => {
     const coursesList = (s.enrolledCourseNames || []).length
-      ? s.enrolledCourseNames.map(cn => `<span class="badge" style="margin:2px">${escapeHtml(cn)}</span>`).join('')
+      ? s.enrolledCourseNames.map(cn => `<span class="badge" style="margin:2px;background:#f1f5f9;color:#334155">${escapeHtml(cn)}</span>`).join('')
       : '<span class="muted" style="font-size:11px">No courses assigned</span>';
+
+    const completed = s.totalCompletedLessons || 0;
+    const certCode = `QAA-PR-${s.phone.slice(-4)}`;
+
     return `
       <tr>
         <td>
-          <b>${escapeHtml(s.name || 'Student')}</b>
-          ${s.city ? `<div class="muted" style="font-size:11px">📍 ${escapeHtml(s.city)}</div>` : ''}
+          <div style="font-weight:700;font-size:13.5px;color:var(--ink)">${escapeHtml(s.name || 'Student')}</div>
+          ${s.city ? `<span class="muted" style="font-size:11px">📍 ${escapeHtml(s.city)}</span>` : ''}
+          ${s.email ? `<span class="muted" style="font-size:11px;margin-left:6px">✉️ ${escapeHtml(s.email)}</span>` : ''}
         </td>
         <td>
-          <a href="tel:+91${s.phone}" style="font-family:monospace;font-weight:600">+91 ${escapeHtml(s.phone)}</a>
+          <div style="display:flex;align-items:center;gap:6px">
+            <a href="tel:+91${s.phone}" style="font-family:monospace;font-weight:700;color:var(--ink)">+91 ${escapeHtml(s.phone)}</a>
+          </div>
         </td>
-        <td>${coursesList}</td>
-        <td><b>${s.totalCompletedLessons || 0}</b> lessons completed</td>
+        <td style="max-width:240px">${coursesList}</td>
+        <td>
+          <div style="font-size:12px;font-weight:600"><b>${completed}</b> lessons done</div>
+          <div style="width:90px;height:5px;background:#e2e8f0;border-radius:99px;margin-top:4px;overflow:hidden">
+            <div style="width:${Math.min(100, completed * 10)}%;height:100%;background:#10b981"></div>
+          </div>
+        </td>
         <td style="font-size:11px;color:var(--muted)">${s.enrolledAt ? new Date(s.enrolledAt).toLocaleDateString() : '—'}</td>
         <td>
-          <div style="display:flex;gap:6px">
-            <button onclick="openEditStudentModal('${s.phone}')" class="btn btn-outline" style="padding:6px 12px;font-size:11px">Edit Courses</button>
-            <button onclick="deleteStudent('${s.phone}')" class="btn btn-danger" style="padding:6px 10px;font-size:11px">✕</button>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <button onclick="openStudentWhatsApp('${s.phone}', '${escapeHtml(s.name || '')}')" class="btn btn-outline" style="padding:5px 9px;font-size:11px;color:#16a34a;border-color:#bbf7d0;background:#f0fdf4" title="Send WhatsApp login &amp; course info">💬 WhatsApp</button>
+            <a href="tel:+91${s.phone}" class="btn btn-outline" style="padding:5px 9px;font-size:11px;color:#2563eb" title="Call Student">📞 Call</a>
+            <a href="portal/index.html?verify=${encodeURIComponent(certCode)}" target="_blank" class="btn btn-outline" style="padding:5px 9px;font-size:11px;color:var(--gold)" title="Verify Certificate">🎓 Cert</a>
+            <button onclick="openEditStudentModal('${s.phone}')" class="btn btn-outline" style="padding:5px 9px;font-size:11px">✏️</button>
+            <button onclick="deleteStudent('${s.phone}')" class="btn btn-danger" style="padding:5px 8px;font-size:11px" title="Remove Student">✕</button>
           </div>
         </td>
       </tr>
@@ -1412,20 +1815,81 @@ function renderLmsStudents() {
   }).join('');
 }
 
+function openStudentWhatsApp(phone, name) {
+  const stu = allLmsStudents.find(s => s.phone === phone);
+  const courseStr = (stu?.enrolledCourseNames || []).join(', ') || 'Online Masterclass';
+  const msg = `Namaste ${name}! 🙏\n\nWelcome to *Quick Art Photography Academy*!\n\nAapka course access active ho chuka hai:\n📚 *Course:* ${courseStr}\n\nApna course shuru karne ke liye student portal me login karein:\n🔗 *Student Portal:* https://www.quickartphotography.in/portal/\n📱 *Login Mobile:* ${phone}\n🔑 *Login OTP:* 123456\n\nKisi bhi help ya doubt ke liye aap hume isi WhatsApp par message kar sakte hain.\nHappy Learning! 📸🎬\n- Anil Sharma, Director`;
+  window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function exportStudentsCSV() {
+  if (!allLmsStudents.length) { toast('No students to export', false); return; }
+  const cols = ['Name', 'Mobile', 'Email', 'City', 'Enrolled Courses', 'Completed Lessons', 'Enrolled Date'];
+  const rows = [
+    cols.join(','),
+    ...allLmsStudents.map(s => [
+      `"${String(s.name || '').replace(/"/g, '""')}"`,
+      `"+91${s.phone}"`,
+      `"${String(s.email || '').replace(/"/g, '""')}"`,
+      `"${String(s.city || '').replace(/"/g, '""')}"`,
+      `"${(s.enrolledCourseNames || []).join('; ').replace(/"/g, '""')}"`,
+      s.totalCompletedLessons || 0,
+      `"${s.enrolledAt ? new Date(s.enrolledAt).toLocaleDateString() : ''}"`
+    ].join(','))
+  ];
+  const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `quickart-students-${Date.now()}.csv`;
+  a.click();
+}
+
+function toggleAllEnrollCourses(select) {
+  document.querySelectorAll('.enroll-course-cb').forEach(cb => {
+    cb.checked = select;
+  });
+  updateEnrollModalAmount();
+}
+
+function updateEnrollModalAmount() {
+  const checkedBoxes = Array.from(document.querySelectorAll('.enroll-course-cb:checked')).map(cb => cb.value);
+  let total = 0;
+  checkedBoxes.forEach(cid => {
+    const c = allLmsCourses.find(x => x.id === cid);
+    if (c && c.price) total += Number(c.price);
+  });
+  const amtInput = document.getElementById('enrollStudentAmount');
+  if (amtInput && total > 0) amtInput.value = total;
+}
+
 function openEnrollStudentModal() {
+  document.getElementById('studentModalTitle').textContent = 'Manual Student Enrollment';
   document.getElementById('enrollStudentName').value = '';
   document.getElementById('enrollStudentPhone').value = '';
   document.getElementById('enrollStudentPhone').removeAttribute('readonly');
-  populateCourseCheckboxes([]);
+  document.getElementById('enrollStudentEmail').value = '';
+  document.getElementById('enrollStudentCity').value = '';
+  document.getElementById('enrollStudentNotes').value = '';
+  document.getElementById('enrollStudentPaymentMode').value = 'UPI / QR Code';
+  document.getElementById('enrollStudentAmount').value = '4999';
+  document.getElementById('enrollStudentSendWA').checked = true;
+  populateCourseCheckboxes(allLmsCourses.length ? [allLmsCourses[0].id] : []);
   document.getElementById('lmsStudentModal').classList.add('show');
 }
 
 function openEditStudentModal(phone) {
   const stu = allLmsStudents.find(s => s.phone === phone);
   if (!stu) return;
+  document.getElementById('studentModalTitle').textContent = `Edit Student: ${stu.name || stu.phone}`;
   document.getElementById('enrollStudentName').value = stu.name || '';
   document.getElementById('enrollStudentPhone').value = stu.phone;
   document.getElementById('enrollStudentPhone').setAttribute('readonly', 'true');
+  document.getElementById('enrollStudentEmail').value = stu.email || '';
+  document.getElementById('enrollStudentCity').value = stu.city || '';
+  document.getElementById('enrollStudentNotes').value = '';
+  document.getElementById('enrollStudentPaymentMode').value = 'UPI / QR Code';
+  document.getElementById('enrollStudentAmount').value = '0';
+  document.getElementById('enrollStudentSendWA').checked = false;
   populateCourseCheckboxes(stu.enrolledCourses || []);
   document.getElementById('lmsStudentModal').classList.add('show');
 }
@@ -1437,9 +1901,12 @@ function populateCourseCheckboxes(selectedIds) {
     return;
   }
   container.innerHTML = allLmsCourses.map(c => `
-    <label style="display:flex;align-items:center;gap:8px;font-size:12px;text-transform:none;letter-spacing:0;color:var(--ink);cursor:pointer">
-      <input type="checkbox" value="${c.id}" class="enroll-course-cb" ${selectedIds.includes(c.id) ? 'checked' : ''} style="width:auto" />
-      <span>${escapeHtml(c.title)}</span>
+    <label style="display:flex;align-items:center;justify-content:space-between;font-size:12px;text-transform:none;letter-spacing:0;color:var(--ink);cursor:pointer;padding:4px 0">
+      <div style="display:flex;align-items:center;gap:8px">
+        <input type="checkbox" value="${c.id}" onchange="updateEnrollModalAmount()" class="enroll-course-cb" ${selectedIds.includes(c.id) ? 'checked' : ''} style="width:auto" />
+        <span><b>${escapeHtml(c.title)}</b></span>
+      </div>
+      <span style="font-weight:600;color:#10b981">₹${Number(c.price || 4999).toLocaleString()}</span>
     </label>
   `).join('');
 }
@@ -1451,30 +1918,235 @@ function closeStudentModal() {
 async function saveStudentModal() {
   const name = document.getElementById('enrollStudentName').value.trim();
   const phone = document.getElementById('enrollStudentPhone').value.replace(/\D/g, '');
-  if (phone.length < 10) { toast('Please enter a 10-digit mobile number', false); return; }
+  const email = document.getElementById('enrollStudentEmail').value.trim();
+  const city = document.getElementById('enrollStudentCity').value.trim();
+  const paymentMethod = document.getElementById('enrollStudentPaymentMode').value;
+  const amountPaid = parseInt(document.getElementById('enrollStudentAmount').value.trim(), 10) || 0;
+  const notes = document.getElementById('enrollStudentNotes').value.trim();
+  const sendWA = document.getElementById('enrollStudentSendWA').checked;
+
+  if (phone.length < 10) { toast('Please enter a valid 10-digit mobile number', false); return; }
 
   const checkedBoxes = document.querySelectorAll('.enroll-course-cb:checked');
   const enrolledCourses = Array.from(checkedBoxes).map(cb => cb.value);
+  if (!enrolledCourses.length) { toast('Please select at least one course', false); return; }
+
+  const btn = document.getElementById('btnSaveStudent');
+  if (btn) { btn.disabled = true; btn.textContent = 'Enrolling Student…'; }
 
   try {
-    await lmsAdmin('enroll-student', {
+    const res = await lmsAdmin('enroll-student', {
       method: 'POST',
-      body: { name, phone, enrolledCourses }
+      body: { name, phone, email, city, enrolledCourses, paymentMethod, amountPaid, notes }
     });
-    toast('✅ Student enrolled successfully!');
+    toast('✅ Student enrolled successfully & course unlocked!');
     closeStudentModal();
     loadLmsStudents();
+
+    // If WhatsApp welcome checked, trigger WhatsApp immediately
+    if (sendWA && res.waLink) {
+      window.open(res.waLink, '_blank');
+    }
   } catch (err) {
     toast(`Enroll failed: ${err.message}`, false);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Enroll Student & Grant Access ✓'; }
   }
 }
 
 async function deleteStudent(phone) {
-  if (!confirm(`Remove student with phone +91 ${phone}?`)) return;
+  if (!confirm(`Remove student with phone +91 ${phone}? They will lose access to all lessons.`)) return;
   try {
     await lmsAdmin('delete-student', { method: 'POST', body: { phone } });
     toast('Student removed');
     loadLmsStudents();
+  } catch (err) {
+    toast(err.message, false);
+  }
+}
+
+// 3. Coupons & Offers Management
+async function loadLmsCoupons() {
+  const tbody = document.getElementById('lmsCouponsTbody');
+  tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted)">Loading coupons…</td></tr>';
+  try {
+    const res = await lmsAdmin('get-coupons');
+    allLmsCoupons = res.coupons || [];
+    renderLmsCoupons();
+    updateLmsKpis();
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--red)">Failed to load coupons: ${escapeHtml(err.message)}</td></tr>`;
+  }
+}
+
+function renderLmsCoupons() {
+  const tbody = document.getElementById('lmsCouponsTbody');
+  if (!allLmsCoupons.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted)">No coupons created yet. Click "+ Create New Coupon" to offer student discounts.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = allLmsCoupons.map(c => {
+    const isExpired = c.expiry && new Date(c.expiry) < new Date(new Date().toDateString());
+    const discountText = c.type === 'percent'
+      ? `${c.discount}% OFF ${c.maxDiscount ? `(Max ₹${c.maxDiscount})` : ''}`
+      : `Flat ₹${Number(c.discount).toLocaleString()} OFF`;
+
+    const statusBadge = isExpired
+      ? '<span class="badge" style="background:#fee2e2;color:#991b1b">Expired</span>'
+      : (c.active !== false
+          ? '<span class="badge" style="background:#dcfce7;color:#166534">Active ✓</span>'
+          : '<span class="badge" style="background:#f1f5f9;color:#64748b">Inactive</span>');
+
+    return `
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:6px">
+            <b style="font-family:monospace;font-size:14px;color:var(--gold);letter-spacing:0.5px">${escapeHtml(c.code)}</b>
+          </div>
+          ${c.description ? `<div class="muted" style="font-size:11px">${escapeHtml(c.description)}</div>` : ''}
+        </td>
+        <td><b style="color:#10b981">${discountText}</b></td>
+        <td>₹${Number(c.minAmount || 0).toLocaleString()}</td>
+        <td><span class="badge" style="background:#f8fafc">${escapeHtml(c.courseId === 'all' ? 'All Courses' : c.courseId)}</span></td>
+        <td style="font-size:11.5px;color:var(--muted)">${c.expiry ? new Date(c.expiry).toLocaleDateString() : 'Never'}</td>
+        <td><b>${c.uses || 0}</b> times</td>
+        <td>${statusBadge}</td>
+        <td>
+          <div style="display:flex;gap:6px">
+            <button onclick="openEditCouponModal('${c.code}')" class="btn btn-outline" style="padding:5px 9px;font-size:11px">Edit</button>
+            <button onclick="toggleCouponStatus('${c.code}')" class="btn btn-outline" style="padding:5px 9px;font-size:11px" title="Toggle active status">
+              ${c.active !== false ? 'Disable' : 'Enable'}
+            </button>
+            <button onclick="deleteCoupon('${c.code}')" class="btn btn-danger" style="padding:5px 8px;font-size:11px" title="Delete Coupon">✕</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function openAddCouponModal() {
+  document.getElementById('couponModalTitle').textContent = 'Create New Discount Coupon';
+  document.getElementById('couponOriginalCode').value = '';
+  document.getElementById('couponCodeInput').value = '';
+  document.getElementById('couponCodeInput').removeAttribute('readonly');
+  document.getElementById('couponTypeSelect').value = 'percent';
+  document.getElementById('couponDiscountInput').value = '20';
+  document.getElementById('couponMaxDiscountInput').value = '1500';
+  document.getElementById('couponMinAmountInput').value = '1000';
+  
+  // Set default expiry to end of current year
+  const endOfYear = new Date(new Date().getFullYear(), 11, 31).toISOString().split('T')[0];
+  document.getElementById('couponExpiryInput').value = endOfYear;
+  document.getElementById('couponDescInput').value = '';
+  document.getElementById('couponActiveCheck').checked = true;
+
+  populateCouponCourseSelect('all');
+  handleCouponTypeChange();
+  document.getElementById('lmsCouponModal').classList.add('show');
+}
+
+function openEditCouponModal(code) {
+  const c = allLmsCoupons.find(x => x.code === code);
+  if (!c) return;
+  document.getElementById('couponModalTitle').textContent = `Edit Coupon: ${c.code}`;
+  document.getElementById('couponOriginalCode').value = c.code;
+  document.getElementById('couponCodeInput').value = c.code;
+  document.getElementById('couponCodeInput').setAttribute('readonly', 'true');
+  document.getElementById('couponTypeSelect').value = c.type || 'percent';
+  document.getElementById('couponDiscountInput').value = c.discount || '';
+  document.getElementById('couponMaxDiscountInput').value = c.maxDiscount || '';
+  document.getElementById('couponMinAmountInput').value = c.minAmount || 0;
+  document.getElementById('couponExpiryInput').value = c.expiry || '';
+  document.getElementById('couponDescInput').value = c.description || '';
+  document.getElementById('couponActiveCheck').checked = c.active !== false;
+
+  populateCouponCourseSelect(c.courseId || 'all');
+  handleCouponTypeChange();
+  document.getElementById('lmsCouponModal').classList.add('show');
+}
+
+function populateCouponCourseSelect(selectedCourseId) {
+  const sel = document.getElementById('couponCourseSelect');
+  if (!sel) return;
+  sel.innerHTML = '<option value="all">All Online Courses</option>' + allLmsCourses.map(c => `
+    <option value="${c.id}" ${c.id === selectedCourseId ? 'selected' : ''}>${escapeHtml(c.title)}</option>
+  `).join('');
+}
+
+function handleCouponTypeChange() {
+  const type = document.getElementById('couponTypeSelect').value;
+  const lbl = document.getElementById('lblCouponDiscount');
+  const wrapMax = document.getElementById('wrapCouponMaxDiscount');
+  if (type === 'percent') {
+    lbl.textContent = 'Discount Value (%) *';
+    wrapMax.style.display = 'block';
+  } else {
+    lbl.textContent = 'Flat Discount (₹) *';
+    wrapMax.style.display = 'none';
+  }
+}
+
+function closeCouponModal() {
+  document.getElementById('lmsCouponModal').classList.remove('show');
+}
+
+async function saveCouponModal() {
+  const code = document.getElementById('couponCodeInput').value.trim().toUpperCase();
+  const type = document.getElementById('couponTypeSelect').value;
+  const discount = parseFloat(document.getElementById('couponDiscountInput').value) || 0;
+  const maxDiscount = parseInt(document.getElementById('couponMaxDiscountInput').value, 10) || null;
+  const minAmount = parseInt(document.getElementById('couponMinAmountInput').value, 10) || 0;
+  const courseId = document.getElementById('couponCourseSelect').value;
+  const expiry = document.getElementById('couponExpiryInput').value;
+  const description = document.getElementById('couponDescInput').value.trim();
+  const active = document.getElementById('couponActiveCheck').checked;
+
+  if (!code) { toast('Please enter a coupon code', false); return; }
+  if (discount <= 0) { toast('Please enter a valid discount value', false); return; }
+
+  const coupon = {
+    code,
+    type,
+    discount,
+    maxDiscount,
+    minAmount,
+    courseId,
+    expiry,
+    description,
+    active
+  };
+
+  try {
+    await lmsAdmin('save-coupon', { method: 'POST', body: { coupon } });
+    toast('✅ Coupon saved successfully!');
+    closeCouponModal();
+    loadLmsCoupons();
+  } catch (err) {
+    toast(`Save coupon failed: ${err.message}`, false);
+  }
+}
+
+async function toggleCouponStatus(code) {
+  const c = allLmsCoupons.find(x => x.code === code);
+  if (!c) return;
+  c.active = !(c.active !== false);
+  try {
+    await lmsAdmin('save-coupon', { method: 'POST', body: { coupon: c } });
+    toast(`Coupon ${c.code} is now ${c.active ? 'Active' : 'Inactive'}`);
+    loadLmsCoupons();
+  } catch (err) {
+    toast(err.message, false);
+  }
+}
+
+async function deleteCoupon(code) {
+  if (!confirm(`Are you sure you want to delete coupon "${code}"?`)) return;
+  try {
+    await lmsAdmin('delete-coupon', { method: 'POST', body: { code } });
+    toast('Coupon deleted');
+    loadLmsCoupons();
   } catch (err) {
     toast(err.message, false);
   }

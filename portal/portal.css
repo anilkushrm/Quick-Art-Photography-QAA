@@ -2214,6 +2214,14 @@ a {
   gap: 6px;
 }
 
+.checkout-coupon-box {
+  transition: all 0.25s ease;
+}
+.checkout-coupon-box:focus-within {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.15);
+}
+
 /* ================= Module Quiz ================= */
 .quiz-card {
   padding: 8px;

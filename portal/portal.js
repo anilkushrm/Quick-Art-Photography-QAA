@@ -1069,6 +1069,7 @@ function closeCatalogModal() {
 // ---------- 6. Instant Checkout Modal ----------
 
 let activeCheckoutCourse = null;
+let activeAppliedCoupon = null;
 
 async function openCheckoutModal(courseId) {
   try {
@@ -1079,12 +1080,23 @@ async function openCheckoutModal(courseId) {
       return;
     }
     activeCheckoutCourse = course;
+    activeAppliedCoupon = null;
 
     document.getElementById('checkout-course-id').value = course.id;
     document.getElementById('checkout-course-title').textContent = course.title;
     document.getElementById('checkout-course-price').textContent = `₹${course.price.toLocaleString()}`;
     document.getElementById('checkout-course-orig').textContent = `₹${course.originalPrice.toLocaleString()}`;
     document.getElementById('btn-pay-amount').textContent = `₹${course.price.toLocaleString()}`;
+
+    // Reset coupon UI
+    const cpInput = document.getElementById('checkout-coupon-input');
+    if (cpInput) cpInput.value = '';
+    const pill = document.getElementById('coupon-applied-pill');
+    if (pill) pill.style.display = 'none';
+    const msg = document.getElementById('coupon-feedback-msg');
+    if (msg) msg.style.display = 'none';
+    const breakdown = document.getElementById('coupon-discount-breakdown');
+    if (breakdown) breakdown.style.display = 'none';
 
     // Auto-fill student details if already logged in
     if (currentStudent) {
@@ -1103,6 +1115,71 @@ function closeCheckoutModal() {
   document.getElementById('modal-checkout').classList.remove('show');
 }
 
+// Apply Coupon Function in Checkout
+async function applyCheckoutCoupon() {
+  const code = (document.getElementById('checkout-coupon-input')?.value || '').trim().toUpperCase();
+  const msgEl = document.getElementById('coupon-feedback-msg');
+  const pillEl = document.getElementById('coupon-applied-pill');
+  const breakdownEl = document.getElementById('coupon-discount-breakdown');
+  const btn = document.getElementById('btn-apply-coupon');
+
+  if (!code) {
+    if (msgEl) {
+      msgEl.textContent = 'Please enter a coupon code';
+      msgEl.style.color = '#ef4444';
+      msgEl.style.display = 'block';
+    }
+    return;
+  }
+
+  if (!activeCheckoutCourse) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+
+  try {
+    const res = await fetch(`../api/lms.php?action=apply-coupon&code=${encodeURIComponent(code)}&courseId=${encodeURIComponent(activeCheckoutCourse.id)}&price=${activeCheckoutCourse.price}`).then(r => r.json());
+    if (!res.ok) throw new Error(res.error || 'Invalid coupon code');
+
+    activeAppliedCoupon = res;
+
+    // Show success pill and breakdown
+    if (pillEl) pillEl.style.display = 'inline-block';
+    if (msgEl) {
+      msgEl.textContent = `✓ ${res.description || 'Coupon applied successfully!'}`;
+      msgEl.style.color = '#059669';
+      msgEl.style.display = 'block';
+    }
+
+    if (breakdownEl) {
+      document.getElementById('chk-base-price').textContent = `₹${res.originalPrice.toLocaleString()}`;
+      document.getElementById('chk-coupon-tag').textContent = res.code;
+      document.getElementById('chk-discount-amt').textContent = `-₹${res.discountAmount.toLocaleString()}`;
+      document.getElementById('chk-final-amt').textContent = `₹${res.finalPrice.toLocaleString()}`;
+      breakdownEl.style.display = 'block';
+    }
+
+    // Update Pay Button
+    document.getElementById('btn-pay-amount').textContent = `₹${res.finalPrice.toLocaleString()}`;
+    toast(`🎟️ Coupon ${res.code} applied: ₹${res.discountAmount.toLocaleString()} saved!`);
+
+  } catch (err) {
+    activeAppliedCoupon = null;
+    if (pillEl) pillEl.style.display = 'none';
+    if (breakdownEl) breakdownEl.style.display = 'none';
+    if (msgEl) {
+      msgEl.textContent = err.message;
+      msgEl.style.color = '#ef4444';
+      msgEl.style.display = 'block';
+    }
+    document.getElementById('btn-pay-amount').textContent = `₹${activeCheckoutCourse.price.toLocaleString()}`;
+    toast(err.message, false);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Apply';
+  }
+}
+
 // Payment method option click
 document.querySelectorAll('.pay-option').forEach(opt => {
   opt.addEventListener('click', () => {
@@ -1119,6 +1196,7 @@ document.getElementById('form-checkout').addEventListener('submit', async (e) =>
   const phone = document.getElementById('checkout-phone').value.replace(/\D/g, '');
   const email = document.getElementById('checkout-email').value.trim();
   const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'UPI';
+  const couponCode = activeAppliedCoupon ? activeAppliedCoupon.code : '';
 
   if (phone.length < 10) {
     toast('Please enter a valid 10-digit mobile number', false);
@@ -1133,7 +1211,7 @@ document.getElementById('form-checkout').addEventListener('submit', async (e) =>
     const res = await fetch('../api/lms.php?action=checkout-enroll', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ courseId, name, phone, email, paymentMethod })
+      body: JSON.stringify({ courseId, name, phone, email, paymentMethod, couponCode })
     }).then(r => r.json());
 
     if (!res.ok) throw new Error(res.error || 'Enrollment failed');
@@ -1144,7 +1222,7 @@ document.getElementById('form-checkout').addEventListener('submit', async (e) =>
     currentStudent = res.student;
 
     closeCheckoutModal();
-    toast('🎉 Payment successful! Course unlocked.');
+    toast('🎉 Payment successful! Course unlocked instantly.');
 
     // Open classroom directly
     await openCourseClassroom(courseId);
@@ -1153,7 +1231,8 @@ document.getElementById('form-checkout').addEventListener('submit', async (e) =>
     toast(`Payment error: ${err.message}`, false);
   } finally {
     btn.disabled = false;
-    btn.innerHTML = `Pay <span id="btn-pay-amount">₹${activeCheckoutCourse?.price?.toLocaleString() || '4,999'}</span> &amp; Start Learning Now →`;
+    const finalAmount = activeAppliedCoupon ? activeAppliedCoupon.finalPrice : (activeCheckoutCourse?.price || 4999);
+    btn.innerHTML = `Pay <span id="btn-pay-amount">₹${finalAmount.toLocaleString()}</span> &amp; Start Learning Now →`;
   }
 });
 

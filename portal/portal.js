@@ -1049,9 +1049,14 @@ async function openCatalogModal() {
                 Resume Course →
               </button>
             ` : `
-              <button type="button" class="btn btn-gold btn-block" onclick="closeCatalogModal(); openCheckoutModal('${c.id}')">
-                Enroll Now →
-              </button>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <a href="../online/${c.slug || ''}/index.html" class="btn btn-outline btn-block" style="text-decoration:none;font-size:12px;padding:8px 6px;text-align:center;">
+                  Syllabus →
+                </a>
+                <button type="button" class="btn btn-gold btn-block" style="font-size:12px;padding:8px 6px;" onclick="closeCatalogModal(); openCheckoutModal('${c.id}')">
+                  Enroll →
+                </button>
+              </div>
             `}
           </div>
         </div>

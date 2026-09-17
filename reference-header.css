@@ -46,6 +46,8 @@
 .ref-course:hover{border-color:#b9802d;background:#fffbf2}
 .ref-course-icon{display:grid;place-items:center;width:38px;height:38px;flex-shrink:0;background:#fff0d2;color:#8c5f20;border-radius:8px;font:600 15px/1 Arial}
 .ref-all{display:inline-block;color:#8c5f20;font-size:14px;font-weight:700;margin-top:24px}
+.ref-all-online{display:inline-flex;align-items:center;gap:6px;color:#8c5f20;font-size:13.5px;font-weight:700;margin-top:20px;padding:8px 14px;background:#fff8eb;border:1px solid #f0dcbe;border-radius:8px;text-decoration:none;transition:all .2s ease}
+.ref-all-online:hover{background:#f7e6c9;color:#6d4712;border-color:#d8a153;transform:translateX(4px)}
 .ref-resources{position:relative}.ref-resource-panel{position:absolute;top:calc(100% + 10px);left:0;width:250px;padding:10px;background:#fff;border:1px solid #e9dfce;border-radius:12px;box-shadow:0 15px 35px #00000033}
 .ref-resource-panel a{display:block;color:#172033;padding:12px;border-radius:6px;font-size:15px}.ref-resource-panel a:hover{background:#fff6e5}
 .ref-header :is(a,button,summary):focus-visible{outline:3px solid #ffca65;outline-offset:3px}

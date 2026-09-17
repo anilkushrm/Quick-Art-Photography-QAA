@@ -34,6 +34,43 @@
   if(oldMobileMarketing){oldMobileMarketing.replaceWith(...marketingCards.map(card=>card.cloneNode(true)));}
   mobileOnline.querySelectorAll('a[href*="website-design-course/"],a[href*="automation-course/"]').forEach(card=>card.remove());
  }
+
+  // Ensure "View All Online Programs" is prominently present in all online panels & mobile nav
+  if(online){
+   let onlineHubHref = 'online/index.html';
+   const sampleOnline = online.querySelector('a[href*="premiere-pro-course"]') || online.querySelector('a[href*="edius-course"]');
+   if(sampleOnline){
+    const s = sampleOnline.getAttribute('href');
+    if(s.includes('online/')){
+     onlineHubHref = s.replace(/online\/.*$/, 'online/index.html');
+    } else {
+     onlineHubHref = s.replace(/[^/]+\/index\.html.*$/, 'index.html');
+    }
+   }
+
+   online.querySelectorAll('.ref-panels > [role="tabpanel"]').forEach(panel => {
+    let allLink = panel.querySelector('.ref-all-online');
+    if(!allLink){
+     allLink = document.createElement('a');
+     allLink.className = 'ref-all ref-all-online';
+     panel.append(allLink);
+    }
+    allLink.href = onlineHubHref;
+    allLink.innerHTML = '✨ View All Online Programs (सभी 9 कोर्सेज देखें) →';
+   });
+
+   const mobileOnline = header.querySelector('#ref-mobile details');
+   if(mobileOnline && !mobileOnline.querySelector('.ref-mobile-all-online')){
+    const allMobileLink = document.createElement('a');
+    allMobileLink.className = 'ref-mobile-all-online';
+    allMobileLink.href = onlineHubHref;
+    allMobileLink.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;margin:8px 0 14px;background:linear-gradient(135deg,#fff8ec,#ffe8b8);border:1px solid #e2bf7d;border-radius:10px;color:#8a5e1e;font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 3px 10px rgba(216,161,83,0.18);';
+    allMobileLink.innerHTML = '🎓 View All Online Programs (सभी 9 ऑनलाइन कोर्सेज) →';
+    const summary = mobileOnline.querySelector('summary');
+    if(summary) summary.after(allMobileLink);
+   }
+  }
+
  const mobileNav=header.querySelector('#ref-mobile');
  const campus=header.querySelector('#ref-courses');
  if(campus){

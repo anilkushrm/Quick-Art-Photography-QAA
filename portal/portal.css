@@ -407,7 +407,7 @@ a {
   margin-bottom: 8px;
 }
 
-.hero-text h1 {
+.hero-text :is(h1, h2) {
   font-size: 28px;
   font-weight: 800;
   margin-bottom: 8px;

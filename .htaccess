@@ -12,6 +12,14 @@ AddOutputFilterByType DEFLATE text/html text/css application/javascript applicat
 RedirectMatch 301 ^/courses/graphic-design/?$ /courses/album-design/
 RedirectMatch 301 ^/courses/graphic-design/index\.html$ /courses/album-design/
 
+# Legacy 301 Redirects (SEO preservation for indexed pages)
+RedirectMatch 301 ^/adobe-premiere-pro-course/?$ /online/premiere-pro-course/
+RedirectMatch 301 ^/adobe-premiere-pro-course/index\.html$ /online/premiere-pro-course/
+RedirectMatch 301 ^/best-davinci-resolve-online-course-in-hindi/?$ /online/davinci-resolve-course/
+RedirectMatch 301 ^/best-davinci-resolve-online-course-in-hindi/index\.html$ /online/davinci-resolve-course/
+RedirectMatch 301 ^/join-video-editing-album-design-course/?$ /online/album-design-course/
+RedirectMatch 301 ^/join-video-editing-album-design-course/index\.html$ /online/album-design-course/
+
 # Performance: static assets
 <IfModule mod_deflate.c>
  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml

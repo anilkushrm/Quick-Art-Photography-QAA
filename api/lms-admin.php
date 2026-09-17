@@ -254,6 +254,11 @@ if ($action === 'save-lms-settings' && $method === 'POST') {
         'bunnyTokenAuthKey' => trim($body['bunnyTokenAuthKey'] ?? ''),
         'bunnyHostname' => trim($body['bunnyHostname'] ?? 'iframe.mediadelivery.net'),
         'bunnyAccountApiKey' => trim($body['bunnyAccountApiKey'] ?? ($currSettings['bunnyAccountApiKey'] ?? '')),
+        'razorpayEnabled' => !empty($body['razorpayEnabled']),
+        'razorpayKeyId' => trim($body['razorpayKeyId'] ?? ($currSettings['razorpayKeyId'] ?? '')),
+        'razorpayKeySecret' => trim($body['razorpayKeySecret'] ?? ($currSettings['razorpayKeySecret'] ?? '')),
+        'razorpayWebhookSecret' => trim($body['razorpayWebhookSecret'] ?? ($currSettings['razorpayWebhookSecret'] ?? '')),
+        'razorpayMode' => trim($body['razorpayMode'] ?? ($currSettings['razorpayMode'] ?? 'live')),
         'watermarkEnabled' => !empty($body['watermarkEnabled']),
         'watermarkOpacity' => floatval($body['watermarkOpacity'] ?? 0.35),
         'otpDemoMode' => !empty($body['otpDemoMode']),
@@ -305,6 +310,41 @@ if ($action === 'test-bunny' && ($method === 'GET' || $method === 'POST')) {
             'connected' => false,
             'message' => 'Bunny.net API response code: ' . $httpCode
         ]);
+    }
+}
+
+// 8.2 Test Razorpay Connection Handshake
+if ($action === 'test-razorpay' && ($method === 'GET' || $method === 'POST')) {
+    $body = read_json_body();
+    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+
+    $keyId = trim($body['razorpayKeyId'] ?? ($settings['razorpayKeyId'] ?? ''));
+    $keySecret = trim($body['razorpayKeySecret'] ?? ($settings['razorpayKeySecret'] ?? ''));
+
+    if (!$keyId || !$keySecret) {
+        json_err('Please provide both Razorpay Key ID and Key Secret to test connection', 400);
+    }
+
+    $ch = curl_init("https://api.razorpay.com/v1/payments?count=1");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_USERPWD, "{$keyId}:{$keySecret}");
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    $res = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode === 200) {
+        $isTest = (strpos($keyId, 'test') !== false);
+        json_ok([
+            'connected' => true,
+            'keyId' => $keyId,
+            'mode' => $isTest ? 'Test Sandbox' : 'Live Production',
+            'message' => 'Razorpay API credentials verified successfully! Ready to accept UPI & cards.'
+        ]);
+    } else {
+        $data = json_decode($res, true);
+        $errMsg = $data['error']['description'] ?? "HTTP {$httpCode} Unauthorized / Invalid credentials";
+        json_err("Razorpay connection failed: {$errMsg}", 400);
     }
 }
 

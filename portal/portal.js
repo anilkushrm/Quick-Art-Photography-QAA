@@ -1188,14 +1188,13 @@ document.querySelectorAll('.pay-option').forEach(opt => {
   });
 });
 
-// Checkout Form Submission
+// Checkout Form Submission (Razorpay-first, fallback to direct enroll)
 document.getElementById('form-checkout').addEventListener('submit', async (e) => {
   e.preventDefault();
   const courseId = document.getElementById('checkout-course-id').value;
   const name = document.getElementById('checkout-name').value.trim();
   const phone = document.getElementById('checkout-phone').value.replace(/\D/g, '');
   const email = document.getElementById('checkout-email').value.trim();
-  const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'UPI';
   const couponCode = activeAppliedCoupon ? activeAppliedCoupon.code : '';
 
   if (phone.length < 10) {
@@ -1205,31 +1204,107 @@ document.getElementById('form-checkout').addEventListener('submit', async (e) =>
 
   const btn = document.getElementById('btn-complete-enroll');
   btn.disabled = true;
-  btn.textContent = 'Processing Enrollment…';
+  btn.textContent = 'Processing…';
 
   try {
-    const res = await fetch('../api/lms.php?action=checkout-enroll', {
+    // Step 1: Try to create a Razorpay order
+    const orderRes = await fetch('../api/lms.php?action=create-razorpay-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ courseId, name, phone, email, paymentMethod, couponCode })
+      body: JSON.stringify({ courseId, name, phone, email, couponCode })
     }).then(r => r.json());
 
-    if (!res.ok) throw new Error(res.error || 'Enrollment failed');
+    if (orderRes.ok && orderRes.razorpayEnabled && orderRes.orderId) {
+      // Step 2: Open Razorpay Checkout modal
+      const rzpOptions = {
+        key: orderRes.keyId,
+        amount: orderRes.amount,
+        currency: orderRes.currency || 'INR',
+        name: 'Quick Art Photography Academy',
+        description: orderRes.courseTitle || 'Course Enrollment',
+        order_id: orderRes.orderId,
+        prefill: {
+          name: orderRes.studentName || name,
+          contact: orderRes.studentPhone || phone,
+          email: orderRes.studentEmail || email
+        },
+        theme: { color: '#c99738' },
+        modal: {
+          ondismiss: () => {
+            btn.disabled = false;
+            const finalAmount = activeAppliedCoupon ? activeAppliedCoupon.finalPrice : (activeCheckoutCourse?.price || 4999);
+            btn.innerHTML = `Pay <span id="btn-pay-amount">₹${finalAmount.toLocaleString()}</span> &amp; Start Learning Now →`;
+            toast('Payment cancelled. Please try again.', false);
+          }
+        },
+        handler: async (response) => {
+          // Step 3: Verify payment signature server-side
+          btn.textContent = 'Verifying Payment…';
+          try {
+            const verifyRes = await fetch('../api/lms.php?action=verify-razorpay-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                courseId,
+                name,
+                phone,
+                email,
+                couponCode
+              })
+            }).then(r => r.json());
 
-    // Save student token & log in immediately
-    studentToken = res.token;
-    localStorage.setItem(TOKEN_KEY, studentToken);
-    currentStudent = res.student;
+            if (!verifyRes.ok || !verifyRes.verified) {
+              throw new Error(verifyRes.error || 'Payment verification failed');
+            }
 
-    closeCheckoutModal();
-    toast('🎉 Payment successful! Course unlocked instantly.');
+            // Step 4: Log in student & open classroom
+            studentToken = verifyRes.token;
+            localStorage.setItem(TOKEN_KEY, studentToken);
+            currentStudent = verifyRes.student;
 
-    // Open classroom directly
-    await openCourseClassroom(courseId);
+            closeCheckoutModal();
+            toast('🎉 Payment verified! Course unlocked instantly.');
+            await openCourseClassroom(courseId);
+
+          } catch (verifyErr) {
+            toast(`Verification error: ${verifyErr.message}. Contact support with Payment ID: ${response.razorpay_payment_id}`, false);
+            btn.disabled = false;
+            const finalAmount = activeAppliedCoupon ? activeAppliedCoupon.finalPrice : (activeCheckoutCourse?.price || 4999);
+            btn.innerHTML = `Pay <span id="btn-pay-amount">₹${finalAmount.toLocaleString()}</span> &amp; Start Learning Now →`;
+          }
+        }
+      };
+
+      const rzp = new Razorpay(rzpOptions);
+      rzp.open();
+      // Button state is managed by modal dismiss / handler
+      btn.disabled = false;
+      btn.textContent = 'Pay with Razorpay';
+
+    } else {
+      // Razorpay not enabled — fallback: direct enrollment
+      const res = await fetch('../api/lms.php?action=checkout-enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ courseId, name, phone, email, paymentMethod: 'Manual', couponCode })
+      }).then(r => r.json());
+
+      if (!res.ok) throw new Error(res.error || 'Enrollment failed');
+
+      studentToken = res.token;
+      localStorage.setItem(TOKEN_KEY, studentToken);
+      currentStudent = res.student;
+
+      closeCheckoutModal();
+      toast('🎉 Enrollment successful! Course unlocked.');
+      await openCourseClassroom(courseId);
+    }
 
   } catch (err) {
-    toast(`Payment error: ${err.message}`, false);
-  } finally {
+    toast(`Error: ${err.message}`, false);
     btn.disabled = false;
     const finalAmount = activeAppliedCoupon ? activeAppliedCoupon.finalPrice : (activeCheckoutCourse?.price || 4999);
     btn.innerHTML = `Pay <span id="btn-pay-amount">₹${finalAmount.toLocaleString()}</span> &amp; Start Learning Now →`;

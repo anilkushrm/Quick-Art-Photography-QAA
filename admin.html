@@ -220,6 +220,47 @@
     box-shadow: 0 4px 18px var(--gold-glow);
   }
 
+  /* Switch Toggle */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 26px;
+  }
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--border);
+    transition: .3s;
+    border-radius: 34px;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #94a3b8;
+    transition: .3s;
+    border-radius: 50%;
+  }
+  input:checked + .slider {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    border-color: var(--gold);
+  }
+  input:checked + .slider:before {
+    transform: translateX(22px);
+    background-color: #0b1120;
+  }
+
   /* Tables */
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); }
@@ -533,6 +574,7 @@
       <button class="tab" data-tab="lms-students">🎓 Students (LMS)</button>
       <button class="tab" data-tab="lms-coupons">🎟️ Coupons &amp; Offers</button>
       <button class="tab" data-tab="lms-transactions">💰 Orders / Revenue</button>
+      <button class="tab" data-tab="lms-razorpay">💳 Razorpay Gateway</button>
       <button class="tab" data-tab="lms-settings">🎥 Bunny.net &amp; Video</button>
       <button class="tab" data-tab="settings">⚙️ Webhook &amp; Admin</button>
     </div>
@@ -1032,6 +1074,92 @@
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LMS RAZORPAY GATEWAY TAB -->
+    <div id="tab-lms-razorpay" class="tab-content hidden" style="margin-top:16px">
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:24px">💳</span>
+              <h2 style="margin:0">Razorpay Payment Gateway Integration</h2>
+            </div>
+            <p class="muted" style="margin-top:6px">Razorpay API credentials yahan set karein. Jab koi student course buy karega, Razorpay ka official checkout popup aayega aur payment verified hote hi course instant unlock ho jayega.</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span id="rzp-mode-pill" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:rgba(99,102,241,0.15);color:#a5b4fc;text-transform:uppercase;border:1px solid rgba(99,102,241,0.3)">Mode: Test</span>
+            <span id="rzp-status-pill" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.3)">Disabled</span>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;padding:16px;background:rgba(201,151,56,0.06);border:1px solid rgba(201,151,56,0.25);border-radius:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div>
+              <div style="font-weight:700;font-size:14px;color:#fff">Enable Razorpay Online Checkout</div>
+              <div class="muted" style="font-size:12px;margin-top:2px">Enable karne par students official Razorpay UI (UPI, GPay, PhonePe, Cards, NetBanking) se pay kar sakenge. Agar disable rakhenge to testing ke liye direct signup open rahega.</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="razorpayEnabled" onchange="updateRzpStatusPill()">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:20px;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <label for="razorpayMode">Environment Mode</label>
+            <select id="razorpayMode" onchange="updateRzpModePill()">
+              <option value="test">🧪 Test / Sandbox Mode (rzp_test_...)</option>
+              <option value="live">🚀 Live Production Mode (rzp_live_...)</option>
+            </select>
+            <div class="muted" style="font-size:11px;margin-top:4px">Test mode me dummy cards / UPI se payment test kar sakte hain bina real money kate.</div>
+          </div>
+          <div>
+            <label for="razorpayKeyId">Razorpay Key ID *</label>
+            <input type="text" id="razorpayKeyId" placeholder="rzp_test_... or rzp_live_..." autocomplete="off" />
+            <div class="muted" style="font-size:11px;margin-top:4px">Razorpay Dashboard → Settings → API Keys se copy karein.</div>
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:16px;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <label for="razorpayKeySecret">Razorpay Key Secret *</label>
+            <input type="password" id="razorpayKeySecret" placeholder="Enter Razorpay Key Secret" autocomplete="new-password" />
+            <div class="muted" style="font-size:11px;margin-top:4px">Server-side HMAC-SHA256 signature verification ke liye zaroori hai. (Browser me kabhi reveal nahi hoga)</div>
+          </div>
+          <div>
+            <label for="razorpayWebhookSecret">Webhook Secret (Optional)</label>
+            <input type="password" id="razorpayWebhookSecret" placeholder="Optional webhook secret" />
+            <div class="muted" style="font-size:11px;margin-top:4px">Background asynchronous payment notifications ke liye.</div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <button type="button" onclick="testRazorpayConnection()" class="btn btn-outline" id="btn-test-razorpay" style="display:inline-flex;align-items:center;gap:6px">
+            ⚡ Test Razorpay Connection
+          </button>
+          <button type="button" onclick="saveRazorpaySettingsForm()" class="btn btn-gold" id="btn-save-razorpay" style="display:inline-flex;align-items:center;gap:6px">
+            💾 Save Razorpay Settings
+          </button>
+          <a href="https://dashboard.razorpay.com/app/keys" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="font-size:12px;padding:6px 14px;margin-left:auto">
+            ↗ Open Razorpay API Keys Dashboard
+          </a>
+        </div>
+
+        <div id="rzp-test-result" style="display:none;margin-top:16px;padding:14px 16px;border-radius:12px;font-size:12.5px"></div>
+
+        <div style="margin-top:24px;padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:16px">
+          <h3 style="font-size:14px;margin:0 0 8px;color:var(--gold-light)">📌 Razorpay Setup Guide:</h3>
+          <ol style="margin:0;padding-left:20px;font-size:12.5px;color:var(--muted);line-height:1.7">
+            <li><a href="https://dashboard.razorpay.com/" target="_blank" style="color:var(--gold);font-weight:600">Razorpay Dashboard</a> par login karein.</li>
+            <li>Left menu me <b>Account &amp; Settings → API Keys</b> section me jayein.</li>
+            <li><b>Generate Key</b> par click karke <b>Key ID</b> aur <b>Key Secret</b> copy karke upar paste karein.</li>
+            <li><b>⚡ Test Razorpay Connection</b> par click karke handshake verify karein.</li>
+            <li><b>💾 Save Razorpay Settings</b> par click karein. Aapka payment gateway live ho jayega!</li>
+          </ol>
         </div>
       </div>
     </div>
@@ -1697,7 +1825,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) =
   const tabName = e.target.dataset.tab;
   document.getElementById('tab-'+tabName).classList.remove('hidden');
 
-  const isLmsTab = ['lms-courses', 'lms-students', 'lms-coupons', 'lms-transactions', 'lms-settings'].includes(tabName);
+  const isLmsTab = ['lms-courses', 'lms-students', 'lms-coupons', 'lms-transactions', 'lms-razorpay', 'lms-settings'].includes(tabName);
   const lmsKpiRow = document.getElementById('lmsKpiRow');
   if (lmsKpiRow) {
     if (isLmsTab) {
@@ -1712,6 +1840,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) =
   if (tabName === 'lms-students') loadLmsStudents();
   if (tabName === 'lms-coupons') loadLmsCoupons();
   if (tabName === 'lms-transactions') loadLmsTransactions();
+  if (tabName === 'lms-razorpay') loadRazorpaySettings();
   if (tabName === 'lms-settings') loadLmsSettings();
   if (tabName === 'settings') loadSettings();
 }));
@@ -2676,6 +2805,143 @@ async function loadLmsTransactions() {
     `).join('');
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--red)">Failed to load orders: ${escapeHtml(err.message)}</td></tr>`;
+  }
+}
+
+// 3.5 Razorpay Settings
+async function loadRazorpaySettings() {
+  try {
+    const res = await lmsAdmin('get-lms-settings');
+    const s = res.settings || {};
+    const enabled = !!s.razorpayEnabled;
+    const mode = s.razorpayMode || 'test';
+
+    document.getElementById('razorpayEnabled').checked = enabled;
+    document.getElementById('razorpayMode').value = mode;
+    document.getElementById('razorpayKeyId').value = s.razorpayKeyId || '';
+    document.getElementById('razorpayKeySecret').value = s.razorpayKeySecret ? '••••••••' : '';
+    document.getElementById('razorpayWebhookSecret').value = s.razorpayWebhookSecret ? '••••••••' : '';
+
+    updateRzpStatusPill();
+    updateRzpModePill();
+
+    // If already configured, auto-test silently
+    if (s.razorpayKeyId && s.razorpayKeySecret) {
+      testRazorpayConnection(true);
+    }
+  } catch (err) {
+    toast(`Could not load Razorpay settings: ${err.message}`, false);
+  }
+}
+
+function updateRzpStatusPill() {
+  const pill = document.getElementById('rzp-status-pill');
+  const enabled = document.getElementById('razorpayEnabled')?.checked;
+  if (!pill) return;
+  if (enabled) {
+    pill.textContent = '✅ Enabled';
+    pill.style.background = 'rgba(16,185,129,0.15)';
+    pill.style.color = '#6ee7b7';
+    pill.style.borderColor = 'rgba(16,185,129,0.4)';
+  } else {
+    pill.textContent = 'Disabled';
+    pill.style.background = 'rgba(239,68,68,0.15)';
+    pill.style.color = '#fca5a5';
+    pill.style.borderColor = 'rgba(239,68,68,0.3)';
+  }
+}
+
+function updateRzpModePill() {
+  const pill = document.getElementById('rzp-mode-pill');
+  const mode = document.getElementById('razorpayMode')?.value;
+  if (!pill) return;
+  if (mode === 'live') {
+    pill.textContent = '🚀 Mode: Live';
+    pill.style.background = 'rgba(201,151,56,0.15)';
+    pill.style.color = '#fcd34d';
+    pill.style.borderColor = 'rgba(201,151,56,0.4)';
+  } else {
+    pill.textContent = '🧪 Mode: Test';
+    pill.style.background = 'rgba(99,102,241,0.15)';
+    pill.style.color = '#a5b4fc';
+    pill.style.borderColor = 'rgba(99,102,241,0.3)';
+  }
+}
+
+async function saveRazorpaySettingsForm() {
+  const keyId = document.getElementById('razorpayKeyId').value.trim();
+  const rawSecret = document.getElementById('razorpayKeySecret').value;
+  const rawWebhook = document.getElementById('razorpayWebhookSecret').value;
+
+  const body = {
+    razorpayEnabled: document.getElementById('razorpayEnabled').checked,
+    razorpayMode: document.getElementById('razorpayMode').value,
+    razorpayKeyId: keyId,
+  };
+
+  // Only update secrets if user entered something new (not the masked ••••••••)
+  if (rawSecret && rawSecret !== '••••••••') body.razorpayKeySecret = rawSecret;
+  if (rawWebhook && rawWebhook !== '••••••••') body.razorpayWebhookSecret = rawWebhook;
+
+  try {
+    const btn = document.getElementById('btn-save-razorpay');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    await lmsAdmin('save-lms-settings', { method: 'POST', body });
+    toast('✅ Razorpay settings saved successfully!');
+    updateRzpStatusPill();
+    updateRzpModePill();
+  } catch (err) {
+    toast(`Failed to save: ${err.message}`, false);
+  } finally {
+    const btn = document.getElementById('btn-save-razorpay');
+    if (btn) { btn.disabled = false; btn.textContent = '💾 Save Razorpay Settings'; }
+  }
+}
+
+async function testRazorpayConnection(silent = false) {
+  const btn = document.getElementById('btn-test-razorpay');
+  const resultBox = document.getElementById('rzp-test-result');
+  if (btn) btn.textContent = 'Testing…';
+
+  try {
+    const res = await lmsAdmin('test-razorpay');
+    if (res.ok && res.connected) {
+      if (resultBox) {
+        resultBox.style.display = 'block';
+        resultBox.style.background = 'rgba(16,185,129,0.08)';
+        resultBox.style.border = '1px solid rgba(16,185,129,0.3)';
+        resultBox.style.color = '#6ee7b7';
+        resultBox.innerHTML = `
+          <div style="font-weight:700;margin-bottom:4px">✅ Razorpay API Connection Verified!</div>
+          <div style="opacity:0.8;font-size:12px">Your Key ID authenticated successfully with Razorpay servers. Students can now pay via UPI, GPay, PhonePe, Cards &amp; NetBanking.</div>
+        `;
+      }
+      if (!silent) toast('✅ Razorpay API connected successfully!');
+    } else {
+      if (resultBox) {
+        resultBox.style.display = 'block';
+        resultBox.style.background = 'rgba(239,68,68,0.08)';
+        resultBox.style.border = '1px solid rgba(239,68,68,0.3)';
+        resultBox.style.color = '#fca5a5';
+        resultBox.innerHTML = `
+          <div style="font-weight:700;margin-bottom:4px">❌ Connection Failed</div>
+          <div style="opacity:0.8;font-size:12px">${escapeHtml(res.message || 'Invalid credentials. Check your Key ID and Key Secret.')}</div>
+        `;
+      }
+      if (!silent) toast(res.message || 'Razorpay connection test failed', false);
+    }
+  } catch (err) {
+    if (resultBox) {
+      resultBox.style.display = 'block';
+      resultBox.style.background = 'rgba(239,68,68,0.08)';
+      resultBox.style.border = '1px solid rgba(239,68,68,0.3)';
+      resultBox.style.color = '#fca5a5';
+      resultBox.innerHTML = `<div style="font-weight:700">❌ Error: ${escapeHtml(err.message)}</div>`;
+    }
+    if (!silent) toast(`Test failed: ${err.message}`, false);
+  } finally {
+    if (btn) btn.textContent = '⚡ Test Razorpay Connection';
   }
 }
 

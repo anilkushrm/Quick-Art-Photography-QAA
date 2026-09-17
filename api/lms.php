@@ -742,6 +742,244 @@ if ($action === 'checkout-enroll' && $method === 'POST') {
     ]);
 }
 
+// 10.1 Get Public Payment Gateway Configuration
+if ($action === 'get-payment-config' && $method === 'GET') {
+    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $enabled = !empty($settings['razorpayEnabled']) && !empty($settings['razorpayKeyId']) && !empty($settings['razorpayKeySecret']);
+    json_ok([
+        'razorpayEnabled' => $enabled,
+        'razorpayKeyId' => $enabled ? ($settings['razorpayKeyId'] ?? '') : '',
+        'razorpayMode' => $settings['razorpayMode'] ?? 'live',
+        'currency' => 'INR',
+        'academyName' => 'Quick Art Photography Academy'
+    ]);
+}
+
+// 10.2 Create Razorpay Order
+if ($action === 'create-razorpay-order' && $method === 'POST') {
+    $body = read_json_body();
+    $rawPhone = $body['phone'] ?? '';
+    $phone = clean_phone($rawPhone);
+    $name = trim($body['name'] ?? '');
+    $email = trim($body['email'] ?? '');
+    $courseId = trim($body['courseId'] ?? '');
+    $couponCode = trim($body['couponCode'] ?? ($body['coupon'] ?? ''));
+
+    if (strlen($phone) < 10) json_err('Valid 10-digit mobile number required', 400);
+    if (!$courseId) json_err('Course selection is required', 400);
+
+    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $keyId = trim($settings['razorpayKeyId'] ?? '');
+    $keySecret = trim($settings['razorpayKeySecret'] ?? '');
+    $razorpayEnabled = !empty($settings['razorpayEnabled']) && !empty($keyId) && !empty($keySecret);
+
+    if (!$razorpayEnabled) {
+        json_ok(['razorpayEnabled' => false, 'message' => 'Razorpay is not active. Use direct enrollment.']);
+    }
+
+    $allCourses = load_courses();
+    $selectedCourse = null;
+    foreach ($allCourses as $c) {
+        if ($c['id'] === $courseId) {
+            $selectedCourse = $c;
+            break;
+        }
+    }
+    if (!$selectedCourse) json_err('Course not found', 404);
+
+    $basePrice = intval($selectedCourse['price'] ?? 4999);
+    $finalAmount = $basePrice;
+    $discountApplied = 0;
+    $appliedCouponCode = '';
+
+    if ($couponCode) {
+        $eval = evaluate_coupon($couponCode, $courseId, $basePrice);
+        if ($eval['valid']) {
+            $discountApplied = $eval['discountAmount'];
+            $finalAmount = $eval['finalPrice'];
+            $appliedCouponCode = $eval['code'];
+        }
+    }
+
+    $amountInPaise = intval(round($finalAmount * 100));
+    $receipt = 'rcpt_' . substr(md5(uniqid($phone, true)), 0, 14);
+
+    $payload = json_encode([
+        'amount' => $amountInPaise,
+        'currency' => 'INR',
+        'receipt' => $receipt,
+        'notes' => [
+            'courseId' => $courseId,
+            'courseTitle' => substr($selectedCourse['title'], 0, 40),
+            'studentPhone' => $phone,
+            'studentName' => substr($name ?: 'Student', 0, 40),
+            'coupon' => $appliedCouponCode
+        ]
+    ]);
+
+    $ch = curl_init('https://api.razorpay.com/v1/orders');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    curl_setopt($ch, CURLOPT_USERPWD, "{$keyId}:{$keySecret}");
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    $resData = json_decode($response, true);
+    if ($httpCode >= 200 && $httpCode < 300 && !empty($resData['id'])) {
+        json_ok([
+            'razorpayEnabled' => true,
+            'orderId' => $resData['id'],
+            'amount' => $amountInPaise,
+            'currency' => 'INR',
+            'keyId' => $keyId,
+            'courseId' => $courseId,
+            'courseTitle' => $selectedCourse['title'],
+            'finalPrice' => $finalAmount,
+            'studentName' => $name,
+            'studentPhone' => $phone,
+            'studentEmail' => $email
+        ]);
+    } else {
+        $errMsg = $resData['error']['description'] ?? "Razorpay order creation failed (HTTP {$httpCode})";
+        json_err($errMsg, 400);
+    }
+}
+
+// 10.3 Verify Razorpay Payment Signature & Instant Enrollment
+if ($action === 'verify-razorpay-payment' && $method === 'POST') {
+    $body = read_json_body();
+    $orderId = trim($body['razorpay_order_id'] ?? '');
+    $paymentId = trim($body['razorpay_payment_id'] ?? '');
+    $signature = trim($body['razorpay_signature'] ?? '');
+    $courseId = trim($body['courseId'] ?? '');
+    $rawPhone = $body['phone'] ?? '';
+    $phone = clean_phone($rawPhone);
+    $name = trim($body['name'] ?? '');
+    $email = trim($body['email'] ?? '');
+    $couponCode = trim($body['couponCode'] ?? '');
+
+    if (!$orderId || !$paymentId || !$signature) {
+        json_err('Incomplete payment verification payload', 400);
+    }
+    if (strlen($phone) < 10) json_err('Valid 10-digit mobile number required', 400);
+    if (!$courseId) json_err('Course ID required', 400);
+
+    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $keySecret = trim($settings['razorpayKeySecret'] ?? '');
+    if (!$keySecret) json_err('Razorpay Key Secret not configured on server', 500);
+
+    // Compute and verify HMAC SHA256 signature
+    $generatedSignature = hash_hmac('sha256', $orderId . '|' . $paymentId, $keySecret);
+    if (!hash_equals($generatedSignature, $signature)) {
+        json_err('Payment verification failed: Signature mismatch', 400);
+    }
+
+    $allCourses = load_courses();
+    $selectedCourse = null;
+    foreach ($allCourses as $c) {
+        if ($c['id'] === $courseId) {
+            $selectedCourse = $c;
+            break;
+        }
+    }
+    if (!$selectedCourse) json_err('Course not found', 404);
+
+    $basePrice = intval($selectedCourse['price'] ?? 4999);
+    $finalAmount = $basePrice;
+    $discountApplied = 0;
+    $appliedCouponCode = '';
+
+    if ($couponCode) {
+        $eval = evaluate_coupon($couponCode, $courseId, $basePrice);
+        if ($eval['valid']) {
+            $discountApplied = $eval['discountAmount'];
+            $finalAmount = $eval['finalPrice'];
+            $appliedCouponCode = $eval['code'];
+
+            $coupons = load_coupons();
+            if (isset($eval['matchedIndex']) && isset($coupons[$eval['matchedIndex']])) {
+                $coupons[$eval['matchedIndex']]['uses'] = ($coupons[$eval['matchedIndex']]['uses'] ?? 0) + 1;
+                save_coupons($coupons);
+            }
+        }
+    }
+
+    // Save/Update student account
+    $students = load_students();
+    $targetStudent = null;
+    $found = false;
+
+    foreach ($students as &$stu) {
+        if ($stu['phone'] === $phone) {
+            if ($name) $stu['name'] = $name;
+            if ($email) $stu['email'] = $email;
+            if (!in_array($courseId, $stu['enrolledCourses'] ?? [])) {
+                $stu['enrolledCourses'][] = $courseId;
+            }
+            $stu['lastActive'] = date('c');
+            $targetStudent = $stu;
+            $found = true;
+            break;
+        }
+    }
+    unset($stu);
+
+    if (!$found) {
+        $targetStudent = [
+            'id' => 'stu_' . substr(md5(uniqid($phone, true)), 0, 8),
+            'phone' => $phone,
+            'name' => $name ?: ('Student ' . substr($phone, -4)),
+            'email' => $email,
+            'city' => '',
+            'enrolledAt' => date('c'),
+            'enrolledCourses' => [$courseId],
+            'completedLessons' => [],
+            'lastActive' => date('c')
+        ];
+        $students[] = $targetStudent;
+    }
+    save_students($students);
+
+    // Record verified transaction
+    $txs = file_exists(LMS_TRANSACTIONS_FILE) ? json_decode(file_get_contents(LMS_TRANSACTIONS_FILE), true) : [];
+    if (!is_array($txs)) $txs = [];
+
+    $newTx = [
+        'id' => 'tx_rzp_' . substr(md5($paymentId), 0, 10),
+        'courseId' => $courseId,
+        'courseTitle' => $selectedCourse['title'],
+        'amount' => $finalAmount,
+        'originalPrice' => $basePrice,
+        'discount' => $discountApplied,
+        'couponCode' => $appliedCouponCode,
+        'studentName' => $targetStudent['name'],
+        'studentPhone' => $phone,
+        'paymentMethod' => 'Razorpay (Online)',
+        'razorpayOrderId' => $orderId,
+        'razorpayPaymentId' => $paymentId,
+        'status' => 'completed',
+        'date' => date('c')
+    ];
+    $txs[] = $newTx;
+    file_put_contents(LMS_TRANSACTIONS_FILE, json_encode($txs, JSON_PRETTY_PRINT), LOCK_EX);
+
+    // Create session token for immediate classroom access
+    $token = create_student_session($phone);
+
+    json_ok([
+        'verified' => true,
+        'message' => 'Payment verified! Course unlocked successfully.',
+        'token' => $token,
+        'student' => $targetStudent,
+        'course' => $selectedCourse,
+        'transaction' => $newTx
+    ]);
+}
+
 // 11. Certificate Verification (Public)
 if ($action === 'verify-certificate' && $method === 'GET') {
     $certId = trim($_GET['id'] ?? '');

@@ -3,98 +3,455 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Quick Art Admin — Leads & Settings</title>
+<title>Quick Art Admin — Executive Console & Course Studio</title>
 <meta name="robots" content="noindex,nofollow" />
 <link rel="icon" href="https://customer-assets-lxgj4vgw.emergentagent.net/job_art-academy-demo/artifacts/pj82qe8v_Logo.webp" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --ink:#111111; --gold:#D8A153; --gold-light:#F5E5C4; --gold-dark:#B8843B;
-    --bg:#FAFAFA; --border:rgba(0,0,0,.08); --muted:#71717a;
-    --emerald:#10b981; --red:#ef4444;
-    --shadow:0 10px 30px -12px rgba(0,0,0,.15);
+    --ink: #f8fafc;
+    --bg: #090d16;
+    --surface: #0f172a;
+    --surface-card: #111827;
+    --surface-hover: #1e293b;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(216, 161, 83, 0.35);
+    --muted: #94a3b8;
+    --gold: #d8a153;
+    --gold-light: #fde68a;
+    --gold-dark: #b8843b;
+    --gold-glow: rgba(216, 161, 83, 0.25);
+    --emerald: #10b981;
+    --emerald-light: #34d399;
+    --red: #ef4444;
+    --red-light: #f87171;
+    --purple: #8b5cf6;
+    --sky: #0ea5e9;
+    --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 20px 50px -15px rgba(0, 0, 0, 0.8);
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;color:var(--ink);background:var(--bg)}
-  a{color:inherit}
-  .container{max-width:1200px;margin:0 auto;padding:0 24px}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:9999px;border:0;cursor:pointer;font-weight:600;font-size:13px;transition:.15s}
-  .btn-primary{background:var(--ink);color:#fff}
-  .btn-primary:hover{background:#000}
-  .btn-gold{background:linear-gradient(135deg,var(--gold-light),var(--gold),var(--gold-dark));color:#000}
-  .btn-outline{background:#fff;color:var(--ink);border:1px solid var(--border)}
-  .btn-outline:hover{background:#f4f4f5}
-  .btn-danger{background:var(--red);color:#fff}
-  .btn:disabled{opacity:.5;cursor:not-allowed}
-  .card{background:#fff;border:1px solid var(--border);border-radius:24px;padding:24px;box-shadow:var(--shadow)}
-  input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;font:inherit;background:#fff}
-  input:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(216,161,83,.15)}
-  label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.15em;font-weight:600;color:var(--muted);margin-bottom:6px}
-  .grid{display:grid;gap:16px}
-  .hidden{display:none!important}
-  .badge{display:inline-block;padding:3px 10px;border-radius:9999px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;background:var(--gold-light);color:var(--gold-dark)}
-  .tabs{display:inline-flex;background:#fff;padding:4px;border-radius:9999px;border:1px solid var(--border);gap:2px}
-  .tab{padding:8px 20px;border-radius:9999px;border:0;background:transparent;cursor:pointer;font-weight:600;font-size:13px;color:var(--muted)}
-  .tab.active{background:var(--ink);color:#fff}
-  table{width:100%;border-collapse:collapse;font-size:13px}
-  th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}
-  th{background:#f9fafb;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
-  tr:hover td{background:#fafafa}
-  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
-  .stat{background:#fff;border:1px solid var(--border);border-radius:20px;padding:20px}
-  .stat-value{font-size:36px;font-weight:800;line-height:1;margin-top:8px;font-family:'Poppins',sans-serif}
-  .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);font-weight:600}
-  .icon-btn{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9999px;border:0;background:#f4f4f5;cursor:pointer;color:var(--ink)}
-  .icon-btn:hover{background:var(--ink);color:#fff}
-  .icon-btn.danger:hover{background:var(--red);color:#fff}
-  .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);padding:14px 22px;border-radius:14px;font-weight:600;font-size:13px;box-shadow:0 20px 60px -20px rgba(0,0,0,.3);z-index:9999;display:none}
-  .toast.show{display:block;animation:slide .3s}
-  .toast.ok{background:var(--emerald);color:#fff}
-  .toast.err{background:var(--red);color:#fff}
-  @keyframes slide{from{transform:translate(-50%,-20px);opacity:0}to{transform:translateX(-50%);opacity:1}}
-  .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--emerald);margin-right:8px}
-  .status-dot.off{background:var(--red)}
-  .wh-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:7px;vertical-align:middle;cursor:help}
-  .wh-dot.wh-ok{background:var(--emerald)}
-  .wh-dot.wh-fail{background:var(--red)}
-  pre{background:#f4f4f5;padding:12px;border-radius:12px;font-size:11px;overflow-x:auto;max-width:100%;white-space:pre-wrap;word-break:break-all}
-  .status-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:9999px;font-size:11px;font-weight:600;text-transform:capitalize;border:1px solid transparent}
-  .st-new{background:#dbeafe;color:#1e40af}
-  .st-contacted{background:#fef3c7;color:#92400e}
-  .st-follow-up{background:#fed7aa;color:#9a3412}
-  .st-interested{background:#e9d5ff;color:#6b21a8}
-  .st-enrolled{background:#d1fae5;color:#065f46}
-  .st-not-interested{background:#fee2e2;color:#991b1b}
-  .st-junk{background:#e5e7eb;color:#374151}
-  .fu-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;margin-left:6px}
-  .fu-today{background:#fef3c7;color:#92400e}
-  .fu-overdue{background:#fee2e2;color:#991b1b}
-  .fu-future{background:#e0e7ff;color:#3730a3}
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}
-  .modal.show{display:flex}
-  .modal-inner{background:#fff;max-width:640px;width:100%;border-radius:24px;max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.3)}
-  .modal-hdr{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-  .modal-body{padding:20px 24px}
-  .note-item{background:#f9fafb;border-left:3px solid var(--gold);padding:10px 12px;border-radius:8px;margin-top:8px;font-size:12px}
-  .note-meta{color:var(--muted);font-size:10px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.1em}
-  select{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;font:inherit;background:#fff;cursor:pointer}
-  textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;font:inherit;background:#fff;resize:vertical;font-family:inherit}
-  .row-clickable{cursor:pointer}
-  .row-clickable:hover td{background:#fef7ed}
-  #login{max-width:420px;margin:100px auto}
-  .login-logo{width:56px;height:56px;border-radius:9999px;overflow:hidden;margin:0 auto 16px}
-  .login-logo img{width:100%;height:100%;object-fit:cover}
-  .header{background:#fff;border-bottom:1px solid var(--border);padding:20px 0;margin-bottom:32px}
-  .header-row{display:flex;align-items:center;justify-content:space-between}
-  .logo{display:flex;align-items:center;gap:12px}
-  .logo img{width:40px;height:40px;border-radius:9999px}
-  .logo-text{line-height:1.2}
-  .logo-name{font-weight:800;font-size:14px}
-  .logo-sub{font-size:9px;text-transform:uppercase;letter-spacing:.2em;color:var(--muted)}
-  h1{margin:0 0 4px 0;font-size:36px;font-weight:800;letter-spacing:-.02em}
-  h2{margin:0 0 8px 0;font-size:20px;font-weight:700}
-  .muted{color:var(--muted);font-size:13px}
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font: 14px/1.6 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background: radial-gradient(circle at 50% -10%, #15213b 0%, #090d16 60%, #060910 100%);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  .container { max-width: 1260px; margin: 0 auto; padding: 0 24px; }
+  
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 9999px;
+    border: 0;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn-primary {
+    background: #1e293b;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .btn-primary:hover {
+    background: #334155;
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+    color: #000;
+    font-weight: 700;
+    box-shadow: 0 4px 18px var(--gold-glow);
+  }
+  .btn-gold:hover {
+    box-shadow: 0 6px 24px rgba(216, 161, 83, 0.45);
+    filter: brightness(1.05);
+  }
+  .btn-outline {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--ink);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+  }
+  .btn-danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--red-light);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+  .btn-danger:hover {
+    background: var(--red);
+    color: #fff;
+  }
+  .btn-sm {
+    padding: 6px 14px;
+    font-size: 11.5px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: all 0.15s;
+    font-family: 'Outfit', sans-serif;
+  }
+  .btn:disabled, .btn-sm:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* Cards */
+  .card {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    color: var(--ink);
+  }
+  
+  /* Inputs, Selects, Textareas */
+  input, select, textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font: inherit;
+    background: #090e18;
+    color: #f8fafc;
+    transition: all 0.2s;
+  }
+  input::placeholder, textarea::placeholder {
+    color: #64748b;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px var(--gold-glow);
+    background: #0c1322;
+  }
+  select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  select option {
+    background: #0f172a;
+    color: #fff;
+  }
+  label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 7px;
+    font-family: 'Outfit', sans-serif;
+  }
+  .grid { display: grid; gap: 16px; }
+  .hidden { display: none !important; }
+
+  /* Badges & Pills */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: rgba(216, 161, 83, 0.14);
+    color: var(--gold-light);
+    border: 1px solid rgba(216, 161, 83, 0.3);
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* Navigation Tabs */
+  .tabs {
+    display: inline-flex;
+    background: rgba(15, 23, 42, 0.9);
+    padding: 5px;
+    border-radius: 9999px;
+    border: 1px solid var(--border);
+    gap: 4px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+  .tab {
+    padding: 9px 20px;
+    border-radius: 9999px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.2s;
+  }
+  .tab:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .tab.active {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+    color: #000;
+    font-weight: 700;
+    box-shadow: 0 4px 18px var(--gold-glow);
+  }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+  th {
+    background: #141f36;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--muted);
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+  }
+  tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+  /* Stats / KPI */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.005) 100%), var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 22px 24px;
+    box-shadow: var(--shadow);
+    transition: all 0.2s;
+    position: relative;
+  }
+  .stat:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-hover);
+    box-shadow: 0 16px 36px -10px rgba(0,0,0,0.6);
+  }
+  .stat-value, .stat-num {
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-top: 6px;
+    font-family: 'Outfit', sans-serif;
+    color: var(--ink);
+  }
+  .stat-label, .stat-lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* Action Buttons */
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 9999px;
+    border: 0;
+    background: rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+    color: var(--ink);
+    transition: all 0.15s;
+  }
+  .icon-btn:hover { background: #334155; color: #fff; transform: scale(1.05); }
+  .icon-btn.danger:hover { background: var(--red); color: #fff; }
+
+  /* Toasts */
+  .toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 14px 24px;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 13.5px;
+    box-shadow: 0 20px 60px -10px rgba(0,0,0,0.7);
+    z-index: 9999;
+    display: none;
+    font-family: 'Outfit', sans-serif;
+    backdrop-filter: blur(12px);
+  }
+  .toast.show { display: block; animation: slide .3s cubic-bezier(0.16, 1, 0.3, 1); }
+  .toast.ok { background: rgba(16, 185, 129, 0.95); color: #fff; border: 1px solid rgba(16, 185, 129, 0.5); }
+  .toast.err { background: rgba(239, 68, 68, 0.95); color: #fff; border: 1px solid rgba(239, 68, 68, 0.5); }
+  @keyframes slide { from { transform: translate(-50%, -20px); opacity: 0; } to { transform: translateX(-50%); opacity: 1; } }
+
+  /* Status Badges */
+  .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); margin-right: 8px; }
+  .status-dot.off { background: var(--red); }
+  .wh-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-left: 7px; vertical-align: middle; cursor: help; }
+  .wh-dot.wh-ok { background: var(--emerald); }
+  .wh-dot.wh-fail { background: var(--red); }
+  pre {
+    background: #080c14;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 11.5px;
+    overflow-x: auto;
+    max-width: 100%;
+    white-space: pre-wrap;
+    word-break: break-all;
+    color: #a5f3fc;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: capitalize;
+    font-family: 'Outfit', sans-serif;
+  }
+  .st-new { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+  .st-contacted { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+  .st-follow-up { background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); }
+  .st-interested { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+  .st-enrolled { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+  .st-not-interested { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+  .st-junk { background: rgba(100, 116, 139, 0.15); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.3); }
+
+  .fu-badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; margin-left: 6px; }
+  .fu-today { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+  .fu-overdue { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+  .fu-future { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); }
+
+  /* Modals */
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal.show { display: flex; }
+  .modal-inner {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    max-width: 640px;
+    width: 100%;
+    border-radius: 24px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+    color: var(--ink);
+  }
+  .modal-hdr {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: #141f36;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-body { padding: 24px; }
+  .note-item {
+    background: #090e18;
+    border-left: 3px solid var(--gold);
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-top: 8px;
+    font-size: 12px;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+  .note-meta { color: var(--muted); font-size: 10px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .1em; }
+  .row-clickable { cursor: pointer; }
+  .row-clickable:hover td { background: rgba(216, 161, 83, 0.05); }
+
+  /* Login Card */
+  #login {
+    max-width: 440px;
+    margin: 80px auto;
+    background: rgba(15, 23, 42, 0.92);
+    border: 1px solid rgba(216, 161, 83, 0.35);
+    border-radius: 28px;
+    box-shadow: 0 25px 60px -15px rgba(0,0,0,0.8), 0 0 40px rgba(216,161,83,0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 38px 34px;
+  }
+  .login-logo {
+    width: 68px;
+    height: 68px;
+    border-radius: 9999px;
+    overflow: hidden;
+    margin: 0 auto 16px;
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 20px rgba(216, 161, 83, 0.4);
+  }
+  .login-logo img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Navbar Header */
+  .header {
+    background: rgba(11, 17, 30, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px 0;
+    margin-bottom: 28px;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+  }
+  .header-row { display: flex; align-items: center; justify-content: space-between; }
+  .logo { display: flex; align-items: center; gap: 14px; }
+  .logo img {
+    width: 44px;
+    height: 44px;
+    border-radius: 9999px;
+    border: 1.5px solid var(--gold);
+    box-shadow: 0 0 15px rgba(216, 161, 83, 0.3);
+  }
+  .logo-text { line-height: 1.2; }
+  .logo-name { font-weight: 800; font-size: 16px; font-family: 'Outfit', sans-serif; color: #fff; letter-spacing: -0.01em; }
+  .logo-sub { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--gold); font-weight: 700; margin-top: 2px; }
+  h1 { margin: 0 0 6px 0; font-size: 32px; font-weight: 800; letter-spacing: -0.02em; font-family: 'Outfit', sans-serif; color: #fff; }
+  h2 { margin: 0 0 8px 0; font-size: 20px; font-weight: 700; font-family: 'Outfit', sans-serif; color: #fff; }
+  .muted { color: var(--muted); font-size: 13px; }
 </style>
-<meta name="robots" content="noindex,nofollow"></head>
+<meta name="robots" content="noindex,nofollow" /></head>
 <body>
 
 <div id="toast" class="toast"></div>
@@ -104,13 +461,16 @@
   <div class="login-logo">
     <img src="https://customer-assets-lxgj4vgw.emergentagent.net/job_art-academy-demo/artifacts/pj82qe8v_Logo.webp" alt="QAA" />
   </div>
-  <h2 style="text-align:center;margin-bottom:4px">Quick Art Admin</h2>
-  <p style="text-align:center;color:var(--muted);margin-top:0">Enter admin password to continue</p>
-  <form id="loginForm">
-    <label for="pw">Admin Password</label>
-    <input type="password" id="pw" required autofocus />
-    <button type="submit" class="btn btn-gold" style="width:100%;margin-top:14px;justify-content:center">Sign in →</button>
-    <p style="text-align:center;margin-top:14px"><a href="/" style="font-size:12px;color:var(--muted)">← Back to website</a></p>
+  <h2 style="text-align:center;margin-bottom:4px;font-family:'Outfit',sans-serif">Quick Art Academy</h2>
+  <p style="text-align:center;color:var(--muted);margin-top:0;font-size:13px">Executive Admin Console &amp; LMS Course Studio</p>
+  <form id="loginForm" style="margin-top:20px">
+    <label for="pw">Enter Admin Password</label>
+    <div style="position:relative">
+      <input type="password" id="pw" placeholder="••••••••••••" required autofocus style="padding-right:42px" />
+      <button type="button" onclick="togglePasswordVisibility('pw')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px" title="Show / Hide Password">👁</button>
+    </div>
+    <button type="submit" class="btn btn-gold" style="width:100%;margin-top:16px;justify-content:center;padding:12px">Sign in to Console →</button>
+    <p style="text-align:center;margin-top:16px"><a href="/" style="font-size:12.5px;color:var(--muted);transition:color 0.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--muted)'">← Back to website</a></p>
   </form>
 </div>
 
@@ -120,37 +480,61 @@
     <div class="container header-row">
       <div class="logo">
         <img src="https://customer-assets-lxgj4vgw.emergentagent.net/job_art-academy-demo/artifacts/pj82qe8v_Logo.webp" alt="QAA" />
-        <div class="logo-text"><div class="logo-name">Quick Art Admin</div><div class="logo-sub">Lead Console</div></div>
+        <div class="logo-text">
+          <div class="logo-name">Quick Art Photography Academy</div>
+          <div class="logo-sub">Executive Admin Console &amp; Studio</div>
+        </div>
       </div>
-      <div style="display:flex;gap:8px">
-        <a href="/" class="btn btn-outline">View Site</a>
-        <button onclick="logout()" class="btn btn-outline">Sign out</button>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:9999px;font-size:11.5px;font-weight:600;background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.25)">
+          <span style="width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981"></span> Hostinger VPS Online
+        </span>
+        <a href="/portal/" target="_blank" class="btn btn-outline" style="font-size:12px;padding:8px 14px;color:var(--gold);border-color:rgba(216,161,83,0.3)">🎓 Student Portal ↗</a>
+        <a href="/" target="_blank" class="btn btn-outline" style="font-size:12px;padding:8px 14px">🌐 View Site ↗</a>
+        <button onclick="logout()" class="btn btn-outline" style="font-size:12px;padding:8px 14px;color:var(--red-light)">Sign out</button>
       </div>
     </div>
   </div>
 
   <div class="container">
-    <h1>Overview</h1>
-    <p class="muted" style="margin-top:0">Lead capture &amp; WhatsApp webhook settings — flat-file backend on your server.</p>
+    <div style="margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px">
+      <div>
+        <h1 style="margin:0 0 4px 0">Academy Command Center</h1>
+        <p class="muted" style="margin:0;font-size:13.5px">Real-time overview of leads, course revenue, student classroom access, and video streams.</p>
+      </div>
+    </div>
 
+    <!-- LEADS / GENERAL KPI STATS ROW -->
     <div class="stats" id="stats"></div>
 
     <!-- LMS KPI STATS ROW (Dynamic overview of academy LMS performance) -->
     <div id="lmsKpiRow" class="stats hidden" style="margin-top:16px">
-      <div class="card stat"><div class="stat-num" id="kpiLmsStudents" style="color:var(--gold)">0</div><div class="stat-lbl">Enrolled Students</div></div>
-      <div class="card stat"><div class="stat-num" id="kpiLmsRevenue" style="color:#10b981">₹0</div><div class="stat-lbl">Total LMS Revenue</div></div>
-      <div class="card stat"><div class="stat-num" id="kpiLmsCourses">0</div><div class="stat-lbl">Active Courses</div></div>
-      <div class="card stat"><div class="stat-num" id="kpiLmsCoupons" style="color:#6366f1">0</div><div class="stat-lbl">Active Coupons</div></div>
+      <div class="card stat" style="border-top:3px solid var(--gold)">
+        <div class="stat-value" id="kpiLmsStudents" style="color:var(--gold)">0</div>
+        <div class="stat-label">🎓 Enrolled Students</div>
+      </div>
+      <div class="card stat" style="border-top:3px solid #10b981">
+        <div class="stat-value" id="kpiLmsRevenue" style="color:#34d399">₹0</div>
+        <div class="stat-label">💰 Total LMS Revenue</div>
+      </div>
+      <div class="card stat" style="border-top:3px solid #818cf8">
+        <div class="stat-value" id="kpiLmsCourses" style="color:#818cf8">0</div>
+        <div class="stat-label">📚 Active Masterclasses</div>
+      </div>
+      <div class="card stat" style="border-top:3px solid #f472b6">
+        <div class="stat-value" id="kpiLmsCoupons" style="color:#f472b6">0</div>
+        <div class="stat-label">🎟️ Active Promo Coupons</div>
+      </div>
     </div>
 
-    <div class="tabs" style="flex-wrap:wrap;gap:4px">
+    <div class="tabs" style="flex-wrap:wrap;gap:4px;margin-bottom:18px">
       <button class="tab active" data-tab="leads">📋 Leads &amp; CRM</button>
-      <button class="tab" data-tab="lms-courses">📚 Courses (LMS)</button>
+      <button class="tab" data-tab="lms-courses">📚 Course Studio (LMS)</button>
       <button class="tab" data-tab="lms-students">🎓 Students (LMS)</button>
-      <button class="tab" data-tab="lms-coupons">🎟️ Coupons &amp; Offers (LMS)</button>
-      <button class="tab" data-tab="lms-transactions">💰 Orders / Revenue (LMS)</button>
-      <button class="tab" data-tab="lms-settings">🎥 Bunny.net &amp; LMS</button>
-      <button class="tab" data-tab="settings">⚙️ Webhook &amp; Password</button>
+      <button class="tab" data-tab="lms-coupons">🎟️ Coupons &amp; Offers</button>
+      <button class="tab" data-tab="lms-transactions">💰 Orders / Revenue</button>
+      <button class="tab" data-tab="lms-settings">🎥 Bunny.net &amp; Video</button>
+      <button class="tab" data-tab="settings">⚙️ Webhook &amp; Admin</button>
     </div>
 
     <!-- LEADS TAB -->
@@ -181,24 +565,201 @@
       </div>
     </div>
 
-    <!-- LMS COURSES TAB -->
+        <!-- LMS COURSES TAB (CATALOG & EMBEDDED IN-PAGE COURSE STUDIO) -->
     <div id="tab-lms-courses" class="tab-content hidden" style="margin-top:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
-        <div>
-          <h2 style="margin:0;font-size:18px">Course Curriculum Management</h2>
-          <p class="muted" style="margin:4px 0 0">Create new courses, set pricing, modules, lessons, and Bunny.net video IDs.</p>
+      
+      <!-- 1. COURSE CATALOG VIEW -->
+      <div id="coursesCatalogView">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:14px;background:#0f172a;border:1px solid var(--border);border-radius:20px;padding:18px 24px">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <h2 style="margin:0;font-size:20px;font-family:'Outfit',sans-serif">📚 Course Curriculum &amp; Content Management</h2>
+              <span class="badge" id="coursesCountBadge" style="background:rgba(216,161,83,0.15);color:var(--gold)">Live Academy Catalog</span>
+            </div>
+            <p class="muted" style="margin:4px 0 0;font-size:13px">Create, modify, and build online masterclasses. Structure modules, video lessons, and attach Bunny.net streams directly.</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <button onclick="openCourseStudio()" class="btn btn-gold" style="font-size:13.5px;padding:11px 22px;box-shadow:0 6px 20px rgba(216,161,83,0.35)">
+              ⚡ + Open Course Builder Studio
+            </button>
+          </div>
         </div>
-        <button onclick="openAddCourseModal()" class="btn btn-gold">+ Create New Course</button>
+
+        <!-- Courses Table -->
+        <div class="card" style="padding:0;overflow-x:auto;border-radius:20px">
+          <table style="width:100%;border-collapse:collapse">
+            <thead>
+              <tr>
+                <th>Course Info</th>
+                <th>Category</th>
+                <th>Fee / Pricing</th>
+                <th>Curriculum Architecture</th>
+                <th>Badge / Level</th>
+                <th style="text-align:right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="lmsCoursesTbody">
+              <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:36px">Loading academy courses…</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="card" style="padding:0;overflow-x:auto">
-        <table>
-          <thead>
-            <tr><th>Course</th><th>Category</th><th>Fee / Pricing</th><th>Modules &amp; Lessons</th><th>Badge / Level</th><th>Action</th></tr>
-          </thead>
-          <tbody id="lmsCoursesTbody">
-            <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">Loading courses…</td></tr>
-          </tbody>
-        </table>
+
+      <!-- 2. IN-PAGE COURSE BUILDER STUDIO (Spacious, full-page workspace embedded right in the dashboard) -->
+      <div id="courseStudioView" style="display:none">
+        
+        <!-- Sticky Studio Control Header -->
+        <div class="studio-header" style="position:sticky;top:16px;z-index:90;background:rgba(15,23,42,0.95);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(216,161,83,0.35);border-radius:20px;padding:16px 22px;margin-bottom:20px;box-shadow:0 12px 35px rgba(0,0,0,0.5);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+          <div style="display:flex;align-items:center;gap:14px">
+            <button type="button" onclick="closeCourseStudio()" class="btn btn-outline" style="padding:8px 16px;font-size:12px;background:rgba(255,255,255,0.06)">
+              ← Back to Catalog
+            </button>
+            <div>
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:var(--gold);font-weight:700">Course Studio Workspace</div>
+              <h2 id="studioHeaderTitle" style="margin:2px 0 0;font-size:20px;font-family:'Outfit',sans-serif;color:#fff">Create New Online Course</h2>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button type="button" onclick="loadStarterCurriculumTemplate()" class="btn btn-outline" style="font-size:12px;padding:9px 16px;color:var(--gold);border-color:rgba(216,161,83,0.4)">
+              ⚡ 5-Module Starter Template
+            </button>
+            <button type="button" onclick="saveCourseFromStudio()" class="btn btn-gold" id="btnStudioSaveTop" style="font-size:13px;padding:9px 22px;box-shadow:0 4px 16px rgba(216,161,83,0.35)">
+              💾 Save Course Changes ✓
+            </button>
+          </div>
+        </div>
+
+        <!-- Studio Form Layout -->
+        <div style="display:flex;flex-direction:column;gap:20px">
+          
+          <!-- Course Metadata & Pricing Card -->
+          <div class="card" style="padding:24px;border:1px solid rgba(255,255,255,0.08);background:#0f172a">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:14px">
+              <div>
+                <h3 style="margin:0;font-size:16px;font-family:'Outfit',sans-serif;color:var(--gold)">1. Course Overview &amp; Commercial Settings</h3>
+                <p class="muted" style="margin:3px 0 0;font-size:12px">Define title, categorization, pricing, duration, and display badges.</p>
+              </div>
+              <span class="badge" style="background:rgba(255,255,255,0.05);color:#94a3b8">Basic Settings</span>
+            </div>
+
+            <input type="hidden" id="editCourseId" />
+
+            <div class="grid" style="grid-template-columns:2fr 1fr;gap:16px">
+              <div>
+                <label>Course Title *</label>
+                <input type="text" id="courseTitleInput" placeholder="e.g. Adobe Premiere Pro Masterclass: Zero to Pro" style="font-size:15px;font-weight:600" required />
+              </div>
+              <div>
+                <label>Category</label>
+                <select id="courseCategoryInput">
+                  <option value="Video Editing">Video Editing</option>
+                  <option value="Cinematography &amp; Filmmaking">Cinematography &amp; Filmmaking</option>
+                  <option value="Wedding Filmmaking &amp; Teaser">Wedding Filmmaking &amp; Teaser</option>
+                  <option value="Photography &amp; Lighting">Photography &amp; Lighting</option>
+                  <option value="Album Designing">Album Designing</option>
+                  <option value="Color Grading &amp; DaVinci">Color Grading &amp; DaVinci</option>
+                  <option value="Digital Marketing &amp; Business">Digital Marketing &amp; Business</option>
+                  <option value="General Filmmaking">General Filmmaking</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid" style="grid-template-columns:repeat(3, 1fr);gap:16px;margin-top:16px">
+              <div>
+                <label>Course Duration</label>
+                <input type="text" id="courseDurationInput" placeholder="e.g. 18 Hours" value="18 Hours" />
+              </div>
+              <div>
+                <label>Skill Level</label>
+                <select id="courseLevelInput">
+                  <option value="All Levels">All Levels (Beginner to Pro)</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                  <option value="Masterclass">Masterclass</option>
+                </select>
+              </div>
+              <div>
+                <label>Display Badge</label>
+                <select id="courseBadgeInput">
+                  <option value="Flagship Masterclass">Flagship Masterclass</option>
+                  <option value="Best Seller">Best Seller</option>
+                  <option value="Popular">Popular</option>
+                  <option value="New Launch">New Launch</option>
+                  <option value="Trending">Trending</option>
+                  <option value="">None</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid" style="grid-template-columns:1fr 1fr 2fr;gap:16px;margin-top:16px">
+              <div>
+                <label>Sale Price (₹) *</label>
+                <input type="number" id="coursePriceInput" placeholder="4999" value="4999" oninput="updatePriceDiscountPreview()" required />
+              </div>
+              <div>
+                <label>Regular MRP (₹)</label>
+                <input type="number" id="courseOrigPriceInput" placeholder="9999" value="9999" oninput="updatePriceDiscountPreview()" />
+              </div>
+              <div>
+                <label>Thumbnail Path / URL</label>
+                <div style="display:flex;gap:10px;align-items:center">
+                  <input type="text" id="courseThumbInput" placeholder="assets/premiere-pro-hero-640.webp" oninput="updateThumbPreview()" style="flex:1" />
+                  <div id="courseThumbPreviewBox" style="width:52px;height:38px;background:#090d16;border:1px solid rgba(255,255,255,0.1);border-radius:8px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+                    <img id="courseThumbPreviewImg" src="assets/premiere-pro-hero-640.webp" style="width:100%;height:100%;object-fit:cover" onerror="this.src='https://customer-assets-lxgj4vgw.emergentagent.net/job_art-academy-demo/artifacts/pj82qe8v_Logo.webp'" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:16px">
+              <label>Course Subtitle &amp; Highlights</label>
+              <textarea id="courseDescInput" rows="2" placeholder="Comprehensive practical training for high-paying studio work, industry shortcuts, and client delivery workflows."></textarea>
+            </div>
+          </div>
+
+          <!-- Curriculum Studio Architecture Card -->
+          <div class="card" style="padding:24px;border:1px solid rgba(255,255,255,0.08);background:#0f172a">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:14px;flex-wrap:wrap;gap:12px">
+              <div>
+                <h3 style="margin:0;font-size:16px;font-family:'Outfit',sans-serif;color:var(--gold)">2. Curriculum Architecture &amp; Video Lessons</h3>
+                <p class="muted" style="margin:3px 0 0;font-size:12px">Build your course outline with modules and video lessons. Assign Bunny.net Stream video GUIDs with 1-click.</p>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <button type="button" id="btnCurriculumVisual" onclick="switchCurriculumTab('visual')" class="btn-sm btn-gold" style="font-size:11.5px;padding:6px 14px">
+                  📝 Visual Studio Builder
+                </button>
+                <button type="button" id="btnCurriculumJson" onclick="switchCurriculumTab('json')" class="btn-sm btn-outline" style="font-size:11.5px;padding:6px 14px">
+                  { } Raw JSON
+                </button>
+              </div>
+            </div>
+
+            <!-- Visual Builder View -->
+            <div id="curriculumVisualView">
+              <div id="curriculumModulesContainer" style="display:flex;flex-direction:column;gap:16px"></div>
+              
+              <button type="button" onclick="addVisualModule()" class="btn btn-outline" style="margin-top:18px;font-size:13px;width:100%;justify-content:center;padding:14px;border:2px dashed rgba(216,161,83,0.4);color:var(--gold);background:rgba(216,161,83,0.03);border-radius:14px;transition:all 0.2s">
+                + Add New Module
+              </button>
+            </div>
+
+            <!-- Raw JSON View -->
+            <div id="curriculumJsonView" style="display:none">
+              <p class="muted" style="font-size:12px;margin-top:0">Direct JSON editor for batch pasting or complex schema editing. Automatically syncs with the Visual Studio Builder:</p>
+              <textarea id="courseModulesJson" rows="18" style="font-family:monospace;font-size:12px;line-height:1.5;background:#090d16;color:#a5f3fc;border:1px solid rgba(255,255,255,0.1)"></textarea>
+            </div>
+
+            <!-- Bottom Studio Action Footer -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;gap:12px">
+              <button type="button" onclick="closeCourseStudio()" class="btn btn-outline">← Cancel &amp; Back to Catalog</button>
+              <div style="display:flex;gap:10px">
+                <button type="button" onclick="loadStarterCurriculumTemplate()" class="btn btn-outline" style="color:var(--gold);border-color:rgba(216,161,83,0.4)">⚡ Load 5-Module Starter</button>
+                <button type="button" onclick="saveCourseFromStudio()" class="btn btn-gold" style="padding:12px 28px;font-size:14px;font-weight:700">💾 Save Course &amp; Publish ✓</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -556,122 +1117,6 @@
 
 <!-- ================ LMS MODALS ================ -->
 
-<!-- Course Modal -->
-<div id="lmsCourseModal" class="modal" onclick="if(event.target.id==='lmsCourseModal')closeCourseModal()">
-  <div class="modal-inner" style="max-width:760px">
-    <div class="modal-hdr">
-      <div>
-        <h2 id="courseModalTitle" style="margin:0;font-size:20px">Add / Edit Course</h2>
-        <div class="muted" style="font-size:12px;margin-top:4px">Course pricing, details &amp; curriculum builder</div>
-      </div>
-      <button onclick="closeCourseModal()" class="icon-btn">✕</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="editCourseId" />
-      <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
-        <div>
-          <label>Course Title *</label>
-          <input type="text" id="courseTitleInput" placeholder="e.g. Adobe Premiere Pro Masterclass" required />
-        </div>
-        <div>
-          <label>Category</label>
-          <select id="courseCategoryInput">
-            <option value="Video Editing">Video Editing</option>
-            <option value="Cinematography &amp; Filmmaking">Cinematography &amp; Filmmaking</option>
-            <option value="Wedding Filmmaking &amp; Teaser">Wedding Filmmaking &amp; Teaser</option>
-            <option value="Photography &amp; Lighting">Photography &amp; Lighting</option>
-            <option value="Album Designing">Album Designing</option>
-            <option value="Color Grading &amp; DaVinci">Color Grading &amp; DaVinci</option>
-            <option value="Digital Marketing &amp; Business">Digital Marketing &amp; Business</option>
-            <option value="General Filmmaking">General Filmmaking</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="grid" style="grid-template-columns:repeat(3, 1fr);gap:12px;margin-top:12px">
-        <div>
-          <label>Course Duration</label>
-          <input type="text" id="courseDurationInput" placeholder="e.g. 18 Hours" value="18 Hours" />
-        </div>
-        <div>
-          <label>Skill Level</label>
-          <select id="courseLevelInput">
-            <option value="All Levels">All Levels (Beginner to Pro)</option>
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-            <option value="Masterclass">Masterclass</option>
-          </select>
-        </div>
-        <div>
-          <label>Display Badge</label>
-          <select id="courseBadgeInput">
-            <option value="Flagship Masterclass">Flagship Masterclass</option>
-            <option value="Best Seller">Best Seller</option>
-            <option value="Popular">Popular</option>
-            <option value="New Launch">New Launch</option>
-            <option value="Trending">Trending</option>
-            <option value="">None</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="grid" style="grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px">
-        <div>
-          <label>Sale Price (₹) *</label>
-          <input type="number" id="coursePriceInput" placeholder="e.g. 4999" value="4999" required />
-        </div>
-        <div>
-          <label>Regular MRP (₹)</label>
-          <input type="number" id="courseOrigPriceInput" placeholder="e.g. 9999" value="9999" />
-        </div>
-        <div>
-          <label>Thumbnail Path / URL</label>
-          <input type="text" id="courseThumbInput" placeholder="assets/premiere-pro-hero-640.webp" />
-        </div>
-      </div>
-
-      <div style="margin-top:12px">
-        <label>Course Subtitle / Overview</label>
-        <textarea id="courseDescInput" rows="2" placeholder="Comprehensive practical training for high-paying studio work"></textarea>
-      </div>
-
-      <div style="margin-top:20px;border-top:1px solid var(--border);padding-top:16px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-          <div>
-            <h3 style="font-size:14px;margin:0">📚 Course Curriculum &amp; Video Lessons</h3>
-            <p class="muted" style="font-size:11px;margin:2px 0 0">Add modules and lessons. Assign Bunny.net stream video GUIDs directly.</p>
-          </div>
-          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-            <button type="button" onclick="loadStarterCurriculumTemplate()" class="btn-sm btn-outline" style="font-size:11px;padding:4px 10px;color:var(--gold);border-color:var(--gold)">⚡ 5-Module Starter Template</button>
-            <button type="button" id="btnCurriculumVisual" onclick="switchCurriculumTab('visual')" class="btn-sm btn-gold" style="font-size:11px;padding:4px 10px">📝 Visual Builder</button>
-            <button type="button" id="btnCurriculumJson" onclick="switchCurriculumTab('json')" class="btn-sm btn-outline" style="font-size:11px;padding:4px 10px">{ } Raw JSON</button>
-          </div>
-        </div>
-
-        <!-- Visual Builder Container -->
-        <div id="curriculumVisualView">
-          <div id="curriculumModulesContainer" style="display:flex;flex-direction:column;gap:12px"></div>
-          <button type="button" onclick="addVisualModule()" class="btn btn-outline" style="margin-top:12px;font-size:11.5px;width:100%;justify-content:center;border-style:dashed">
-            + Add New Module
-          </button>
-        </div>
-
-        <!-- Raw JSON Container -->
-        <div id="curriculumJsonView" style="display:none">
-          <p class="muted" style="font-size:11px;margin-top:0">Advanced JSON editor (syncs automatically with Visual Builder):</p>
-          <textarea id="courseModulesJson" rows="10" style="font-family:monospace;font-size:11.5px"></textarea>
-        </div>
-      </div>
-
-      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
-        <button onclick="closeCourseModal()" class="btn btn-outline">Cancel</button>
-        <button onclick="saveCourseModal()" class="btn btn-gold">Save Course ✓</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- Enroll Student Modal -->
 <div id="lmsStudentModal" class="modal" onclick="if(event.target.id==='lmsStudentModal')closeStudentModal()">
   <div class="modal-inner" style="max-width:560px">
@@ -954,6 +1399,12 @@ const TOKEN_KEY = 'qa_admin_token';
 let token = localStorage.getItem(TOKEN_KEY) || null;
 let allLeads = [];
 
+function togglePasswordVisibility(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.type = el.type === 'password' ? 'text' : 'password';
+}
+
 function toast(msg, ok=true){
   const el=document.getElementById('toast');
   el.textContent=msg; el.className='toast show '+(ok?'ok':'err');
@@ -1040,17 +1491,17 @@ async function refresh(){
 function renderStats(s){
   const fu = s.followUp || {};
   document.getElementById('stats').innerHTML = `
-    <div class="stat" style="background:linear-gradient(135deg,#111,#333);color:#fff">
-      <div class="stat-label" style="color:rgba(255,255,255,.7)">Total Leads</div>
-      <div class="stat-value">${s.total}</div>
+    <div class="stat" style="border-top:3px solid var(--gold)">
+      <div class="stat-label">Total Leads</div>
+      <div class="stat-value" style="color:var(--gold)">${s.total || 0}</div>
     </div>
-    <div class="stat" style="background:${fu.dueToday>0?'#fef3c7':'#fff'};border-color:${fu.dueToday>0?'#fbbf24':'var(--border)'}">
+    <div class="stat" style="border-top:3px solid ${fu.dueToday>0?'#f59e0b':'var(--border)'}">
       <div class="stat-label">📅 Due Today</div>
-      <div class="stat-value" style="color:${fu.dueToday>0?'#92400e':'inherit'}">${fu.dueToday||0}</div>
+      <div class="stat-value" style="color:${fu.dueToday>0?'#fbbf24':'var(--ink)'}">${fu.dueToday||0}</div>
     </div>
-    <div class="stat" style="background:${fu.overdue>0?'#fee2e2':'#fff'};border-color:${fu.overdue>0?'#f87171':'var(--border)'}">
+    <div class="stat" style="border-top:3px solid ${fu.overdue>0?'#ef4444':'var(--border)'}">
       <div class="stat-label">⚠️ Overdue</div>
-      <div class="stat-value" style="color:${fu.overdue>0?'#991b1b':'inherit'}">${fu.overdue||0}</div>
+      <div class="stat-value" style="color:${fu.overdue>0?'#f87171':'var(--ink)'}">${fu.overdue||0}</div>
     </div>
     <div class="stat">
       <div class="stat-label">This Week</div>
@@ -1058,11 +1509,11 @@ function renderStats(s){
     </div>
     <div class="stat">
       <div class="stat-label">Last 7 Days</div>
-      <div class="stat-value">${s.last7}</div>
+      <div class="stat-value">${s.last7||0}</div>
     </div>
-    <div class="stat" style="background:#d1fae5">
-      <div class="stat-label">✅ Enrolled</div>
-      <div class="stat-value" style="color:#065f46">${(s.byStatus?.enrolled)||0}</div>
+    <div class="stat" style="border-top:3px solid #10b981">
+      <div class="stat-label">🎓 Enrolled</div>
+      <div class="stat-value" style="color:#34d399">${(s.byStatus?.enrolled)||0}</div>
     </div>`;
 }
 
@@ -1330,40 +1781,44 @@ async function loadLmsCourses() {
 function renderLmsCourses() {
   const tbody = document.getElementById('lmsCoursesTbody');
   if (!allLmsCourses.length) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">No courses created yet. Click "+ Create New Course" to build one.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:36px;color:var(--muted)">No courses created yet. Click "+ Open Course Builder Studio" above to build your first course.</td></tr>';
     return;
   }
   tbody.innerHTML = allLmsCourses.map(c => {
     let lessonCount = 0;
     (c.modules || []).forEach(m => lessonCount += (m.lessons || []).length);
     const price = c.price ? `₹${Number(c.price).toLocaleString()}` : 'Free';
-    const origPrice = c.originalPrice ? `<span style="text-decoration:line-through;color:var(--muted);font-size:11px;margin-left:4px">₹${Number(c.originalPrice).toLocaleString()}</span>` : '';
-    const badgeHtml = c.badge ? `<span class="badge" style="background:#fef3c7;color:#92400e;margin-right:4px">${escapeHtml(c.badge)}</span>` : '';
+    const origPrice = c.originalPrice ? `<span style="text-decoration:line-through;color:var(--muted);font-size:11.5px;margin-left:5px">₹${Number(c.originalPrice).toLocaleString()}</span>` : '';
+    const badgeHtml = c.badge ? `<span class="badge" style="margin-right:6px">${escapeHtml(c.badge)}</span>` : '';
 
     return `
       <tr>
         <td>
-          <div style="display:flex;align-items:center;gap:12px">
-            <img src="${escapeHtml(c.thumbnail || 'assets/premiere-pro-hero-640.webp')}" style="width:52px;height:36px;object-fit:cover;border-radius:6px;background:#1e293b" onerror="this.src='assets/premiere-pro-hero-640.webp'" />
+          <div style="display:flex;align-items:center;gap:14px">
+            <img src="${escapeHtml(c.thumbnail || 'assets/premiere-pro-hero-640.webp')}" style="width:64px;height:42px;object-fit:cover;border-radius:8px;background:#1e293b;border:1px solid rgba(255,255,255,0.1)" onerror="this.src='https://customer-assets-lxgj4vgw.emergentagent.net/job_art-academy-demo/artifacts/pj82qe8v_Logo.webp'" />
             <div>
-              <b style="font-size:13.5px">${escapeHtml(c.title)}</b>
-              <div class="muted" style="font-size:11px">${escapeHtml(c.subtitle || c.duration || '')}</div>
+              <div style="font-weight:700;font-size:14px;color:#fff">${escapeHtml(c.title)}</div>
+              <div class="muted" style="font-size:11px;margin-top:2px">${escapeHtml(c.subtitle || c.duration || '')}</div>
             </div>
           </div>
         </td>
-        <td><span class="badge">${escapeHtml(c.category || 'General')}</span></td>
+        <td><span class="badge" style="background:rgba(255,255,255,0.05);color:#94a3b8">${escapeHtml(c.category || 'General')}</span></td>
         <td>
-          <b style="color:#10b981;font-size:14px">${price}</b>${origPrice}
+          <b style="color:#34d399;font-size:14.5px;font-family:'Outfit',sans-serif">${price}</b>${origPrice}
         </td>
-        <td><b>${(c.modules || []).length}</b> Modules (${lessonCount} Lessons)</td>
+        <td>
+          <span style="font-weight:700;color:var(--gold)">${(c.modules || []).length} Modules</span>
+          <span class="muted" style="font-size:11.5px">(${lessonCount} Video Lessons)</span>
+        </td>
         <td>
           ${badgeHtml}
-          <span style="font-size:11.5px;color:var(--muted)">${escapeHtml(c.level || 'All Levels')}</span>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:2px">${escapeHtml(c.level || 'All Levels')}</div>
         </td>
-        <td>
-          <div style="display:flex;gap:6px">
-            <button onclick="openEditCourseModal('${c.id}')" class="btn btn-outline" style="padding:6px 12px;font-size:11px">Edit</button>
-            <button onclick="deleteCourse('${c.id}')" class="btn btn-danger" style="padding:6px 10px;font-size:11px" title="Delete Course">✕</button>
+        <td style="text-align:right">
+          <div style="display:inline-flex;gap:8px;align-items:center">
+            <button onclick="openCourseStudio('${c.id}')" class="btn btn-gold" style="padding:6px 14px;font-size:11.5px;box-shadow:0 2px 10px rgba(216,161,83,0.3)">⚡ Open in Studio</button>
+            <a href="/portal/" target="_blank" class="btn btn-outline" style="padding:6px 10px;font-size:11.5px" title="Student Classroom View">👁️</a>
+            <button onclick="deleteCourse('${c.id}')" class="btn btn-danger" style="padding:6px 10px;font-size:11.5px" title="Delete Course">🗑</button>
           </div>
         </td>
       </tr>
@@ -1371,23 +1826,57 @@ function renderLmsCourses() {
   }).join('');
 }
 
-function openAddCourseModal() {
-  document.getElementById('courseModalTitle').textContent = 'Create New Online Course';
-  document.getElementById('editCourseId').value = '';
-  document.getElementById('courseTitleInput').value = '';
-  document.getElementById('courseCategoryInput').value = 'Video Editing';
-  document.getElementById('courseDurationInput').value = '18 Hours';
-  document.getElementById('courseLevelInput').value = 'All Levels';
-  document.getElementById('courseBadgeInput').value = 'New Launch';
-  document.getElementById('coursePriceInput').value = 4999;
-  document.getElementById('courseOrigPriceInput').value = 9999;
-  document.getElementById('courseThumbInput').value = 'assets/premiere-pro-hero-640.webp';
-  document.getElementById('courseDescInput').value = 'Professional comprehensive masterclass with real studio footage, sound design, and client-ready workflows.';
-  
-  loadStarterCurriculumTemplate(false);
+// IN-PAGE COURSE BUILDER STUDIO CONTROLS
+function openCourseStudio(courseId) {
+  const catView = document.getElementById('coursesCatalogView');
+  const stuView = document.getElementById('courseStudioView');
+  if (!catView || !stuView) return;
+
+  // Preload Bunny videos for quick picking if not already loaded
+  if (!allBunnyVideos.length) {
+    lmsAdmin('list-bunny-videos').then(res => {
+      if (res.videos) allBunnyVideos = res.videos;
+    }).catch(()=>{});
+  }
+
+  if (courseId) {
+    const course = allLmsCourses.find(c => c.id === courseId);
+    if (!course) return;
+    document.getElementById('studioHeaderTitle').textContent = `Studio: ${course.title}`;
+    document.getElementById('editCourseId').value = course.id;
+    document.getElementById('courseTitleInput').value = course.title || '';
+    document.getElementById('courseCategoryInput').value = course.category || 'Video Editing';
+    document.getElementById('courseDurationInput').value = course.duration || '18 Hours';
+    document.getElementById('courseLevelInput').value = course.level || 'All Levels';
+    document.getElementById('courseBadgeInput').value = course.badge || '';
+    document.getElementById('coursePriceInput').value = course.price || 4999;
+    document.getElementById('courseOrigPriceInput').value = course.originalPrice || 9999;
+    document.getElementById('courseThumbInput').value = course.thumbnail || 'assets/premiere-pro-hero-640.webp';
+    document.getElementById('courseDescInput').value = course.description || course.subtitle || '';
+    document.getElementById('courseModulesJson').value = JSON.stringify(course.modules || [], null, 2);
+    currentEditingModules = JSON.parse(JSON.stringify(course.modules || []));
+  } else {
+    document.getElementById('studioHeaderTitle').textContent = 'Studio: Create New Course';
+    document.getElementById('editCourseId').value = '';
+    document.getElementById('courseTitleInput').value = '';
+    document.getElementById('courseCategoryInput').value = 'Video Editing';
+    document.getElementById('courseDurationInput').value = '18 Hours';
+    document.getElementById('courseLevelInput').value = 'All Levels';
+    document.getElementById('courseBadgeInput').value = 'New Launch';
+    document.getElementById('coursePriceInput').value = 4999;
+    document.getElementById('courseOrigPriceInput').value = 9999;
+    document.getElementById('courseThumbInput').value = 'assets/premiere-pro-hero-640.webp';
+    document.getElementById('courseDescInput').value = 'Professional comprehensive masterclass with real studio footage, sound design, and client-ready workflows.';
+    loadStarterCurriculumTemplate(false);
+  }
+
+  updateThumbPreview();
   switchCurriculumTab('visual');
-  document.getElementById('lmsCourseModal').classList.add('show');
+  catView.style.display = 'none';
+  stuView.style.display = 'block';
+  stuView.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
 
 function loadStarterCurriculumTemplate(notify = true) {
   const starter = [
@@ -1529,40 +2018,42 @@ function renderVisualCurriculum(modules) {
   if (!container) return;
 
   if (!currentEditingModules.length) {
-    container.innerHTML = '<div style="padding:16px;text-align:center;color:var(--muted);background:#f8fafc;border-radius:10px">No modules added yet. Click "+ Add New Module" below or load a starter template.</div>';
+    container.innerHTML = '<div style="padding:28px;text-align:center;color:var(--muted);background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.1);border-radius:14px">No modules added yet. Click "+ Add New Module" below or load the 5-Module Starter Template.</div>';
     return;
   }
 
   container.innerHTML = currentEditingModules.map((m, mIdx) => {
     const lessons = m.lessons || [];
     return `
-      <div class="visual-module-card" data-midx="${mIdx}" style="border:1px solid var(--border);border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.03)">
-        <div style="background:#f8fafc;padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
-          <span style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase">M${mIdx + 1}</span>
-          <input type="text" value="${escapeHtml(m.title || '')}" onchange="currentEditingModules[${mIdx}].title = this.value" placeholder="Module Title (e.g. Module 1: Getting Started)" style="flex:1;padding:6px 10px;font-size:12.5px;font-weight:600" />
-          <button type="button" onclick="removeVisualModule(${mIdx})" class="icon-btn" title="Delete Module" style="color:var(--red);font-size:13px">🗑</button>
+      <div class="visual-module-card" data-midx="${mIdx}" style="border:1px solid rgba(255,255,255,0.1);border-radius:16px;background:#090e18;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,0.3)">
+        <div style="background:#131d33;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:12px">
+          <span style="font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;background:rgba(216,161,83,0.14);padding:4px 10px;border-radius:6px;border:1px solid rgba(216,161,83,0.25);font-family:'Outfit',sans-serif">MODULE ${mIdx + 1 < 10 ? '0' : ''}${mIdx + 1}</span>
+          <input type="text" value="${escapeHtml(m.title || '')}" onchange="currentEditingModules[${mIdx}].title = this.value" placeholder="Module Title (e.g. Module 1: Workspace &amp; Foundations)" style="flex:1;padding:8px 12px;font-size:13.5px;font-weight:600;background:#0b111e" />
+          <span style="font-size:12px;color:var(--muted);white-space:nowrap">${lessons.length} Lesson${lessons.length === 1 ? '' : 's'}</span>
+          <button type="button" onclick="removeVisualModule(${mIdx})" class="icon-btn danger" title="Delete Module" style="font-size:13px">🗑</button>
         </div>
-        <div style="padding:12px 14px">
-          <div style="display:flex;flex-direction:column;gap:8px" id="module-lessons-${mIdx}">
+        <div style="padding:16px 18px">
+          <div style="display:flex;flex-direction:column;gap:10px" id="module-lessons-${mIdx}">
             ${lessons.map((l, lIdx) => `
-              <div style="padding:10px;background:#fafafa;border:1px solid #f1f5f9;border-radius:8px;font-size:12px">
-                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-                  <span style="font-weight:700;color:#64748b;min-width:28px">#${lIdx + 1}</span>
-                  <input type="text" value="${escapeHtml(l.title || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'title', this.value)" placeholder="Lesson Title" style="flex:2;min-width:180px;padding:6px 8px;font-size:12px" />
-                  <input type="text" value="${escapeHtml(l.duration || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'duration', this.value)" placeholder="Duration (e.g. 15:30)" style="width:90px;padding:6px 8px;font-size:12px" />
-                  <div style="display:flex;gap:4px;flex:2;min-width:180px">
-                    <input type="text" value="${escapeHtml(l.videoId || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'videoId', this.value)" placeholder="Bunny Video GUID" style="font-family:monospace;font-size:11px;padding:6px 8px;flex:1" />
-                    <button type="button" onclick="quickPickBunnyVideo(${mIdx}, ${lIdx})" class="btn btn-outline" style="padding:4px 8px;font-size:10px" title="Pick from Bunny library">⚡ Pick</button>
+              <div style="padding:12px 14px;background:#0f172a;border:1px solid rgba(255,255,255,0.06);border-radius:12px">
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                  <span style="font-weight:800;font-size:12px;color:var(--gold);min-width:32px;background:rgba(255,255,255,0.04);padding:4px 8px;border-radius:6px;text-align:center;font-family:'Outfit',sans-serif">#${mIdx + 1}.${lIdx + 1}</span>
+                  <input type="text" value="${escapeHtml(l.title || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'title', this.value)" placeholder="Lesson Title (e.g. 1.1 Ingest &amp; Codecs)" style="flex:3;min-width:200px;padding:8px 10px;font-size:13px;font-weight:500" />
+                  <input type="text" value="${escapeHtml(l.duration || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'duration', this.value)" placeholder="Duration (15:30)" style="width:105px;padding:8px 10px;font-size:12.5px" />
+                  <div style="display:flex;gap:6px;flex:2;min-width:220px">
+                    <input type="text" value="${escapeHtml(l.videoId || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'videoId', this.value)" placeholder="Bunny Video GUID" style="font-family:monospace;font-size:11.5px;padding:8px 10px;flex:1;background:#070b14;color:#a5f3fc" />
+                    <button type="button" onclick="quickPickBunnyVideo(${mIdx}, ${lIdx})" class="btn btn-outline" style="padding:6px 10px;font-size:11px;white-space:nowrap" title="Pick video from Bunny.net library">⚡ Pick</button>
+                    ${l.videoId ? `<button type="button" onclick="openBunnyPreviewModal('${l.videoId}', '${escapeHtml(l.title || 'Lesson Preview')}')" class="btn btn-outline" style="padding:6px 9px;font-size:11px;color:#38bdf8" title="Preview Stream">▶</button>` : ''}
                   </div>
-                  <button type="button" onclick="removeVisualLesson(${mIdx}, ${lIdx})" class="icon-btn" style="color:var(--red);font-size:12px" title="Remove lesson">✕</button>
+                  <button type="button" onclick="removeVisualLesson(${mIdx}, ${lIdx})" class="icon-btn danger" style="font-size:12px" title="Remove lesson">✕</button>
                 </div>
-                <div style="margin-top:6px">
-                  <input type="text" value="${escapeHtml(l.summary || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'summary', this.value)" placeholder="Brief Lesson Summary / what is covered" style="width:100%;padding:4px 8px;font-size:11px;color:#475569" />
+                <div style="margin-top:8px">
+                  <input type="text" value="${escapeHtml(l.summary || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'summary', this.value)" placeholder="Lesson Summary / Learning outcomes" style="width:100%;padding:6px 10px;font-size:11.5px;color:var(--muted);background:transparent;border:1px solid rgba(255,255,255,0.05)" />
                 </div>
               </div>
             `).join('')}
           </div>
-          <button type="button" onclick="addVisualLesson(${mIdx})" class="btn-sm btn-outline" style="margin-top:10px;font-size:11px;padding:4px 10px">
+          <button type="button" onclick="addVisualLesson(${mIdx})" class="btn btn-outline" style="margin-top:14px;font-size:12px;padding:8px 16px;border-color:rgba(255,255,255,0.1)">
             + Add Lesson to Module ${mIdx + 1}
           </button>
         </div>
@@ -1641,31 +2132,25 @@ function quickPickBunnyVideo(mIdx, lIdx) {
   }
 }
 
-function openEditCourseModal(courseId) {
-  const course = allLmsCourses.find(c => c.id === courseId);
-  if (!course) return;
-  document.getElementById('courseModalTitle').textContent = `Edit Course: ${course.title}`;
-  document.getElementById('editCourseId').value = course.id;
-  document.getElementById('courseTitleInput').value = course.title;
-  document.getElementById('courseCategoryInput').value = course.category || 'Video Editing';
-  document.getElementById('courseDurationInput').value = course.duration || '18 Hours';
-  document.getElementById('courseLevelInput').value = course.level || 'All Levels';
-  document.getElementById('courseBadgeInput').value = course.badge || '';
-  document.getElementById('coursePriceInput').value = course.price || 4999;
-  document.getElementById('courseOrigPriceInput').value = course.originalPrice || 9999;
-  document.getElementById('courseThumbInput').value = course.thumbnail || 'assets/premiere-pro-hero-640.webp';
-  document.getElementById('courseDescInput').value = course.description || course.subtitle || '';
-  document.getElementById('courseModulesJson').value = JSON.stringify(course.modules || [], null, 2);
-  currentEditingModules = JSON.parse(JSON.stringify(course.modules || []));
-  switchCurriculumTab('visual');
-  document.getElementById('lmsCourseModal').classList.add('show');
+function closeCourseStudio() {
+  const catView = document.getElementById('coursesCatalogView');
+  const stuView = document.getElementById('courseStudioView');
+  if (catView) catView.style.display = 'block';
+  if (stuView) stuView.style.display = 'none';
+  loadLmsCourses();
 }
 
-function closeCourseModal() {
-  document.getElementById('lmsCourseModal').classList.remove('show');
+function updateThumbPreview() {
+  const input = document.getElementById('courseThumbInput');
+  const img = document.getElementById('courseThumbPreviewImg');
+  if (input && img) {
+    img.src = input.value.trim() || 'assets/premiere-pro-hero-640.webp';
+  }
 }
 
-async function saveCourseModal() {
+function updatePriceDiscountPreview() {}
+
+async function saveCourseFromStudio() {
   const id = document.getElementById('editCourseId').value;
   const title = document.getElementById('courseTitleInput').value.trim();
   if (!title) { toast('Please enter a course title', false); return; }
@@ -1697,15 +2182,26 @@ async function saveCourseModal() {
     modules
   };
 
+  const btn = document.getElementById('btnStudioSaveTop');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving to Academy…'; }
+
   try {
     await lmsAdmin('save-course', { method: 'POST', body: { course: courseData } });
-    toast('✅ Course saved successfully!');
-    closeCourseModal();
-    loadLmsCourses();
+    toast('✅ Course saved and published successfully!');
+    closeCourseStudio();
   } catch (err) {
     toast(`Save failed: ${err.message}`, false);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '💾 Save Course Changes ✓'; }
   }
 }
+
+// Compatibility aliases
+function openAddCourseModal() { openCourseStudio(); }
+function openEditCourseModal(courseId) { openCourseStudio(courseId); }
+function closeCourseModal() { closeCourseStudio(); }
+function saveCourseModal() { saveCourseFromStudio(); }
+
 
 async function deleteCourse(courseId) {
   if (!confirm('Are you sure you want to delete this course? Enrolled students will lose access.')) return;

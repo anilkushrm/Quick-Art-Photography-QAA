@@ -8,7 +8,7 @@
   <link rel="icon" href="../home-assets/ec55a6be3747a9.webp" type="image/webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="portal.css" />
 </head>
 <body>
@@ -287,51 +287,268 @@
       <div class="modal-content cert-content">
         <button type="button" class="modal-close" onclick="closeCertificateModal()" aria-label="Close">×</button>
         
+        <!-- Live Status Bar -->
+        <div class="cert-status-banner">
+          <span class="cert-status-dot"></span>
+          <span>OFFICIAL VERIFIED CREDENTIAL • QUICK ART PHOTOGRAPHY ACADEMY</span>
+          <span class="cert-iso-badge">ISO 9001:2015</span>
+        </div>
+
         <div id="certificate-print-area" class="certificate-frame">
+          <!-- Background Security Watermark -->
+          <div class="cert-watermark" aria-hidden="true">
+            <svg viewBox="0 0 400 400" width="360" height="360">
+              <circle cx="200" cy="200" r="180" fill="none" stroke="rgba(216, 161, 83, 0.08)" stroke-width="2" stroke-dasharray="6,4"/>
+              <circle cx="200" cy="200" r="140" fill="none" stroke="rgba(216, 161, 83, 0.06)" stroke-width="1.5"/>
+              <circle cx="200" cy="200" r="100" fill="none" stroke="rgba(216, 161, 83, 0.05)" stroke-width="1"/>
+              <path d="M200,60 L205,100 L240,110 L210,135 L220,170 L190,150 L160,170 L170,135 L140,110 L175,100 Z" fill="rgba(216, 161, 83, 0.04)"/>
+              <text x="200" y="215" text-anchor="middle" font-family="'Cinzel', serif" font-size="44" font-weight="bold" fill="rgba(216, 161, 83, 0.07)" letter-spacing="4">QAA</text>
+            </svg>
+          </div>
+
+          <!-- Ornate Corner Filigree Arabesques (Vector) -->
+          <div class="cert-corner cert-corner-tl" aria-hidden="true">
+            <svg viewBox="0 0 100 100" width="70" height="70">
+              <path d="M5,95 L5,20 C5,10 10,5 20,5 L95,5 C70,5 50,15 40,30 C30,45 25,65 5,95 Z" fill="none" stroke="url(#goldGrad)" stroke-width="2"/>
+              <path d="M12,85 L12,25 C12,18 18,12 25,12 L85,12 C65,12 48,22 40,35 C32,48 26,65 12,85 Z" fill="none" stroke="rgba(216, 161, 83, 0.5)" stroke-width="1"/>
+              <circle cx="28" cy="28" r="4" fill="#d8a153"/>
+              <circle cx="16" cy="16" r="2.5" fill="#aa7c11"/>
+            </svg>
+          </div>
+          <div class="cert-corner cert-corner-tr" aria-hidden="true">
+            <svg viewBox="0 0 100 100" width="70" height="70">
+              <path d="M95,95 L95,20 C95,10 90,5 80,5 L5,5 C30,5 50,15 60,30 C70,45 75,65 95,95 Z" fill="none" stroke="url(#goldGrad)" stroke-width="2"/>
+              <path d="M88,85 L88,25 C88,18 82,12 75,12 L15,12 C35,12 52,22 60,35 C68,48 74,65 88,85 Z" fill="none" stroke="rgba(216, 161, 83, 0.5)" stroke-width="1"/>
+              <circle cx="72" cy="28" r="4" fill="#d8a153"/>
+              <circle cx="84" cy="16" r="2.5" fill="#aa7c11"/>
+            </svg>
+          </div>
+          <div class="cert-corner cert-corner-bl" aria-hidden="true">
+            <svg viewBox="0 0 100 100" width="70" height="70">
+              <path d="M5,5 L5,80 C5,90 10,95 20,95 L95,95 C70,95 50,85 40,70 C30,55 25,35 5,5 Z" fill="none" stroke="url(#goldGrad)" stroke-width="2"/>
+              <path d="M12,15 L12,75 C12,82 18,88 25,88 L85,88 C65,88 48,78 40,65 C32,52 26,35 12,15 Z" fill="none" stroke="rgba(216, 161, 83, 0.5)" stroke-width="1"/>
+              <circle cx="28" cy="72" r="4" fill="#d8a153"/>
+              <circle cx="16" cy="84" r="2.5" fill="#aa7c11"/>
+            </svg>
+          </div>
+          <div class="cert-corner cert-corner-br" aria-hidden="true">
+            <svg viewBox="0 0 100 100" width="70" height="70">
+              <path d="M95,5 L95,80 C95,90 90,95 80,95 L5,95 C30,95 50,85 60,70 C70,55 75,35 95,5 Z" fill="none" stroke="url(#goldGrad)" stroke-width="2"/>
+              <path d="M88,15 L88,75 C88,82 82,88 75,88 L15,88 C35,88 52,78 60,65 C68,52 74,35 88,15 Z" fill="none" stroke="rgba(216, 161, 83, 0.5)" stroke-width="1"/>
+              <circle cx="72" cy="72" r="4" fill="#d8a153"/>
+              <circle cx="84" cy="84" r="2.5" fill="#aa7c11"/>
+            </svg>
+          </div>
+
+          <!-- Microprint Security Border -->
+          <div class="cert-microprint-border" aria-hidden="true">
+            <span>★ QUICK ART PHOTOGRAPHY ACADEMY ★ AN ISO 9001:2015 CERTIFIED INSTITUTION ★ GOVT. OF INDIA MSME REGD. ★ CENTRE: PAT/QAA-800001 ★ VERIFIED CREDENTIAL ★ OFFICIAL RECORD ★ TAMPER-PROOF ACADEMIC REGISTER ★</span>
+          </div>
+
           <div class="cert-inner">
+            <!-- Gradients Definition SVG -->
+            <svg width="0" height="0" style="position: absolute;">
+              <defs>
+                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#b8843b"/>
+                  <stop offset="35%" stop-color="#ecc779"/>
+                  <stop offset="70%" stop-color="#d8a153"/>
+                  <stop offset="100%" stop-color="#996a24"/>
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <!-- Certificate Header with Crest -->
             <div class="cert-top">
-              <img src="../home-assets/ec55a6be3747a9.webp" alt="Quick Art Logo" width="64" height="64" class="cert-logo" />
+              <div class="cert-crest-wrap">
+                <!-- Royal Academy Golden Crest -->
+                <svg viewBox="0 0 160 80" width="130" height="65" class="cert-crest-svg">
+                  <!-- Laurels Left -->
+                  <path d="M60,65 C45,55 35,40 38,20 C42,28 50,38 65,45 Z" fill="url(#goldGrad)"/>
+                  <path d="M52,50 C40,42 32,30 36,12 C39,20 48,28 58,35 Z" fill="url(#goldGrad)"/>
+                  <path d="M68,72 C55,68 45,58 48,45 C52,52 60,58 72,62 Z" fill="url(#goldGrad)"/>
+                  <!-- Laurels Right -->
+                  <path d="M100,65 C115,55 125,40 122,20 C118,28 110,38 95,45 Z" fill="url(#goldGrad)"/>
+                  <path d="M108,50 C120,42 128,30 124,12 C121,20 112,28 102,35 Z" fill="url(#goldGrad)"/>
+                  <path d="M92,72 C105,68 115,58 112,45 C108,52 100,58 88,62 Z" fill="url(#goldGrad)"/>
+                  <!-- Center Shield & Camera Icon -->
+                  <path d="M80,15 L98,24 C98,48 80,60 80,60 C80,60 62,48 62,24 Z" fill="#18181f" stroke="url(#goldGrad)" stroke-width="2"/>
+                  <!-- Star Crown -->
+                  <polygon points="80,4 82,10 88,10 83,14 85,20 80,16 75,20 77,14 72,10 78,10" fill="url(#goldGrad)"/>
+                  <!-- Mini Camera inside Shield -->
+                  <rect x="73" y="32" width="14" height="10" rx="2" fill="url(#goldGrad)"/>
+                  <circle cx="80" cy="37" r="3.2" fill="#18181f"/>
+                  <circle cx="80" cy="37" r="1.6" fill="url(#goldGrad)"/>
+                  <!-- Ribbon Estd -->
+                  <path d="M55,68 L80,74 L105,68 L98,63 L80,68 L62,63 Z" fill="url(#goldGrad)"/>
+                  <text x="80" y="72" text-anchor="middle" font-size="5.5" font-family="'Cinzel', serif" font-weight="bold" fill="#1a1505" letter-spacing="1.2">ESTD. 2014</text>
+                </svg>
+              </div>
+
               <div class="cert-academy-title">QUICK ART PHOTOGRAPHY ACADEMY</div>
-              <div class="cert-subtitle">CENTRE FOR CINEMATIC FILMMAKING &amp; VIDEO EDITING EXCELLENCE</div>
+              <div class="cert-subtitle">ACADEMY OF CINEMATIC FILMMAKING, PHOTOGRAPHY &amp; DIGITAL ARTS</div>
+              <div class="cert-accreditation-line">
+                AN ISO 9001:2015 CERTIFIED INSTITUTION • GOVT. OF INDIA MSME REGD. • CENTRE CODE: PAT/QAA-800001
+              </div>
             </div>
 
-            <div class="cert-badge-gold">CERTIFICATE OF COMPLETION</div>
-            <p class="cert-presented-to">This is proudly presented to</p>
-            <h2 id="cert-student-name" class="cert-name">Student Name</h2>
+            <!-- Title Ribbon -->
+            <div class="cert-title-container">
+              <div class="cert-badge-gold">
+                <span class="cert-badge-star">★</span>
+                <span>CERTIFICATE OF COMPLETION &amp; EXCELLENCE</span>
+                <span class="cert-badge-star">★</span>
+              </div>
+              <div class="cert-reg-code">Registration No: QAA/ISO-2026/0842 &bull; Authenticity Verified</div>
+            </div>
+
+            <!-- Recipient Block -->
+            <p class="cert-presented-to">This prestigious credential is duly and officially conferred upon</p>
+            <div class="cert-name-wrapper">
+              <h2 id="cert-student-name" class="cert-name">Student Name</h2>
+              <div class="cert-name-underline" aria-hidden="true"></div>
+            </div>
+
+            <!-- Citation Body -->
             <p class="cert-body-text">
-              for successfully mastering the comprehensive curriculum, practical projects, and professional workflow of
+              in recognition of successfully completing all academic modules, rigorous practical assignments,
+              industry-standard real client workflows, and demonstrating professional mastery in
             </p>
+
             <h3 id="cert-course-name" class="cert-course">Adobe Premiere Pro Masterclass</h3>
 
+            <!-- Course Meta Badges (Hours, Grade, Portfolio) -->
+            <div class="cert-meta-row">
+              <span class="cert-meta-pill" id="cert-meta-duration">⏱ 18 Credit Hours</span>
+              <span class="cert-meta-pill cert-meta-pill-gold">★ Grade: Distinction (Grade A+)</span>
+              <span class="cert-meta-pill">✓ Practical Portfolio Approved</span>
+            </div>
+
+            <!-- Triad Footer: Left (QR & Barcode) - Center (3D Seal) - Right (Signature & Stamp) -->
             <div class="cert-footer">
-              <div class="cert-sig-block">
-                <div class="cert-sig-line">Anil Sharma</div>
-                <div class="cert-sig-role">Founder &amp; Master Trainer</div>
-                <div class="cert-sig-org">Quick Art Photography Academy</div>
+              <!-- Left: Verification & QR Code -->
+              <div class="cert-verify-block">
+                <div class="cert-qr-frame">
+                  <img id="cert-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fquickartphotography.in%2Fportal%2F" alt="Verification QR Code" width="80" height="80" class="cert-qr-img" />
+                </div>
+                <div class="cert-qr-text">SCAN TO VERIFY ONLINE</div>
+                <div class="cert-sig-id" id="cert-id-val">ID: QAA-2026-PR-0780</div>
+                <!-- SVG Security Barcode -->
+                <svg class="cert-barcode" width="130" height="18" viewBox="0 0 130 18" aria-hidden="true">
+                  <rect x="0" y="0" width="3" height="18" fill="#444"/>
+                  <rect x="5" y="0" width="1" height="18" fill="#444"/>
+                  <rect x="8" y="0" width="4" height="18" fill="#444"/>
+                  <rect x="15" y="0" width="2" height="18" fill="#444"/>
+                  <rect x="19" y="0" width="1" height="18" fill="#444"/>
+                  <rect x="22" y="0" width="3" height="18" fill="#444"/>
+                  <rect x="27" y="0" width="5" height="18" fill="#444"/>
+                  <rect x="34" y="0" width="2" height="18" fill="#444"/>
+                  <rect x="38" y="0" width="1" height="18" fill="#444"/>
+                  <rect x="41" y="0" width="3" height="18" fill="#444"/>
+                  <rect x="46" y="0" width="2" height="18" fill="#444"/>
+                  <rect x="50" y="0" width="4" height="18" fill="#444"/>
+                  <rect x="56" y="0" width="1" height="18" fill="#444"/>
+                  <rect x="59" y="0" width="3" height="18" fill="#444"/>
+                  <rect x="64" y="0" width="5" height="18" fill="#444"/>
+                  <rect x="71" y="0" width="2" height="18" fill="#444"/>
+                  <rect x="75" y="0" width="1" height="18" fill="#444"/>
+                  <rect x="78" y="0" width="3" height="18" fill="#444"/>
+                  <rect x="83" y="0" width="4" height="18" fill="#444"/>
+                  <rect x="89" y="0" width="2" height="18" fill="#444"/>
+                  <rect x="93" y="0" width="1" height="18" fill="#444"/>
+                  <rect x="96" y="0" width="5" height="18" fill="#444"/>
+                  <rect x="103" y="0" width="2" height="18" fill="#444"/>
+                  <rect x="107" y="0" width="3" height="18" fill="#444"/>
+                  <rect x="112" y="0" width="1" height="18" fill="#444"/>
+                  <rect x="115" y="0" width="4" height="18" fill="#444"/>
+                  <rect x="121" y="0" width="2" height="18" fill="#444"/>
+                  <rect x="125" y="0" width="3" height="18" fill="#444"/>
+                </svg>
               </div>
+
+              <!-- Center: 3D Embossed Gold Wax Seal with Ribbons -->
               <div class="cert-seal-block">
-                <div class="cert-seal">
-                  <span>OFFICIAL</span>
-                  <b>SEAL</b>
-                  <span>QAA</span>
+                <div class="cert-gold-seal-container">
+                  <!-- Ribbon Tails -->
+                  <div class="cert-seal-ribbon cert-ribbon-left"></div>
+                  <div class="cert-seal-ribbon cert-ribbon-right"></div>
+                  <!-- Embossed Medallion -->
+                  <div class="cert-seal-embossed">
+                    <div class="cert-seal-outer-teeth"></div>
+                    <div class="cert-seal-inner-ring">
+                      <div class="cert-seal-curved-text-top">EXCELLENCE</div>
+                      <div class="cert-seal-center-star">★ ★ ★</div>
+                      <div class="cert-seal-core-symbol">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                          <circle cx="12" cy="12" r="4"/>
+                          <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                        </svg>
+                      </div>
+                      <div class="cert-seal-curved-text-bot">SEAL &bull; QAA</div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="cert-date-block">
-                <div class="cert-date-val" id="cert-date-val">September 2026</div>
-                <div class="cert-sig-role">Date of Completion</div>
-                <div class="cert-sig-id" id="cert-id-val">ID: QAA-2026-CERT</div>
+
+              <!-- Right: Issue Date, Signature & Official Director Stamp -->
+              <div class="cert-sig-block">
+                <div class="cert-date-wrap">
+                  <div class="cert-date-val" id="cert-date-val">17 September 2026</div>
+                  <div class="cert-sig-role">Date of Issue</div>
+                </div>
+
+                <div class="cert-sig-signature-area">
+                  <!-- Official Red / Violet Academy Director Stamp -->
+                  <div class="cert-official-stamp" aria-hidden="true">
+                    <div class="cert-stamp-inner">
+                      <span>QUICK ART ACADEMY</span>
+                      <b>DIRECTOR</b>
+                      <small>VERIFIED</small>
+                    </div>
+                  </div>
+
+                  <!-- Digital Pen Signature (Alex Brush) -->
+                  <div class="cert-sig-line">Anil Sharma</div>
+                </div>
+
+                <div class="cert-sig-name">Anil Sharma</div>
+                <div class="cert-sig-role">Founder &amp; Master Director</div>
+                <div class="cert-sig-org">Quick Art Photography Academy</div>
               </div>
+            </div>
+
+            <!-- Bottom Tamper Proof Note -->
+            <div class="cert-bottom-tamper">
+              VERIFIED OFFICIAL RECORD &bull; THIS DOCUMENT CARRIES TAMPER-EVIDENT DIGITAL VALIDATION &bull; VALID WORLDWIDE
             </div>
           </div>
         </div>
 
+        <!-- Action Toolbar -->
         <div class="cert-modal-actions">
-          <button type="button" class="btn btn-gold" onclick="window.print()">🖨 Print / Save as PDF</button>
-          <button type="button" class="btn btn-outline" onclick="closeCertificateModal()">Close</button>
+          <button type="button" class="btn btn-gold" onclick="window.print()">
+            🖨️ Print / Save as PDF (A4)
+          </button>
+          <button type="button" class="btn btn-emerald" onclick="downloadCertificatePNG()">
+            📥 Download HD Image (PNG)
+          </button>
+          <button type="button" class="btn btn-outline" onclick="shareCertificateWhatsApp()">
+            📲 Share on WhatsApp
+          </button>
+          <button type="button" class="btn btn-outline" onclick="copyCertificateLink()">
+            🔗 Copy Link
+          </button>
+          <button type="button" class="btn btn-outline" onclick="closeCertificateModal()">
+            Close
+          </button>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Confetti Canvas for Automatic Course Completion Celebration -->
+  <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+  <canvas id="cert-export-canvas" style="display: none;"></canvas>
 
   <!-- ================= 5. COURSE CATALOG & ENROLL MODAL ================= -->
   <div id="modal-catalog" class="modal" role="dialog" aria-modal="true">

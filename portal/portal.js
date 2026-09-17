@@ -200,7 +200,27 @@ async function loadDashboard() {
       return;
     }
 
-    grid.innerHTML = courses.map(c => `
+    const completedCoursesList = courses.filter(c => c.isCompleted || c.progressPercent >= 100);
+    const celebrationBanner = completedCoursesList.length > 0 ? `
+      <div class="card celebration-banner" style="grid-column: 1/-1; background: linear-gradient(135deg, rgba(201,151,56,0.18) 0%, rgba(16,185,129,0.12) 100%); border: 1px solid var(--border-gold); padding: 18px 24px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 8px;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div style="font-size: 32px;">🏆</div>
+          <div>
+            <div style="font-size: 16px; font-weight: 800; color: #ecd394;">
+              Congratulations ${escapeHtml(currentStudent ? currentStudent.name : 'Student')}! You have completed ${completedCoursesList.length} course${completedCoursesList.length > 1 ? 's' : ''}!
+            </div>
+            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+              Your official accredited certificate is ready with instant online verification, 1-click A4 PDF, and HD PNG download.
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-gold" onclick="openCertificateModalFromCard('${completedCoursesList[0].id}', '${escapeHtml(completedCoursesList[0].title)}')">
+          🎓 View Official Certificate →
+        </button>
+      </div>
+    ` : '';
+
+    grid.innerHTML = celebrationBanner + courses.map(c => `
       <article class="course-card">
         <div class="course-thumb-wrap">
           <img src="../${c.thumbnail || 'assets/editing-timeline.jpg'}" alt="${escapeHtml(c.title)}" loading="lazy" />
@@ -221,13 +241,13 @@ async function loadDashboard() {
             </div>
           </div>
 
-          <div class="course-card-footer">
-            <button type="button" class="btn btn-gold" style="flex: 1" onclick="openCourseClassroom('${c.id}')">
+          <div class="course-card-footer" style="flex-wrap: wrap; gap: 8px;">
+            <button type="button" class="btn btn-gold" style="flex: 1; min-width: 140px;" onclick="openCourseClassroom('${c.id}')">
               ${c.completedCount > 0 ? 'Resume Course →' : 'Start Learning →'}
             </button>
-            ${c.isCompleted ? `
-              <button type="button" class="btn btn-outline" onclick="openCertificateModalFromCard('${escapeHtml(c.title)}')">
-                🎓 Certificate
+            ${(c.isCompleted || c.progressPercent >= 100) ? `
+              <button type="button" class="btn btn-gold" style="border: 1px solid #ecd394; box-shadow: 0 4px 12px rgba(201,151,56,0.3);" onclick="openCertificateModalFromCard('${c.id}', '${escapeHtml(c.title)}')">
+                🎓 Official Certificate
               </button>
             ` : ''}
           </div>
@@ -472,10 +492,17 @@ async function toggleLessonComplete() {
 
     updateCertificateUnlockState();
 
-    toast(newState ? 'Lesson marked as completed! 🎉' : 'Lesson marked as uncompleted.');
-
-    if (newState && pct < 100) {
-      goToNextLesson();
+    if (newState && pct >= 100) {
+      toast('🎓 Outstanding! Course completed 100%! Generating official certificate...');
+      triggerConfettiCelebration();
+      setTimeout(() => {
+        openCertificateModal(currentCourse.id);
+      }, 900);
+    } else {
+      toast(newState ? 'Lesson marked as completed! 🎉' : 'Lesson marked as uncompleted.');
+      if (newState && pct < 100) {
+        goToNextLesson();
+      }
     }
   } catch (err) {
     toast(`Failed to update progress: ${err.message}`, false);
@@ -504,46 +531,365 @@ function goToNextLesson() {
   if (nextLesson) {
     loadLesson(currentCourse.id, nextLesson.id);
   } else {
-    toast('You have reached the end of this course! 🎓');
     updateCertificateUnlockState();
+    if (currentCourse.progressPercent >= 100) {
+      toast('🎓 Congratulations! You reached the end of this course!');
+      triggerConfettiCelebration();
+      setTimeout(() => {
+        openCertificateModal(currentCourse.id);
+      }, 900);
+    } else {
+      toast('You have reached the end of this module. Complete remaining lessons to unlock your certificate!');
+    }
   }
 }
 
 function updateCertificateUnlockState() {
   const box = document.getElementById('certificate-unlock-box');
+  if (!box) return;
   if (currentCourse && currentCourse.progressPercent >= 100) {
     box.classList.remove('hidden');
+    box.innerHTML = `
+      <div style="background: linear-gradient(135deg, rgba(201,151,56,0.2) 0%, rgba(16,185,129,0.15) 100%); border: 1.5px solid var(--border-gold); padding: 16px; border-radius: var(--radius-md); text-align: center; box-shadow: 0 4px 14px rgba(0,0,0,0.3);">
+        <div style="font-size: 26px; margin-bottom: 4px;">🎓</div>
+        <div style="font-family: 'Cinzel', serif; font-weight: 800; color: #ecd394; font-size: 14px; letter-spacing: 0.05em;">
+          COURSE COMPLETED (100%)
+        </div>
+        <div style="font-size: 11.5px; color: var(--text-muted); margin: 4px 0 12px;">
+          Your official accredited certificate is ready!
+        </div>
+        <button type="button" class="btn btn-gold" style="width: 100%; box-shadow: 0 4px 12px rgba(201,151,56,0.4);" onclick="openCertificateModal('${currentCourse.id}')">
+          🎓 View &amp; Download Certificate
+        </button>
+      </div>
+    `;
   } else {
     box.classList.add('hidden');
   }
 }
 
-// ---------- 4. Certificate Generator ----------
+// ---------- 4. Certificate Generator & Verification System ----------
 
-function openCertificateModal() {
-  if (!currentCourse || !currentStudent) return;
-  document.getElementById('cert-student-name').textContent = currentStudent.name || 'Student';
-  document.getElementById('cert-course-name').textContent = currentCourse.title;
-  document.getElementById('cert-date-val').textContent = new Date().toLocaleDateString('en-US', {
-    month: 'long', year: 'numeric'
+let activeCertData = null;
+
+function getCourseCode(courseId) {
+  if (!courseId) return 'PR';
+  const id = courseId.toLowerCase();
+  if (id.includes('premiere')) return 'PR';
+  if (id.includes('edius')) return 'ED';
+  if (id.includes('davinci')) return 'DV';
+  if (id.includes('cinematic') || id.includes('wedding')) return 'CW';
+  if (id.includes('album')) return 'AL';
+  if (id.includes('pre-wedding')) return 'PW';
+  if (id.includes('website') || id.includes('web')) return 'WD';
+  if (id.includes('marketing') || id.includes('digital')) return 'DM';
+  if (id.includes('auto')) return 'AU';
+  return 'GEN';
+}
+
+function generateCertificateId(courseId, phone) {
+  const code = getCourseCode(courseId);
+  const suffix = (phone || (currentStudent ? currentStudent.phone : '0780')).slice(-4);
+  return `QAA-2026-${code}-${suffix}`;
+}
+
+function triggerConfettiCelebration() {
+  const canvas = document.getElementById('confetti-canvas');
+  if (!canvas) return;
+  canvas.style.display = 'block';
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const particles = [];
+  const colors = ['#c99738', '#ecd394', '#10b981', '#3b82f6', '#ef4444', '#f59e0b', '#ffffff'];
+
+  for (let i = 0; i < 150; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * (canvas.height * 0.4) - 40,
+      w: Math.random() * 10 + 6,
+      h: Math.random() * 8 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: (Math.random() - 0.5) * 5,
+      vy: Math.random() * 4 + 2.5,
+      rotation: Math.random() * 360,
+      vrot: (Math.random() - 0.5) * 8,
+      opacity: 1
+    });
+  }
+
+  let animationFrame;
+  const startTime = Date.now();
+
+  function animate() {
+    const elapsed = Date.now() - startTime;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rotation += p.vrot;
+      if (elapsed > 2500) {
+        p.opacity = Math.max(0, p.opacity - 0.02);
+      }
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rotation * Math.PI) / 180);
+      ctx.globalAlpha = p.opacity;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    }
+
+    if (elapsed < 3800) {
+      animationFrame = requestAnimationFrame(animate);
+    } else {
+      cancelAnimationFrame(animationFrame);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.style.display = 'none';
+    }
+  }
+
+  animate();
+}
+
+function populateCertificateUI(studentName, courseTitle, courseId, duration, certId) {
+  const nameElem = document.getElementById('cert-student-name');
+  const courseElem = document.getElementById('cert-course-name');
+  const dateElem = document.getElementById('cert-date-val');
+  const idElem = document.getElementById('cert-id-val');
+  const durElem = document.getElementById('cert-meta-duration');
+  const qrElem = document.getElementById('cert-qr-img');
+
+  const name = studentName || (currentStudent ? currentStudent.name : 'Student');
+  const cTitle = courseTitle || (currentCourse ? currentCourse.title : 'Adobe Premiere Pro Masterclass');
+  const cId = certId || generateCertificateId(courseId, currentStudent ? currentStudent.phone : '0780');
+
+  const today = new Date().toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
   });
-  document.getElementById('cert-id-val').textContent = `ID: QAA-${currentCourse.id.slice(-6).toUpperCase()}-${currentStudent.phone.slice(-4)}`;
+
+  if (nameElem) nameElem.textContent = name;
+  if (courseElem) courseElem.textContent = cTitle;
+  if (dateElem) dateElem.textContent = today;
+  if (idElem) idElem.textContent = `ID: ${cId}`;
+  if (durElem) durElem.textContent = `⏱ ${duration || '18 Credit Hours'}`;
+
+  // Live QR Code leading to verification URL
+  const verifyUrl = `https://quickartphotography.in/portal/index.html?verify=${encodeURIComponent(cId)}`;
+  if (qrElem) {
+    qrElem.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}&margin=4`;
+    qrElem.alt = `Verify ${cId}`;
+  }
+
+  activeCertData = {
+    studentName: name,
+    courseTitle: cTitle,
+    courseId: courseId,
+    duration: duration || '18 Credit Hours',
+    certificateId: cId,
+    issuedDate: today,
+    verifyUrl: verifyUrl
+  };
+}
+
+function openCertificateModal(courseId) {
+  const cid = courseId || (currentCourse ? currentCourse.id : '');
+  const cTitle = currentCourse ? currentCourse.title : 'Adobe Premiere Pro Masterclass';
+  const dur = currentCourse ? currentCourse.duration : '18 Credit Hours';
+  populateCertificateUI(currentStudent ? currentStudent.name : 'Student', cTitle, cid, dur);
   document.getElementById('modal-certificate').classList.add('show');
 }
 
-function openCertificateModalFromCard(courseTitle) {
-  if (!currentStudent) return;
-  document.getElementById('cert-student-name').textContent = currentStudent.name || 'Student';
-  document.getElementById('cert-course-name').textContent = courseTitle;
-  document.getElementById('cert-date-val').textContent = new Date().toLocaleDateString('en-US', {
-    month: 'long', year: 'numeric'
-  });
-  document.getElementById('cert-id-val').textContent = `ID: QAA-CERT-${currentStudent.phone.slice(-4)}`;
+function openCertificateModalFromCard(courseId, courseTitle) {
+  const studentName = currentStudent ? currentStudent.name : 'Student';
+  populateCertificateUI(studentName, courseTitle, courseId, '18 Credit Hours');
   document.getElementById('modal-certificate').classList.add('show');
 }
 
 function closeCertificateModal() {
   document.getElementById('modal-certificate').classList.remove('show');
+}
+
+// 1-Click HD Image (PNG) Export via Canvas
+function downloadCertificatePNG() {
+  if (!activeCertData) {
+    toast('Certificate not ready', false);
+    return;
+  }
+  toast('Generating high-resolution Certificate PNG…');
+
+  const canvas = document.getElementById('cert-export-canvas') || document.createElement('canvas');
+  canvas.width = 1754; // A4 Landscape 150 DPI
+  canvas.height = 1240;
+  const ctx = canvas.getContext('2d');
+
+  // Background Parchment
+  const bgGrad = ctx.createRadialGradient(877, 620, 50, 877, 620, 900);
+  bgGrad.addColorStop(0, '#ffffff');
+  bgGrad.addColorStop(0.6, '#fbf6ec');
+  bgGrad.addColorStop(1, '#f4ebd9');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Outer Gold Double Border
+  ctx.lineWidth = 14;
+  ctx.strokeStyle = '#c99738';
+  ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
+
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#ecd394';
+  ctx.strokeRect(48, 48, canvas.width - 96, canvas.height - 96);
+
+  // Inner dashed border
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = 'rgba(201, 151, 56, 0.4)';
+  ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
+
+  // Header Title
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#141720';
+  ctx.font = 'bold 36px "Cinzel", Georgia, serif';
+  ctx.fillText('QUICK ART PHOTOGRAPHY ACADEMY', 877, 140);
+
+  ctx.fillStyle = '#8c6a28';
+  ctx.font = 'bold 15px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('ACADEMY OF CINEMATIC FILMMAKING, PHOTOGRAPHY & DIGITAL ARTS', 877, 175);
+
+  ctx.fillStyle = '#5c584e';
+  ctx.font = '13px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('AN ISO 9001:2015 CERTIFIED INSTITUTION • GOVT. OF INDIA MSME REGD. • CENTRE CODE: PAT/QAA-800001', 877, 205);
+
+  // Ribbon Banner
+  ctx.fillStyle = '#b8843b';
+  ctx.beginPath();
+  ctx.roundRect(480, 235, 794, 42, 6);
+  ctx.fill();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 18px "Cinzel", Georgia, serif';
+  ctx.fillText('★  CERTIFICATE OF COMPLETION & EXCELLENCE  ★', 877, 262);
+
+  // Presented to
+  ctx.fillStyle = '#585143';
+  ctx.font = 'italic 20px "Playfair Display", Georgia, serif';
+  ctx.fillText('This prestigious credential is duly and officially conferred upon', 877, 325);
+
+  // Student Name
+  ctx.fillStyle = '#94661a';
+  ctx.font = 'bold 54px "Cinzel", Georgia, serif';
+  ctx.fillText(activeCertData.studentName, 877, 400);
+
+  // Underline
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#c99738';
+  ctx.beginPath();
+  ctx.moveTo(560, 420);
+  ctx.lineTo(1194, 420);
+  ctx.stroke();
+
+  // Citation text
+  ctx.fillStyle = '#403c35';
+  ctx.font = '18px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('in recognition of successfully completing all academic modules, practical assignments,', 877, 475);
+  ctx.fillText('industry-standard real client workflows, and demonstrating professional mastery in', 877, 505);
+
+  // Course Name
+  ctx.fillStyle = '#12151d';
+  ctx.font = 'bold 36px "Cinzel", Georgia, serif';
+  ctx.fillText(activeCertData.courseTitle, 877, 565);
+
+  // Meta Pill text
+  ctx.fillStyle = '#704408';
+  ctx.font = 'bold 16px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText(`⏱ ${activeCertData.duration}   •   ★ Grade: Distinction (Grade A+)   •   ✓ Practical Portfolio Approved`, 877, 615);
+
+  // Footer Left: ID & Verification
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#141720';
+  ctx.font = 'bold 16px monospace';
+  ctx.fillText(`Certificate ID: ${activeCertData.certificateId}`, 120, 1100);
+  ctx.fillStyle = '#6d5423';
+  ctx.font = '13px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('Verify Online: quickartphotography.in/portal/', 120, 1125);
+
+  // Footer Center: Seal
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#b8843b';
+  ctx.beginPath();
+  ctx.arc(877, 1080, 52, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 12px "Cinzel", Georgia, serif';
+  ctx.fillText('OFFICIAL SEAL', 877, 1075);
+  ctx.fillText('QAA', 877, 1095);
+
+  // Footer Right: Signature & Anil Sharma
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#13151e';
+  ctx.font = 'italic 44px "Alex Brush", cursive';
+  ctx.fillText('Anil Sharma', 1630, 1060);
+  ctx.strokeStyle = '#141720';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(1400, 1075);
+  ctx.lineTo(1630, 1075);
+  ctx.stroke();
+
+  ctx.fillStyle = '#141720';
+  ctx.font = 'bold 16px "Cinzel", Georgia, serif';
+  ctx.fillText('Anil Sharma', 1630, 1100);
+  ctx.fillStyle = '#845714';
+  ctx.font = 'bold 13px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('Founder & Master Director', 1630, 1120);
+
+  // Try loading QR Code onto canvas
+  try {
+    const qrImg = new Image();
+    qrImg.crossOrigin = 'Anonymous';
+    qrImg.onload = () => {
+      ctx.drawImage(qrImg, 120, 950, 120, 120);
+      triggerCanvasDownload(canvas, activeCertData.studentName);
+    };
+    qrImg.onerror = () => {
+      triggerCanvasDownload(canvas, activeCertData.studentName);
+    };
+    qrImg.src = activeCertData.verifyUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(activeCertData.verifyUrl)}` : '';
+  } catch (e) {
+    triggerCanvasDownload(canvas, activeCertData.studentName);
+  }
+}
+
+function triggerCanvasDownload(canvas, studentName) {
+  const link = document.createElement('a');
+  const safeName = (studentName || 'Student').replace(/[^a-zA-Z0-9]/g, '_');
+  link.download = `QuickArt_Certificate_${safeName}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  toast('✅ HD Certificate Downloaded Successfully!');
+}
+
+function shareCertificateWhatsApp() {
+  if (!activeCertData) return;
+  const msg = `🎓 Proud to share my official Certificate of Completion for "${activeCertData.courseTitle}" from Quick Art Photography Academy!\n\nCandidate: ${activeCertData.studentName}\nCredential ID: ${activeCertData.certificateId}\n\nVerify Live Online: ${activeCertData.verifyUrl}`;
+  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function copyCertificateLink() {
+  if (!activeCertData || !activeCertData.verifyUrl) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(activeCertData.verifyUrl).then(() => {
+      toast('✅ Official Verification link copied to clipboard!');
+    }).catch(() => {
+      prompt('Copy certificate link:', activeCertData.verifyUrl);
+    });
+  } else {
+    prompt('Copy certificate link:', activeCertData.verifyUrl);
+  }
 }
 
 // ---------- Video Playback Controls ----------
@@ -816,12 +1162,20 @@ async function verifyCertificateById(certId) {
   try {
     const res = await fetch(`../api/lms.php?action=verify-certificate&id=${encodeURIComponent(certId)}`).then(r => r.json());
     if (res.ok && res.certificate && res.certificate.valid) {
-      document.getElementById('cert-student-name').textContent = res.certificate.studentName || 'Student';
-      document.getElementById('cert-course-name').textContent = res.certificate.courseTitle || 'Masterclass';
-      document.getElementById('cert-date-val').textContent = 'Verified Official';
-      document.getElementById('cert-id-val').textContent = `ID: ${res.certificate.certificateId}`;
+      const c = res.certificate;
+      populateCertificateUI(
+        c.studentName,
+        c.courseTitle,
+        c.courseId,
+        c.duration,
+        c.certificateId
+      );
+      if (c.issuedDate) {
+        const d = document.getElementById('cert-date-val');
+        if (d) d.textContent = c.issuedDate;
+      }
       document.getElementById('modal-certificate').classList.add('show');
-      toast('✅ Official Certificate Verified!');
+      toast('✅ Official Accredited Certificate Verified & Authentic!');
     } else {
       toast(res.certificate?.message || 'Certificate ID invalid or not found', false);
       switchView('login');

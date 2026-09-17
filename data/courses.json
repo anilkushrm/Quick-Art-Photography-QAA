@@ -344,5 +344,165 @@
         "answer": 2
       }
     ]
+  },
+  {
+    "id": "course-pre-wedding",
+    "slug": "pre-wedding-shoot-course",
+    "title": "Pre-Wedding Shoot & Filmmaking Masterclass",
+    "subtitle": "Creative Planning, Natural Light, Posing & Cinematic Couple Direction",
+    "category": "Filmmaking",
+    "level": "Beginner to Advanced",
+    "duration": "14 Hours",
+    "price": 3999,
+    "originalPrice": 7999,
+    "thumbnail": "assets/editing-timeline.jpg",
+    "badge": "Creative Masterclass",
+    "description": "Learn professional pre-wedding shoot workflows from location planning and couple storytelling to directing natural poses, shooting on golden hour, and editing couple teasers.",
+    "modules": [
+      {
+        "id": "mod-pw-1",
+        "title": "Module 1: Story Concept, Mood Boards & Location Recce",
+        "lessons": [
+          {
+            "id": "les-pw-1-1",
+            "title": "1.1 Client Consultation & Couple Personality Brief",
+            "duration": "16:40",
+            "videoId": "demo-pw-concept",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "summary": "Understanding client expectations and creating a customized thematic concept for pre-wedding films.",
+            "resources": [
+              { "name": "Pre-Wedding Shoot Planner (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          }
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "When is the optimal natural lighting condition for pre-wedding outdoor romantic shots?",
+        "options": ["Mid-day 12 PM sun", "Golden Hour (Early Morning / Sunset)", "Pitch Dark", "Indoor Flash"],
+        "answer": 1
+      }
+    ]
+  },
+  {
+    "id": "course-website-design",
+    "slug": "website-design-course",
+    "title": "Studio & Portfolio Website Design",
+    "subtitle": "Create Fast, High-Converting Photography Websites Without Coding",
+    "category": "Design & Business",
+    "level": "All Levels",
+    "duration": "10 Hours",
+    "price": 2999,
+    "originalPrice": 5999,
+    "thumbnail": "assets/cinematic-editing-workspace.webp",
+    "badge": "Business Essential",
+    "description": "Stop relying solely on Instagram. Build your own professional studio website with photo galleries, client inquiry forms, custom domain, and mobile-first speed.",
+    "modules": [
+      {
+        "id": "mod-web-1",
+        "title": "Module 1: Domain, Hosting & Modern Portfolio Layouts",
+        "lessons": [
+          {
+            "id": "les-web-1-1",
+            "title": "1.1 Choosing Brand Domains & High-Speed Hosting Setup",
+            "duration": "15:20",
+            "videoId": "demo-web-domain",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "summary": "Step-by-step setup of your brand domain, SSL, and mobile responsive photography templates.",
+            "resources": [
+              { "name": "Studio Website Blueprint (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          }
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "Why is image compression crucial for photography website portfolios?",
+        "options": ["To lower photo quality", "To load pages instantly on mobile without lag", "It is not needed", "To prevent viewing"],
+        "answer": 1
+      }
+    ]
+  },
+  {
+    "id": "course-digital-marketing",
+    "slug": "digital-marketing-course",
+    "title": "Digital Marketing for Photographers & Studios",
+    "subtitle": "Targeted Meta Ads, Local Google SEO & High-Ticket Wedding Leads",
+    "category": "Marketing & Growth",
+    "level": "Beginner to Intermediate",
+    "duration": "12 Hours",
+    "price": 3499,
+    "originalPrice": 6999,
+    "thumbnail": "assets/edius-classroom.webp",
+    "badge": "High ROI",
+    "description": "Master Facebook, Instagram, and Google Ads specifically tailored for wedding photographers and studios. Generate consistent high-budget enquiries every wedding season.",
+    "modules": [
+      {
+        "id": "mod-dm-1",
+        "title": "Module 1: Meta Ads Manager Setup & High-Intent Audience Targeting",
+        "lessons": [
+          {
+            "id": "les-dm-1-1",
+            "title": "1.1 Running Wedding Lead Generation Ads with Positive ROI",
+            "duration": "21:30",
+            "videoId": "demo-dm-meta",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "summary": "Targeting newly engaged couples, families, and high-income households within a 50km radius.",
+            "resources": [
+              { "name": "Ad Copy & Creative Templates (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          }
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "Which audience targeting feature is best for booking wedding photography clients?",
+        "options": ["Recently Engaged Life Event on Meta", "Random age targeting", "Gaming interests", "Travel blogs"],
+        "answer": 0
+      }
+    ]
+  },
+  {
+    "id": "course-automation",
+    "slug": "automation-course",
+    "title": "Studio Automation & AI CRM Masterclass",
+    "subtitle": "Automated WhatsApp Reminders, Instant Lead Booking & Smart Invoicing",
+    "category": "Automation",
+    "level": "All Levels",
+    "duration": "8 Hours",
+    "price": 2999,
+    "originalPrice": 5999,
+    "thumbnail": "assets/premiere-pro-editor-dual-monitor.webp",
+    "badge": "Time Saver",
+    "description": "Save 15+ hours weekly by automating client follow-ups, payment reminders, calendar scheduling, contract generation, and automated WhatsApp replies.",
+    "modules": [
+      {
+        "id": "mod-au-1",
+        "title": "Module 1: WhatsApp Business API & Automated Inquiry Funnels",
+        "lessons": [
+          {
+            "id": "les-au-1-1",
+            "title": "1.1 Instant WhatsApp Reply & Inquiry Qualification",
+            "duration": "14:50",
+            "videoId": "demo-au-whatsapp",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            "summary": "Sending instant price quotation PDFs and booking calendars automatically when a client enquires.",
+            "resources": [
+              { "name": "Automation Funnel Scripts (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          }
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "What is the primary benefit of automated WhatsApp lead follow-ups for a photography business?",
+        "options": ["Higher conversion rate within 5 minutes of inquiry", "Higher phone bills", "Less communication", "More confusion"],
+        "answer": 0
+      }
+    ]
   }
 ]

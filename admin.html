@@ -321,6 +321,23 @@
         <div style="margin-top:24px">
           <button onclick="saveLmsSettingsForm()" class="btn btn-gold">💾 Save LMS &amp; Bunny Settings</button>
         </div>
+
+        <!-- Course Video Collections in Bunny.net -->
+        <div style="margin-top:28px;border-top:1px solid var(--border);padding-top:20px">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div>
+              <h3 style="font-size:16px;margin:0">📁 Course Video Folders in Bunny.net Stream</h3>
+              <p class="muted" style="margin:4px 0 0;font-size:12px">Har course ke liye dedicated secure folder ready hai. Video upload karke uska Video ID lesson me paste karein.</p>
+            </div>
+            <a href="https://dash.bunny.net/stream/755385" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="font-size:12px;padding:6px 14px">
+              ↗ Open Bunny.net Stream Dashboard
+            </a>
+          </div>
+
+          <div id="bunnyCollectionsGrid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:12px;margin-top:16px">
+            <!-- Dynamically populated collections -->
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1207,6 +1224,7 @@ async function testBunnyConnection(silent = false) {
       document.getElementById('bunny-lib-id').textContent = res.libraryId || '755385';
       document.getElementById('bunny-video-count').textContent = res.videoCount ?? 0;
       document.getElementById('bunny-trial-bal').textContent = res.trialBalance || '$50.00';
+      loadBunnyCollections();
       if (!silent) toast('✅ Successfully verified Bunny.net Stream connection!');
     } else {
       badge.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444"></span> Connection Issue';
@@ -1219,6 +1237,42 @@ async function testBunnyConnection(silent = false) {
     if (!silent) toast(`Test failed: ${err.message}`, false);
   } finally {
     if (btn) btn.textContent = '⚡ Test Bunny.net Connection';
+  }
+}
+
+async function loadBunnyCollections() {
+  const grid = document.getElementById('bunnyCollectionsGrid');
+  if (!grid) return;
+  try {
+    const res = await lmsAdmin('list-bunny-collections');
+    const cols = res.collections || [];
+    if (!cols.length) {
+      grid.innerHTML = '<p class="muted">No collections found. Test Bunny connection first.</p>';
+      return;
+    }
+    grid.innerHTML = cols.map(c => `
+      <div style="padding:14px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.03);display:flex;flex-direction:column;justify-content:space-between">
+        <div>
+          <div style="font-weight:700;font-size:13.5px;color:var(--ink);display:flex;align-items:center;gap:6px">
+            <span>📁</span> <span>${escapeHtml(c.name)}</span>
+          </div>
+          <div style="font-size:11px;color:#64748b;margin:8px 0;display:flex;justify-content:space-between;align-items:center">
+            <span>Videos: <b>${c.videoCount || 0}</b></span>
+            <span style="font-family:monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:10px" title="${c.guid}">${c.guid.slice(0, 8)}…</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:10px">
+          <button type="button" class="btn-sm btn-outline" style="font-size:11px;flex:1;text-align:center" onclick="navigator.clipboard.writeText('${c.guid}');toast('📋 Folder ID Copied!')">
+            📋 Copy ID
+          </button>
+          <a href="https://dash.bunny.net/stream/755385" target="_blank" rel="noopener noreferrer" class="btn-sm btn-gold" style="font-size:11px;flex:1;text-align:center;text-decoration:none">
+            Upload Video ↗
+          </a>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    grid.innerHTML = `<p class="muted" style="color:var(--red)">Failed to load folders: ${e.message}</p>`;
   }
 }
 

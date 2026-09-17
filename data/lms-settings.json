@@ -11,5 +11,16 @@
   "fast2smsApiKey": "",
   "academyName": "Quick Art Photography Academy",
   "mentorName": "Anil Sharma",
-  "updatedAt": "2026-09-17T07:05:00Z"
+  "collections": {
+    "course-premiere-pro": "e8c9044d-a305-465c-86ca-297e4e71436d",
+    "course-edius-pro": "22652727-657c-4280-8d97-08504a594235",
+    "course-davinci-resolve": "43e2437d-d1ac-4665-ad2b-15b5276d87b6",
+    "course-cinematic-wedding": "e7173751-87b3-4662-b85a-a481500acded",
+    "course-album-design": "6a818a59-8758-4b3e-9d9f-0a33b8ff2d0e",
+    "course-pre-wedding": "ed57f97b-fb42-42de-893e-862aa9e9b744",
+    "course-website-design": "9eb90731-0f25-42ee-91ae-190888872929",
+    "course-digital-marketing": "23e69417-3b15-436e-bc23-52066132738f",
+    "course-automation": "e84c2f96-2763-490d-a250-111f8c7886e9"
+  },
+  "updatedAt": "2026-09-17T07:12:00Z"
 }

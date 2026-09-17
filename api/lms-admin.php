@@ -268,5 +268,93 @@ if ($action === 'get-transactions' && $method === 'GET') {
     ]);
 }
 
+// 10. List Bunny.net Uploaded Videos
+if ($action === 'list-bunny-videos' && $method === 'GET') {
+    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $libraryId = $settings['bunnyLibraryId'] ?? '755385';
+    $apiKey = $settings['bunnyApiKey'] ?? '';
+
+    $ch = curl_init("https://video.bunnycdn.com/library/{$libraryId}/videos?page=1&itemsPerPage=50");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "AccessKey: {$apiKey}",
+        "Accept: application/json"
+    ]);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+    $res = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode === 200 && $res) {
+        $data = json_decode($res, true);
+        json_ok(['videos' => $data['items'] ?? [], 'total' => $data['totalItems'] ?? 0]);
+    } else {
+        json_ok(['videos' => [], 'total' => 0]);
+    }
+}
+
+// 11. List Bunny.net Course Collections
+if ($action === 'list-bunny-collections' && $method === 'GET') {
+    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $libraryId = $settings['bunnyLibraryId'] ?? '755385';
+    $apiKey = $settings['bunnyApiKey'] ?? '';
+
+    $ch = curl_init("https://video.bunnycdn.com/library/{$libraryId}/collections?page=1&itemsPerPage=50");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "AccessKey: {$apiKey}",
+        "Accept: application/json"
+    ]);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+    $res = curl_exec($ch);
+    curl_close($ch);
+
+    $data = $res ? json_decode($res, true) : null;
+    json_ok(['collections' => $data['items'] ?? []]);
+}
+
+// 12. Create Video Object in Bunny Stream (Ready for Upload)
+if ($action === 'create-bunny-video' && $method === 'POST') {
+    $body = read_json_body();
+    $title = trim($body['title'] ?? 'New Lesson Video');
+    $collectionId = trim($body['collectionId'] ?? '');
+
+    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $libraryId = $settings['bunnyLibraryId'] ?? '755385';
+    $apiKey = $settings['bunnyApiKey'] ?? '';
+
+    $postData = ['title' => $title];
+    if ($collectionId) {
+        $postData['collectionId'] = $collectionId;
+    }
+
+    $ch = curl_init("https://video.bunnycdn.com/library/{$libraryId}/videos");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "AccessKey: {$apiKey}",
+        "Content-Type: application/json",
+        "Accept: application/json"
+    ]);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    $res = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode === 200 && $res) {
+        $video = json_decode($res, true);
+        json_ok([
+            'created' => true,
+            'videoId' => $video['guid'] ?? '',
+            'libraryId' => $libraryId,
+            'title' => $video['title'] ?? $title
+        ]);
+    } else {
+        json_err('Failed to create video on Bunny.net (HTTP ' . $httpCode . ')', 500);
+    }
+}
+
 json_err('Unknown action', 404);
+
 

@@ -107,6 +107,21 @@ function generate_bunny_video_url($libraryId, $videoId, $tokenKey) {
 // ---------- Request Routing ----------
 
 $action = $_GET['action'] ?? '';
+
+// Robust parser: Handle actions that include query parameters (e.g. course-details&id=xyz)
+if (strpos($action, '&') !== false) {
+    parse_str($action, $parsedActionParams);
+    if (!empty($parsedActionParams)) {
+        foreach ($parsedActionParams as $k => $v) {
+            if (!isset($_GET[$k]) || $_GET[$k] === '') {
+                $_GET[$k] = $v;
+            }
+        }
+        $parts = explode('&', $action, 2);
+        $action = $parts[0];
+    }
+}
+$action = trim($action);
 $method = $_SERVER['REQUEST_METHOD'];
 
 // 1. Send OTP

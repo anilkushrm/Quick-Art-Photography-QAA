@@ -19,7 +19,15 @@ function toast(msg, ok = true) {
 }
 
 async function lmsApi(action, opts = {}) {
-  const url = `../api/lms.php?action=${encodeURIComponent(action)}`;
+  let url = '../api/lms.php?';
+  if (action.startsWith('?') || action.startsWith('&')) {
+    url += action.replace(/^[?&]/, '');
+  } else if (action.includes('&') || action.includes('=')) {
+    url += action.startsWith('action=') ? action : `action=${action}`;
+  } else {
+    url += `action=${encodeURIComponent(action)}`;
+  }
+
   const headers = { 'Content-Type': 'application/json' };
   if (studentToken) {
     headers['X-Student-Token'] = studentToken;
@@ -682,6 +690,14 @@ function populateCertificateUI(studentName, courseTitle, courseId, duration, cer
   if (dateElem) dateElem.textContent = today;
   if (idElem) idElem.textContent = `ID: ${cId}`;
   if (durElem) durElem.textContent = `⏱ ${duration || '18 Credit Hours'}`;
+
+  // Update Live Academic Verification Ledger
+  const ledgerName = document.getElementById('ledger-student-name');
+  const ledgerId = document.getElementById('ledger-cert-id');
+  const ledgerCourse = document.getElementById('ledger-course-title');
+  if (ledgerName) ledgerName.textContent = name;
+  if (ledgerId) ledgerId.textContent = cId;
+  if (ledgerCourse) ledgerCourse.textContent = cTitle;
 
   // Live QR Code leading to verification URL
   const verifyUrl = `https://quickartphotography.in/portal/index.html?verify=${encodeURIComponent(cId)}`;

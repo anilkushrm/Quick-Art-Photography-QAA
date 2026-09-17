@@ -296,15 +296,15 @@
   },
   {
     "id": "course-album-design",
-    "slug": "album-design",
+    "slug": "album-design-course",
     "title": "Wedding Album Design Masterclass",
     "subtitle": "Photoshop Layouts, Retouching & Print Lab Preparation",
     "category": "Photo & Design",
     "level": "Beginner to Advanced",
-    "duration": "12 Hours",
+    "duration": "14 Hours",
     "price": 3499,
     "originalPrice": 6999,
-    "thumbnail": "assets/edius-practice.webp",
+    "thumbnail": "home-assets/4d4bc0f95c0b96.webp",
     "badge": "Studio Essential",
     "description": "Professional Photobook & Karizma/Canvera wedding album creation in Adobe Photoshop. Grid systems, skin retouching, color harmonizing, and print lab export specs.",
     "modules": [
@@ -333,6 +333,101 @@
             "resources": [
               { "name": "Quick Art Wedding Color Palette (.cube)", "url": "downloads/QuickArt_Wedding_LUT.cube" }
             ]
+          },
+          {
+            "id": "les-ad-1-3",
+            "title": "1.3 Reusable Photoshop Grid Templates & Smart Object Framework",
+            "duration": "21:40",
+            "videoId": "demo-ad-grids",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+            "summary": "Creating fast drag-and-drop templates using smart objects and non-destructive layer masks.",
+            "resources": [
+              { "name": "12x36 Master PSD Grid Template", "url": "downloads/course-details.pdf" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-ad-2",
+        "title": "Module 2: Skin Retouching & Color Correction for Print",
+        "lessons": [
+          {
+            "id": "les-ad-2-1",
+            "title": "2.1 Frequency Separation & High-End Skin Retouching",
+            "duration": "28:10",
+            "videoId": "demo-ad-freqsep",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+            "summary": "Separating skin texture from tone to clean blemishes while preserving natural Indian skin pores.",
+            "resources": [
+              { "name": "Photoshop Frequency Separation Action (.atn)", "url": "downloads/course-details.pdf" }
+            ]
+          },
+          {
+            "id": "les-ad-2-2",
+            "title": "2.2 Color Matching Multiple Cameras Across the Spread",
+            "duration": "22:45",
+            "videoId": "demo-ad-colormatch",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+            "summary": "Ensuring bride, groom and family skin tones match consistently across indoor and outdoor lighting.",
+            "resources": [
+              { "name": "Print Color Calibration Guide (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-ad-3",
+        "title": "Module 3: Creative Storytelling & Premium Cover Design",
+        "lessons": [
+          {
+            "id": "les-ad-3-1",
+            "title": "3.1 Haldi, Mehndi, Sangeet & Jaimala Sequence Pacing",
+            "duration": "25:50",
+            "videoId": "demo-ad-sequence",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+            "summary": "Building emotion and chronology across a 40-sheet luxury wedding album.",
+            "resources": [
+              { "name": "Ritual Sequence Storyboard (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          },
+          {
+            "id": "les-ad-3-2",
+            "title": "3.2 Premium Acrylic, Leatherette & Foil Emboss Cover Design",
+            "duration": "20:15",
+            "videoId": "demo-ad-covers",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4",
+            "summary": "Designing front covers, spines, and back wraps with bleed margins for acrylic and velvet binding.",
+            "resources": [
+              { "name": "Emboss & Spine Margin Spec Sheet (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mod-ad-4",
+        "title": "Module 4: Lab Printing Profiles & Client Delivery",
+        "lessons": [
+          {
+            "id": "les-ad-4-1",
+            "title": "4.1 Canvera, Suba & Karizma Lab Color Profiles (sRGB vs CMYK)",
+            "duration": "16:30",
+            "videoId": "demo-ad-profiles",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+            "summary": "Choosing correct ICC color profiles and soft proofing to ensure zero print darkening.",
+            "resources": [
+              { "name": "Lab ICC Profile Cheatsheet (PDF)", "url": "downloads/course-details.pdf" }
+            ]
+          },
+          {
+            "id": "les-ad-4-2",
+            "title": "4.2 Digital Proofing via PDF & Client Approval Workflow",
+            "duration": "18:50",
+            "videoId": "demo-ad-proofing",
+            "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+            "summary": "Generating watermarked flipbook PDFs and client review links to speed up revisions.",
+            "resources": [
+              { "name": "Client Album Contract & Approval Form (PDF)", "url": "downloads/course-details.pdf" }
+            ]
           }
         ]
       }
@@ -342,6 +437,26 @@
         "question": "What is the standard DPI resolution required for professional wedding album printing?",
         "options": ["72 DPI", "150 DPI", "300 DPI", "600 DPI"],
         "answer": 2
+      },
+      {
+        "question": "What is the most common full-spread sheet dimension used by Indian photo labs?",
+        "options": ["12x36 inches", "8x10 inches", "4x6 inches", "18x24 inches"],
+        "answer": 0
+      },
+      {
+        "question": "Which color profile is standard for Canvera and Karizma digital printing labs?",
+        "options": ["sRGB IEC61966-2.1", "ProPhoto RGB", "CMYK Generic Web", "Apple RGB"],
+        "answer": 0
+      },
+      {
+        "question": "Why is Frequency Separation used in bridal portrait retouching?",
+        "options": ["To separate texture from color/tone for clean skin without blur", "To change background sky", "To compress JPEG size", "To apply watermarks"],
+        "answer": 0
+      },
+      {
+        "question": "How much bleed margin should be kept in the center gutter of an album sheet?",
+        "options": ["At least 0.5 inch safe zone to prevent faces getting cut in the fold", "Zero bleed is needed", "3 inches", "5 inches"],
+        "answer": 0
       }
     ]
   },

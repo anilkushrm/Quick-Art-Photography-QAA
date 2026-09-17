@@ -608,8 +608,11 @@ if ($action === 'verify-certificate' && $method === 'GET') {
     $codeMap = [
         'PR' => 'course-premiere-pro',
         'ED' => 'course-edius-pro',
+        'DR' => 'course-davinci-resolve',
         'DV' => 'course-davinci-resolve',
+        'CE' => 'course-cinematic-editing',
         'CW' => 'course-cinematic-wedding',
+        'AD' => 'course-album-design',
         'AL' => 'course-album-design',
         'PW' => 'course-pre-wedding',
         'WD' => 'course-website-design',

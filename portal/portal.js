@@ -587,12 +587,12 @@ let activeCertData = null;
 function getCourseCode(courseId) {
   if (!courseId) return 'PR';
   const id = courseId.toLowerCase();
+  if (id.includes('pre-wedding')) return 'PW';
+  if (id.includes('album')) return 'AD';
   if (id.includes('premiere')) return 'PR';
   if (id.includes('edius')) return 'ED';
-  if (id.includes('davinci')) return 'DV';
-  if (id.includes('cinematic') || id.includes('wedding')) return 'CW';
-  if (id.includes('album')) return 'AL';
-  if (id.includes('pre-wedding')) return 'PW';
+  if (id.includes('davinci') || id.includes('resolve')) return 'DR';
+  if (id.includes('cinematic') || id.includes('wedding')) return 'CE';
   if (id.includes('website') || id.includes('web')) return 'WD';
   if (id.includes('marketing') || id.includes('digital')) return 'DM';
   if (id.includes('auto')) return 'AU';
@@ -1186,9 +1186,12 @@ async function verifyCertificateById(certId) {
     'PR': { id: 'course-premiere-pro', title: 'Adobe Premiere Pro Masterclass', dur: '18 Hours' },
     'ED': { id: 'course-edius-pro', title: 'EDIUS Pro Fast Editing Course', dur: '14 Hours' },
     'DR': { id: 'course-davinci-resolve', title: 'DaVinci Resolve Color Grading', dur: '16 Hours' },
+    'DV': { id: 'course-davinci-resolve', title: 'DaVinci Resolve Color Grading', dur: '16 Hours' },
     'CE': { id: 'course-cinematic-editing', title: 'Cinematic Wedding Editing Course', dur: '15 Hours' },
+    'CW': { id: 'course-cinematic-editing', title: 'Cinematic Wedding Editing Course', dur: '15 Hours' },
     'PW': { id: 'course-pre-wedding', title: 'Pre-Wedding Shoot & Direction Course', dur: '12 Hours' },
     'AD': { id: 'course-album-design', title: 'Wedding Album Design Masterclass', dur: '12 Hours' },
+    'AL': { id: 'course-album-design', title: 'Wedding Album Design Masterclass', dur: '12 Hours' },
     'WD': { id: 'course-website-design', title: 'Studio Website Design Course', dur: '10 Hours' },
     'DM': { id: 'course-digital-marketing', title: 'Digital Marketing & Ads Course', dur: '10 Hours' },
     'AU': { id: 'course-automation', title: 'Studio AI Automation & CRM Course', dur: '8 Hours' }

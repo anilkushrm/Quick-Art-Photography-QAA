@@ -1,22 +1,32 @@
 (() => {
  const header=document.getElementById('qaaHeader');if(!header?.classList.contains('ref-header'))return;
  // Keep shared navigation consistent across the static course pages.
- const online=header.querySelector('#ref-online');
- const album=header.querySelector('#ref-courses a[href*="album-design"]');
- if(online&&album){
-  const label='Video Editing Course <small class="ref-ai-label">AI Powered</small>';
-  online.querySelector('#ref-online-tab-0').innerHTML='<span class="ref-category-label">'+label+'</span><span aria-hidden="true">›</span>';
-  online.querySelector('#ref-online-panel-0 h2').innerHTML=label;
-  const design=online.querySelector('#ref-online-panel-2');
-  const marketing=design.cloneNode(true);marketing.id='ref-online-panel-3';marketing.setAttribute('aria-labelledby','ref-online-tab-3');marketing.querySelector('h2').textContent='Digital Marketing';
-  design.after(marketing);
-  design.querySelector('h2').textContent='Graphics Design Course';design.querySelector('.ref-card-grid').replaceChildren(album.cloneNode(true));
-  const tab=online.querySelector('#ref-online-tab-2');tab.innerHTML='Graphics Design Course<span aria-hidden="true">›</span>';
-  const next=tab.cloneNode(true);next.id='ref-online-tab-3';next.setAttribute('aria-controls','ref-online-panel-3');next.innerHTML='Digital Marketing<span aria-hidden="true">›</span>';tab.after(next);
-  const mobileOnline=header.querySelector('#ref-mobile details');
-  const groups=mobileOnline.querySelectorAll('.ref-mobile-group');
-  if(groups[0])groups[0].innerHTML=label;
-  if(groups[2]){groups[2].textContent='Graphics Design Course';const card=album.cloneNode(true);groups[2].after(card);const heading=document.createElement('p');heading.className='ref-mobile-group';heading.textContent='Digital Marketing';card.after(heading);}
+  const online=header.querySelector('#ref-online');
+  const album=header.querySelector('#ref-courses a[href*="album-design"]');
+  if(online&&album){
+   const label='Video Editing Course <small class="ref-ai-label">AI Powered</small>';
+   online.querySelector('#ref-online-tab-0').innerHTML='<span class="ref-category-label">'+label+'</span><span aria-hidden="true">›</span>';
+   online.querySelector('#ref-online-panel-0 h2').innerHTML=label;
+   const design=online.querySelector('#ref-online-panel-2');
+   const marketing=design.cloneNode(true);marketing.id='ref-online-panel-3';marketing.setAttribute('aria-labelledby','ref-online-tab-3');marketing.querySelector('h2').textContent='Digital Marketing';
+   design.after(marketing);
+   const onlineSample=online.querySelector('a[href*="premiere-pro-course"]')||online.querySelector('a[href*="edius-course"]')||online.querySelector('a');
+   let onlineAlbumHref='online/album-design-course/index.html';
+   if(onlineSample){
+    const s=onlineSample.getAttribute('href');
+    if(s.includes('premiere-pro-course/index.html'))onlineAlbumHref=s.replace('premiere-pro-course/index.html','album-design-course/index.html');
+    else if(s.includes('edius-course/index.html'))onlineAlbumHref=s.replace('edius-course/index.html','album-design-course/index.html');
+    else onlineAlbumHref=s.replace(/[^/]+\/index\.html$/,'album-design-course/index.html');
+   }
+   const onlineAlbumCard=document.createElement('a');onlineAlbumCard.className='ref-course';onlineAlbumCard.href=onlineAlbumHref;
+   onlineAlbumCard.innerHTML='<span class="ref-course-icon" aria-hidden="true">Ad</span><span>Wedding Album Design</span>';
+   design.querySelector('h2').textContent='Graphics Design Course';design.querySelector('.ref-card-grid').replaceChildren(onlineAlbumCard);
+   const tab=online.querySelector('#ref-online-tab-2');tab.innerHTML='Graphics Design Course<span aria-hidden="true">›</span>';
+   const next=tab.cloneNode(true);next.id='ref-online-tab-3';next.setAttribute('aria-controls','ref-online-panel-3');next.innerHTML='Digital Marketing<span aria-hidden="true">›</span>';tab.after(next);
+   const mobileOnline=header.querySelector('#ref-mobile details');
+   const groups=mobileOnline.querySelectorAll('.ref-mobile-group');
+   if(groups[0])groups[0].innerHTML=label;
+   if(groups[2]){groups[2].textContent='Graphics Design Course';const card=onlineAlbumCard.cloneNode(true);groups[2].after(card);const heading=document.createElement('p');heading.className='ref-mobile-group';heading.textContent='Digital Marketing';card.after(heading);}
   const marketingCard=marketing.querySelector('a[href*="digital-marketing-course/"]');
   const marketingCards=['Google and Facebook Ads Course','SEO Course','GMB Profile Course'].map((title,i)=>{const card=marketingCard.cloneNode(true);card.querySelector('.ref-course-icon').textContent=['Ads','SEO','GMB'][i];card.querySelector('span:last-child').textContent=title;return card;});
   marketing.querySelector('.ref-card-grid').replaceChildren(...marketingCards);

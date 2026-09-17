@@ -920,6 +920,33 @@ a {
   display: flex;
 }
 
+/* Dedicated Public Verification View Mode */
+.modal.verify-mode {
+  position: static !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  display: flex !important;
+  padding: 10px 0 40px !important;
+  min-height: auto !important;
+  z-index: 10 !important;
+}
+
+.modal.verify-mode .modal-close,
+.modal.verify-mode .cert-close-btn {
+  display: none !important;
+}
+
+.modal.verify-mode .cert-dialog {
+  max-width: 960px !important;
+  max-height: none !important;
+  overflow: visible !important;
+  margin: 0 auto !important;
+}
+
+.modal.verify-mode .cert-content {
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(216, 161, 83, 0.15) !important;
+}
+
 .cert-dialog {
   max-width: 920px;
   width: 100%;

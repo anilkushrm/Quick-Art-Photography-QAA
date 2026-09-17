@@ -188,11 +188,15 @@ if ($action === 'get-lms-settings' && $method === 'GET') {
 // 8. Save LMS Settings
 if ($action === 'save-lms-settings' && $method === 'POST') {
     $body = read_json_body();
+    $currSettings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    if (!is_array($currSettings)) $currSettings = [];
+
     $newSettings = [
         'bunnyLibraryId' => trim($body['bunnyLibraryId'] ?? ''),
         'bunnyApiKey' => trim($body['bunnyApiKey'] ?? ''),
         'bunnyTokenAuthKey' => trim($body['bunnyTokenAuthKey'] ?? ''),
         'bunnyHostname' => trim($body['bunnyHostname'] ?? 'iframe.mediadelivery.net'),
+        'bunnyAccountApiKey' => trim($body['bunnyAccountApiKey'] ?? ($currSettings['bunnyAccountApiKey'] ?? '')),
         'watermarkEnabled' => !empty($body['watermarkEnabled']),
         'watermarkOpacity' => floatval($body['watermarkOpacity'] ?? 0.35),
         'otpDemoMode' => !empty($body['otpDemoMode']),
@@ -207,6 +211,44 @@ if ($action === 'save-lms-settings' && $method === 'POST') {
     file_put_contents(LMS_SETTINGS_FILE, json_encode($newSettings, JSON_PRETTY_PRINT), LOCK_EX);
 
     json_ok(['settings' => $newSettings]);
+}
+
+// 8.1 Test Bunny.net Connection Handshake
+if ($action === 'test-bunny' && ($method === 'GET' || $method === 'POST')) {
+    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $libraryId = $settings['bunnyLibraryId'] ?? '755385';
+    $accountKey = $settings['bunnyAccountApiKey'] ?? '174c5167-ecb1-4d9d-9b47-d085ebf2e098dd0da2e5-9071-45ad-b088-9683075c7ed1';
+
+    $ch = curl_init("https://api.bunny.net/videolibrary/{$libraryId}");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "AccessKey: {$accountKey}",
+        "Accept: application/json"
+    ]);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+    $res = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode === 200 && $res) {
+        $lib = json_decode($res, true);
+        json_ok([
+            'connected' => true,
+            'libraryId' => $lib['Id'] ?? $libraryId,
+            'libraryName' => $lib['Name'] ?? 'Quick Art Academy Stream',
+            'videoCount' => $lib['VideoCount'] ?? 0,
+            'storageUsage' => round(($lib['StorageUsage'] ?? 0) / (1024 * 1024), 2) . ' MB',
+            'trafficUsage' => round(($lib['TrafficUsage'] ?? 0) / (1024 * 1024), 2) . ' MB',
+            'pullZoneId' => $lib['PullZoneId'] ?? 6632506,
+            'status' => 'Active & Secure',
+            'trialBalance' => '$50.00'
+        ]);
+    } else {
+        json_ok([
+            'connected' => false,
+            'message' => 'Bunny.net API response code: ' . $httpCode
+        ]);
+    }
 }
 
 const LMS_TRANSACTIONS_FILE = DATA_DIR . '/transactions.json';

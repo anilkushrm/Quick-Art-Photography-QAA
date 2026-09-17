@@ -397,7 +397,12 @@ if ($action === 'get-lesson' && $method === 'GET') {
     $videoType = 'mp4';
     $streamUrl = $targetLesson['videoUrl'] ?? '';
 
-    if (!empty($targetLesson['videoId']) && !empty($settings['bunnyLibraryId'])) {
+    // If videoId is a real Bunny Stream Video ID (not a placeholder demo-*), activate secure Bunny player
+    $isBunnyVideo = !empty($targetLesson['videoId']) && 
+                    strpos($targetLesson['videoId'], 'demo-') !== 0 && 
+                    !empty($settings['bunnyLibraryId']);
+
+    if ($isBunnyVideo) {
         $videoType = 'bunny_stream';
         $streamUrl = generate_bunny_video_url(
             $settings['bunnyLibraryId'],

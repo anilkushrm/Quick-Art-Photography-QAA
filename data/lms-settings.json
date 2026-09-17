@@ -1,8 +1,9 @@
 {
-  "bunnyLibraryId": "",
-  "bunnyApiKey": "",
-  "bunnyTokenAuthKey": "",
+  "bunnyLibraryId": "755385",
+  "bunnyApiKey": "50179050-0bf6-4266-bc61fb984600-4b08-47e3",
+  "bunnyTokenAuthKey": "436c7112-8150-409c-b5f3-d29a1856b06b",
   "bunnyHostname": "iframe.mediadelivery.net",
+  "bunnyAccountApiKey": "174c5167-ecb1-4d9d-9b47-d085ebf2e098dd0da2e5-9071-45ad-b088-9683075c7ed1",
   "watermarkEnabled": true,
   "watermarkOpacity": 0.35,
   "otpDemoMode": true,
@@ -10,5 +11,5 @@
   "fast2smsApiKey": "",
   "academyName": "Quick Art Photography Academy",
   "mentorName": "Anil Sharma",
-  "updatedAt": "2026-09-17T04:30:00Z"
+  "updatedAt": "2026-09-17T07:05:00Z"
 }

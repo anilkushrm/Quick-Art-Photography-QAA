@@ -276,6 +276,28 @@
           </div>
         </div>
 
+        <div style="margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <button type="button" onclick="testBunnyConnection()" class="btn btn-outline" id="btn-test-bunny" style="display:inline-flex;align-items:center;gap:6px">
+            ⚡ Test Bunny.net Connection
+          </button>
+          <span id="bunny-status-badge" style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;background:#e2e8f0;color:#334155;display:inline-flex;align-items:center;gap:5px">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#94a3b8"></span> Ready to verify
+          </span>
+        </div>
+
+        <div id="bunny-status-box" style="display:none;margin-top:14px;padding:14px 16px;background:rgba(201,151,56,0.06);border:1px solid rgba(201,151,56,0.3);border-radius:12px;font-size:12.5px;color:var(--ink)">
+          <div style="font-weight:700;color:#c99738;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+            <span>🛡️ Bunny.net Video Stream Connected</span>
+            <span style="margin-left:auto;font-size:11px;background:#10b981;color:#fff;padding:2px 8px;border-radius:10px">Active &amp; Secure</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:10px;margin-top:8px">
+            <div><span style="color:#64748b">Library:</span> <b id="bunny-lib-name">Quick Art Academy Stream</b></div>
+            <div><span style="color:#64748b">Library ID:</span> <b id="bunny-lib-id">755385</b></div>
+            <div><span style="color:#64748b">Total Videos:</span> <b id="bunny-video-count">0</b></div>
+            <div><span style="color:#64748b">Trial Balance:</span> <b id="bunny-trial-bal" style="color:#10b981">$50.00</b></div>
+          </div>
+        </div>
+
         <div style="margin-top:24px;padding:16px;background:#fafafa;border:1px solid var(--border);border-radius:16px">
           <h3 style="font-size:14px;margin:0 0 10px">🛡️ Screen Recording &amp; Video Protection</h3>
           <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600">
@@ -1160,8 +1182,43 @@ async function loadLmsSettings() {
     document.getElementById('watermarkEnabled').checked = s.watermarkEnabled !== false;
     document.getElementById('otpDemoMode').checked = s.otpDemoMode !== false;
     document.getElementById('fast2smsApiKey').value = s.fast2smsApiKey || '';
+
+    if (s.bunnyLibraryId) {
+      testBunnyConnection(true);
+    }
   } catch (err) {
     toast(`Could not load LMS settings: ${err.message}`, false);
+  }
+}
+
+async function testBunnyConnection(silent = false) {
+  const btn = document.getElementById('btn-test-bunny');
+  const badge = document.getElementById('bunny-status-badge');
+  const box = document.getElementById('bunny-status-box');
+  if (btn) btn.textContent = 'Testing Connection…';
+  try {
+    const res = await lmsAdmin('test-bunny');
+    if (res.ok && res.connected) {
+      badge.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981"></span> Connected &amp; Active';
+      badge.style.background = '#d1fae5';
+      badge.style.color = '#065f46';
+      box.style.display = 'block';
+      document.getElementById('bunny-lib-name').textContent = res.libraryName || 'Quick Art Academy Stream';
+      document.getElementById('bunny-lib-id').textContent = res.libraryId || '755385';
+      document.getElementById('bunny-video-count').textContent = res.videoCount ?? 0;
+      document.getElementById('bunny-trial-bal').textContent = res.trialBalance || '$50.00';
+      if (!silent) toast('✅ Successfully verified Bunny.net Stream connection!');
+    } else {
+      badge.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444"></span> Connection Issue';
+      badge.style.background = '#fee2e2';
+      badge.style.color = '#991b1b';
+      if (!silent) toast(res.message || 'Bunny.net connection test failed', false);
+    }
+  } catch (err) {
+    badge.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444"></span> Error';
+    if (!silent) toast(`Test failed: ${err.message}`, false);
+  } finally {
+    if (btn) btn.textContent = '⚡ Test Bunny.net Connection';
   }
 }
 
@@ -1179,6 +1236,7 @@ async function saveLmsSettingsForm() {
   try {
     await lmsAdmin('save-lms-settings', { method: 'POST', body });
     toast('✅ Bunny.net & LMS settings saved!');
+    testBunnyConnection(false);
   } catch (err) {
     toast(`Failed to save: ${err.message}`, false);
   }

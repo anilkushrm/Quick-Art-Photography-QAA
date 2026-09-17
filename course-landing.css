@@ -51,7 +51,7 @@ body.landing-page-body {
   gap: 8px;
   font-size: 13px;
   color: var(--lp-text-dim);
-  padding: 16px 0 0;
+  padding: 0 0 12px;
   flex-wrap: wrap;
 }
 .lp-breadcrumb a {
@@ -72,9 +72,15 @@ body.landing-page-body {
 
 /* Hero Section */
 .lp-hero {
-  padding: 24px 0 60px;
+  padding: 104px 0 60px;
   position: relative;
   overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .lp-hero {
+    padding: 86px 0 44px;
+  }
 }
 .lp-hero::before {
   content: "";

@@ -45,6 +45,21 @@ html, body {
     align-items: center;
   }
 
+  /* Homepage Hero Main Heading — Large, cinematic, and professional */
+  .qa-home-hero #home-title,
+  .qa-home-hero .qa-hero-inner h1 {
+    font-size: clamp(38px, 7.5vw, 54px) !important;
+    font-weight: 900 !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.035em !important;
+    margin-bottom: 20px !important;
+    text-wrap: balance;
+  }
+  .qa-home-hero #home-title span,
+  .qa-home-hero .qa-hero-inner h1 span {
+    font-weight: 900 !important;
+  }
+
   /* Section headings */
   section h2 {
     font-size: clamp(22px, 5vw, 32px) !important;
@@ -116,15 +131,15 @@ html, body {
 
   /* Popup / modal */
   .qa-popup-overlay { padding: 12px; align-items: center; }
-  .qa-popup { width: min(350px, 94vw); border-radius: 18px; max-height: calc(100dvh - 24px); overflow-y: auto; -webkit-overflow-scrolling: touch; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
-  .qa-popup-top { padding: 16px 16px 12px; }
-  .qa-popup-top > span { padding: 3px 9px; font-size: 9.5px; letter-spacing: .08em; border-radius: 999px; }
-  .qa-popup-top h2 { margin: 7px 0 3px; font-size: 17.5px; line-height: 1.22; font-weight: 800; letter-spacing: -.02em; }
-  .qa-popup-top p { margin: 0; font-size: 11.5px; line-height: 1.4; color: #d8d4cd; }
-  .qa-popup-close { right: 10px; top: 10px; width: 28px; height: 28px; font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.16); color: #fff; border-radius: 50%; }
-  .qa-popup-form { padding: 12px 15px 14px; display: grid; gap: 7px; }
-  .qa-popup-form input { padding: 8.5px 11px; border-radius: 9px; font-size: 12.5px; min-height: 36px; }
-  .qa-popup-form > button { padding: 9.5px 12px; border-radius: 9px; font-size: 13.5px; font-weight: 700; }
+  .qa-popup { width: min(340px, 94vw); border-radius: 16px; max-height: calc(100dvh - 24px); overflow-y: auto; -webkit-overflow-scrolling: touch; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+  .qa-popup-top { padding: 15px 16px 12px; }
+  .qa-popup-top > span { padding: 3px 8px; font-size: 9px; letter-spacing: .08em; border-radius: 999px; }
+  .qa-popup-top h2 { margin: 6px 0 3px; font-size: 17px; line-height: 1.25; font-weight: 800; letter-spacing: -.02em; }
+  .qa-popup-top p { margin: 0; font-size: 11.5px; line-height: 1.4; color: #cfcac2; }
+  .qa-popup-close { right: 12px; top: 12px; font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center; background: transparent; border: none; color: rgba(255,255,255,.9); z-index: 50; cursor: pointer; padding: 4px; }
+  .qa-popup-form { padding: 12px 16px 14px; display: grid; gap: 7px; }
+  .qa-popup-form input { padding: 8px 12px; border-radius: 8px; font-size: 12.5px; height: 38px; min-height: 38px; }
+  .qa-popup-form > button { padding: 9px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; height: 40px; min-height: 40px; }
   .qa-popup-form small { font-size: 10px; line-height: 1.35; margin-top: 1px; }
   .qa-popup-status { font-size: 11.5px; }
 
@@ -158,12 +173,58 @@ html, body {
    SMALL MOBILE — 480px and below
    ============================================================ */
 @media (max-width: 480px) {
-  /* Section padding */
-  section { padding-top: 48px !important; padding-bottom: 48px !important; }
+  /* Section padding (excludes hero to preserve header clearance) */
+  section:not(.qa-home-hero):not(.hero) { padding-top: 48px !important; padding-bottom: 48px !important; }
 
   /* Typography scale */
   h1 { font-size: clamp(24px, 7vw, 36px) !important; }
   h2 { font-size: clamp(20px, 5.5vw, 28px) !important; }
+
+  /* Homepage Hero Main Heading — Extra Bold, noticeably larger & prominent on mobile */
+  .qa-home-hero #home-title,
+  .qa-home-hero .qa-hero-inner h1 {
+    font-size: clamp(36px, 10vw, 44px) !important;
+    font-weight: 900 !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.025em !important;
+    margin-bottom: 16px !important;
+    text-wrap: balance;
+  }
+  .qa-home-hero #home-title span,
+  .qa-home-hero .qa-hero-inner h1 span {
+    font-weight: 900 !important;
+  }
+  .qa-home-hero .qa-hero-badge {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    padding: 7px 16px !important;
+    margin-bottom: 16px !important;
+  }
+  .qa-home-hero .qa-hero-copy > p {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    color: #94a3b8 !important;
+    margin-inline: auto !important;
+    max-width: 380px !important;
+    text-wrap: balance !important;
+    text-align: center !important;
+    margin-bottom: 22px !important;
+  }
+  .qa-home-hero .qa-hero-copy > p strong {
+    display: inline !important;
+    font-size: inherit !important;
+    font-weight: 600 !important;
+    color: #f1ebd8 !important;
+    margin-top: 0 !important;
+  }
+  .qa-home-hero .qa-hero-copy > p strong:last-child {
+    display: block !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    color: #e2c285 !important;
+    margin-top: 8px !important;
+    letter-spacing: 0.3px !important;
+  }
 
   /* Feature grid: single column on very small */
   #why-choose .mt-14.grid,
@@ -172,8 +233,15 @@ html, body {
     gap: 10px;
   }
 
-  /* Container padding */
-  .container { width: calc(100% - 32px) !important; }
+  /* Container padding: normalize to clean 16px gutters */
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
 
   /* Buttons: full width on small screens */
   .qa-cta-btn,
@@ -182,6 +250,28 @@ html, body {
     width: 100%;
     text-align: center;
     justify-content: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .qa-home-hero #home-title,
+  .qa-home-hero .qa-hero-inner h1 {
+    font-size: 33px !important;
+    font-weight: 900 !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.025em !important;
+  }
+  .qa-home-hero #home-title span,
+  .qa-home-hero .qa-hero-inner h1 span {
+    font-weight: 900 !important;
+  }
+  .qa-home-hero .qa-hero-badge {
+    font-size: 12px !important;
+    padding: 6px 14px !important;
+  }
+  .qa-home-hero .qa-hero-copy > p {
+    font-size: 13.5px !important;
+    max-width: 320px !important;
   }
 }
 
@@ -199,3 +289,461 @@ html, body {
   #why-choose .mt-14.grid h3,
   #career .mt-14.grid h3 { font-size: 14px; }
 }
+
+/* ============================================================
+   EXTENDED MOBILE FIXES — All Sections
+   ============================================================ */
+
+/* Prevent horizontal scroll globally */
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* ── Header / Nav ── */
+@media (max-width: 768px) {
+  .qa-nav-inner,
+  .header-inner,
+  nav .container {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+  .header-logo img { height: 36px !important; }
+  
+  /* Stack CTAs on mobile */
+  .hero-cta-group,
+  .qa-hero-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+  .qa-hero-buttons a,
+  .hero-cta-group a {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+/* ── Popular Courses Section ── */
+@media (max-width: 768px) {
+  /* Course cards grid → 1 column */
+  .courses-section .grid,
+  [class*="courses-grid"],
+  .popular-courses-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+    padding: 0 4px;
+  }
+  
+  /* Course card full width */
+  .course-card,
+  [class*="course-item"] {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Section headings */
+  h2.section-title,
+  .section-heading,
+  section > h2 {
+    font-size: clamp(20px, 5.5vw, 26px) !important;
+    text-align: center;
+  }
+  
+  /* Reduce section padding (excludes hero to preserve header clearance) */
+  section:not(.qa-home-hero):not(.hero) {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+  
+  /* Hero text */
+  .hero-title,
+  .qa-hero-title {
+    font-size: clamp(24px, 7vw, 36px) !important;
+    text-align: center;
+  }
+  .hero-subtitle,
+  .qa-hero-subtitle {
+    font-size: clamp(14px, 4vw, 18px) !important;
+    text-align: center;
+  }
+}
+
+/* ── LMS / Online Programs Section ── */
+@media (max-width: 768px) {
+  .lms-section-card,
+  .online-program-card {
+    padding: 24px 16px !important;
+    border-radius: 16px !important;
+  }
+  .lms-course-pills {
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+  }
+  .lms-trust-stats {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+}
+
+/* ── Footer ── */
+@media (max-width: 480px) {
+  .qa-footer-grid,
+  footer .grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px;
+  }
+  .qa-footer-bottom-row {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+  footer {
+    padding: 32px 16px 24px !important;
+  }
+}
+
+/* ── Floating Buttons ── */
+@media (max-width: 480px) {
+  .fixed.bottom-5.right-5,
+  .qa-float-actions {
+    bottom: 16px !important;
+    right: 14px !important;
+  }
+  .qa-float-actions a,
+  .fixed.bottom-5.right-5 > a {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 18px !important;
+  }
+}
+
+/* ── Tables → Horizontal scroll on mobile ── */
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+}
+
+/* ── Images ── */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── Touch targets — min 44px ── */
+@media (max-width: 768px) {
+  button,
+  a.btn,
+  .btn,
+  input[type="submit"] {
+    min-height: 44px;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  textarea,
+  select {
+    font-size: 16px !important; /* Prevent iOS zoom */
+    min-height: 44px;
+  }
+}
+
+/* ── Signup Page Mobile ── */
+@media (max-width: 480px) {
+  .signup-page-wrap {
+    padding: 20px 12px 40px !important;
+    align-items: flex-start !important;
+  }
+  .signup-page-inner {
+    max-width: 100%;
+  }
+}
+
+/* ── Homepage Hero Header Clearance & Extra Bold Guarantee ── */
+.ref-header ~ main .qa-home-hero,
+.qa-home-hero {
+  padding-top: 116px !important;
+}
+
+.qa-home-hero #home-title,
+.qa-home-hero .qa-hero-inner h1 {
+  font-family: 'Outfit', 'Plus Jakarta Sans', var(--font-inter), sans-serif !important;
+  font-weight: 900 !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+.qa-home-hero #home-title span,
+.qa-home-hero .qa-hero-inner h1 span {
+  font-weight: 900 !important;
+}
+
+@media (max-width: 950px) {
+  .ref-header ~ main .qa-home-hero,
+  .qa-home-hero {
+    padding-top: 104px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .ref-header ~ main .qa-home-hero,
+  .qa-home-hero {
+    padding-top: 98px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .ref-header ~ main .qa-home-hero,
+  .qa-home-hero {
+    padding-top: 94px !important;
+  }
+}
+
+/* ── Homepage Hero Mobile-Only Typography Boost ── */
+@media (max-width: 768px) {
+  .qa-home-hero .qa-hero-badge {
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.035em !important;
+    padding: 7px 18px !important;
+    margin-bottom: 18px !important;
+    display: inline-flex !important;
+  }
+  .qa-home-hero #home-title,
+  .qa-home-hero .qa-hero-inner h1 {
+    font-size: clamp(38px, 9.8vw, 48px) !important;
+    font-weight: 900 !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.03em !important;
+    margin-bottom: 18px !important;
+    text-wrap: balance;
+  }
+  .qa-home-hero #home-title span,
+  .qa-home-hero .qa-hero-inner h1 span {
+    font-weight: 900 !important;
+  }
+  .qa-home-hero .qa-hero-copy > p {
+    font-size: 14.5px !important;
+    line-height: 1.62 !important;
+    color: #94a3b8 !important;
+    margin-bottom: 22px !important;
+    margin-inline: auto !important;
+    max-width: 420px !important;
+    text-wrap: balance !important;
+    text-align: center !important;
+  }
+  .qa-home-hero .qa-hero-copy > p strong {
+    display: inline !important;
+    font-size: inherit !important;
+    font-weight: 600 !important;
+    color: #f1ebd8 !important;
+    margin-top: 0 !important;
+  }
+  .qa-home-hero .qa-hero-copy > p strong:last-child {
+    display: block !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #e2c285 !important;
+    margin-top: 8px !important;
+    letter-spacing: 0.3px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .qa-home-hero .qa-hero-badge {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    padding: 7px 16px !important;
+    margin-bottom: 16px !important;
+  }
+  .qa-home-hero #home-title,
+  .qa-home-hero .qa-hero-inner h1 {
+    font-size: clamp(36px, 10vw, 44px) !important;
+    font-weight: 900 !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.025em !important;
+    margin-bottom: 16px !important;
+  }
+  .qa-home-hero .qa-hero-copy > p {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    color: #94a3b8 !important;
+    margin-inline: auto !important;
+    max-width: 380px !important;
+    text-wrap: balance !important;
+    text-align: center !important;
+    margin-bottom: 22px !important;
+  }
+  .qa-home-hero .qa-hero-copy > p strong {
+    display: inline !important;
+    font-size: inherit !important;
+    font-weight: 600 !important;
+    color: #f1ebd8 !important;
+    margin-top: 0 !important;
+  }
+  .qa-home-hero .qa-hero-copy > p strong:last-child {
+    display: block !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    color: #e2c285 !important;
+    margin-top: 8px !important;
+    letter-spacing: 0.3px !important;
+  }
+}
+
+/* ============================================================
+   HOMEPAGE MOBILE GUTTER & SECTION PADDING NORMALIZATION
+   Fixes excessive side padding (40px–86px down to professional 16px)
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Container padding: 16px consistent mobile gutter across all homepage sections */
+  .home-page .container,
+  .home-page .qa-section .container,
+  .home-page main section > .container,
+  .home-page #courses .container,
+  .home-page #curriculum .container,
+  .home-page #gallery .container,
+  .home-page #about .container,
+  .home-page #why-choose .container,
+  .home-page #career .container,
+  .home-page #testimonials .container,
+  .home-page #faq .container,
+  .home-page #contact .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* YOUR LEARNING ROADMAP section: slightly roomier side padding (20px) */
+  .home-page #curriculum .container,
+  .qa-roadmap-section .container {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* Section 11: CTA banner card (Launch creative career) - fix excessive p-10 (40px) padding */
+  .home-page section .rounded-\[36px\] {
+    padding: 30px 20px !important;
+    border-radius: 24px !important;
+  }
+  .home-page section .rounded-\[36px\] h3 {
+    font-size: clamp(24px, 6.8vw, 34px) !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.025em !important;
+  }
+  .home-page section .rounded-\[36px\] p {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    margin-top: 14px !important;
+  }
+  .home-page section .rounded-\[36px\] .flex-col {
+    width: 100% !important;
+    align-items: stretch !important;
+    margin-top: 18px !important;
+  }
+  .home-page section .rounded-\[36px\] .flex-col a {
+    width: 100% !important;
+    justify-content: center !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    font-size: 14px !important;
+  }
+
+  /* Curriculum Week Cards: streamline padding to prevent double gutters */
+  .home-page .qa-week-card {
+    padding: 20px 16px !important;
+    border-radius: 16px !important;
+  }
+  .home-page .qa-part-banner {
+    padding: 20px 16px !important;
+    border-radius: 16px !important;
+  }
+
+  /* Testimonials: review card inner padding */
+  .home-page #testimonials .p-8,
+  .home-page #testimonials .rounded-3xl.p-8 {
+    padding: 24px 18px !important;
+    border-radius: 20px !important;
+  }
+
+  /* Popular Courses: card border-radius */
+  .home-page #courses .rounded-3xl {
+    border-radius: 20px !important;
+  }
+
+  /* Contact Section Cards */
+  .home-page .home-contact-card {
+    padding: 20px 16px !important;
+    border-radius: 16px !important;
+    margin: 12px 0 !important;
+  }
+  .home-page .home-contact-form {
+    padding: 24px 16px !important;
+    border-radius: 20px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-page .container,
+  .home-page .qa-section .container,
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .home-page section .rounded-\[36px\] {
+    padding: 26px 16px !important;
+    border-radius: 20px !important;
+  }
+
+  .home-page .qa-week-card {
+    padding: 18px 14px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .home-page .container,
+  .home-page .qa-section .container,
+  .container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  .home-page #curriculum .container,
+  .qa-roadmap-section .container {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+  .home-page section .rounded-\[36px\] {
+    padding: 22px 14px !important;
+  }
+  .home-page .qa-week-card {
+    padding: 16px 12px !important;
+  }
+  .home-page .home-contact-card {
+    padding: 16px 12px !important;
+  }
+  .home-page .home-contact-form {
+    padding: 18px 12px !important;
+  }
+}
+
+
+

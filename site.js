@@ -115,7 +115,7 @@
         if (section.querySelector('[data-thanks-heading]') || section.querySelector('[data-thanks-message]')) section.classList.add('qa-thanks-page');
     });
     const homeBadge = document.querySelector('.qa-home-hero .qa-hero-badge');
-    if (homeBadge) homeBadge.textContent = 'New Batch Starting Soon · Wedding Editing & Album Design';
+    if (homeBadge) homeBadge.textContent = 'New Batch Starting Soon';
     if ((location.pathname || '').includes('/contact-us/')) document.querySelector('main')?.classList.add('qa-contact-page');
     if ((location.pathname || '').includes('/courses/video-editing/')) document.querySelector('main')?.classList.add('qa-video-page');
     if ((location.pathname || '').includes('/courses/album-design/')) document.querySelector('main')?.classList.add('qa-album-page');
@@ -205,7 +205,8 @@
             const timeout = setTimeout(() => controller.abort(), 20000);
             try {
                 if (location.protocol === 'file:') throw new Error('local');
-                const response = await fetch(new URL('api/leads.php', siteRoot), {
+                const leadsEndpoint = ['5500', '5501', '5502', '3000'].includes(location.port) ? 'http://127.0.0.1:8000/api/leads.php' : new URL('api/leads.php', siteRoot);
+                const response = await fetch(leadsEndpoint, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), signal: controller.signal
                 });
                 const result = await response.json();
@@ -337,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.querySelector('.qa-popup-overlay')) return;
         markAutoPopupShown();
         const overlay = document.createElement('div'); overlay.className = 'qa-popup-overlay';
-        overlay.innerHTML = '<div class="qa-popup" role="dialog" aria-modal="true" aria-labelledby="qa-popup-title"><button class="qa-popup-close" type="button" aria-label="Close">×</button><div class="qa-popup-top"><span>♔ LIMITED SEATS LEFT</span><h2 id="qa-popup-title">Get a <em>FREE</em> Career Consultation</h2><p>Leave your details — our mentor will call within 60 minutes and guide you on the best course for your goals.</p></div><form class="qa-popup-form"><input name="name" required placeholder="Your Full Name *" autocomplete="name"><input name="phone" required type="tel" placeholder="WhatsApp Number *" autocomplete="tel"><input name="city" placeholder="Your City (optional)" autocomplete="address-level2"><input name="course" placeholder="Which course are you interested in? (optional)"><button type="submit">Request Free Callback <span>→</span></button>' + getProofHTML() + '<p class="qa-popup-status" role="status"></p></form></div>';
+        overlay.innerHTML = '<div class="qa-popup" role="dialog" aria-modal="true" aria-labelledby="qa-popup-title"><div class="qa-popup-top"><button class="qa-popup-close" type="button" aria-label="Close popup" title="Close">✕</button><span>♔ LIMITED SEATS LEFT</span><h2 id="qa-popup-title">Get a <em>FREE</em> Career Consultation</h2><p>Leave your details — our mentor will call within 60 minutes and guide you on the best course for your goals.</p></div><form class="qa-popup-form"><input name="name" required placeholder="Your Full Name *" autocomplete="name"><input name="phone" required type="tel" placeholder="WhatsApp Number *" autocomplete="tel"><input name="city" placeholder="Your City (optional)" autocomplete="address-level2"><input name="course" placeholder="Which course are you interested in? (optional)"><button type="submit">Request Free Callback <span>→</span></button>' + getProofHTML() + '<p class="qa-popup-status" role="status"></p></form></div>';
         document.body.append(overlay);
         const close = () => overlay.remove();
         overlay.querySelector('.qa-popup-close').addEventListener('click', close);
@@ -366,7 +367,8 @@ document.addEventListener('DOMContentLoaded', () => {
             data.source = 'career-popup'; data.consent = true; button.disabled = true; status.textContent = 'Sending your enquiry…';
             const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 20000);
             try {
-                const response = await fetch(new URL('api/leads.php', popupRoot), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), signal: controller.signal });
+                const popupEndpoint = ['5500', '5501', '5502', '3000'].includes(location.port) ? 'http://127.0.0.1:8000/api/leads.php' : new URL('api/leads.php', popupRoot);
+                const response = await fetch(popupEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), signal: controller.signal });
                 const result = await response.json(); if (!response.ok || !result.ok || !result.id) throw new Error('save');
                 try {
                     sessionStorage.setItem('qa-enquiry-received', 'true');

@@ -16,3 +16,10 @@ yarn-error.log*
 
 # Node dependencies (if any added later)
 node_modules/
+
+# Runtime session and OTP cache files
+data/*-otps.json
+data/otps.json
+data/*sessions.json
+data/rate-limit.json
+

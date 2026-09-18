@@ -12,17 +12,19 @@
 <style>
   :root {
     --ink: #f8fafc;
-    --bg: #090d16;
-    --surface: #0f172a;
-    --surface-card: #111827;
-    --surface-hover: #1e293b;
+    --bg: #070b14;
+    --surface: #0e1628;
+    --surface-card: #121c32;
+    --surface-hover: #1b2846;
+    --surface-input: #090e1a;
     --border: rgba(255, 255, 255, 0.08);
-    --border-hover: rgba(216, 161, 83, 0.35);
+    --border-hover: rgba(216, 161, 83, 0.4);
     --muted: #94a3b8;
+    --muted-light: #cbd5e1;
     --gold: #d8a153;
     --gold-light: #fde68a;
     --gold-dark: #b8843b;
-    --gold-glow: rgba(216, 161, 83, 0.25);
+    --gold-glow: rgba(216, 161, 83, 0.28);
     --emerald: #10b981;
     --emerald-light: #34d399;
     --red: #ef4444;
@@ -30,7 +32,7 @@
     --purple: #8b5cf6;
     --sky: #0ea5e9;
     --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
-    --shadow-lg: 0 20px 50px -15px rgba(0, 0, 0, 0.8);
+    --shadow-lg: 0 20px 50px -15px rgba(0, 0, 0, 0.85);
   }
   * { box-sizing: border-box; }
   html, body {
@@ -38,12 +40,12 @@
     padding: 0;
     font: 14px/1.6 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     color: var(--ink);
-    background: radial-gradient(circle at 50% -10%, #15213b 0%, #090d16 60%, #060910 100%);
+    background: radial-gradient(circle at 50% -10%, #15223e 0%, #080d18 55%, #050811 100%);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
   a { color: inherit; text-decoration: none; }
-  .container { max-width: 1260px; margin: 0 auto; padding: 0 24px; }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
   
   /* Buttons */
   .btn {
@@ -62,23 +64,25 @@
   .btn:hover { transform: translateY(-1px); }
   .btn:active { transform: translateY(0); }
   .btn-primary {
-    background: #1e293b;
+    background: #1b2846;
     color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.14);
   }
   .btn-primary:hover {
-    background: #334155;
-    border-color: rgba(255, 255, 255, 0.25);
+    background: #25375d;
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #fff;
   }
   .btn-gold {
     background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
     color: #000;
     font-weight: 700;
     box-shadow: 0 4px 18px var(--gold-glow);
+    border: 1px solid rgba(253, 230, 138, 0.5);
   }
   .btn-gold:hover {
-    box-shadow: 0 6px 24px rgba(216, 161, 83, 0.45);
-    filter: brightness(1.05);
+    box-shadow: 0 6px 26px rgba(216, 161, 83, 0.5);
+    filter: brightness(1.08);
   }
   .btn-outline {
     background: rgba(255, 255, 255, 0.04);
@@ -87,7 +91,7 @@
   }
   .btn-outline:hover {
     background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.25);
     color: #fff;
   }
   .btn-danger {
@@ -125,10 +129,10 @@
   input, select, textarea {
     width: 100%;
     padding: 12px 14px;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 12px;
     font: inherit;
-    background: #090e18;
+    background: var(--surface-input);
     color: #f8fafc;
     transition: all 0.2s;
   }
@@ -139,7 +143,8 @@
     outline: none;
     border-color: var(--gold);
     box-shadow: 0 0 0 3px var(--gold-glow);
-    background: #0c1322;
+    background: #0d1527;
+    color: #fff;
   }
   select {
     cursor: pointer;
@@ -173,51 +178,59 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 3px 10px;
+    padding: 4px 11px;
     border-radius: 9999px;
-    font-size: 10.5px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    background: rgba(216, 161, 83, 0.14);
+    letter-spacing: 0.06em;
+    background: rgba(216, 161, 83, 0.12);
     color: var(--gold-light);
-    border: 1px solid rgba(216, 161, 83, 0.3);
+    border: 1px solid rgba(216, 161, 83, 0.28);
     font-family: 'Outfit', sans-serif;
   }
 
   /* Navigation Tabs */
   .tabs {
-    display: inline-flex;
-    background: rgba(15, 23, 42, 0.9);
-    padding: 5px;
-    border-radius: 9999px;
-    border: 1px solid var(--border);
-    gap: 4px;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    display: flex;
+    background: rgba(12, 19, 34, 0.96);
+    padding: 6px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    gap: 6px;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 10px 32px rgba(0,0,0,0.4);
+    overflow-x: auto;
+    scrollbar-width: thin;
   }
   .tab {
-    padding: 9px 20px;
-    border-radius: 9999px;
-    border: 0;
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: 1px solid transparent;
     background: transparent;
     cursor: pointer;
     font-weight: 600;
     font-size: 13px;
     color: var(--muted);
     font-family: 'Outfit', sans-serif;
-    transition: all 0.2s;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
   }
   .tab:hover {
     color: #fff;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.08);
   }
   .tab.active {
-    background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+    background: linear-gradient(135deg, #fde68a 0%, #d8a153 50%, #b8843b 100%);
     color: #000;
     font-weight: 700;
     box-shadow: 0 4px 18px var(--gold-glow);
+    border-color: rgba(253, 230, 138, 0.4);
   }
 
   /* Switch Toggle */
@@ -263,17 +276,23 @@
 
   /* Tables */
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+  th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
   th {
-    background: #141f36;
+    background: #111a2e;
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.09em;
-    color: var(--muted);
+    letter-spacing: 0.1em;
+    color: #94a3b8;
     font-weight: 700;
     font-family: 'Outfit', sans-serif;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
-  tr:hover td { background: rgba(255, 255, 255, 0.02); }
+  tbody tr {
+    transition: background 0.15s ease;
+  }
+  tbody tr:hover td {
+    background: rgba(255, 255, 255, 0.025);
+  }
 
   /* Stats / KPI */
   .stats {
@@ -283,18 +302,19 @@
     margin-bottom: 24px;
   }
   .stat {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.005) 100%), var(--surface);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0.005) 100%), var(--surface);
     border: 1px solid var(--border);
     border-radius: 20px;
     padding: 22px 24px;
     box-shadow: var(--shadow);
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
+    overflow: hidden;
   }
   .stat:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     border-color: var(--border-hover);
-    box-shadow: 0 16px 36px -10px rgba(0,0,0,0.6);
+    box-shadow: 0 16px 36px -10px rgba(0,0,0,0.7), 0 0 20px rgba(216, 161, 83, 0.1);
   }
   .stat-value, .stat-num {
     font-size: 34px;
@@ -327,7 +347,7 @@
     color: var(--ink);
     transition: all 0.15s;
   }
-  .icon-btn:hover { background: #334155; color: #fff; transform: scale(1.05); }
+  .icon-btn:hover { background: #25375d; color: #fff; transform: scale(1.05); }
   .icon-btn.danger:hover { background: var(--red); color: #fff; }
 
   /* Toasts */
@@ -344,7 +364,7 @@
     z-index: 9999;
     display: none;
     font-family: 'Outfit', sans-serif;
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
   }
   .toast.show { display: block; animation: slide .3s cubic-bezier(0.16, 1, 0.3, 1); }
   .toast.ok { background: rgba(16, 185, 129, 0.95); color: #fff; border: 1px solid rgba(16, 185, 129, 0.5); }
@@ -358,7 +378,7 @@
   .wh-dot.wh-ok { background: var(--emerald); }
   .wh-dot.wh-fail { background: var(--red); }
   pre {
-    background: #080c14;
+    background: #060a14;
     padding: 14px;
     border-radius: 12px;
     font-size: 11.5px;
@@ -374,33 +394,33 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 3px 10px;
+    padding: 4px 11px;
     border-radius: 9999px;
     font-size: 11px;
     font-weight: 700;
     text-transform: capitalize;
     font-family: 'Outfit', sans-serif;
   }
-  .st-new { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-  .st-contacted { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-  .st-follow-up { background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); }
-  .st-interested { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
-  .st-enrolled { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-  .st-not-interested { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-  .st-junk { background: rgba(100, 116, 139, 0.15); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.3); }
+  .st-new { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
+  .st-contacted { background: rgba(245, 158, 11, 0.15); color: #fde68a; border: 1px solid rgba(245, 158, 11, 0.3); }
+  .st-follow-up { background: rgba(249, 115, 22, 0.15); color: #fdba74; border: 1px solid rgba(249, 115, 22, 0.3); }
+  .st-interested { background: rgba(168, 85, 247, 0.15); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.3); }
+  .st-enrolled { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); }
+  .st-not-interested { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
+  .st-junk { background: rgba(100, 116, 139, 0.15); color: #cbd5e1; border: 1px solid rgba(100, 116, 139, 0.3); }
 
   .fu-badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; margin-left: 6px; }
-  .fu-today { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
-  .fu-overdue { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
-  .fu-future { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); }
+  .fu-today { background: rgba(245, 158, 11, 0.2); color: #fde68a; border: 1px solid rgba(245, 158, 11, 0.4); }
+  .fu-overdue { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+  .fu-future { background: rgba(99, 102, 241, 0.15); color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.3); }
 
   /* Modals */
   .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.82);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     z-index: 1000;
     display: none;
     align-items: center;
@@ -416,26 +436,27 @@
     border-radius: 24px;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85);
     color: var(--ink);
   }
   .modal-hdr {
     padding: 20px 24px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    background: #141f36;
+    background: #131d33;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
   .modal-body { padding: 24px; }
   .note-item {
-    background: #090e18;
+    background: #080d18;
     border-left: 3px solid var(--gold);
     padding: 12px 14px;
     border-radius: 8px;
     margin-top: 8px;
     font-size: 12px;
-    border: 1px solid rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: #f1f5f9;
   }
   .note-meta { color: var(--muted); font-size: 10px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .1em; }
   .row-clickable { cursor: pointer; }
@@ -445,10 +466,10 @@
   #login {
     max-width: 440px;
     margin: 80px auto;
-    background: rgba(15, 23, 42, 0.92);
+    background: rgba(14, 22, 40, 0.94);
     border: 1px solid rgba(216, 161, 83, 0.35);
     border-radius: 28px;
-    box-shadow: 0 25px 60px -15px rgba(0,0,0,0.8), 0 0 40px rgba(216,161,83,0.15);
+    box-shadow: 0 25px 60px -15px rgba(0,0,0,0.85), 0 0 40px rgba(216,161,83,0.15);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     padding: 38px 34px;
@@ -466,7 +487,7 @@
 
   /* Navbar Header */
   .header {
-    background: rgba(11, 17, 30, 0.85);
+    background: rgba(10, 16, 30, 0.88);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -500,7 +521,7 @@
 <!-- ================ LOGIN ================ -->
 <div id="login" class="card">
   <div class="login-logo">
-    <img src="https://customer-assets-lxgj4vgw.emergentagent.net/job_art-academy-demo/artifacts/pj82qe8v_Logo.webp" alt="QAA" />
+    <img src="home-assets/ec55a6be3747a9.webp" alt="Quick Art Photography Academy" />
   </div>
   <h2 style="text-align:center;margin-bottom:4px;font-family:'Outfit',sans-serif">Quick Art Academy</h2>
   <p style="text-align:center;color:var(--muted);margin-top:0;font-size:13px">Executive Admin Console &amp; LMS Course Studio</p>
@@ -520,7 +541,7 @@
   <div class="header">
     <div class="container header-row">
       <div class="logo">
-        <img src="https://customer-assets-lxgj4vgw.emergentagent.net/job_art-academy-demo/artifacts/pj82qe8v_Logo.webp" alt="QAA" />
+        <img src="home-assets/ec55a6be3747a9.webp" alt="Quick Art Photography Academy" />
         <div class="logo-text">
           <div class="logo-name">Quick Art Photography Academy</div>
           <div class="logo-sub">Executive Admin Console &amp; Studio</div>
@@ -575,6 +596,8 @@
       <button class="tab" data-tab="lms-coupons">🎟️ Coupons &amp; Offers</button>
       <button class="tab" data-tab="lms-transactions">💰 Orders / Revenue</button>
       <button class="tab" data-tab="lms-razorpay">💳 Razorpay Gateway</button>
+      <button class="tab" data-tab="lms-fast2sms" style="border:1px solid rgba(216,161,83,0.45);color:#ffe09c;font-weight:700">📱 Mobile OTP (Fast2SMS)</button>
+      <button class="tab" data-tab="lms-email" style="border:1px solid rgba(59,130,246,0.45);color:#93c5fd;font-weight:700">✉️ Email OTP (Supabase)</button>
       <button class="tab" data-tab="lms-settings">🎥 Bunny.net &amp; Video</button>
       <button class="tab" data-tab="settings">⚙️ Webhook &amp; Admin</button>
     </div>
@@ -925,42 +948,41 @@
           <button type="button" onclick="testBunnyConnection()" class="btn btn-outline" id="btn-test-bunny" style="display:inline-flex;align-items:center;gap:6px">
             ⚡ Test Bunny.net Connection
           </button>
-          <span id="bunny-status-badge" style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;background:#e2e8f0;color:#334155;display:inline-flex;align-items:center;gap:5px">
+          <span id="bunny-status-badge" style="font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,0.06);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);display:inline-flex;align-items:center;gap:6px">
             <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#94a3b8"></span> Ready to verify
           </span>
         </div>
 
-        <div id="bunny-status-box" style="display:none;margin-top:14px;padding:14px 16px;background:rgba(201,151,56,0.06);border:1px solid rgba(201,151,56,0.3);border-radius:12px;font-size:12.5px;color:var(--ink)">
-          <div style="font-weight:700;color:#c99738;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+        <div id="bunny-status-box" style="display:none;margin-top:14px;padding:16px 20px;background:rgba(216,161,83,0.08);border:1px solid rgba(216,161,83,0.3);border-radius:16px;font-size:13px;color:var(--ink)">
+          <div style="font-weight:700;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:8px">
             <span>🛡️ Bunny.net Video Stream Connected</span>
-            <span style="margin-left:auto;font-size:11px;background:#10b981;color:#fff;padding:2px 8px;border-radius:10px">Active &amp; Secure</span>
+            <span style="margin-left:auto;font-size:11px;background:#10b981;color:#fff;padding:3px 10px;border-radius:12px;font-weight:700">Active &amp; Secure</span>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:10px;margin-top:8px">
-            <div><span style="color:#64748b">Library:</span> <b id="bunny-lib-name">Quick Art Academy Stream</b></div>
-            <div><span style="color:#64748b">Library ID:</span> <b id="bunny-lib-id">755385</b></div>
-            <div><span style="color:#64748b">Total Videos:</span> <b id="bunny-video-count">0</b></div>
-            <div><span style="color:#64748b">Trial Balance:</span> <b id="bunny-trial-bal" style="color:#10b981">$50.00</b></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:12px;margin-top:10px">
+            <div><span style="color:#94a3b8">Library:</span> <b id="bunny-lib-name" style="color:#fff">Quick Art Academy Stream</b></div>
+            <div><span style="color:#94a3b8">Library ID:</span> <b id="bunny-lib-id" style="color:#fff">755385</b></div>
+            <div><span style="color:#94a3b8">Total Videos:</span> <b id="bunny-video-count" style="color:#fff">0</b></div>
+            <div><span style="color:#94a3b8">Trial Balance:</span> <b id="bunny-trial-bal" style="color:#34d399">$50.00</b></div>
           </div>
         </div>
 
-        <div style="margin-top:24px;padding:16px;background:#fafafa;border:1px solid var(--border);border-radius:16px">
-          <h3 style="font-size:14px;margin:0 0 10px">🛡️ Screen Recording &amp; Video Protection</h3>
-          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600">
-            <input type="checkbox" id="watermarkEnabled" style="width:auto" checked />
+        <div style="margin-top:24px;padding:20px;background:#0d1527;border:1px solid rgba(255,255,255,0.08);border-radius:18px">
+          <h3 style="font-size:15px;margin:0 0 10px;color:var(--gold);font-family:'Outfit',sans-serif">🛡️ Screen Recording &amp; Video Protection</h3>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:0;color:#f8fafc;font-weight:500">
+            <input type="checkbox" id="watermarkEnabled" style="width:auto;cursor:pointer" checked />
             Floating Watermark On Video (Displays student mobile number randomly to stop piracy)
           </label>
         </div>
 
-        <div style="margin-top:20px;padding:16px;background:#fafafa;border:1px solid var(--border);border-radius:16px">
-          <h3 style="font-size:14px;margin:0 0 10px">📱 Mobile Number OTP Login</h3>
-          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600">
-            <input type="checkbox" id="otpDemoMode" style="width:auto" checked />
-            OTP Demo / Test Mode Enabled (Default OTP: 123456 — testing ke liye bina SMS charge ke chalega)
-          </label>
-          <div style="margin-top:12px">
-            <label for="fast2smsApiKey">Fast2SMS API Key (Optional — real SMS bhejne ke liye)</label>
-            <input type="password" id="fast2smsApiKey" placeholder="Leave empty for demo OTP mode" />
+        <!-- QUICK LINK TO DEDICATED FAST2SMS TAB -->
+        <div style="margin-top:20px;padding:16px 20px;background:rgba(216,161,83,0.08);border:1px solid rgba(216,161,83,0.25);border-radius:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+          <div>
+            <div style="font-weight:700;color:var(--gold);font-size:14px">📱 Mobile OTP &amp; Fast2SMS Gateway</div>
+            <p style="margin:4px 0 0;font-size:12px;color:var(--muted)">Fast2SMS API Key, Live Wallet Balance, aur Test SMS ke liye alag se dedicated tab banaya gaya hai.</p>
           </div>
+          <button type="button" onclick="switchAdminTab('lms-fast2sms')" class="btn btn-gold" style="font-size:12px;padding:8px 18px">
+            📱 Open Fast2SMS Tab →
+          </button>
         </div>
 
         <div style="margin-top:24px">
@@ -968,10 +990,10 @@
         </div>
 
         <!-- Course Video Collections in Bunny.net -->
-        <div style="margin-top:28px;border-top:1px solid var(--border);padding-top:20px">
+        <div style="margin-top:28px;border-top:1px solid rgba(255,255,255,0.08);padding-top:20px">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
             <div>
-              <h3 style="font-size:16px;margin:0">📁 Course Video Folders in Bunny.net Stream</h3>
+              <h3 style="font-size:16px;margin:0;font-family:'Outfit',sans-serif;color:#fff">📁 Course Video Folders in Bunny.net Stream</h3>
               <p class="muted" style="margin:4px 0 0;font-size:12px">Har course ke liye dedicated secure folder ready hai. Video upload karke uska Video ID lesson me paste karein.</p>
             </div>
             <a href="https://dash.bunny.net/stream/755385" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="font-size:12px;padding:6px 14px">
@@ -979,21 +1001,21 @@
             </a>
           </div>
 
-          <div id="bunnyCollectionsGrid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:12px;margin-top:16px">
+          <div id="bunnyCollectionsGrid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:14px;margin-top:16px">
             <!-- Dynamically populated collections -->
           </div>
         </div>
 
         <!-- DIRECT VIDEO UPLOADER -->
-        <div style="margin-top:28px;border-top:1px solid var(--border);padding-top:20px">
+        <div style="margin-top:28px;border-top:1px solid rgba(255,255,255,0.08);padding-top:20px">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
             <div>
-              <h3 style="font-size:16px;margin:0">🚀 Direct Video Uploader to Bunny.net Stream</h3>
+              <h3 style="font-size:16px;margin:0;font-family:'Outfit',sans-serif;color:#fff">🚀 Direct Video Uploader to Bunny.net Stream</h3>
               <p class="muted" style="margin:4px 0 0;font-size:12px">Apne computer se koi bhi MP4/MOV video seedhe Bunny.net CDN pe upload karein. Real-time progress bar ke sath upload hoga aur anti-piracy token lag jayega.</p>
             </div>
           </div>
 
-          <div style="margin-top:16px;padding:20px;background:#fff;border:1px solid var(--border);border-radius:16px">
+          <div style="margin-top:16px;padding:22px;background:#0d1527;border:1px solid rgba(255,255,255,0.08);border-radius:18px">
             <div class="grid" style="grid-template-columns:1fr 1fr;gap:14px">
               <div>
                 <label for="uploadCourseSelect">Select Target Course *</label>
@@ -1015,26 +1037,26 @@
               </div>
               <div>
                 <label for="uploadVideoFile">Choose Video File (.mp4, .mov, .mkv) *</label>
-                <input type="file" id="uploadVideoFile" accept="video/*" onchange="onVideoFileChosen()" />
+                <input type="file" id="uploadVideoFile" accept="video/*" onchange="onVideoFileChosen()" style="background:#090e1a;padding:9px;color:#cbd5e1" />
               </div>
             </div>
 
             <!-- Upload Progress Bar & Status -->
-            <div id="uploadProgressBox" style="display:none;margin-top:16px;padding:14px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:12px">
-              <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:6px">
-                <span id="uploadStatusText">Uploading to Bunny.net CDN…</span>
-                <span id="uploadPercentText">0%</span>
+            <div id="uploadProgressBox" style="display:none;margin-top:16px;padding:16px;background:#080d18;border:1px solid rgba(255,255,255,0.12);border-radius:14px;color:#f8fafc">
+              <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:8px">
+                <span id="uploadStatusText" style="color:var(--gold)">Uploading to Bunny.net CDN…</span>
+                <span id="uploadPercentText" style="color:#34d399;font-weight:700">0%</span>
               </div>
-              <div style="width:100%;height:10px;background:#e2e8f0;border-radius:10px;overflow:hidden">
-                <div id="uploadProgressBar" style="width:0%;height:100%;background:linear-gradient(90deg, #c99738, #10b981);transition:width 0.2s"></div>
+              <div style="width:100%;height:10px;background:rgba(255,255,255,0.08);border-radius:10px;overflow:hidden">
+                <div id="uploadProgressBar" style="width:0%;height:100%;background:linear-gradient(90deg, #d8a153, #10b981);transition:width 0.2s"></div>
               </div>
-              <div style="display:flex;justify-content:space-between;font-size:11px;color:#64748b;margin-top:6px">
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:8px">
                 <span id="uploadBytesText">0 MB / 0 MB</span>
                 <span id="uploadSpeedText">-- MB/s</span>
               </div>
             </div>
 
-            <div style="margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <div style="margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
               <button type="button" onclick="startBunnyDirectUpload()" class="btn btn-gold" id="btnStartUpload" style="padding:10px 22px">
                 🚀 Start Upload to Bunny.net
               </button>
@@ -1044,10 +1066,10 @@
         </div>
 
         <!-- UPLOADED BUNNY VIDEOS LIST -->
-        <div style="margin-top:32px;border-top:1px solid var(--border);padding-top:20px">
+        <div style="margin-top:32px;border-top:1px solid rgba(255,255,255,0.08);padding-top:20px">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
             <div>
-              <h3 style="font-size:16px;margin:0">📹 Live Videos on Bunny.net Stream</h3>
+              <h3 style="font-size:16px;margin:0;font-family:'Outfit',sans-serif;color:#fff">📹 Live Videos on Bunny.net Stream</h3>
               <p class="muted" style="margin:4px 0 0;font-size:12px">All transcode-ready videos in your library. Preview them, copy IDs, or assign to any course lesson with 1-click.</p>
             </div>
             <div style="display:flex;gap:8px">
@@ -1057,16 +1079,16 @@
             </div>
           </div>
 
-          <div style="margin-top:14px;overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:14px">
+          <div style="margin-top:14px;overflow-x:auto;background:#0d1527;border:1px solid rgba(255,255,255,0.08);border-radius:16px">
             <table style="width:100%;font-size:12.5px;border-collapse:collapse">
               <thead>
-                <tr style="background:#f8fafc;border-bottom:1px solid var(--border);text-align:left">
-                  <th style="padding:10px 14px">Video Title</th>
-                  <th style="padding:10px 14px">Duration</th>
-                  <th style="padding:10px 14px">Status</th>
-                  <th style="padding:10px 14px">Course / Folder</th>
-                  <th style="padding:10px 14px">Video ID (GUID)</th>
-                  <th style="padding:10px 14px;text-align:right">Actions</th>
+                <tr style="background:#111a2e;border-bottom:1px solid rgba(255,255,255,0.08);text-align:left">
+                  <th style="padding:12px 16px">Video Title</th>
+                  <th style="padding:12px 16px">Duration</th>
+                  <th style="padding:12px 16px">Status</th>
+                  <th style="padding:12px 16px">Course / Folder</th>
+                  <th style="padding:12px 16px">Video ID (GUID)</th>
+                  <th style="padding:12px 16px;text-align:right">Actions</th>
                 </tr>
               </thead>
               <tbody id="bunnyVideosTbody">
@@ -1164,6 +1186,309 @@
       </div>
     </div>
 
+    <!-- FAST2SMS OTP GATEWAY TAB -->
+    <div id="tab-lms-fast2sms" class="tab-content hidden" style="margin-top:16px">
+      <div class="card" style="border:1px solid rgba(216,161,83,0.3);background:linear-gradient(180deg,#0d1527 0%,#090e1a 100%)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:18px;margin-bottom:20px">
+          <div>
+            <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(216,161,83,0.12);border:1px solid rgba(216,161,83,0.3);color:#fce7b0;padding:4px 12px;border-radius:9999px;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">
+              ⚡ India's Cheapest OTP Gateway (Pay-As-You-Go)
+            </div>
+            <h2 style="font-size:22px;margin:10px 0 4px;font-family:'Outfit',sans-serif;color:#fff">📱 Fast2SMS Mobile OTP Gateway</h2>
+            <p class="muted" style="margin:0;font-size:13.5px">
+              Koi Monthly Subscription Nahi (₹0/month) · Sirf jitna OTP message send hoga utna hi paisa katega (~₹0.15–₹0.20 per SMS) · Minimum recharge sirf ₹100
+            </p>
+          </div>
+          <div id="fast2smsBalanceBadge" style="display:inline-flex;align-items:center;gap:8px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#34d399;padding:8px 16px;border-radius:14px;font-size:13px;font-weight:600">
+            <span style="width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981"></span>
+            <span id="fast2smsBalanceText">Fast2SMS Gateway Ready</span>
+          </div>
+        </div>
+
+        <!-- 1. Demo Mode Toggle -->
+        <div style="background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px 18px;margin-bottom:22px">
+          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;font-size:14px;color:#fff;font-weight:600;margin:0">
+            <input type="checkbox" id="otpDemoMode" style="width:19px;height:19px;cursor:pointer;accent-color:var(--gold)" />
+            <span>OTP Demo / Free Test Mode (Testing ke liye bina SMS charge ke Default OTP: <b style="color:var(--gold)">123456</b> chalega)</span>
+          </label>
+          <p style="font-size:12px;color:var(--muted);margin:8px 0 0 31px;line-height:1.5">
+            Jab tak aapka Fast2SMS recharge nahi hai tab tak isse <b>ON (Checked)</b> rakhein. Real mobile par SMS bhejna ho to ise <b>Uncheck (OFF)</b> karein aur niche API Key save karein.
+          </p>
+        </div>
+
+        <!-- 2. API Key Form -->
+        <div style="background:#090e1a;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;margin-bottom:22px">
+          <div class="grid" style="grid-template-columns:1fr auto;gap:14px;align-items:flex-end">
+            <div>
+              <label for="fast2smsApiKey" style="font-size:12.5px;font-weight:700;color:#e2e8f0;margin-bottom:6px;display:block">
+                Fast2SMS API Authorization Key *
+              </label>
+              <div style="position:relative">
+                <input type="password" id="fast2smsApiKey" placeholder="e.g. 5xV7l9QoKzZfJbTuO0wYeR1mNgPsW... (fast2sms.com -> Dev API se copy karein)" style="padding-right:42px" />
+                <button type="button" onclick="togglePasswordVisibility('fast2smsApiKey')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px" title="Show / Hide Key">👁</button>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px">
+              <button type="button" onclick="checkFast2SmsBalance()" class="btn btn-outline" style="padding:11px 18px;font-size:12.5px;white-space:nowrap;border-color:rgba(16,185,129,0.3);color:#34d399">
+                💰 Check Wallet Balance
+              </button>
+              <button type="button" onclick="saveFast2SmsSettingsOnly()" class="btn btn-gold" style="padding:11px 22px;font-size:12.5px;white-space:nowrap">
+                💾 Save Fast2SMS Key
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2.5 Professional SMS Template -->
+        <div style="background:#090e1a;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;margin-bottom:22px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+            <label for="fast2smsOtpTemplate" style="font-size:12.5px;font-weight:700;color:#e2e8f0;display:flex;align-items:center;gap:6px">
+              ✉️ Professional SMS Text Template (Student ke mobile par aane wala message)
+            </label>
+            <span id="fast2smsCharCount" style="font-size:11.5px;color:var(--gold);font-weight:600">147 / 160 chars (1 SMS Credit)</span>
+          </div>
+          <textarea id="fast2smsOtpTemplate" rows="6" style="width:100%;font-size:13px;line-height:1.6;padding:10px 14px;border-radius:8px;resize:vertical;color:#f8fafc;background:#030712;border:1px solid rgba(255,255,255,0.12)" placeholder="Dear Student,&#10;&#10;Your Quick Art Photography Academy portal verification code is: {otp}&#10;&#10;Valid for 10 minutes. Please do not share this OTP with anyone.&#10;&#10;Warm regards,&#10;Anil Sharma&#10;Quick Art Photography Academy&#10;Helpline: 9939800780"></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:11.5px;color:var(--muted);flex-wrap:wrap;gap:8px">
+            <span>Use <code>{otp}</code> jahan 6-digit code replace hoga. (160 characters ke andar 1 SMS credit charge hota hai).</span>
+            <button type="button" onclick="resetDefaultOtpTemplate()" class="btn-link" style="font-size:11.5px;color:var(--gold);cursor:pointer;background:none;border:none;text-decoration:underline">Reset to Default Template</button>
+          </div>
+        </div>
+
+        <!-- 3. Live Test OTP Tool -->
+        <div style="padding:18px 20px;background:rgba(0,0,0,0.35);border:1px solid rgba(216,161,83,0.25);border-radius:16px;margin-bottom:22px">
+          <div style="font-size:13.5px;font-weight:700;color:var(--gold);margin-bottom:10px">📲 Send Live Test OTP (Mobile par SMS aana check karein):</div>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <input type="tel" id="fast2smsTestPhone" placeholder="Enter your 10-digit phone (e.g. 9939800780)" style="max-width:320px;padding:10px 14px;font-size:13px" />
+            <button type="button" onclick="sendTestFast2SmsOtp()" class="btn btn-gold" style="padding:10px 22px;font-size:12.5px">
+              ⚡ Send Live Test OTP Now
+            </button>
+            <span id="fast2smsTestResult" style="font-size:12.5px;font-weight:600"></span>
+          </div>
+        </div>
+
+        <!-- 4. Hindi Step-by-Step Guide -->
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px 20px">
+          <h3 style="font-size:14px;color:var(--gold);margin:0 0 10px;font-family:'Outfit',sans-serif">📖 Fast2SMS Setup Guide (Step-by-step Hindi)</h3>
+          <ol style="font-size:12.5px;color:#cbd5e1;line-height:1.9;margin:0;padding-left:20px">
+            <li><a href="https://www.fast2sms.com" target="_blank" rel="noopener noreferrer" style="color:#60a5fa;text-decoration:underline;font-weight:600">www.fast2sms.com</a> par jakar apna Free Account banayein.</li>
+            <li>Wallet me <b>Add Credit</b> par click karke sirf <b>₹100</b> recharge karein (Koi monthly subscription ya hidden renewal fee nahi hoti, wallet balance expire nahi hota).</li>
+            <li>Left side menu me <b>Dev API</b> option par click karein aur waha se apni <b>Authorization Key</b> copy karein.</li>
+            <li>Wahi Key upar <b>Fast2SMS API Authorization Key</b> box me paste karein aur <b>Save Fast2SMS Key</b> par click karein.</li>
+            <li><b>Send Live Test OTP Now</b> me apna mobile number daal kar check karein — aapke mobile par live OTP message turant receive ho jayega!</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMAIL OTP (SUPABASE) TAB -->
+    <div id="tab-lms-email" class="tab-content hidden" style="margin-top:16px">
+      <div class="card" style="border:1px solid rgba(59,130,246,0.3);background:linear-gradient(180deg,#0b1329,#070b14)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+          <div>
+            <h2 style="font-size:20px;font-family:'Outfit',sans-serif;color:#93c5fd;margin:0 0 6px;display:flex;align-items:center;gap:8px">
+              ✉️ Supabase Email OTP Configuration
+            </h2>
+            <p class="muted" style="margin:0;font-size:13px">
+              Student <b>Registration (Sign Up)</b> aur <b>Forgot Password</b> ke liye Email OTP service.
+            </p>
+          </div>
+          <div id="supabaseStatusBadge" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:9999px;font-size:12px;font-weight:700;background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.35)">
+            ⚡ Email OTP Active
+          </div>
+        </div>
+
+        <!-- 1. Sender Info & Custom Message Template -->
+        <div style="background:#090e1a;border:1px solid rgba(216,161,83,0.35);border-radius:16px;padding:22px;margin-bottom:22px">
+          <div style="font-size:15px;font-weight:700;color:#fcd34d;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+            <span>✍️</span> Email Sender &amp; Message Customization (Brand Setup)
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+            <div>
+              <label for="emailSender" style="font-size:12.5px;font-weight:700;color:#e2e8f0;margin-bottom:6px;display:block">
+                Aapka Sender Email (From / Reply-To Email) *
+              </label>
+              <input type="email" id="emailSender" placeholder="support@quickartphotography.in" style="width:100%" />
+            </div>
+            <div>
+              <label for="emailSenderName" style="font-size:12.5px;font-weight:700;color:#e2e8f0;margin-bottom:6px;display:block">
+                Sender Name (Brand / Academy Name) *
+              </label>
+              <input type="text" id="emailSenderName" placeholder="Quick Art Photography Academy" style="width:100%" />
+            </div>
+            <div style="grid-column:1 / -1">
+              <label for="emailSubjectTemplate" style="font-size:12.5px;font-weight:700;color:#e2e8f0;margin-bottom:6px;display:block">
+                Email Subject Template * <small style="color:var(--muted);font-weight:400">({otp} automatically replace hoga)</small>
+              </label>
+              <input type="text" id="emailSubjectTemplate" placeholder="Your Quick Art Academy Verification OTP: {otp}" style="width:100%" />
+            </div>
+            <div style="grid-column:1 / -1">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <label for="emailMessageCustom" style="font-size:12.5px;font-weight:700;color:#e2e8f0;margin:0">
+                  Customized Email Message Body (OTP ke upar jo message dikhega) *
+                </label>
+                <div style="display:flex;gap:6px">
+                  <span style="font-size:11px;background:rgba(216,161,83,0.15);color:#fcd34d;padding:2px 8px;border-radius:4px;cursor:pointer" onclick="insertEmailVar('{otp}')">+ {otp}</span>
+                  <span style="font-size:11px;background:rgba(59,130,246,0.15);color:#93c5fd;padding:2px 8px;border-radius:4px;cursor:pointer" onclick="insertEmailVar('{email}')">+ {email}</span>
+                </div>
+              </div>
+              <textarea id="emailMessageCustom" rows="4" style="width:100%;line-height:1.5;font-size:13px;padding:10px 14px;background:#0d1117;border:1px solid #30363d;border-radius:8px;color:#e6edf3" placeholder="Dear Student, your Quick Art Photography Academy verification code is: {otp}..."></textarea>
+            </div>
+          </div>
+
+          <!-- Brevo (Sendinblue) Free Email API -->
+          <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;margin-top:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+              <div style="font-size:13.5px;font-weight:700;color:#34d399;display:flex;align-items:center;gap:6px">
+                <span>🚀</span> Brevo (Sendinblue) Free Email API (300 Free Emails / Day — No Monthly Fee)
+              </div>
+              <a href="https://app.brevo.com/settings/keys/api" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#60a5fa;text-decoration:underline;font-weight:600">
+                👉 Get Free Brevo API Key
+              </a>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:flex-end">
+              <div>
+                <label for="brevoApiKey" style="font-size:11.5px;color:#94a3b8;display:block;margin-bottom:4px">
+                  Brevo API Key (xkeysib-...)
+                </label>
+                <div style="position:relative">
+                  <input type="password" id="brevoApiKey" placeholder="xkeysib-..." style="width:100%;font-size:12.5px;padding:9px 40px 9px 12px" />
+                  <button type="button" onclick="togglePasswordVisibility('brevoApiKey')" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:15px" title="Show / Hide Key">👁</button>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button type="button" onclick="testBrevoEmail()" class="btn btn-outline" style="padding:9px 16px;font-size:12px;border-color:rgba(52,211,153,0.4);color:#34d399;white-space:nowrap">
+                  ⚡ Test Brevo Email
+                </button>
+              </div>
+            </div>
+            <div style="font-size:11.5px;color:#94a3b8;margin-top:6px">
+              💡 Brevo par account banate hi bina kisi credit card ke <b>har roz 300 free emails</b> milte hain. API key yahan paste karke Save kar dein.
+            </div>
+          </div>
+
+          <!-- SMTP Settings (Optional / For Unlimited Delivery) -->
+          <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;margin-top:16px">
+            <div style="font-size:13px;font-weight:700;color:#93c5fd;margin-bottom:8px">
+              🌐 Custom SMTP Server (Optional — Unlimited High-Speed Delivery ke liye):
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 2fr 2fr;gap:12px">
+              <div>
+                <label for="smtpHost" style="font-size:11.5px;color:#94a3b8;display:block;margin-bottom:4px">SMTP Host</label>
+                <input type="text" id="smtpHost" placeholder="smtp-relay.brevo.com" style="width:100%;font-size:12px;padding:8px 10px" />
+              </div>
+              <div>
+                <label for="smtpPort" style="font-size:11.5px;color:#94a3b8;display:block;margin-bottom:4px">Port</label>
+                <input type="number" id="smtpPort" placeholder="587" style="width:100%;font-size:12px;padding:8px 10px" />
+              </div>
+              <div>
+                <label for="smtpUser" style="font-size:11.5px;color:#94a3b8;display:block;margin-bottom:4px">SMTP User</label>
+                <input type="text" id="smtpUser" placeholder="sharmalab2017@gmail.com" style="width:100%;font-size:12px;padding:8px 10px" />
+              </div>
+              <div>
+                <label for="smtpPass" style="font-size:11.5px;color:#94a3b8;display:block;margin-bottom:4px">SMTP Pass / API Key</label>
+                <input type="password" id="smtpPass" placeholder="••••••••" style="width:100%;font-size:12px;padding:8px 10px" />
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;margin-top:16px">
+            <button type="button" onclick="saveEmailCustomSettings()" class="btn btn-gold" style="padding:11px 26px;font-size:13px">
+              💾 Save Email &amp; Message Settings
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Credentials Form (Supabase) -->
+        <div style="background:#090e1a;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;margin-bottom:22px">
+          <div style="font-size:14px;font-weight:700;color:#93c5fd;margin-bottom:12px">⚡ Supabase Auth Integration Keys</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+            <div style="grid-column:1 / -1">
+              <label for="supabaseUrl" style="font-size:12.5px;font-weight:700;color:#e2e8f0;margin-bottom:6px;display:block">
+                Supabase Project URL * <small style="font-weight:400;color:var(--muted)">(Supabase Dashboard -> Settings -> API se copy karein)</small>
+              </label>
+              <input type="url" id="supabaseUrl" placeholder="https://xxxxxxxxxxxxxxxxxxxx.supabase.co" style="width:100%" />
+            </div>
+            <div>
+              <label for="supabaseAnonKey" style="font-size:12.5px;font-weight:700;color:#e2e8f0;margin-bottom:6px;display:block">
+                Supabase Publishable / Anon API Key *
+              </label>
+              <div style="position:relative">
+                <input type="password" id="supabaseAnonKey" placeholder="sb_publishable_..." style="padding-right:42px" />
+                <button type="button" onclick="togglePasswordVisibility('supabaseAnonKey')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px" title="Show / Hide Key">👁</button>
+              </div>
+            </div>
+            <div>
+              <label for="supabaseSecretKey" style="font-size:12.5px;font-weight:700;color:#e2e8f0;margin-bottom:6px;display:block">
+                Supabase Secret Key (Service Role)
+              </label>
+              <div style="position:relative">
+                <input type="password" id="supabaseSecretKey" placeholder="sb_secret_..." style="padding-right:42px" />
+                <button type="button" onclick="togglePasswordVisibility('supabaseSecretKey')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px" title="Show / Hide Key">👁</button>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end">
+            <button type="button" onclick="saveSupabaseSettingsOnly()" class="btn btn-gold" style="padding:11px 24px;font-size:13px">
+              💾 Save Supabase Settings
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Live Test Email OTP Tool -->
+        <div style="padding:18px 20px;background:rgba(0,0,0,0.35);border:1px solid rgba(59,130,246,0.3);border-radius:16px;margin-bottom:22px">
+          <div style="font-size:13.5px;font-weight:700;color:#93c5fd;margin-bottom:10px">✉️ Send Live Test Email OTP (Email inbox check karein):</div>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <input type="email" id="supabaseTestEmail" placeholder="Enter your email (e.g. sharmalab2017@gmail.com)" style="max-width:340px;padding:10px 14px;font-size:13px" />
+            <button type="button" onclick="sendTestEmailOtpAdmin()" class="btn btn-gold" style="padding:10px 22px;font-size:12.5px">
+              ⚡ Send Test Email OTP Now
+            </button>
+            <span id="supabaseTestResult" style="font-size:12.5px;font-weight:600"></span>
+          </div>
+        </div>
+
+        <!-- 3. Hindi Guide for 6-Digit OTP & URL Setup -->
+        <div style="background:rgba(216,161,83,0.06);border:1px solid rgba(216,161,83,0.3);border-radius:14px;padding:20px;margin-bottom:18px">
+          <h3 style="font-size:15px;color:#fcd34d;margin:0 0 10px;font-family:'Outfit',sans-serif">⚡ Email me Link ki jagah 6-Digit OTP Code aane ke liye (1-Minute Setting)</h3>
+          <p style="font-size:12.5px;color:#cbd5e1;line-height:1.6;margin:0 0 12px">
+            Supabase by default email me link bhejta hai. Agar aap chahte hain ki student ko email me <b>6-digit numeric OTP code</b> dikhai de, to Supabase me sirf ye 2 chote se step karein:
+          </p>
+          <ol style="font-size:12.5px;color:#e2e8f0;line-height:1.9;margin:0 0 14px;padding-left:20px">
+            <li>
+              Direct is link par click karein:
+              <a href="https://supabase.com/dashboard/project/wysgdueraejdmphenjkp/auth/templates" target="_blank" rel="noopener noreferrer" style="color:#60a5fa;text-decoration:underline;font-weight:700">
+                👉 Supabase Email Templates Page Kholein
+              </a>
+            </li>
+            <li>
+              <b>"Confirm signup"</b> aur <b>"Magic Link"</b> par baari-baari click karein.
+            </li>
+            <li>
+              Template body me jahan <code>{{ .ConfirmationURL }}</code> hai, wahan ye code paste karke <b>Save</b> daba dein:
+            </li>
+          </ol>
+          <div style="background:#090d13;border:1px solid rgba(216,161,83,0.25);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:12px;color:#fef08a;margin-bottom:12px;overflow-x:auto">
+            &lt;h2&gt;Quick Art Photography Academy&lt;/h2&gt;<br>
+            &lt;p&gt;Aapka 6-digit verification code hai: &lt;b style="font-size:24px;color:#d8a153;"&gt;{{ .Token }}&lt;/b&gt;&lt;/p&gt;<br>
+            &lt;p&gt;Ya direct verify karne ke liye yahan click karein: &lt;a href="{{ .ConfirmationURL }}"&gt;Confirm Email&lt;/a&gt;&lt;/p&gt;
+          </div>
+          <div style="font-size:12px;color:#94a3b8">
+            ✅ <b>Bonus:</b> Agar student email me aaye link par click karega to bina OTP daale bhi auto-login ho jayega, aur OTP daalega to OTP se bhi login ho jayega!
+          </div>
+        </div>
+
+        <!-- 4. Supabase Project URL Guide -->
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px 20px">
+          <h3 style="font-size:14px;color:#93c5fd;margin:0 0 10px;font-family:'Outfit',sans-serif">📖 Supabase Project URL Kaise Nikalein? (Simple Hindi)</h3>
+          <ol style="font-size:12.5px;color:#cbd5e1;line-height:1.9;margin:0;padding-left:20px">
+            <li><a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" style="color:#60a5fa;text-decoration:underline;font-weight:600">supabase.com/dashboard</a> par jakar apna project open karein.</li>
+            <li>Left side bottom me <b>Project Settings (⚙️ Gear Icon)</b> par click karein.</li>
+            <li>Wahan <b>API</b> option par click karein.</li>
+            <li>Page ke sabse upar <b>Project URL</b> likha hoga (jaise <code>https://abcdefghijkl.supabase.co</code>) — use copy karke upar paste kar dein aur <b>Save Supabase Settings</b> par click karein.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
     <!-- SETTINGS TAB -->
     <div id="tab-settings" class="tab-content hidden" style="margin-top:16px">
       <div class="card">
@@ -1182,8 +1507,8 @@
           </div>
         </div>
 
-        <details style="margin-top:20px;background:#fafafa;border:1px solid var(--border);border-radius:16px;padding:12px 16px">
-          <summary style="cursor:pointer;font-weight:600;font-size:13px;color:var(--ink)">⚙️ Advanced options (Method / Payload format / Custom headers)</summary>
+        <details style="margin-top:20px;background:#0d1527;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px 20px">
+          <summary style="cursor:pointer;font-weight:600;font-size:13px;color:#fff">⚙️ Advanced options (Method / Payload format / Custom headers)</summary>
           <div class="grid" style="margin-top:16px;grid-template-columns:1fr 1fr;gap:12px">
             <div>
               <label for="webhookMethod">HTTP Method</label>
@@ -1226,7 +1551,7 @@
         <div id="webhookStatus" class="muted">Loading…</div>
       </div>
 
-      <div class="card" style="margin-top:20px;background:#fafafa">
+      <div class="card" style="margin-top:20px;background:#0d1527">
         <h2 style="font-size:14px">Sample Webhook Payload</h2>
         <p class="muted" style="margin:6px 0 10px">Yeh JSON aapke webhook pe POST hoga:</p>
         <pre>{
@@ -1286,7 +1611,7 @@
             <a href="javascript:void(0)" onclick="toggleAllEnrollCourses(false)" style="color:var(--muted)">Clear</a>
           </div>
         </div>
-        <div id="enrollCoursesCheckboxes" style="display:flex;flex-direction:column;gap:8px;max-height:160px;overflow-y:auto;padding:10px;border:1px solid var(--border);border-radius:12px;background:#f8fafc">
+        <div id="enrollCoursesCheckboxes" style="display:flex;flex-direction:column;gap:8px;max-height:180px;overflow-y:auto;padding:12px;border:1px solid rgba(255,255,255,0.12);border-radius:14px;background:#080d18">
           <!-- Dynamically populated -->
         </div>
       </div>
@@ -1312,9 +1637,9 @@
         <input type="text" id="enrollStudentNotes" placeholder="e.g. GPay Ref: 3289412781 or Paid at Siwan office" />
       </div>
 
-      <div style="margin-top:14px;padding:10px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;gap:10px">
-        <input type="checkbox" id="enrollStudentSendWA" checked style="width:auto" />
-        <label for="enrollStudentSendWA" style="margin:0;cursor:pointer;font-size:12px;color:#166534;font-weight:600">
+      <div style="margin-top:14px;padding:12px 14px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.28);border-radius:12px;display:flex;align-items:center;gap:10px">
+        <input type="checkbox" id="enrollStudentSendWA" checked style="width:auto;cursor:pointer" />
+        <label for="enrollStudentSendWA" style="margin:0;cursor:pointer;font-size:12.5px;color:#34d399;font-weight:600">
           💬 Open WhatsApp with Welcome message &amp; Portal login instructions immediately
         </label>
       </div>
@@ -1327,7 +1652,47 @@
   </div>
 </div>
 
+<!-- Set Student Email + Password Modal -->
+<div id="setPasswordModal" class="modal" onclick="if(event.target.id==='setPasswordModal')closeSetPasswordModal()">
+  <div class="modal-inner" style="max-width:480px">
+    <div class="modal-hdr">
+      <div>
+        <h2 style="margin:0;font-size:20px">🔑 Set Email &amp; Password Login</h2>
+        <div class="muted" style="font-size:12px;margin-top:4px">Student portal mein Email+Password login enable karein</div>
+      </div>
+      <button onclick="closeSetPasswordModal()" class="icon-btn">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="setPwPhone" />
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Student Mobile (read-only)</label>
+        <input type="tel" id="setPwPhoneDisplay" disabled style="background:#080d18;color:#cbd5e1;border:1px solid rgba(255,255,255,0.08);font-family:monospace" />
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Email Address *</label>
+        <input type="email" id="setPwEmail" placeholder="student@gmail.com" required />
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label>New Password * (min 6 characters)</label>
+        <div style="position:relative">
+          <input type="password" id="setPwPassword" placeholder="minimum 6 characters" required style="padding-right:44px" />
+          <button type="button" onclick="document.getElementById('setPwPassword').type==='password'?(document.getElementById('setPwPassword').type='text',this.textContent='🙈'):(document.getElementById('setPwPassword').type='password',this.textContent='👁️')" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:17px">👁️</button>
+        </div>
+        <small class="muted" style="display:block;margin-top:4px">Student yeh email aur password use karke portal mein login kar sakta hai.</small>
+      </div>
+      <div style="margin-top:6px;padding:12px 14px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);border-radius:10px;font-size:12px;color:#c4b5fd;line-height:1.5">
+        <strong>ℹ️ Note:</strong> Password securely hash hokar save hoga. Admin panel mein plain-text password store nahi hota.
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding:0 24px 24px">
+      <button onclick="closeSetPasswordModal()" class="btn btn-outline">Cancel</button>
+      <button onclick="saveStudentPassword()" class="btn btn-gold" id="btnSaveStudentPw" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;border:none">🔑 Set Password &amp; Activate</button>
+    </div>
+  </div>
+</div>
+
 <!-- LMS Coupon Modal -->
+
 <div id="lmsCouponModal" class="modal" onclick="if(event.target.id==='lmsCouponModal')closeCouponModal()">
   <div class="modal-inner" style="max-width:560px">
     <div class="modal-hdr">
@@ -1397,10 +1762,6 @@
         <button onclick="saveCouponModal()" class="btn btn-gold">Save Coupon ✓</button>
       </div>
     </div>
-  </div>
-</div>
-
-
   </div>
 </div>
 
@@ -1501,10 +1862,10 @@
     <div class="modal-body">
       <input type="hidden" id="assignVideoId" />
       <input type="hidden" id="assignVideoDuration" />
-      <div style="padding:12px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:14px">
-        <div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;font-weight:600">Selected Bunny Video</div>
-        <div id="assignVideoTitleDisplay" style="font-weight:700;font-size:14px;color:var(--ink);margin-top:4px">—</div>
-        <div id="assignVideoIdDisplay" style="font-family:monospace;font-size:11px;color:#c99738;margin-top:2px">—</div>
+      <div style="padding:14px;background:#080d18;border:1px solid rgba(255,255,255,0.12);border-radius:14px;margin-bottom:14px">
+        <div style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em;font-weight:700;font-family:'Outfit',sans-serif">Video Source (YouTube Link or Bunny GUID)</div>
+        <div id="assignVideoTitleDisplay" style="font-weight:700;font-size:14px;color:#fff;margin-top:4px">—</div>
+        <input type="text" id="assignCustomVideoInput" placeholder="Paste YouTube URL (e.g. https://youtu.be/...) or Bunny GUID" oninput="document.getElementById('assignVideoId').value=this.value.trim()" style="width:100%;margin-top:8px;padding:10px 12px;font-size:12.5px;background:#050912;border:1px solid rgba(255,255,255,0.14);color:#f8fafc;border-radius:8px;box-sizing:border-box;" />
       </div>
       <div>
         <label>1. Select Course *</label>
@@ -1539,8 +1900,10 @@ function toast(msg, ok=true){
   clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),3500);
 }
 
+const API_HOST = ['5500', '5501', '5502', '3000'].includes(window.location.port) ? 'http://127.0.0.1:8000/' : '';
+
 async function api(action, opts={}) {
-  const url = `api/admin.php?action=${encodeURIComponent(action)}`;
+  const url = `${API_HOST}api/admin.php?action=${encodeURIComponent(action)}`;
   const init = {
     method: opts.method || 'GET',
     headers: { 'X-Admin-Token': token || '' },
@@ -1555,7 +1918,7 @@ async function api(action, opts={}) {
 // ---------- LOGIN + FIRST-RUN SETUP ----------
 async function checkSetupAndInit() {
   try {
-    const r = await fetch('api/admin.php?action=setup-status');
+    const r = await fetch(`${API_HOST}api/admin.php?action=setup-status`);
     const d = await r.json();
     if (!r.ok || !d.ok) throw new Error(d.error || 'Backend unavailable');
     if (!d.setupComplete) {
@@ -1576,7 +1939,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const isSetup = e.target.dataset.mode === 'setup';
   const action = isSetup ? 'setup-admin' : 'login';
   try {
-    const r = await fetch('api/admin.php?action=' + action, {
+    const r = await fetch(`${API_HOST}api/admin.php?action=` + action, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({password: pw})
@@ -1590,7 +1953,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 });
 
 async function logout(){
-  try { await fetch('api/admin.php?action=logout', {method:'POST', headers:{'X-Admin-Token': token||''}}); } catch{}
+  try { await fetch(`${API_HOST}api/admin.php?action=logout`, {method:'POST', headers:{'X-Admin-Token': token||''}}); } catch{}
   localStorage.removeItem(TOKEN_KEY);
   location.reload();
 }
@@ -1818,14 +2181,22 @@ function exportCSV(){
 }
 
 // ---------- TABS ----------
-document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) => {
-  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-  e.target.classList.add('active');
-  document.querySelectorAll('.tab-content').forEach(x => x.classList.add('hidden'));
-  const tabName = e.target.dataset.tab;
-  document.getElementById('tab-'+tabName).classList.remove('hidden');
+function switchAdminTab(tabName) {
+  const btn = document.querySelector(`.tab[data-tab="${tabName}"]`);
+  if (btn) btn.click();
+}
 
-  const isLmsTab = ['lms-courses', 'lms-students', 'lms-coupons', 'lms-transactions', 'lms-razorpay', 'lms-settings'].includes(tabName);
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) => {
+  const btn = e.currentTarget || e.target.closest('.tab');
+  if (!btn) return;
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(x => x.classList.add('hidden'));
+  const tabName = btn.dataset.tab;
+  const targetTab = document.getElementById('tab-' + tabName);
+  if (targetTab) targetTab.classList.remove('hidden');
+
+  const isLmsTab = ['lms-courses', 'lms-students', 'lms-coupons', 'lms-transactions', 'lms-razorpay', 'lms-fast2sms', 'lms-email', 'lms-settings'].includes(tabName);
   const lmsKpiRow = document.getElementById('lmsKpiRow');
   if (lmsKpiRow) {
     if (isLmsTab) {
@@ -1841,9 +2212,249 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) =
   if (tabName === 'lms-coupons') loadLmsCoupons();
   if (tabName === 'lms-transactions') loadLmsTransactions();
   if (tabName === 'lms-razorpay') loadRazorpaySettings();
+  if (tabName === 'lms-fast2sms') loadFast2SmsSettings();
+  if (tabName === 'lms-email') loadSupabaseSettings();
   if (tabName === 'lms-settings') loadLmsSettings();
   if (tabName === 'settings') loadSettings();
 }));
+
+async function loadSupabaseSettings() {
+  try {
+    const res = await lmsAdmin('get-lms-settings');
+    const s = res.settings || {};
+    const urlInput = document.getElementById('supabaseUrl');
+    const anonInput = document.getElementById('supabaseAnonKey');
+    const secInput = document.getElementById('supabaseSecretKey');
+    if (urlInput) urlInput.value = s.supabaseUrl || '';
+    if (anonInput) anonInput.value = s.supabaseAnonKey || '';
+    if (secInput) secInput.value = s.supabaseSecretKey || '';
+
+    // Email Customization fields
+    const sender = document.getElementById('emailSender');
+    const senderName = document.getElementById('emailSenderName');
+    const subject = document.getElementById('emailSubjectTemplate');
+    const customMsg = document.getElementById('emailMessageCustom');
+    if (sender) sender.value = s.emailSender || 'support@quickartphotography.in';
+    if (senderName) senderName.value = s.emailSenderName || 'Quick Art Photography Academy';
+    if (subject) subject.value = s.emailSubjectTemplate || 'Your Quick Art Academy Verification OTP: {otp}';
+    if (customMsg) customMsg.value = s.emailMessageCustom || 'Dear Student,\n\nYour Quick Art Photography Academy portal verification code is: {otp}\n\nValid for 10 minutes. Please do not share this OTP with anyone.\n\nWarm regards,\nAnil Sharma\nQuick Art Photography Academy\nHelpline: 9939800780';
+
+    // Brevo API field
+    const brevoKeyInput = document.getElementById('brevoApiKey');
+    if (brevoKeyInput) brevoKeyInput.value = s.brevoApiKey || '';
+
+    // SMTP fields
+    const smtpH = document.getElementById('smtpHost');
+    const smtpP = document.getElementById('smtpPort');
+    const smtpU = document.getElementById('smtpUser');
+    const smtpPass = document.getElementById('smtpPass');
+    if (smtpH) smtpH.value = s.smtpHost || '';
+    if (smtpP) smtpP.value = s.smtpPort || 587;
+    if (smtpU) smtpU.value = s.smtpUser || 'support@quickartphotography.in';
+    if (smtpPass) smtpPass.value = s.smtpPass || '';
+  } catch(e){}
+}
+
+function insertEmailVar(v) {
+  const ta = document.getElementById('emailMessageCustom');
+  if (!ta) return;
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  const text = ta.value;
+  ta.value = text.substring(0, start) + v + text.substring(end);
+  ta.focus();
+  ta.selectionStart = ta.selectionEnd = start + v.length;
+}
+
+async function saveEmailCustomSettings() {
+  const emailSender = (document.getElementById('emailSender')?.value || 'support@quickartphotography.in').trim();
+  const emailSenderName = (document.getElementById('emailSenderName')?.value || 'Quick Art Photography Academy').trim();
+  const emailSubjectTemplate = (document.getElementById('emailSubjectTemplate')?.value || '').trim();
+  const emailMessageCustom = (document.getElementById('emailMessageCustom')?.value || '').trim();
+  const brevoApiKey = (document.getElementById('brevoApiKey')?.value || '').trim();
+  const smtpHost = (document.getElementById('smtpHost')?.value || '').trim();
+  const smtpPort = parseInt(document.getElementById('smtpPort')?.value || '587', 10);
+  const smtpUser = (document.getElementById('smtpUser')?.value || '').trim();
+  const smtpPass = (document.getElementById('smtpPass')?.value || '').trim();
+
+  try {
+    const curr = await lmsAdmin('get-lms-settings');
+    const body = {
+      ...(curr.settings || {}),
+      emailSender,
+      emailSenderName,
+      emailSubjectTemplate,
+      emailMessageCustom,
+      brevoApiKey,
+      smtpHost,
+      smtpPort,
+      smtpUser,
+      smtpPass
+    };
+    await lmsAdmin('save-lms-settings', { method: 'POST', body });
+    toast('✅ Email customization, Brevo & Sender settings saved successfully!');
+  } catch (err) {
+    toast(`Failed to save: ${err.message}`, false);
+  }
+}
+
+async function testBrevoEmail() {
+  const apiKey = (document.getElementById('brevoApiKey')?.value || '').trim();
+  const email = (document.getElementById('supabaseTestEmail')?.value || document.getElementById('emailSender')?.value || '').trim();
+
+  if (!apiKey) {
+    toast('Brevo API Key (xkeysib-...) enter karein pehle', false);
+    document.getElementById('brevoApiKey')?.focus();
+    return;
+  }
+  if (!email || !email.includes('@')) {
+    toast('Test email address enter karein', false);
+    return;
+  }
+
+  toast('Sending test email via Brevo…');
+  try {
+    const res = await lmsAdmin('test-brevo', {
+      method: 'POST',
+      body: { apiKey, email }
+    });
+    toast('🎉 ' + (res.message || 'Brevo test email successfully sent! Check inbox.'));
+  } catch (err) {
+    toast(`Brevo Error: ${err.message}`, false);
+  }
+}
+
+async function saveSupabaseSettingsOnly() {
+  const supabaseUrl = (document.getElementById('supabaseUrl')?.value || '').trim();
+  const supabaseAnonKey = (document.getElementById('supabaseAnonKey')?.value || '').trim();
+  const supabaseSecretKey = (document.getElementById('supabaseSecretKey')?.value || '').trim();
+
+  try {
+    const curr = await lmsAdmin('get-lms-settings');
+    const body = {
+      ...(curr.settings || {}),
+      supabaseUrl,
+      supabaseAnonKey,
+      supabaseSecretKey
+    };
+    await lmsAdmin('save-lms-settings', { method: 'POST', body });
+    toast('✅ Supabase Email OTP settings saved successfully!');
+  } catch (err) {
+    toast(`Failed to save Supabase settings: ${err.message}`, false);
+  }
+}
+
+async function sendTestEmailOtpAdmin() {
+  const email = document.getElementById('supabaseTestEmail')?.value.trim();
+  const resSpan = document.getElementById('supabaseTestResult');
+
+  if (!email || !email.includes('@')) {
+    toast('Valid email address enter karein pehle', false);
+    return;
+  }
+
+  resSpan.innerHTML = '<span style="color:var(--gold)">Sending Test Email OTP…</span>';
+  try {
+    const res = await fetch('api/lms.php?action=send-email-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, purpose: 'register' })
+    });
+    const d = await res.json();
+    if (!res.ok || !d.ok) throw new Error(d.error || 'Failed to send');
+    resSpan.innerHTML = '<span style="color:#34d399">✅ Email OTP sent! Please check inbox / spam.</span>';
+    toast('✅ Email OTP successfully sent to ' + email);
+  } catch (err) {
+    resSpan.innerHTML = `<span style="color:#f87171">❌ Failed: ${escapeHtml(err.message)}</span>`;
+    toast(`Email failed: ${err.message}`, false);
+  }
+}
+
+function cleanFast2SmsKey(k) {
+  if (!k) return '';
+  return String(k).trim()
+    .replace(/^(key|authorization|auth|api[_\s-]?key)\s*[-:=]\s*/i, '')
+    .replace(/^["']|["']$/g, '')
+    .trim();
+}
+
+const DEFAULT_OTP_TEMPLATE = `Dear Student,
+
+Your Quick Art Photography Academy portal verification code is: {otp}
+
+Valid for 10 minutes. Please do not share this OTP with anyone.
+
+Warm regards,
+Anil Sharma
+Quick Art Photography Academy
+Helpline: 9939800780`;
+
+function updateSmsCharCount() {
+  const tpl = document.getElementById('fast2smsOtpTemplate');
+  const countSpan = document.getElementById('fast2smsCharCount');
+  if (!tpl || !countSpan) return;
+  const sample = (tpl.value || DEFAULT_OTP_TEMPLATE).replace('{otp}', '123456');
+  const len = sample.length;
+  const credits = Math.ceil(len / 160) || 1;
+  countSpan.innerHTML = `${len} / 160 chars (${credits} SMS Credit${credits > 1 ? 's' : ''})`;
+  countSpan.style.color = len > 160 ? '#f59e0b' : 'var(--gold)';
+}
+
+function resetDefaultOtpTemplate() {
+  const tpl = document.getElementById('fast2smsOtpTemplate');
+  if (tpl) {
+    tpl.value = DEFAULT_OTP_TEMPLATE;
+    updateSmsCharCount();
+    toast('Template reset to default professional format');
+  }
+}
+
+async function loadFast2SmsSettings() {
+  try {
+    const res = await lmsAdmin('get-lms-settings');
+    const s = res.settings || {};
+    const key = cleanFast2SmsKey(s.fast2smsApiKey || '');
+    const keyInput = document.getElementById('fast2smsApiKey');
+    const demoInput = document.getElementById('otpDemoMode');
+    const tplInput = document.getElementById('fast2smsOtpTemplate');
+    if (keyInput) keyInput.value = key;
+    if (demoInput) demoInput.checked = s.otpDemoMode !== false;
+    if (tplInput) {
+      tplInput.value = s.fast2smsOtpTemplate || DEFAULT_OTP_TEMPLATE;
+      updateSmsCharCount();
+      tplInput.oninput = updateSmsCharCount;
+    }
+    if (key) {
+      checkFast2SmsBalance(true);
+    }
+  } catch(e){}
+}
+
+async function saveFast2SmsSettingsOnly() {
+  const keyInput = document.getElementById('fast2smsApiKey');
+  const fast2smsApiKey = cleanFast2SmsKey(keyInput ? keyInput.value : '');
+  if (keyInput) keyInput.value = fast2smsApiKey;
+  const otpDemoMode = document.getElementById('otpDemoMode').checked;
+  const tplInput = document.getElementById('fast2smsOtpTemplate');
+  const fast2smsOtpTemplate = tplInput ? (tplInput.value.trim() || DEFAULT_OTP_TEMPLATE) : DEFAULT_OTP_TEMPLATE;
+
+  try {
+    const curr = await lmsAdmin('get-lms-settings');
+    const body = {
+      ...(curr.settings || {}),
+      fast2smsApiKey,
+      otpDemoMode,
+      fast2smsOtpTemplate
+    };
+    await lmsAdmin('save-lms-settings', { method: 'POST', body });
+    toast('✅ Fast2SMS settings & message template saved!');
+    if (fast2smsApiKey) {
+      checkFast2SmsBalance();
+    }
+  } catch (err) {
+    toast(`Failed to save Fast2SMS settings: ${err.message}`, false);
+  }
+}
 
 // ---------- LMS ADMIN LOGIC ----------
 let allLmsCourses = [];
@@ -1851,7 +2462,7 @@ let allLmsStudents = [];
 let allLmsCoupons = [];
 
 async function lmsAdmin(action, opts = {}) {
-  const url = `api/lms-admin.php?action=${encodeURIComponent(action)}`;
+  const url = `${API_HOST}api/lms-admin.php?action=${encodeURIComponent(action)}`;
   const headers = {
     'Content-Type': 'application/json',
     'X-Admin-Token': token || '',
@@ -2169,10 +2780,10 @@ function renderVisualCurriculum(modules) {
                   <span style="font-weight:800;font-size:12px;color:var(--gold);min-width:32px;background:rgba(255,255,255,0.04);padding:4px 8px;border-radius:6px;text-align:center;font-family:'Outfit',sans-serif">#${mIdx + 1}.${lIdx + 1}</span>
                   <input type="text" value="${escapeHtml(l.title || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'title', this.value)" placeholder="Lesson Title (e.g. 1.1 Ingest &amp; Codecs)" style="flex:3;min-width:200px;padding:8px 10px;font-size:13px;font-weight:500" />
                   <input type="text" value="${escapeHtml(l.duration || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'duration', this.value)" placeholder="Duration (15:30)" style="width:105px;padding:8px 10px;font-size:12.5px" />
-                  <div style="display:flex;gap:6px;flex:2;min-width:220px">
-                    <input type="text" value="${escapeHtml(l.videoId || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'videoId', this.value)" placeholder="Bunny Video GUID" style="font-family:monospace;font-size:11.5px;padding:8px 10px;flex:1;background:#070b14;color:#a5f3fc" />
-                    <button type="button" onclick="quickPickBunnyVideo(${mIdx}, ${lIdx})" class="btn btn-outline" style="padding:6px 10px;font-size:11px;white-space:nowrap" title="Pick video from Bunny.net library">⚡ Pick</button>
-                    ${l.videoId ? `<button type="button" onclick="openBunnyPreviewModal('${l.videoId}', '${escapeHtml(l.title || 'Lesson Preview')}')" class="btn btn-outline" style="padding:6px 9px;font-size:11px;color:#38bdf8" title="Preview Stream">▶</button>` : ''}
+                  <div style="display:flex;gap:6px;flex:2;min-width:240px">
+                    <input type="text" value="${escapeHtml(l.videoUrl || l.videoId || '')}" oninput="updateVisualLessonVideo(${mIdx}, ${lIdx}, this.value)" placeholder="YouTube Link / Bunny GUID / MP4" style="font-family:monospace;font-size:11.5px;padding:8px 10px;flex:1;background:#070b14;color:${(l.videoUrl || l.videoId || '').includes('youtu') ? '#f87171' : '#a5f3fc'}" />
+                    <button type="button" onclick="quickPickBunnyVideo(${mIdx}, ${lIdx})" class="btn btn-outline" style="padding:6px 10px;font-size:11px;white-space:nowrap" title="Pick video from Bunny.net library">⚡ Bunny</button>
+                    ${(l.videoUrl || l.videoId) ? `<button type="button" onclick="previewLessonVideo('${escapeHtml(l.videoUrl || l.videoId)}', '${escapeHtml(l.title || 'Lesson Preview')}')" class="btn btn-outline" style="padding:6px 9px;font-size:11px;color:#38bdf8" title="Preview Video">▶</button>` : ''}
                   </div>
                   <button type="button" onclick="removeVisualLesson(${mIdx}, ${lIdx})" class="icon-btn danger" style="font-size:12px" title="Remove lesson">✕</button>
                 </div>
@@ -2195,6 +2806,32 @@ function updateVisualLesson(mIdx, lIdx, key, val) {
   if (currentEditingModules[mIdx] && currentEditingModules[mIdx].lessons[lIdx]) {
     currentEditingModules[mIdx].lessons[lIdx][key] = val;
   }
+}
+
+function updateVisualLessonVideo(mIdx, lIdx, val) {
+  if (currentEditingModules[mIdx] && currentEditingModules[mIdx].lessons[lIdx]) {
+    val = (val || '').trim();
+    currentEditingModules[mIdx].lessons[lIdx].videoId = val;
+    if (/^https?:\/\//i.test(val)) {
+      currentEditingModules[mIdx].lessons[lIdx].videoUrl = val;
+    }
+  }
+}
+
+function previewLessonVideo(videoVal, title) {
+  if (!videoVal) return;
+  const match = videoVal.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+  if (match) {
+    const ytId = match[1];
+    const modal = document.getElementById('bunnyPreviewModal');
+    const iframe = document.getElementById('bunnyPreviewIframe');
+    document.getElementById('previewModalTitle').textContent = `▶ ${title || 'YouTube Video Preview'}`;
+    document.getElementById('previewModalVideoId').textContent = `YouTube ID: ${ytId}`;
+    iframe.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1`;
+    modal.classList.add('show');
+    return;
+  }
+  openBunnyPreviewModal(videoVal, title);
 }
 
 function addVisualModule() {
@@ -2400,7 +3037,7 @@ function renderLmsStudents() {
 
   tbody.innerHTML = filtered.map(s => {
     const coursesList = (s.enrolledCourseNames || []).length
-      ? s.enrolledCourseNames.map(cn => `<span class="badge" style="margin:2px;background:#f1f5f9;color:#334155">${escapeHtml(cn)}</span>`).join('')
+      ? s.enrolledCourseNames.map(cn => `<span class="badge" style="margin:2px;background:rgba(216,161,83,0.12);color:#fde68a;border:1px solid rgba(216,161,83,0.28)">${escapeHtml(cn)}</span>`).join('')
       : '<span class="muted" style="font-size:11px">No courses assigned</span>';
 
     const completed = s.totalCompletedLessons || 0;
@@ -2409,30 +3046,31 @@ function renderLmsStudents() {
     return `
       <tr>
         <td>
-          <div style="font-weight:700;font-size:13.5px;color:var(--ink)">${escapeHtml(s.name || 'Student')}</div>
+          <div style="font-weight:700;font-size:13.5px;color:#fff">${escapeHtml(s.name || 'Student')}</div>
           ${s.city ? `<span class="muted" style="font-size:11px">📍 ${escapeHtml(s.city)}</span>` : ''}
           ${s.email ? `<span class="muted" style="font-size:11px;margin-left:6px">✉️ ${escapeHtml(s.email)}</span>` : ''}
         </td>
         <td>
           <div style="display:flex;align-items:center;gap:6px">
-            <a href="tel:+91${s.phone}" style="font-family:monospace;font-weight:700;color:var(--ink)">+91 ${escapeHtml(s.phone)}</a>
+            <a href="tel:+91${s.phone}" style="font-family:monospace;font-weight:700;color:var(--gold)">+91 ${escapeHtml(s.phone)}</a>
           </div>
         </td>
         <td style="max-width:240px">${coursesList}</td>
         <td>
           <div style="font-size:12px;font-weight:600"><b>${completed}</b> lessons done</div>
-          <div style="width:90px;height:5px;background:#e2e8f0;border-radius:99px;margin-top:4px;overflow:hidden">
+          <div style="width:90px;height:6px;background:rgba(255,255,255,0.08);border-radius:99px;margin-top:4px;overflow:hidden">
             <div style="width:${Math.min(100, completed * 10)}%;height:100%;background:#10b981"></div>
           </div>
         </td>
         <td style="font-size:11px;color:var(--muted)">${s.enrolledAt ? new Date(s.enrolledAt).toLocaleDateString() : '—'}</td>
         <td>
           <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-            <button onclick="openStudentWhatsApp('${s.phone}', '${escapeHtml(s.name || '')}')" class="btn btn-outline" style="padding:5px 9px;font-size:11px;color:#16a34a;border-color:#bbf7d0;background:#f0fdf4" title="Send WhatsApp login &amp; course info">💬 WhatsApp</button>
-            <a href="tel:+91${s.phone}" class="btn btn-outline" style="padding:5px 9px;font-size:11px;color:#2563eb" title="Call Student">📞 Call</a>
-            <a href="portal/index.html?verify=${encodeURIComponent(certCode)}" target="_blank" class="btn btn-outline" style="padding:5px 9px;font-size:11px;color:var(--gold)" title="Verify Certificate">🎓 Cert</a>
+            <button onclick="openStudentWhatsApp('${s.phone}', '${escapeHtml(s.name || '')}')" class="btn btn-outline" style="padding:5px 10px;font-size:11px;color:#34d399;border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.12)" title="Send WhatsApp login &amp; course info">💬 WhatsApp</button>
+            <a href="tel:+91${s.phone}" class="btn btn-outline" style="padding:5px 10px;font-size:11px;color:#93c5fd;border-color:rgba(59,130,246,0.3);background:rgba(59,130,246,0.12)" title="Call Student">📞 Call</a>
+            <a href="portal/index.html?verify=${encodeURIComponent(certCode)}" target="_blank" class="btn btn-outline" style="padding:5px 10px;font-size:11px;color:#fde68a;border-color:rgba(216,161,83,0.3);background:rgba(216,161,83,0.12)" title="Verify Certificate">🎓 Cert</a>
+            <button onclick="openSetPasswordModal('${s.phone}', '${escapeHtml(s.email || '')}')" class="btn btn-outline" style="padding:5px 10px;font-size:11px;color:#c4b5fd;border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.12)" title="Set Email &amp; Password Login">🔑 Password</button>
             <button onclick="openEditStudentModal('${s.phone}')" class="btn btn-outline" style="padding:5px 9px;font-size:11px">✏️</button>
-            <button onclick="deleteStudent('${s.phone}')" class="btn btn-danger" style="padding:5px 8px;font-size:11px" title="Remove Student">✕</button>
+            <button onclick="deleteStudent('${s.phone}')" class="btn btn-danger" style="padding:5px 9px;font-size:11px" title="Remove Student">✕</button>
           </div>
         </td>
       </tr>
@@ -2454,18 +3092,18 @@ function exportStudentsCSV() {
     cols.join(','),
     ...allLmsStudents.map(s => [
       `"${String(s.name || '').replace(/"/g, '""')}"`,
-      `"+91${s.phone}"`,
+      `"${String(s.phone || '').replace(/"/g, '""')}"`,
       `"${String(s.email || '').replace(/"/g, '""')}"`,
       `"${String(s.city || '').replace(/"/g, '""')}"`,
       `"${(s.enrolledCourseNames || []).join('; ').replace(/"/g, '""')}"`,
-      s.totalCompletedLessons || 0,
+      `"${s.totalCompletedLessons || 0}"`,
       `"${s.enrolledAt ? new Date(s.enrolledAt).toLocaleDateString() : ''}"`
     ].join(','))
   ];
-  const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `quickart-students-${Date.now()}.csv`;
+  a.download = 'students-' + Date.now() + '.csv';
   a.click();
 }
 
@@ -2488,7 +3126,7 @@ function updateEnrollModalAmount() {
 }
 
 function openEnrollStudentModal() {
-  document.getElementById('studentModalTitle').textContent = 'Manual Student Enrollment';
+  document.getElementById('studentModalTitle').textContent = 'Enroll Student in Courses';
   document.getElementById('enrollStudentName').value = '';
   document.getElementById('enrollStudentPhone').value = '';
   document.getElementById('enrollStudentPhone').removeAttribute('readonly');
@@ -2498,14 +3136,14 @@ function openEnrollStudentModal() {
   document.getElementById('enrollStudentPaymentMode').value = 'UPI / QR Code';
   document.getElementById('enrollStudentAmount').value = '4999';
   document.getElementById('enrollStudentSendWA').checked = true;
-  populateCourseCheckboxes(allLmsCourses.length ? [allLmsCourses[0].id] : []);
+  populateCourseCheckboxes([]);
   document.getElementById('lmsStudentModal').classList.add('show');
 }
 
 function openEditStudentModal(phone) {
   const stu = allLmsStudents.find(s => s.phone === phone);
   if (!stu) return;
-  document.getElementById('studentModalTitle').textContent = `Edit Student: ${stu.name || stu.phone}`;
+  document.getElementById('studentModalTitle').textContent = 'Edit Student Access & Info';
   document.getElementById('enrollStudentName').value = stu.name || '';
   document.getElementById('enrollStudentPhone').value = stu.phone;
   document.getElementById('enrollStudentPhone').setAttribute('readonly', 'true');
@@ -2526,12 +3164,12 @@ function populateCourseCheckboxes(selectedIds) {
     return;
   }
   container.innerHTML = allLmsCourses.map(c => `
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:12px;text-transform:none;letter-spacing:0;color:var(--ink);cursor:pointer;padding:4px 0">
-      <div style="display:flex;align-items:center;gap:8px">
-        <input type="checkbox" value="${c.id}" onchange="updateEnrollModalAmount()" class="enroll-course-cb" ${selectedIds.includes(c.id) ? 'checked' : ''} style="width:auto" />
-        <span><b>${escapeHtml(c.title)}</b></span>
+    <label style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;text-transform:none;letter-spacing:0;color:#f8fafc;cursor:pointer;padding:6px 8px;border-radius:8px;transition:background 0.15s" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background='transparent'">
+      <div style="display:flex;align-items:center;gap:10px">
+        <input type="checkbox" value="${c.id}" onchange="updateEnrollModalAmount()" class="enroll-course-cb" ${selectedIds.includes(c.id) ? 'checked' : ''} style="width:auto;cursor:pointer" />
+        <span style="color:#ffffff;font-weight:600">${escapeHtml(c.title)}</span>
       </div>
-      <span style="font-weight:600;color:#10b981">₹${Number(c.price || 4999).toLocaleString()}</span>
+      <span style="font-weight:700;color:#34d399">₹${Number(c.price || 4999).toLocaleString()}</span>
     </label>
   `).join('');
 }
@@ -2590,6 +3228,44 @@ async function deleteStudent(phone) {
   }
 }
 
+// Set Student Email + Password (Admin)
+function openSetPasswordModal(phone, email) {
+  document.getElementById('setPwPhone').value = phone;
+  document.getElementById('setPwPhoneDisplay').value = '+91 ' + phone;
+  document.getElementById('setPwEmail').value = email || '';
+  document.getElementById('setPwPassword').value = '';
+  document.getElementById('setPasswordModal').classList.add('open');
+}
+
+function closeSetPasswordModal() {
+  document.getElementById('setPasswordModal').classList.remove('open');
+}
+
+async function saveStudentPassword() {
+  const phone    = document.getElementById('setPwPhone').value.trim();
+  const email    = document.getElementById('setPwEmail').value.trim();
+  const password = document.getElementById('setPwPassword').value;
+
+  if (!email) { toast('Email address darj karein', false); return; }
+  if (!password || password.length < 6) { toast('Password kam se kam 6 characters ka hona chahiye', false); return; }
+
+  const btn = document.getElementById('btnSaveStudentPw');
+  btn.disabled = true;
+  btn.textContent = 'Setting password…';
+
+  try {
+    await lmsAdmin('set-student-password', { method: 'POST', body: { phone, email, password } });
+    toast('✅ Email aur password successfully set ho gaya!');
+    closeSetPasswordModal();
+    loadLmsStudents();
+  } catch (err) {
+    toast(err.message, false);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '🔑 Set Password &amp; Activate';
+  }
+}
+
 // 3. Coupons & Offers Management
 async function loadLmsCoupons() {
   const tbody = document.getElementById('lmsCouponsTbody');
@@ -2618,10 +3294,10 @@ function renderLmsCoupons() {
       : `Flat ₹${Number(c.discount).toLocaleString()} OFF`;
 
     const statusBadge = isExpired
-      ? '<span class="badge" style="background:#fee2e2;color:#991b1b">Expired</span>'
+      ? '<span class="badge" style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3)">Expired</span>'
       : (c.active !== false
-          ? '<span class="badge" style="background:#dcfce7;color:#166534">Active ✓</span>'
-          : '<span class="badge" style="background:#f1f5f9;color:#64748b">Inactive</span>');
+          ? '<span class="badge" style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3)">Active ✓</span>'
+          : '<span class="badge" style="background:rgba(100,116,139,0.2);color:#94a3b8;border:1px solid rgba(100,116,139,0.3)">Inactive</span>');
 
     return `
       <tr>
@@ -2631,11 +3307,11 @@ function renderLmsCoupons() {
           </div>
           ${c.description ? `<div class="muted" style="font-size:11px">${escapeHtml(c.description)}</div>` : ''}
         </td>
-        <td><b style="color:#10b981">${discountText}</b></td>
-        <td>₹${Number(c.minAmount || 0).toLocaleString()}</td>
-        <td><span class="badge" style="background:#f8fafc">${escapeHtml(c.courseId === 'all' ? 'All Courses' : c.courseId)}</span></td>
+        <td><b style="color:#34d399">${discountText}</b></td>
+        <td style="color:#f8fafc">₹${Number(c.minAmount || 0).toLocaleString()}</td>
+        <td><span class="badge" style="background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid rgba(255,255,255,0.12)">${escapeHtml(c.courseId === 'all' ? 'All Courses' : c.courseId)}</span></td>
         <td style="font-size:11.5px;color:var(--muted)">${c.expiry ? new Date(c.expiry).toLocaleDateString() : 'Never'}</td>
-        <td><b>${c.uses || 0}</b> times</td>
+        <td style="color:#f8fafc"><b>${c.uses || 0}</b> times</td>
         <td>${statusBadge}</td>
         <td>
           <div style="display:flex;gap:6px">
@@ -2795,12 +3471,12 @@ async function loadLmsTransactions() {
     tbody.innerHTML = txs.map(t => `
       <tr>
         <td style="font-size:12px;color:var(--muted)">${t.date ? new Date(t.date).toLocaleString() : '—'}</td>
-        <td><b>${escapeHtml(t.studentName || 'Student')}</b></td>
-        <td><a href="tel:+91${t.studentPhone}" style="font-family:monospace;font-weight:600">+91 ${escapeHtml(t.studentPhone)}</a></td>
-        <td><span class="badge">${escapeHtml(t.courseTitle || t.courseId)}</span></td>
-        <td style="font-weight:700;color:#10b981">₹${Number(t.amount || 0).toLocaleString()}</td>
-        <td><span class="badge" style="background:#f1f5f9;color:#475569">${escapeHtml(t.paymentMethod || 'UPI')}</span></td>
-        <td><span class="badge" style="background:#dcfce7;color:#166534">✓ ${escapeHtml(t.status || 'completed')}</span></td>
+        <td><b style="color:#fff">${escapeHtml(t.studentName || 'Student')}</b></td>
+        <td><a href="tel:+91${t.studentPhone}" style="font-family:monospace;font-weight:600;color:var(--gold)">+91 ${escapeHtml(t.studentPhone)}</a></td>
+        <td><span class="badge" style="background:rgba(216,161,83,0.12);color:#fde68a;border:1px solid rgba(216,161,83,0.25)">${escapeHtml(t.courseTitle || t.courseId)}</span></td>
+        <td style="font-weight:700;color:#34d399">₹${Number(t.amount || 0).toLocaleString()}</td>
+        <td><span class="badge" style="background:rgba(255,255,255,0.06);color:#cbd5e1;border:1px solid rgba(255,255,255,0.1)">${escapeHtml(t.paymentMethod || 'UPI')}</span></td>
+        <td><span class="badge" style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3)">✓ ${escapeHtml(t.status || 'completed')}</span></td>
       </tr>
     `).join('');
   } catch (err) {
@@ -2974,9 +3650,10 @@ async function testBunnyConnection(silent = false) {
   try {
     const res = await lmsAdmin('test-bunny');
     if (res.ok && res.connected) {
-      badge.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981"></span> Connected &amp; Active';
-      badge.style.background = '#d1fae5';
-      badge.style.color = '#065f46';
+      badge.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 6px #10b981"></span> Connected &amp; Active';
+      badge.style.background = 'rgba(16,185,129,0.15)';
+      badge.style.color = '#34d399';
+      badge.style.border = '1px solid rgba(16,185,129,0.3)';
       box.style.display = 'block';
       document.getElementById('bunny-lib-name').textContent = res.libraryName || 'Quick Art Academy Stream';
       document.getElementById('bunny-lib-id').textContent = res.libraryId || '755385';
@@ -2988,12 +3665,16 @@ async function testBunnyConnection(silent = false) {
       if (!silent) toast('✅ Successfully verified Bunny.net Stream connection!');
     } else {
       badge.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444"></span> Connection Issue';
-      badge.style.background = '#fee2e2';
-      badge.style.color = '#991b1b';
+      badge.style.background = 'rgba(239,68,68,0.15)';
+      badge.style.color = '#f87171';
+      badge.style.border = '1px solid rgba(239,68,68,0.3)';
       if (!silent) toast(res.message || 'Bunny.net connection test failed', false);
     }
   } catch (err) {
     badge.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444"></span> Error';
+    badge.style.background = 'rgba(239,68,68,0.15)';
+    badge.style.color = '#f87171';
+    badge.style.border = '1px solid rgba(239,68,68,0.3)';
     if (!silent) toast(`Test failed: ${err.message}`, false);
   } finally {
     if (btn) btn.textContent = '⚡ Test Bunny.net Connection';
@@ -3011,17 +3692,17 @@ async function loadBunnyCollections() {
       return;
     }
     grid.innerHTML = cols.map(c => `
-      <div style="padding:14px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.03);display:flex;flex-direction:column;justify-content:space-between">
+      <div style="padding:16px;background:#0d1527;border:1px solid rgba(255,255,255,0.08);border-radius:16px;box-shadow:0 4px 15px rgba(0,0,0,0.3);display:flex;flex-direction:column;justify-content:space-between">
         <div>
-          <div style="font-weight:700;font-size:13.5px;color:var(--ink);display:flex;align-items:center;gap:6px">
+          <div style="font-weight:700;font-size:14px;color:#fff;display:flex;align-items:center;gap:8px">
             <span>📁</span> <span>${escapeHtml(c.name)}</span>
           </div>
-          <div style="font-size:11px;color:#64748b;margin:8px 0;display:flex;justify-content:space-between;align-items:center">
-            <span>Videos: <b>${c.videoCount || 0}</b></span>
-            <span style="font-family:monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:10px" title="${c.guid}">${c.guid.slice(0, 8)}…</span>
+          <div style="font-size:11.5px;color:#94a3b8;margin:10px 0;display:flex;justify-content:space-between;align-items:center">
+            <span>Videos: <b style="color:#f8fafc">${c.videoCount || 0}</b></span>
+            <span style="font-family:monospace;background:#080d18;color:#a5f3fc;padding:3px 8px;border-radius:6px;font-size:10.5px;border:1px solid rgba(255,255,255,0.08)" title="${c.guid}">${c.guid.slice(0, 8)}…</span>
           </div>
         </div>
-        <div style="display:flex;gap:6px;margin-top:10px">
+        <div style="display:flex;gap:8px;margin-top:10px">
           <button type="button" class="btn-sm btn-outline" style="font-size:11px;flex:1;text-align:center" onclick="navigator.clipboard.writeText('${c.guid}');toast('📋 Folder ID Copied!')">
             📋 Copy ID
           </button>
@@ -3068,15 +3749,15 @@ function renderBunnyVideosTable() {
       durStr = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
-    let statusBadge = '<span class="badge" style="background:#e2e8f0;color:#334155">Draft</span>';
+    let statusBadge = '<span class="badge" style="background:rgba(100,116,139,0.2);color:#94a3b8;border:1px solid rgba(100,116,139,0.3)">Draft</span>';
     if (v.status === 1) {
-      statusBadge = '<span class="badge" style="background:#dbeafe;color:#1e40af">Uploaded</span>';
+      statusBadge = '<span class="badge" style="background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.3)">Uploaded</span>';
     } else if (v.status === 2 || v.status === 3) {
-      statusBadge = '<span class="badge" style="background:#fef3c7;color:#92400e">⚡ Transcoding</span>';
+      statusBadge = '<span class="badge" style="background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3)">⚡ Transcoding</span>';
     } else if (v.status === 4) {
-      statusBadge = '<span class="badge" style="background:#dcfce7;color:#166534">✓ Ready &amp; Encoded</span>';
+      statusBadge = '<span class="badge" style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3)">✓ Ready &amp; Encoded</span>';
     } else if (v.status === 5) {
-      statusBadge = '<span class="badge" style="background:#fee2e2;color:#991b1b">Failed</span>';
+      statusBadge = '<span class="badge" style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3)">Failed</span>';
     }
 
     let courseName = v.courseKey || 'General Library';
@@ -3088,31 +3769,31 @@ function renderBunnyVideosTable() {
     const thumbUrl = v.thumbnailFileName ? `https://vz-4b5caf84-253.b-cdn.net/${v.guid}/${v.thumbnailFileName}` : '';
 
     return `
-      <tr style="border-bottom:1px solid var(--border)">
-        <td style="padding:10px 14px">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:48px;height:32px;background:#0f172a;border-radius:6px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06)">
+        <td style="padding:12px 16px">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:52px;height:34px;background:#090e18;border-radius:8px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.08)">
               ${thumbUrl ? `<img src="${escapeHtml(thumbUrl)}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'" />` : '<span style="font-size:14px">📹</span>'}
             </div>
             <div>
-              <b style="color:var(--ink)">${escapeHtml(v.title || 'Untitled Video')}</b>
-              <div class="muted" style="font-size:11px">${v.views || 0} views · ${( (v.storageSize||0) / (1024*1024) ).toFixed(1)} MB</div>
+              <b style="color:#fff">${escapeHtml(v.title || 'Untitled Video')}</b>
+              <div class="muted" style="font-size:11px;margin-top:2px">${v.views || 0} views · ${( (v.storageSize||0) / (1024*1024) ).toFixed(1)} MB</div>
             </div>
           </div>
         </td>
-        <td style="padding:10px 14px"><b>${durStr}</b></td>
-        <td style="padding:10px 14px">${statusBadge}</td>
-        <td style="padding:10px 14px"><span style="font-size:11.5px;color:#475569">${escapeHtml(courseName)}</span></td>
-        <td style="padding:10px 14px">
+        <td style="padding:12px 16px;color:#f8fafc"><b>${durStr}</b></td>
+        <td style="padding:12px 16px">${statusBadge}</td>
+        <td style="padding:12px 16px"><span style="font-size:12px;color:#cbd5e1;font-weight:500">${escapeHtml(courseName)}</span></td>
+        <td style="padding:12px 16px">
           <div style="display:flex;align-items:center;gap:6px">
-            <code style="font-family:monospace;font-size:11px;background:#f1f5f9;padding:2px 6px;border-radius:4px" title="${v.guid}">${v.guid.slice(0, 8)}…</code>
-            <button type="button" class="btn-sm btn-outline" style="font-size:10px;padding:2px 6px" onclick="navigator.clipboard.writeText('${v.guid}');toast('📋 Video GUID Copied!')">Copy</button>
+            <code style="font-family:monospace;font-size:11px;background:#080d18;color:#a5f3fc;padding:3px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.08)" title="${v.guid}">${v.guid.slice(0, 8)}…</code>
+            <button type="button" class="btn-sm btn-outline" style="font-size:10px;padding:3px 8px" onclick="navigator.clipboard.writeText('${v.guid}');toast('📋 Video GUID Copied!')">Copy</button>
           </div>
         </td>
-        <td style="padding:10px 14px;text-align:right">
+        <td style="padding:12px 16px;text-align:right">
           <div style="display:inline-flex;gap:6px">
-            <button type="button" onclick="openBunnyPreviewModal('${v.guid}', '${escapeHtml(v.title || '')}')" class="btn-sm btn-outline" style="font-size:11px;padding:4px 10px">▶ Preview</button>
-            <button type="button" onclick="openAssignLessonModal('${v.guid}', '${escapeHtml(v.title || '')}', '${v.length || 0}')" class="btn-sm btn-gold" style="font-size:11px;padding:4px 10px">⚡ Assign</button>
+            <button type="button" onclick="openBunnyPreviewModal('${v.guid}', '${escapeHtml(v.title || '')}')" class="btn-sm btn-outline" style="font-size:11px;padding:5px 12px">▶ Preview</button>
+            <button type="button" onclick="openAssignLessonModal('${v.guid}', '${escapeHtml(v.title || '')}', '${v.length || 0}')" class="btn-sm btn-gold" style="font-size:11px;padding:5px 12px">⚡ Assign</button>
           </div>
         </td>
       </tr>
@@ -3316,10 +3997,11 @@ function copyPreviewVideoId() {
 
 // Assign Modal
 function openAssignLessonModal(videoId, title, duration) {
-  document.getElementById('assignVideoId').value = videoId;
+  document.getElementById('assignVideoId').value = videoId || '';
   document.getElementById('assignVideoDuration').value = duration || '';
-  document.getElementById('assignVideoTitleDisplay').textContent = title || 'Untitled Video';
-  document.getElementById('assignVideoIdDisplay').textContent = videoId;
+  document.getElementById('assignVideoTitleDisplay').textContent = title || 'Video Assignment';
+  const customInput = document.getElementById('assignCustomVideoInput');
+  if (customInput) customInput.value = videoId || '';
 
   const selC = document.getElementById('assignCourseSelect');
   selC.innerHTML = '<option value="">-- Select Course --</option>' + allLmsCourses.map(c => `
@@ -3400,6 +4082,71 @@ async function saveLmsSettingsForm() {
     testBunnyConnection(false);
   } catch (err) {
     toast(`Failed to save: ${err.message}`, false);
+  }
+}
+
+async function checkFast2SmsBalance(silent = false) {
+  const keyInput = document.getElementById('fast2smsApiKey');
+  const apiKey = cleanFast2SmsKey(keyInput ? keyInput.value : '');
+  if (keyInput && keyInput.value !== apiKey) keyInput.value = apiKey;
+  const badgeText = document.getElementById('fast2smsBalanceText');
+  const badge = document.getElementById('fast2smsBalanceBadge');
+
+  if (!apiKey) {
+    if (!silent) toast('Fast2SMS API Key enter karein pehle', false);
+    return;
+  }
+
+  badgeText.textContent = 'Checking Balance…';
+  try {
+    const res = await lmsAdmin('fast2sms-balance', {
+      method: 'POST',
+      body: { apiKey }
+    });
+    const bal = parseFloat(res.balance || 0).toFixed(2);
+    badgeText.innerHTML = `Wallet Balance: <b>₹${bal}</b>`;
+    badge.style.background = 'rgba(16,185,129,0.18)';
+    badge.style.borderColor = 'rgba(16,185,129,0.4)';
+    badge.style.color = '#34d399';
+    if (!silent) toast(`✅ Fast2SMS Wallet Balance: ₹${bal}`);
+  } catch (err) {
+    badgeText.textContent = 'Balance Error';
+    badge.style.background = 'rgba(239,68,68,0.15)';
+    badge.style.borderColor = 'rgba(239,68,68,0.3)';
+    badge.style.color = '#f87171';
+    if (!silent) toast(`Fast2SMS Error: ${err.message}`, false);
+  }
+}
+
+async function sendTestFast2SmsOtp() {
+  const keyInput = document.getElementById('fast2smsApiKey');
+  const apiKey = cleanFast2SmsKey(keyInput ? keyInput.value : '');
+  if (keyInput && keyInput.value !== apiKey) keyInput.value = apiKey;
+  const phone = document.getElementById('fast2smsTestPhone').value.trim();
+  const resSpan = document.getElementById('fast2smsTestResult');
+
+  if (!apiKey) {
+    toast('Fast2SMS API Key enter karein pehle', false);
+    return;
+  }
+  if (!phone || phone.length < 10) {
+    toast('Apna 10-digit mobile number enter karein', false);
+    return;
+  }
+
+  const template = document.getElementById('fast2smsOtpTemplate')?.value.trim() || '';
+  resSpan.innerHTML = '<span style="color:var(--gold)">Sending Test OTP…</span>';
+  try {
+    const res = await lmsAdmin('test-fast2sms', {
+      method: 'POST',
+      body: { apiKey, phone, template }
+    });
+    resSpan.innerHTML = `<span style="color:#34d399">✅ ${escapeHtml(res.message || 'OTP Sent Successfully!')} Check your phone.</span>`;
+    toast(res.message || 'Test OTP successfully sent!');
+    checkFast2SmsBalance();
+  } catch (err) {
+    resSpan.innerHTML = `<span style="color:#f87171">❌ Failed: ${escapeHtml(err.message)}</span>`;
+    toast(`Test Failed: ${err.message}`, false);
   }
 }
 

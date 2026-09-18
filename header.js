@@ -56,7 +56,7 @@
      panel.append(allLink);
     }
     allLink.href = onlineHubHref;
-    allLink.innerHTML = '✨ View All Online Programs (सभी 9 कोर्सेज देखें) →';
+    allLink.innerHTML = 'View all online programs →';
    });
 
    const mobileOnline = header.querySelector('#ref-mobile details');
@@ -64,8 +64,8 @@
     const allMobileLink = document.createElement('a');
     allMobileLink.className = 'ref-mobile-all-online';
     allMobileLink.href = onlineHubHref;
-    allMobileLink.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;margin:8px 0 14px;background:linear-gradient(135deg,#fff8ec,#ffe8b8);border:1px solid #e2bf7d;border-radius:10px;color:#8a5e1e;font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 3px 10px rgba(216,161,83,0.18);';
-    allMobileLink.innerHTML = '🎓 View All Online Programs (सभी 9 ऑनलाइन कोर्सेज) →';
+    allMobileLink.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:4px 0;margin:6px 0 10px;background:none;border:none;color:#8c5f20;font-weight:600;font-size:13px;text-decoration:none;';
+    allMobileLink.innerHTML = 'View all online programs →';
     const summary = mobileOnline.querySelector('summary');
     if(summary) summary.after(allMobileLink);
    }
@@ -140,22 +140,186 @@
   function select(tab){tabs.forEach(t=>{const active=t===tab;t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1;document.getElementById(t.getAttribute('aria-controls')).hidden=!active;});}
   tabs.forEach((tab,i)=>{tab.addEventListener('click',()=>select(tab));tab.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse')select(tab);});tab.addEventListener('keydown',event=>{let next;if(event.key==='ArrowDown')next=(i+1)%tabs.length;else if(event.key==='ArrowUp')next=(i+tabs.length-1)%tabs.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=tabs.length-1;else return;event.preventDefault();select(tabs[next]);tabs[next].focus();});});
  });
- const menu=header.querySelector('#ref-mobile'),button=header.querySelector('.ref-menu-button');
- const drawerBody=document.createElement('div');drawerBody.className='ref-drawer-body';
- const drawerActions=document.createElement('div');drawerActions.className='ref-drawer-actions';
- const demo=menu.querySelector('.ref-demo-cta');
- const login=header.querySelector('.ref-login').cloneNode(true);drawerActions.append(login);if(demo)drawerActions.append(demo);
- while(menu.firstChild)drawerBody.append(menu.firstChild);menu.append(drawerBody,drawerActions);
- const backdrop=document.createElement('div');backdrop.className='ref-drawer-backdrop';backdrop.hidden=true;header.insertBefore(backdrop,menu);
- const oldOverflow=document.body.style.overflow;
- function drawerState(open){backdrop.hidden=!open;document.body.style.overflow=open?'hidden':oldOverflow;}
- backdrop.addEventListener('click',closeMobile);
- menu.querySelectorAll('details').forEach(detail=>detail.addEventListener('toggle',()=>{if(detail.open)menu.querySelectorAll('details').forEach(other=>{if(other!==detail)other.open=false;});}));
- function closeMobile(){menu.hidden=true;drawerState(false);button.setAttribute('aria-expanded','false');button.setAttribute('aria-label','Open navigation');}
- button.addEventListener('click',()=>{const open=menu.hidden;menu.hidden=!open;drawerState(open);button.setAttribute('aria-expanded',String(open));button.setAttribute('aria-label',open?'Close navigation':'Open navigation');closeAll();});
- header.addEventListener('keydown',event=>{if(event.key!=='Tab'||menu.hidden)return;const items=[button,...menu.querySelectorAll('a,summary,button')].filter(el=>el.getClientRects().length);const first=items[0],last=items[items.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}});
- header.addEventListener('keydown',event=>{if(event.key==='Escape'&&!menu.hidden){closeMobile();button.focus();}});
- menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMobile));
- document.addEventListener('click',event=>{if(!header.contains(event.target)){closeAll();closeMobile();}});
- matchMedia('(min-width:1151px)').addEventListener('change',()=>{closeAll();closeMobile();});
+  const menu = header.querySelector('#ref-mobile');
+  if (menu) {
+    const originalLogin = header.querySelector('.ref-login');
+    const loginHref = originalLogin ? (originalLogin.getAttribute('href') || 'portal/index.html') : 'portal/index.html';
+
+    let mobileLogin = header.querySelector('.ref-mobile-login');
+    const oldMenuBtn = header.querySelector('.ref-menu-button');
+
+    const loginIconHtml = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>';
+
+    if (!mobileLogin) {
+      mobileLogin = document.createElement('a');
+      mobileLogin.className = 'ref-mobile-login';
+      mobileLogin.href = loginHref;
+      mobileLogin.target = '_blank';
+      mobileLogin.rel = 'noopener noreferrer';
+      mobileLogin.setAttribute('aria-label', 'Login');
+      mobileLogin.innerHTML = loginIconHtml;
+      if (oldMenuBtn) {
+        oldMenuBtn.replaceWith(mobileLogin);
+      } else {
+        header.querySelector('.ref-bar')?.append(mobileLogin);
+      }
+    } else {
+      mobileLogin.href = loginHref;
+      mobileLogin.innerHTML = loginIconHtml;
+      if (oldMenuBtn) oldMenuBtn.remove();
+    }
+
+    let programsBtn = header.querySelector('.ref-mobile-programs');
+    if (!programsBtn) {
+      programsBtn = document.createElement('button');
+      programsBtn.type = 'button';
+      programsBtn.className = 'ref-mobile-programs';
+      programsBtn.setAttribute('aria-label', 'Explore Programs');
+      programsBtn.innerHTML = '<span>Programs</span><svg class="ref-programs-arrow" width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5"></path></svg>';
+      mobileLogin.before(programsBtn);
+    }
+
+    const drawerHead = document.createElement('div');
+    drawerHead.className = 'ref-drawer-head';
+    const brandImg = header.querySelector('.ref-brand img');
+    const imgSrc = brandImg ? brandImg.getAttribute('src') : 'home-assets/ec55a6be3747a9.webp';
+    drawerHead.innerHTML = `<div class="ref-drawer-title"><img src="${imgSrc}" width="30" height="30" alt="Quick Art" style="object-fit:contain;border-radius:6px;"><span>Quick <b>Art</b> <small>ACADEMY</small></span></div><button type="button" class="ref-drawer-close" aria-label="Close navigation"><span aria-hidden="true">✕</span></button>`;
+    
+    const drawerBody = document.createElement('div');
+    drawerBody.className = 'ref-drawer-body';
+    
+    const drawerActions = document.createElement('div');
+    drawerActions.className = 'ref-drawer-actions';
+    
+    const demo = menu.querySelector('.ref-demo-cta');
+    if (originalLogin) {
+      const login = originalLogin.cloneNode(true);
+      login.classList.add('ref-drawer-login');
+      login.textContent = 'Login';
+      drawerActions.append(login);
+    }
+    if (demo) drawerActions.append(demo);
+
+    while (menu.firstChild) drawerBody.append(menu.firstChild);
+    menu.append(drawerHead, drawerBody, drawerActions);
+
+    const backdrop = document.createElement('div');
+    backdrop.className = 'ref-drawer-backdrop';
+    backdrop.hidden = true;
+    document.body.appendChild(backdrop);
+    document.body.appendChild(menu);
+
+    // Ensure all accordions start closed initially
+    menu.querySelectorAll('details').forEach(d => { d.open = false; });
+
+    function drawerState(open) {
+      backdrop.hidden = !open;
+      if (open) {
+        document.body.classList.add('ref-nav-locked');
+      } else {
+        document.body.classList.remove('ref-nav-locked');
+      }
+    }
+
+    function openMobile() {
+      // Ensure all accordions are collapsed so the clean main menu is shown
+      menu.querySelectorAll('details').forEach(d => { d.open = false; });
+      if (drawerBody) {
+        drawerBody.scrollTop = 0;
+      }
+      menu.hidden = false;
+      menu.classList.add('ref-mobile-open');
+      drawerState(true);
+      if (programsBtn) {
+        programsBtn.setAttribute('aria-expanded', 'true');
+      }
+      closeAll();
+    }
+
+    function closeMobile() {
+      menu.hidden = true;
+      menu.classList.remove('ref-mobile-open');
+      drawerState(false);
+      if (programsBtn) {
+        programsBtn.setAttribute('aria-expanded', 'false');
+      }
+      menu.querySelectorAll('details').forEach(d => { d.open = false; });
+    }
+
+    function toggleMobile(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (menu.hidden || !menu.classList.contains('ref-mobile-open')) {
+        openMobile();
+      } else {
+        closeMobile();
+      }
+    }
+
+    if (programsBtn) {
+      programsBtn.addEventListener('click', toggleMobile);
+      programsBtn.addEventListener('touchend', toggleMobile);
+    }
+
+    backdrop.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeMobile();
+    });
+    backdrop.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeMobile();
+    });
+
+    const closeBtn = drawerHead.querySelector('.ref-drawer-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeMobile();
+      });
+      closeBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeMobile();
+      });
+    }
+
+    // Stop click events inside drawer from bubbling to document (prevents drawer closing on + / -)
+    menu.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    menu.querySelectorAll('details').forEach(detail => detail.addEventListener('toggle', () => {
+      if (detail.open) menu.querySelectorAll('details').forEach(other => {
+        if (other !== detail) other.open = false;
+      });
+    }));
+
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      if (a.getAttribute('href') && a.getAttribute('href') !== '#') {
+        closeMobile();
+      }
+    }));
+
+    header.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && !menu.hidden) {
+        closeMobile();
+        programsBtn?.focus();
+      }
+    });
+
+    document.addEventListener('click', event => {
+      if (!header.contains(event.target) && !menu.contains(event.target) && !backdrop.contains(event.target)) {
+        closeAll();
+        closeMobile();
+      }
+    });
+
+    matchMedia('(min-width:1151px)').addEventListener('change', () => {
+      closeAll();
+      closeMobile();
+    });
+  }
 })();

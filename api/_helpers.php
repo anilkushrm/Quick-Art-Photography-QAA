@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', '0');
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 /**
  * Shared helpers — hardened version.
  *
@@ -32,7 +34,7 @@ const LOGIN_WINDOW_SEC    = 15 * 60;
 function send_cors() {
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE');
-    header('Access-Control-Allow-Headers: Content-Type, X-Admin-Pass, X-Admin-Token');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Admin-Pass, X-Admin-Token, X-Student-Token');
     header('X-Content-Type-Options: nosniff');
     header('Referrer-Policy: same-origin');
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
@@ -312,3 +314,405 @@ function trigger_webhook($lead) {
         'error' => $err ?: null, 'errno' => $errno,
     ];
 }
+
+// ---------- Fast2SMS Helpers ----------
+function clean_fast2sms_key($key) {
+    $key = trim((string)$key);
+    $key = preg_replace('/^(key|authorization|auth|api[_\s-]?key)\s*[-:=]\s*/i', '', $key);
+    return trim($key, " \t\n\r\0\x0B\"'");
+}
+
+function send_fast2sms_otp($phone, $otp, $apiKey, $customTemplate = '') {
+    $apiKey = clean_fast2sms_key($apiKey);
+    if (empty($apiKey)) {
+        return ['ok' => false, 'error' => 'Fast2SMS API Key is required'];
+    }
+
+    $cleanPhone = preg_replace('/[^0-9]/', '', (string)$phone);
+    if (strlen($cleanPhone) === 12 && substr($cleanPhone, 0, 2) === '91') {
+        $cleanPhone = substr($cleanPhone, 2);
+    }
+    if (strlen($cleanPhone) !== 10) {
+        return ['ok' => false, 'error' => 'Valid 10-digit mobile number enter karein'];
+    }
+
+    // Build custom SMS body
+    if (!empty($customTemplate) && strpos($customTemplate, '{otp}') !== false) {
+        $smsBody = str_replace('{otp}', $otp, $customTemplate);
+    } else {
+        $smsBody = "Dear Student,\n\nYour Quick Art Photography Academy portal verification code is: {$otp}\n\nValid for 10 minutes. Please do not share this OTP with anyone.\n\nWarm regards,\nAnil Sharma\nQuick Art Photography Academy\nHelpline: 9939800780";
+    }
+
+    // 1. Send via Quick route ('q') with the exact customized template
+    $payloadQ = [
+        "route" => "q",
+        "message" => $smsBody,
+        "language" => "english",
+        "flash" => 0,
+        "numbers" => $cleanPhone
+    ];
+
+    $ch = curl_init("https://www.fast2sms.com/dev/bulkV2");
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($payloadQ),
+        CURLOPT_HTTPHEADER => [
+            "authorization: " . $apiKey,
+            "Content-Type: application/json"
+        ],
+        CURLOPT_TIMEOUT => 9
+    ]);
+    $raw = curl_exec($ch);
+    $err = curl_error($ch);
+    @curl_close($ch);
+
+    $res = $raw ? json_decode($raw, true) : null;
+    if ($res && isset($res['return']) && $res['return'] === true) {
+        return [
+            'ok' => true,
+            'route' => 'q',
+            'message' => "OTP {$otp} delivered via Fast2SMS with custom template",
+            'response' => $res
+        ];
+    }
+
+    // 2. Fallback to route: 'otp' if Quick route fails
+    $payloadOtp = [
+        "route" => "otp",
+        "variables_values" => (string)$otp,
+        "numbers" => $cleanPhone
+    ];
+
+    $ch2 = curl_init("https://www.fast2sms.com/dev/bulkV2");
+    curl_setopt_array($ch2, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($payloadOtp),
+        CURLOPT_HTTPHEADER => [
+            "authorization: " . $apiKey,
+            "Content-Type: application/json"
+        ],
+        CURLOPT_TIMEOUT => 9
+    ]);
+    $raw2 = curl_exec($ch2);
+    $err2 = curl_error($ch2);
+    @curl_close($ch2);
+
+    $res2 = $raw2 ? json_decode($raw2, true) : null;
+    if ($res2 && isset($res2['return']) && $res2['return'] === true) {
+        return [
+            'ok' => true,
+            'route' => 'otp',
+            'message' => "OTP {$otp} delivered via Fast2SMS OTP route",
+            'response' => $res2
+        ];
+    }
+
+    $errMsg = 'Fast2SMS delivery failed';
+    if ($res2 && !empty($res2['message'])) {
+        $errMsg = is_array($res2['message']) ? implode(', ', $res2['message']) : $res2['message'];
+    } elseif ($res && !empty($res['message'])) {
+        $errMsg = is_array($res['message']) ? implode(', ', $res['message']) : $res['message'];
+    } elseif ($err2 || $err) {
+        $errMsg = $err2 ?: $err;
+    }
+
+    return ['ok' => false, 'error' => $errMsg];
+}
+
+// ---------- Email OTP Helpers (Supabase + Direct Mail) ----------
+const EMAIL_OTPS_FILE = DATA_DIR . '/email-otps.json';
+
+function load_email_otps() {
+    if (!file_exists(EMAIL_OTPS_FILE)) return [];
+    return json_decode(file_get_contents(EMAIL_OTPS_FILE), true) ?: [];
+}
+
+function save_email_otps($otps) {
+    if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+    file_put_contents(EMAIL_OTPS_FILE, json_encode($otps, JSON_PRETTY_PRINT), LOCK_EX);
+}
+
+function send_email_otp($email, $otp, $purpose = 'register', $settings = []) {
+    $email = strtolower(trim((string)$email));
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return ['ok' => false, 'error' => 'Valid email address darj karein'];
+    }
+
+    // 1. Persist locally for reliable verification
+    $otps = load_email_otps();
+    $otps[$email] = [
+        'otp' => (string)$otp,
+        'purpose' => $purpose,
+        'expiresAt' => time() + 600, // 10 minutes
+        'verified' => false
+    ];
+    save_email_otps($otps);
+
+    // 2. Prepare professional branded HTML email
+    $senderEmail = !empty($settings['emailSender']) ? trim($settings['emailSender']) : 'support@quickartphotography.in';
+    $senderName  = !empty($settings['emailSenderName']) ? trim($settings['emailSenderName']) : 'Quick Art Photography Academy';
+
+    $subjectTpl = !empty($settings['emailSubjectTemplate']) 
+        ? $settings['emailSubjectTemplate'] 
+        : (($purpose === 'forgot-password')
+            ? "Password Reset Code: {otp} — Quick Art Photography Academy"
+            : "Verification Code: {otp} — Quick Art Photography Academy");
+    $subject = str_replace(['{otp}', '{email}'], [$otp, $email], $subjectTpl);
+
+    $customMsg = !empty($settings['emailMessageCustom'])
+        ? str_replace(['{otp}', '{email}'], [$otp, $email], $settings['emailMessageCustom'])
+        : (($purpose === 'forgot-password')
+            ? "Use the verification code below to reset your student portal password. If you did not request this, please ignore this email."
+            : "Welcome to Quick Art Photography Academy! Use the verification code below to complete your student registration.");
+
+    $html = '<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;background:#0d1117;color:#e6edf3;padding:30px;margin:0;">'
+          . '<div style="max-width:540px;margin:0 auto;background:#161b22;border:1px solid rgba(216,161,83,0.35);border-radius:14px;padding:32px;text-align:center;">'
+          . '<div style="display:inline-block;padding:4px 12px;background:rgba(216,161,83,0.15);border:1px solid rgba(216,161,83,0.3);border-radius:9999px;font-size:11px;font-weight:700;color:#d8a153;letter-spacing:1px;margin-bottom:12px;">STUDENT LEARNING PORTAL</div>'
+          . '<h2 style="color:#d8a153;margin:0 0 8px;font-size:22px;letter-spacing:0.5px;">Quick Art Photography Academy</h2>'
+          . '<p style="color:#8b949e;font-size:13px;margin:0 0 24px;">Siwan &bull; Mentor: Anil Sharma</p>'
+          . '<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:24px 20px;margin-bottom:24px;">'
+          . '<p style="color:#cbd5e1;font-size:14px;line-height:1.6;margin:0 0 18px;white-space:pre-line;">' . htmlspecialchars($customMsg) . '</p>'
+          . '<div style="font-size:34px;font-weight:bold;letter-spacing:8px;color:#d8a153;background:rgba(216,161,83,0.1);padding:16px 24px;border-radius:8px;display:inline-block;border:1px solid rgba(216,161,83,0.35);">' . htmlspecialchars($otp) . '</div>'
+          . '<p style="color:#f87171;font-size:12px;margin:18px 0 0;">Valid for 10 minutes. Do not share this OTP with anyone.</p>'
+          . '</div>'
+          . '<div style="color:#8b949e;font-size:12px;line-height:1.6;border-top:1px solid #21262d;padding-top:16px;">'
+          . '<strong style="color:#e6edf3;">Quick Art Photography Academy</strong><br>'
+          . 'Director: Anil Sharma &bull; Helpline: <a href="tel:9939800780" style="color:#d8a153;text-decoration:none;">9939800780</a><br>'
+          . 'Email: <a href="mailto:' . htmlspecialchars($senderEmail) . '" style="color:#d8a153;text-decoration:none;">' . htmlspecialchars($senderEmail) . '</a> &bull; Web: <a href="https://quickartphotography.in" style="color:#d8a153;text-decoration:none;">quickartphotography.in</a>'
+          . '</div>'
+          . '</div></body></html>';
+
+    // 3. Try Brevo REST API First (300 Free Emails / Day, No Monthly Subscription)
+    $brevoApiKey = trim((string)($settings['brevoApiKey'] ?? ''));
+    if (!empty($brevoApiKey)) {
+        $brevoRes = send_brevo_email($email, $subject, $html, $brevoApiKey, $senderEmail, $senderName);
+        if ($brevoRes['ok']) {
+            return [
+                'ok' => true,
+                'message' => 'OTP sent to email successfully via Brevo',
+                'provider' => 'brevo'
+            ];
+        }
+    }
+
+    // 4. Try custom SMTP if configured
+    if (!empty($settings['smtpHost']) && !empty($settings['smtpUser']) && !empty($settings['smtpPass'])) {
+        $smtpSent = send_smtp_email($email, $subject, $html, $settings);
+        if ($smtpSent) {
+            return [
+                'ok' => true,
+                'message' => 'OTP sent to email successfully via SMTP',
+                'provider' => 'smtp'
+            ];
+        }
+    }
+
+    // 5. Try Supabase Auth OTP if configured
+    $supabaseUrl = rtrim($settings['supabaseUrl'] ?? '', '/');
+    $supabaseKey = $settings['supabaseAnonKey'] ?? '';
+
+    if (!empty($supabaseUrl) && !empty($supabaseKey)) {
+        $portalUrl = (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'quickart') !== false)
+            ? 'https://' . $_SERVER['HTTP_HOST'] . '/portal/'
+            : 'https://quickartphotography.in/portal/';
+
+        $ch = curl_init("{$supabaseUrl}/auth/v1/otp");
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode([
+                'email' => $email,
+                'create_user' => ($purpose === 'register'),
+                'options' => [
+                    'email_redirect_to' => $portalUrl
+                ]
+            ]),
+            CURLOPT_HTTPHEADER => [
+                "apikey: {$supabaseKey}",
+                "Authorization: Bearer {$supabaseKey}",
+                "Content-Type: application/json"
+            ],
+            CURLOPT_TIMEOUT => 8
+        ]);
+        $raw = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        @curl_close($ch);
+        if ($code >= 200 && $code < 300) {
+            return [
+                'ok' => true,
+                'message' => 'OTP sent to email successfully via Supabase',
+                'provider' => 'supabase'
+            ];
+        }
+    }
+
+    // 6. Fallback to PHP mail()
+    $headers = "MIME-Version: 1.0\r\n"
+             . "Content-Type: text/html; charset=UTF-8\r\n"
+             . "From: {$senderName} <{$senderEmail}>\r\n"
+             . "Reply-To: {$senderEmail}\r\n"
+             . "X-Mailer: PHP/" . phpversion();
+
+    @mail($email, $subject, $html, $headers);
+
+    return [
+        'ok' => true,
+        'message' => 'OTP sent to email successfully',
+        'supabase' => $supabaseSent,
+        'smtp' => $smtpSent,
+        'brevo' => $brevoSent
+    ];
+}
+
+function send_brevo_email($to, $subject, $html, $apiKey, $fromEmail, $fromName) {
+    $apiKey = trim((string)$apiKey);
+    if (empty($apiKey)) return ['ok' => false, 'error' => 'Brevo API key missing'];
+
+    $payload = [
+        'sender' => [
+            'name' => $fromName ?: 'Quick Art Photography Academy',
+            'email' => $fromEmail ?: 'support@quickartphotography.in'
+        ],
+        'to' => [
+            ['email' => $to]
+        ],
+        'subject' => $subject,
+        'htmlContent' => $html
+    ];
+
+    $ch = curl_init('https://api.brevo.com/v3/smtp/email');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_HTTPHEADER => [
+            'api-key: ' . $apiKey,
+            'Content-Type: application/json',
+            'accept: application/json'
+        ],
+        CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+        CURLOPT_TIMEOUT => 10
+    ]);
+    $raw = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    @curl_close($ch);
+
+    $res = $raw ? json_decode($raw, true) : null;
+    if ($code >= 200 && $code < 300) {
+        return ['ok' => true, 'messageId' => $res['messageId'] ?? ''];
+    }
+    return ['ok' => false, 'error' => $res['message'] ?? 'Brevo error ' . $code];
+}
+
+function send_smtp_email($to, $subject, $html, $settings) {
+    $host = trim((string)($settings['smtpHost'] ?? ''));
+    $port = intval($settings['smtpPort'] ?? 587);
+    $user = trim((string)($settings['smtpUser'] ?? ''));
+    $pass = trim((string)($settings['smtpPass'] ?? ''));
+    $from = !empty($settings['emailSender']) ? trim($settings['emailSender']) : 'support@quickartphotography.in';
+    $fromName = !empty($settings['emailSenderName']) ? trim($settings['emailSenderName']) : 'Quick Art Photography Academy';
+
+    if (empty($host) || empty($user) || empty($pass)) return false;
+
+    $url = ($port == 465) ? "smtps://{$host}:{$port}" : "smtp://{$host}:{$port}";
+    $headers = [
+        "From: {$fromName} <{$from}>",
+        "To: <{$to}>",
+        "Subject: {$subject}",
+        "MIME-Version: 1.0",
+        "Content-Type: text/html; charset=UTF-8"
+    ];
+    $payload = implode("\r\n", $headers) . "\r\n\r\n" . $html;
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_MAIL_FROM, "<{$from}>");
+    curl_setopt($ch, CURLOPT_MAIL_RCPT, ["<{$to}>"]);
+    curl_setopt($ch, CURLOPT_USERNAME, $user);
+    curl_setopt($ch, CURLOPT_PASSWORD, $pass);
+    curl_setopt($ch, CURLOPT_USE_SSL, CURLUSESSL_TRY);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+
+    $fp = fopen('php://memory', 'r+');
+    fwrite($fp, $payload);
+    rewind($fp);
+    curl_setopt($ch, CURLOPT_READDATA, $fp);
+    curl_setopt($ch, CURLOPT_UPLOAD, true);
+
+    $res = curl_exec($ch);
+    fclose($fp);
+    curl_close($ch);
+
+    return ($res !== false);
+}
+
+function verify_email_otp($email, $userOtp, $purpose = '', $settings = []) {
+    $email = strtolower(trim((string)$email));
+    $userOtp = trim((string)$userOtp);
+
+    // 1. Try Supabase verification if configured
+    $supabaseUrl = rtrim($settings['supabaseUrl'] ?? '', '/');
+    $supabaseKey = $settings['supabaseAnonKey'] ?? '';
+
+    if (!empty($supabaseUrl) && !empty($supabaseKey)) {
+        $ch = curl_init("{$supabaseUrl}/auth/v1/verify");
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode([
+                'type' => 'email',
+                'email' => $email,
+                'token' => $userOtp
+            ]),
+            CURLOPT_HTTPHEADER => [
+                "apikey: {$supabaseKey}",
+                "Authorization: Bearer {$supabaseKey}",
+                "Content-Type: application/json"
+            ],
+            CURLOPT_TIMEOUT => 8
+        ]);
+        $raw = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        @curl_close($ch);
+        if ($code >= 200 && $code < 300) {
+            return ['ok' => true, 'supabase' => true];
+        }
+    }
+
+    // 2. Check local OTP records
+    $otps = load_email_otps();
+    $rec = $otps[$email] ?? null;
+
+    if (!$rec || $rec['expiresAt'] < time()) {
+        return ['ok' => false, 'error' => 'OTP expire ho gaya hai ya invalid hai. Dubara request karein.'];
+    }
+
+    if ($purpose && !empty($rec['purpose']) && $rec['purpose'] !== $purpose) {
+        return ['ok' => false, 'error' => 'Invalid OTP request'];
+    }
+
+    if ($rec['otp'] !== $userOtp) {
+        return ['ok' => false, 'error' => 'Galat OTP code enter kiya hai. Check karke dubara daalein.'];
+    }
+
+    // Mark verified
+    $otps[$email]['verified'] = true;
+    save_email_otps($otps);
+
+    return ['ok' => true];
+}
+
+function consume_email_otp($email) {
+    $email = strtolower(trim((string)$email));
+    $otps = load_email_otps();
+    if (isset($otps[$email])) {
+        unset($otps[$email]);
+        save_email_otps($otps);
+    }
+}
+
+

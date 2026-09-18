@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="portal.css?v=20260917_04" />
+  <link rel="stylesheet" href="portal.css?v=20260918_03" />
 </head>
 <body>
 
@@ -31,27 +31,106 @@
   <!-- Header -->
   <header class="portal-header">
     <div class="portal-container header-content">
-      <a href="../index.html" class="portal-brand">
-        <img src="../home-assets/ec55a6be3747a9.webp" alt="Quick Art Academy" width="40" height="40" />
-        <div>
-          <span class="brand-title">Quick <b>Art</b></span>
-          <span class="brand-tag">LEARNING PORTAL</span>
-        </div>
+      <a href="../index.html" class="portal-brand ref-brand" aria-label="Quick Art Photography Academy Homepage">
+        <img src="../home-assets/ec55a6be3747a9.webp" width="46" height="46" alt="Quick Art Photography Academy" />
+        <span>Quick <b>Art</b><small>PHOTOGRAPHY ACADEMY</small></span>
       </a>
 
+
+      <!-- User Menu (logged-in) -->
       <div id="header-user-nav" class="user-nav hidden">
-        <div class="user-pill">
-          <div class="user-avatar" id="nav-user-avatar">QA</div>
-          <div class="user-info">
-            <span class="user-name" id="nav-user-name">Student</span>
-            <span class="user-phone" id="nav-user-phone">+91 ••••••••••</span>
+
+        <!-- Avatar trigger button -->
+        <button
+          id="user-menu-trigger"
+          class="user-menu-trigger"
+          onclick="toggleUserMenu()"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-label="User menu"
+        >
+          <!-- Profile pic or initials -->
+          <div class="nav-avatar-wrap" id="nav-avatar-wrap">
+            <img id="nav-avatar-img" src="" alt="" class="nav-avatar-img hidden" />
+            <div id="nav-avatar-initials" class="nav-avatar-initials">QA</div>
           </div>
+          <div class="nav-user-info">
+            <span class="nav-user-name" id="nav-user-name">Student</span>
+          </div>
+          <span class="nav-chevron" id="user-menu-chevron">▾</span>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="user-dropdown" class="user-dropdown hidden" role="menu">
+
+          <!-- User header inside dropdown -->
+          <div class="dropdown-user-header">
+            <div class="dropdown-avatar-lg" id="dropdown-avatar-lg">
+              <img id="dropdown-avatar-img" src="" alt="" class="dropdown-avatar-img hidden" />
+              <div id="dropdown-avatar-initials" class="dropdown-avatar-initials">QA</div>
+            </div>
+            <div>
+              <div class="dropdown-user-name" id="dropdown-user-name">Student</div>
+              <div class="dropdown-user-phone" id="dropdown-user-phone">+91 ••••••••••</div>
+            </div>
+          </div>
+
+          <div class="dropdown-divider"></div>
+
+          <!-- Section: Learning -->
+          <div class="dropdown-section-label">LEARNING</div>
+          <button class="dropdown-item" onclick="showDashboard(); closeUserMenu();" role="menuitem">
+            <span class="dropdown-item-icon">🎓</span>
+            <span>My Courses</span>
+            <span class="dropdown-item-badge" id="dd-enrolled-count"></span>
+          </button>
+          <button class="dropdown-item" onclick="openMyCertificates(); closeUserMenu();" role="menuitem">
+            <span class="dropdown-item-icon">🏆</span>
+            <span>My Certificates</span>
+          </button>
+
+          <div class="dropdown-divider"></div>
+
+          <!-- Section: Account -->
+          <div class="dropdown-section-label">ACCOUNT</div>
+          <button class="dropdown-item" onclick="openMyProfile(); closeUserMenu();" role="menuitem">
+            <span class="dropdown-item-icon">👤</span>
+            <span>My Profile</span>
+          </button>
+          <button class="dropdown-item" onclick="openMySettings(); closeUserMenu();" role="menuitem">
+            <span class="dropdown-item-icon">⚙️</span>
+            <span>Settings</span>
+          </button>
+
+          <div class="dropdown-divider"></div>
+
+          <!-- Section: Support -->
+          <div class="dropdown-section-label">SUPPORT</div>
+          <a class="dropdown-item" href="https://wa.me/919939800780" target="_blank" rel="noopener" role="menuitem" onclick="closeUserMenu();">
+            <span class="dropdown-item-icon">💬</span>
+            <span>Help &amp; Support</span>
+            <span class="dropdown-item-ext">↗</span>
+          </a>
+          <a class="dropdown-item" href="../contact-us/index.html" role="menuitem" onclick="closeUserMenu();">
+            <span class="dropdown-item-icon">📞</span>
+            <span>Contact Academy</span>
+          </a>
+
+          <div class="dropdown-divider"></div>
+
+          <button class="dropdown-item dropdown-item-danger" onclick="logoutStudent(); closeUserMenu();" role="menuitem">
+            <span class="dropdown-item-icon">🚪</span>
+            <span>Logout</span>
+          </button>
         </div>
-        <button id="btn-logout" class="btn-sm btn-outline" onclick="logoutStudent()">Logout</button>
       </div>
 
+
       <div id="header-guest-nav" class="guest-nav">
-        <a href="../index.html" class="btn-sm btn-ghost">← Back to Academy</a>
+        <a href="../index.html" class="btn-sm btn-ghost header-back-btn">
+          <span class="back-text-full">← Back to Academy</span>
+          <span class="back-text-mobile">← Back</span>
+        </a>
       </div>
     </div>
   </header>
@@ -59,101 +138,448 @@
   <main class="portal-main">
     <div class="portal-container">
 
-      <!-- ================= 1. LOGIN VIEW ================= -->
-      <section id="view-login" class="portal-view">
-        <div class="login-card">
-          <div class="login-header">
-            <div class="login-badge">STUDENT LOGIN</div>
-            <h1>Welcome to Your Classroom</h1>
-            <p>Enter your 10-digit mobile number to receive a secure OTP and access your enrolled courses.</p>
+      <!-- ================= 0. DEDICATED FAST CHECKOUT VIEW ================= -->
+      <section id="view-checkout" class="portal-view hidden">
+        <div class="checkout-wrapper">
+          <!-- Top Breadcrumb & Security Row -->
+          <div class="checkout-breadcrumb-bar">
+            <nav class="checkout-breadcrumbs" aria-label="Breadcrumb">
+              <a href="../index.html" class="crumb-link">Academy</a>
+              <span class="crumb-sep">/</span>
+              <a href="../index.html#courses" class="crumb-link">Courses</a>
+              <span class="crumb-sep">/</span>
+              <span class="crumb-current">Instant Checkout</span>
+            </nav>
+            <div class="checkout-security-pill">
+              <span class="sec-lock">🔒</span>
+              <span>256-Bit SSL Encrypted Checkout</span>
+            </div>
           </div>
 
-          <!-- Step 1: Phone Input -->
-          <form id="form-phone" class="login-form">
-            <label for="input-phone">Mobile Number (WhatsApp)</label>
-            <div class="input-phone-group">
-              <span class="phone-prefix">+91</span>
-              <input type="tel" id="input-phone" placeholder="98765 43210" maxlength="10" autocomplete="tel" required autofocus />
+          <div class="checkout-grid">
+            <!-- LEFT COLUMN: Course Value & Overview -->
+            <div class="checkout-left-col">
+              <div class="checkout-course-card">
+                <div class="course-card-top">
+                  <span class="badge-gold-subtle" id="view-checkout-badge">VIDEO EDITING MASTERCLASS</span>
+                  <div class="rating-pill">⭐ 4.9 · 1,800+ Students</div>
+                </div>
+
+                <h1 class="checkout-course-title" id="view-checkout-title">Adobe Premiere Pro Masterclass</h1>
+                <p class="checkout-course-desc" id="view-checkout-desc">Zero to Professional Level Wedding &amp; Cinematic Editing with 4K RAW Projects.</p>
+
+                <div class="course-meta-pills">
+                  <span class="meta-pill">Mentor: <strong>Anil Sharma</strong></span>
+                  <span class="meta-pill">Audio: <strong>Hindi</strong></span>
+                  <span class="meta-pill">Access: <strong>Lifetime</strong></span>
+                  <span class="meta-pill">Level: <strong>Beginner to Pro</strong></span>
+                </div>
+
+                <div class="checkout-features-list">
+                  <div class="feature-item">
+                    <span class="f-check">✓</span>
+                    <div class="f-body">
+                      <strong>Full Step-by-Step 4K Ultra HD Masterclass</strong>
+                      <span>Self-paced learning, watch anytime on mobile, laptop, or tablet.</span>
+                    </div>
+                  </div>
+                  <div class="feature-item">
+                    <span class="f-check">✓</span>
+                    <div class="f-body">
+                      <strong>Downloadable 4K RAW Wedding Project Files</strong>
+                      <span>Practice with real multi-cam footage, sound FX, and transitions.</span>
+                    </div>
+                  </div>
+                  <div class="feature-item">
+                    <span class="f-check">✓</span>
+                    <div class="f-body">
+                      <strong>Premium Cinematic Wedding Color LUTs Pack</strong>
+                      <span>Instant color grading presets to produce film-grade visuals.</span>
+                    </div>
+                  </div>
+                  <div class="feature-item">
+                    <span class="f-check">✓</span>
+                    <div class="f-body">
+                      <strong>Direct 1-on-1 WhatsApp Mentorship</strong>
+                      <span>Clear your doubts directly with Anil Sharma on WhatsApp.</span>
+                    </div>
+                  </div>
+                  <div class="feature-item">
+                    <span class="f-check">✓</span>
+                    <div class="f-body">
+                      <strong>Official Academy Certificate with QR Verification</strong>
+                      <span>Showcase verified credentials to clients and production studios.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="checkout-guarantee-box">
+                  <span class="g-icon">⚡</span>
+                  <div class="g-content">
+                    <strong>100% Instant Automated Classroom Access</strong>
+                    <span>Payment complete hote hi 10 seconds me aapki classroom automatically unlock ho jayegi.</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <button type="submit" id="btn-send-otp" class="btn btn-gold btn-block">
-              Send OTP Code <span aria-hidden="true">→</span>
-            </button>
-          </form>
 
-          <!-- Step 2: OTP Input (Hidden initially) -->
-          <form id="form-otp" class="login-form hidden">
-            <div class="otp-sent-info">
-              <span>Code sent to <b id="otp-phone-display">+91 ••••••••••</b></span>
-              <button type="button" class="btn-link" onclick="resetToPhoneStep()">Change</button>
+            <!-- RIGHT COLUMN: Fast 1-Step Form -->
+            <div class="checkout-right-col">
+              <div class="checkout-form-card">
+                <!-- Course Fee Header -->
+                <div class="checkout-price-card">
+                  <div class="price-row-top">
+                    <span class="label">Course Fee</span>
+                    <span class="save-badge">SAVE 50% TODAY</span>
+                  </div>
+                  <div class="price-row-main">
+                    <span class="final-price" id="view-checkout-price">₹4,999</span>
+                    <span class="orig-price" id="view-checkout-orig">₹9,999</span>
+                    <span class="gst-tag">(All Taxes &amp; GST Included)</span>
+                  </div>
+                </div>
+
+                <!-- Form -->
+                <form id="form-checkout-view" class="checkout-form-fields" onsubmit="handleCheckoutViewSubmit(event)">
+                  <input type="hidden" id="view-course-id" />
+
+                  <!-- WhatsApp Mobile Number (Primary) -->
+                  <div class="checkout-field">
+                    <div class="field-label-row">
+                      <label for="view-phone">WhatsApp Mobile Number <span class="req">*</span></label>
+                      <span class="badge-subtle">Student ID</span>
+                    </div>
+                    <div class="checkout-phone-input-wrap">
+                      <span class="phone-flag">🇮🇳 +91</span>
+                      <input type="tel" id="view-phone" placeholder="98765 43210" maxlength="10" autocomplete="tel" required />
+                    </div>
+                    <span class="field-hint">Used for instant OTP verification &amp; passwordless login.</span>
+                  </div>
+
+                  <!-- Full Name -->
+                  <div class="checkout-field">
+                    <div class="field-label-row">
+                      <label for="view-name">Your Full Name <span class="req">*</span></label>
+                      <span class="badge-subtle">For Certificate</span>
+                    </div>
+                    <input type="text" id="view-name" class="checkout-input" placeholder="e.g. Rahul Sharma" autocomplete="name" required />
+                    <span class="field-hint">Aapke official certificate par yahi naam print hoga.</span>
+                  </div>
+
+                  <!-- Promo Code Accordion -->
+                  <div class="checkout-coupon-accordion">
+                    <button type="button" class="coupon-toggle-btn" onclick="toggleCheckoutCoupon()">
+                      <span class="coupon-btn-title">🏷️ Have a coupon code?</span>
+                      <span id="coupon-toggle-arrow" class="coupon-arrow">▼</span>
+                    </button>
+                    <div id="checkout-coupon-drawer" class="coupon-drawer hidden">
+                      <div class="coupon-input-group">
+                        <input type="text" id="view-coupon-code" class="checkout-input" placeholder="COUPON CODE" style="text-transform:uppercase;" />
+                        <button type="button" id="btn-apply-view-coupon" onclick="applyViewCoupon()" class="btn-apply-coupon">Apply</button>
+                      </div>
+                      <div id="view-coupon-feedback" class="coupon-msg"></div>
+                      <div id="view-coupon-breakdown" class="coupon-breakdown hidden">
+                        <div class="c-row"><span>Original Fee:</span> <span id="v-base-amt">₹4,999</span></div>
+                        <div class="c-row c-saving"><span>Discount (<b id="v-coupon-tag"></b>):</span> <span id="v-discount-amt">-₹0</span></div>
+                        <div class="c-row c-total"><span>Total Payable:</span> <b id="v-final-amt">₹4,999</b></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Payment Method Selector -->
+                  <div class="checkout-field payment-methods-field">
+                    <label>Select Payment Option</label>
+                    <div class="payment-method-selector">
+                      <label class="pay-method-pill active" id="pill-upi" onclick="selectPayMethod('upi')">
+                        <input type="radio" name="view_payment_method" value="UPI / QR Code" checked />
+                        <span class="method-icon">⚡</span>
+                        <div class="method-text">
+                          <span class="method-title">UPI / QR Instant</span>
+                          <span class="method-sub">GPay, PhonePe, Paytm</span>
+                        </div>
+                      </label>
+                      <label class="pay-method-pill" id="pill-card" onclick="selectPayMethod('card')">
+                        <input type="radio" name="view_payment_method" value="Credit/Debit Card" />
+                        <span class="method-icon">💳</span>
+                        <div class="method-text">
+                          <span class="method-title">Cards / NetBanking</span>
+                          <span class="method-sub">Visa, Mastercard, RuPay</span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- CTA Button -->
+                  <button type="submit" id="btn-submit-enroll" class="btn-checkout-pay">
+                    <span class="btn-pay-text">Pay <b id="view-btn-pay-amt">₹4,999</b> &amp; Start Learning Now →</span>
+                    <span class="btn-pay-sub">⚡ Instant Automated Classroom Access</span>
+                  </button>
+
+                  <!-- Trust Footer -->
+                  <div class="checkout-trust-footer">
+                    <div class="trust-icons-row">
+                      <span class="t-badge">🔒 256-Bit SSL</span>
+                      <span class="t-badge">⚡ Instant Access</span>
+                      <span class="t-badge">📱 WhatsApp OTP</span>
+                      <span class="t-badge">🏆 ISO 9001:2015</span>
+                    </div>
+                    <p class="trust-note">Secured by Razorpay · 100% safe &amp; encrypted transaction</p>
+                  </div>
+                </form>
+              </div>
             </div>
-
-            <label for="input-otp">6-Digit Verification Code</label>
-            <input type="text" id="input-otp" class="input-otp" placeholder="••••••" maxlength="6" inputmode="numeric" required />
-            
-            <div id="dev-otp-banner" class="dev-otp-banner hidden">
-              <span>Demo OTP: <strong id="dev-otp-val">123456</strong></span>
-            </div>
-
-            <button type="submit" id="btn-verify-otp" class="btn btn-gold btn-block">
-              Verify &amp; Enter Classroom <span aria-hidden="true">✓</span>
-            </button>
-
-            <div class="otp-resend">
-              Didn't receive code? 
-              <button type="button" id="btn-resend-otp" class="btn-link" onclick="resendOtp()">Resend OTP</button>
-            </div>
-          </form>
-
-          <div class="login-footer">
-            <p>New student? Enquire at <a href="tel:+919939800780">+91 9939800780</a> or <a href="../contact-us/index.html">Book Demo</a> to enroll.</p>
           </div>
         </div>
       </section>
 
-      <!-- ================= 2. DASHBOARD VIEW ================= -->
-      <section id="view-dashboard" class="portal-view hidden">
-        <div class="dashboard-hero">
-          <div class="hero-text">
-            <span class="eyebrow">YOUR EDITING JOURNEY</span>
-            <h2 id="dash-greeting">Namaste, Student!</h2>
-            <p>Pick up right where you left off. Watch lessons, download practice project files, and earn your certification.</p>
+      <!-- ================= 1. LOGIN VIEW ================= -->
+      <section id="view-login" class="portal-view">
+
+        <!-- LOGIN CARD -->
+        <div class="login-card">
+          <div class="login-header">
+            <div class="login-badge" id="login-badge-text">STUDENT PORTAL</div>
+            <h1 id="login-card-title">Student Classroom Login</h1>
+            <p id="login-card-subtitle">Apne registered WhatsApp mobile number se direct login karein.</p>
           </div>
-          <div class="hero-stats">
-            <div class="stat-card">
-              <span class="stat-num" id="stat-enrolled-count">0</span>
-              <span class="stat-lbl">Enrolled Courses</span>
+
+          <!-- Login Method Tabs — only 2 -->
+          <div class="login-tabs" role="tablist" aria-label="Login method">
+            <button class="login-tab active" id="tab-phone" role="tab" aria-selected="true" aria-controls="panel-phone" onclick="switchLoginTab('phone')">
+              <span class="tab-icon">📱</span> Mobile OTP (Main)
+            </button>
+            <button class="login-tab" id="tab-email" role="tab" aria-selected="false" aria-controls="panel-email" onclick="switchLoginTab('email')">
+              <span class="tab-icon">✉️</span> Email Login
+            </button>
+          </div>
+
+          <!-- Panel: Phone OTP -->
+          <div id="panel-phone" role="tabpanel" aria-labelledby="tab-phone">
+            <form id="form-phone" class="login-form">
+              <label for="input-phone">Mobile Number (WhatsApp) *</label>
+              <div class="input-phone-group">
+                <span class="phone-prefix">+91</span>
+                <input type="tel" id="input-phone" placeholder="98765 43210" maxlength="10" autocomplete="tel" required autofocus />
+              </div>
+              <span class="muted" style="font-size: 11.5px; display: block; margin-top: -6px; margin-bottom: 12px;">Enrolled students apne 10-digit number se login karein.</span>
+              <button type="submit" id="btn-send-otp" class="btn btn-gold btn-block">
+                Send OTP Code <span aria-hidden="true">→</span>
+              </button>
+            </form>
+
+            <form id="form-otp" class="login-form hidden">
+              <div class="otp-sent-info">
+                <span>Code sent to <b id="otp-phone-display">+91 ••••••••••</b></span>
+                <button type="button" class="btn-link" onclick="resetToPhoneStep()">Change</button>
+              </div>
+              <label for="input-otp">6-Digit Verification Code</label>
+              <input type="text" id="input-otp" class="input-otp" placeholder="••••••" maxlength="6" inputmode="numeric" required />
+              <div id="dev-otp-banner" class="dev-otp-banner hidden">
+                <span>Demo OTP: <strong id="dev-otp-val">123456</strong></span>
+              </div>
+              <button type="submit" id="btn-verify-otp" class="btn btn-gold btn-block">
+                Verify &amp; Enter Classroom <span aria-hidden="true">✓</span>
+              </button>
+              <div class="otp-resend">
+                Didn't receive code?
+                <button type="button" id="btn-resend-otp" class="btn-link" onclick="resendOtp()">Resend OTP</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Panel: Email + Password Login -->
+          <div id="panel-email" role="tabpanel" aria-labelledby="tab-email" hidden>
+            <form id="form-email-login" class="login-form" onsubmit="handleEmailLogin(event)">
+              <label for="input-email">Email Address</label>
+              <input type="email" id="input-email" placeholder="yourname@gmail.com" autocomplete="email" required class="portal-input" />
+
+              <label for="input-password" style="margin-top:14px;display:block;">Password</label>
+              <div class="password-input-group" style="position:relative;">
+                <input type="password" id="input-password" placeholder="••••••••" autocomplete="current-password" required class="portal-input" style="padding-right:44px;" />
+                <button type="button" id="btn-toggle-pw" onclick="togglePasswordVisibility('input-password','btn-toggle-pw')" aria-label="Show/hide password" class="pw-eye-btn">👁️</button>
+              </div>
+
+              <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+                <button type="button" onclick="openForgotPasswordModal()" class="btn-link" style="font-size:12px;color:var(--gold,#d8a153);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;">
+                  🔑 Forgot Password? (Reset via Email OTP)
+                </button>
+              </div>
+
+              <button type="submit" id="btn-email-login" class="btn btn-gold btn-block" style="margin-top:16px;">
+                Login &amp; Enter Classroom <span aria-hidden="true">→</span>
+              </button>
+            </form>
+
+            <!-- Small signup link — only visible on Email tab -->
+            <p style="margin:14px 0 0;text-align:center;font-size:12.5px;color:var(--muted,#777);">
+              New here? <a href="signup.html" style="color:var(--gold,#d8a153);font-weight:600;text-decoration:none;letter-spacing:0.01em;">Create a free account with Email OTP →</a>
+            </p>
+          </div>
+
+          <div class="login-footer">
+            <p>Need help? Call <a href="tel:+919939800780">+91 9939800780</a> or <a href="../contact-us/index.html">Book Free Demo</a>.</p>
+          </div>
+        </div>
+
+        <!-- FORGOT PASSWORD MODAL (EMAIL OTP) -->
+        <div id="modal-forgot-password" class="portal-modal hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);">
+          <div class="login-card" style="max-width:440px;width:100%;box-shadow:0 24px 48px rgba(0,0,0,0.7);border:1px solid rgba(216,161,83,0.35);position:relative;background:#0d1117;">
+            <button type="button" onclick="closeForgotPasswordModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted,#888);font-size:22px;cursor:pointer;line-height:1;" title="Close">✕</button>
+            <div class="login-header" style="margin-bottom:18px;">
+              <div class="login-badge" style="background:rgba(216,161,83,0.12);color:var(--gold,#d8a153);">🔑 PASSWORD RECOVERY</div>
+              <h2 style="font-size:20px;margin:8px 0 4px;color:#f8fafc;">Reset Password via Email OTP</h2>
+              <p style="font-size:12.5px;color:var(--muted,#94a3b8);margin:0;">Apna registered email enter karein, hum 6-digit OTP bhejenge.</p>
             </div>
-            <div class="stat-card">
-              <span class="stat-num" id="stat-completed-count">0</span>
-              <span class="stat-lbl">Completed Lessons</span>
+
+            <form id="form-forgot-pw" onsubmit="handleForgotPwSubmit(event)">
+              <!-- Step 1: Email Input -->
+              <label for="forgot-email" style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;color:#cbd5e1;">Registered Email Address *</label>
+              <div style="display:flex;gap:8px;margin-bottom:14px;">
+                <input type="email" id="forgot-email" placeholder="yourname@gmail.com" required class="portal-input" style="flex:1;" />
+                <button type="button" id="btn-send-email-otp" onclick="sendForgotEmailOtp()" class="btn btn-gold" style="white-space:nowrap;padding:10px 14px;font-size:12px;">
+                  Send OTP
+                </button>
+              </div>
+
+              <!-- Step 2: OTP and New Password -->
+              <div id="forgot-step-2" class="hidden">
+                <div style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#34d399;display:flex;align-items:center;gap:6px;">
+                  <span>✉️</span> <span>OTP code aapke email par bhej diya gaya hai! Inbox check karein.</span>
+                </div>
+
+                <label for="forgot-otp" style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;color:#cbd5e1;">6-Digit Email OTP *</label>
+                <input type="text" id="forgot-otp" placeholder="••••••" maxlength="6" inputmode="numeric" class="portal-input" style="margin-bottom:14px;letter-spacing:6px;font-weight:700;text-align:center;font-size:20px;" />
+
+                <label for="forgot-new-pw" style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;color:#cbd5e1;">Choose New Password * <small style="font-weight:400;color:var(--muted)">(min 6 chars)</small></label>
+                <div style="position:relative;margin-bottom:18px;">
+                  <input type="password" id="forgot-new-pw" placeholder="••••••••" minlength="6" class="portal-input" style="padding-right:44px;" />
+                  <button type="button" onclick="togglePasswordVisibility('forgot-new-pw','btn-toggle-forgot-pw')" id="btn-toggle-forgot-pw" class="pw-eye-btn">👁️</button>
+                </div>
+
+                <button type="submit" id="btn-submit-reset-pw" class="btn btn-gold btn-block" style="font-size:13.5px;padding:12px;font-weight:700;">
+                  🔒 Set New Password &amp; Login →
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </section>
+
+
+
+
+
+
+      <!-- ================= 2. DASHBOARD / MY COURSES VIEW ================= -->
+      <section id="view-dashboard" class="portal-view hidden">
+
+        <!-- Executive Student Learning Hub Header -->
+        <div class="mycourses-hero">
+          <div class="mycourses-welcome">
+            <div class="mycourses-avatar-wrap">
+              <img id="dash-avatar-img" src="" alt="" class="dash-avatar-img hidden" />
+              <div id="dash-avatar-initials" class="dash-avatar-initials">QA</div>
+              <span class="dash-verified-badge" title="Verified Enrolled Student">✓</span>
+            </div>
+            <div class="mycourses-welcome-text">
+              <div class="mycourses-badge-row">
+                <span class="mycourses-role-pill">⚡ OFFICIAL ACADEMY STUDENT</span>
+                <span class="mycourses-status-pill" id="dash-status-pill">ACTIVE ACCESS</span>
+              </div>
+              <h1 id="dash-greeting" class="mycourses-greeting">Namaste, Student!</h1>
+              <p class="mycourses-subtext">Pick up right where you left off. Watch 4K lessons, download practice project files, and earn accredited academy certificates.</p>
+            </div>
+          </div>
+
+          <!-- Live Learning KPIs Grid -->
+          <div class="mycourses-kpi-grid">
+            <div class="kpi-box">
+              <div class="kpi-icon">🎓</div>
+              <div class="kpi-info">
+                <span class="kpi-val" id="stat-enrolled-count">0</span>
+                <span class="kpi-lbl">My Courses</span>
+              </div>
+            </div>
+            <div class="kpi-box">
+              <div class="kpi-icon">📹</div>
+              <div class="kpi-info">
+                <span class="kpi-val" id="stat-completed-count">0</span>
+                <span class="kpi-lbl">Lessons Done</span>
+              </div>
+            </div>
+            <div class="kpi-box">
+              <div class="kpi-icon">🏆</div>
+              <div class="kpi-info">
+                <span class="kpi-val" id="stat-cert-count">0</span>
+                <span class="kpi-lbl">Certificates</span>
+              </div>
+            </div>
+            <div class="kpi-box kpi-box-gold">
+              <div class="kpi-icon">📈</div>
+              <div class="kpi-info">
+                <span class="kpi-val" id="stat-avg-progress">0%</span>
+                <span class="kpi-lbl">Overall Learning</span>
+              </div>
             </div>
           </div>
         </div>
 
+        <!-- Spotlight Continue Watching Card (dynamic) -->
+        <div id="resume-spotlight-box" class="resume-spotlight-box hidden"></div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="mycourses-toolbar">
+          <div class="mycourses-filter-tabs">
+            <button type="button" class="mycourses-filter-btn active" data-filter="all" onclick="filterMyCourses('all')">
+              All Courses <span class="filter-count" id="count-all">0</span>
+            </button>
+            <button type="button" class="mycourses-filter-btn" data-filter="in-progress" onclick="filterMyCourses('in-progress')">
+              In Progress <span class="filter-count" id="count-in-progress">0</span>
+            </button>
+            <button type="button" class="mycourses-filter-btn" data-filter="completed" onclick="filterMyCourses('completed')">
+              Completed 🎓 <span class="filter-count" id="count-completed">0</span>
+            </button>
+          </div>
+
+          <div class="mycourses-search-wrap">
+            <div class="search-input-inner">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="mycourses-search-input" placeholder="Search my courses…" oninput="onSearchMyCourses(this.value)" />
+            </div>
+            <a href="../online/index.html" class="btn-sm btn-gold-outline browse-more-btn" style="text-decoration:none;">
+              + Browse All Classes
+            </a>
+          </div>
+        </div>
+
+        <!-- Section Title Bar -->
+        <div class="section-title-bar">
+          <div>
+            <h2 id="mycourses-section-title">My Enrolled Courses</h2>
+            <span class="muted" id="courses-count-label">Active Learning Programs</span>
+          </div>
+          <div class="view-switch-btns">
+            <span class="student-perk-chip">✓ Lifetime Access</span>
+            <span class="student-perk-chip">✓ WhatsApp Mentor Support</span>
+          </div>
+        </div>
+
+        <!-- Grid of Courses -->
+        <div id="courses-grid" class="courses-grid">
+          <div class="loading-state">Loading your courses…</div>
+        </div>
+
         <!-- Discover More Masterclasses Banner -->
-        <div class="portal-explore-banner">
+        <div class="portal-explore-banner" style="margin-top: 48px;">
           <div class="explore-banner-content">
-            <div class="explore-banner-badge">🚀 EXPAND YOUR CREATIVE CAREER</div>
+            <div class="explore-banner-badge">🚀 EXPAND YOUR SKILLS</div>
             <h3>Explore All 9 Online Programs &amp; Masterclasses</h3>
             <p>From Premiere Pro, EDIUS &amp; DaVinci Resolve to Wedding Album Design, Pre-Wedding Filmmaking, Digital Marketing, and Studio Automation.</p>
           </div>
           <a href="../online/index.html" class="btn btn-gold explore-banner-btn">
             🌟 Browse All Classes →
           </a>
-        </div>
-
-        <div class="section-title-bar">
-          <div>
-            <h2>My Enrolled Courses</h2>
-            <span class="muted" id="courses-count-label">Active Enrollments</span>
-          </div>
-          <a href="../online/index.html" class="btn-sm btn-gold" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
-            + Explore &amp; Enroll in Courses →
-          </a>
-        </div>
-
-        <div id="courses-grid" class="courses-grid">
-          <div class="loading-state">Loading your courses…</div>
         </div>
       </section>
 
@@ -166,7 +592,6 @@
             <span aria-hidden="true">←</span> Back to Dashboard
           </button>
           <div class="topbar-course-info">
-            <span class="course-mini-cat" id="player-course-category">VIDEO EDITING</span>
             <h2 class="course-mini-title" id="player-course-title">Adobe Premiere Pro Masterclass</h2>
           </div>
           <div class="topbar-progress-pill" id="player-progress-badge">
@@ -216,6 +641,9 @@
                 <h3 id="lesson-title" class="lesson-active-title">1.1 Welcome &amp; Course Roadmap</h3>
               </div>
               <div class="lesson-actions">
+                <button type="button" id="btn-replay-lesson" class="btn-sm btn-outline" onclick="replayCurrentVideo()" title="Dobara Play Karein">
+                  ↺ Replay
+                </button>
                 <button type="button" id="btn-toggle-complete" class="btn-sm btn-outline" onclick="toggleLessonComplete()">
                   <span id="complete-btn-icon">○</span> <span id="complete-btn-text">Mark as Complete</span>
                 </button>
@@ -227,13 +655,46 @@
 
             <!-- Lesson Content Tabs -->
             <div class="lesson-tabs">
-              <button class="lesson-tab active" data-ltab="notes">Lesson Notes</button>
+              <button class="lesson-tab active" data-ltab="discussion">💬 Comment</button>
+              <button class="lesson-tab" data-ltab="notes">Lesson Notes</button>
               <button class="lesson-tab" data-ltab="resources">Practice Files &amp; LUTs</button>
               <button class="lesson-tab" data-ltab="quiz">Module Quiz</button>
               <button class="lesson-tab" data-ltab="support">Ask Mentor (WhatsApp)</button>
             </div>
 
-            <div id="ltab-notes" class="lesson-tab-content">
+            <!-- Comment / Discussion Tab — FIRST (default active) -->
+            <div id="ltab-discussion" class="lesson-tab-content">
+              <div class="discussion-card">
+
+                <!-- Post a comment form -->
+                <div class="discussion-form-wrap">
+                  <div class="discussion-avatar" id="discussion-avatar-initials">A</div>
+                  <div class="discussion-form-inner">
+                    <textarea
+                      id="discussion-comment-input"
+                      class="discussion-textarea"
+                      placeholder="Apna sawaal ya feedback likhein…"
+                      rows="3"
+                      maxlength="1000"
+                    ></textarea>
+                    <div class="discussion-form-footer">
+                      <span class="discussion-char-count" id="discussion-char-count">0 / 1000</span>
+                      <button type="button" id="btn-post-comment" class="btn btn-gold btn-sm" onclick="postDiscussionComment()" style="padding:8px 20px;font-size:13px;">
+                        Post Comment 💬
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Comments List -->
+                <div id="discussion-comments-list" class="discussion-comments-list">
+                  <div class="discussion-loading">Loading comments…</div>
+                </div>
+
+              </div>
+            </div>
+
+            <div id="ltab-notes" class="lesson-tab-content hidden">
               <div class="notes-card" id="lesson-notes-text">
                 <p>Loading lesson notes…</p>
               </div>
@@ -660,46 +1121,46 @@
           
           <div style="margin-bottom: 12px">
             <label for="checkout-name">Your Full Name *</label>
-            <input type="text" id="checkout-name" placeholder="e.g. Rahul Sharma" required />
+            <input type="text" id="checkout-name" class="checkout-input" placeholder="e.g. Rahul Sharma" required />
           </div>
 
           <div style="margin-bottom: 12px">
             <label for="checkout-phone">WhatsApp Mobile Number *</label>
-            <div class="input-phone-group" style="margin-bottom: 0">
-              <span class="phone-prefix">+91</span>
+            <div class="checkout-phone-input-wrap" style="margin-bottom: 0">
+              <span class="phone-flag">🇮🇳 +91</span>
               <input type="tel" id="checkout-phone" placeholder="98765 43210" maxlength="10" required />
             </div>
             <span class="muted" style="font-size: 11px">Course access will be linked to this number for OTP login.</span>
           </div>
 
           <div style="margin-bottom: 16px; margin-top: 12px">
-            <label for="checkout-email">Email Address (for invoice)</label>
-            <input type="email" id="checkout-email" placeholder="rahul@gmail.com" />
+            <label for="checkout-email">Email Address (Optional, for invoice)</label>
+            <input type="email" id="checkout-email" class="checkout-input" placeholder="rahul@gmail.com" />
           </div>
 
           <!-- Coupon Code Input Box -->
           <div class="checkout-coupon-box" style="margin-bottom: 16px; padding: 12px; background: rgba(212, 175, 55, 0.06); border: 1px dashed rgba(212, 175, 55, 0.4); border-radius: 12px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-              <label for="checkout-coupon-input" style="margin: 0; font-size: 12px; font-weight: 700; color: var(--ink);">🎟️ Have a Coupon / Promo Code?</label>
+              <label for="checkout-coupon-input" style="margin: 0; font-size: 12px; font-weight: 700; color: var(--text-main, #f0f0f0);">🎟️ Have a Coupon / Promo Code?</label>
               <span id="coupon-applied-pill" class="badge" style="display: none; background: #dcfce7; color: #166534; font-size: 10.5px; font-weight: 700;">APPLIED ✓</span>
             </div>
             <div style="display: flex; gap: 8px;">
-              <input type="text" id="checkout-coupon-input" placeholder="e.g. QUICKART50, FLAT1000" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; flex: 1; padding: 8px 12px; font-size: 12.5px; border-radius: 8px; border: 1px solid var(--border);" />
+              <input type="text" id="checkout-coupon-input" class="checkout-input" placeholder="e.g. QUICKART50, FLAT1000" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; flex: 1; padding: 8px 12px; font-size: 12.5px; border-radius: 8px;" />
               <button type="button" id="btn-apply-coupon" onclick="applyCheckoutCoupon()" class="btn btn-gold" style="padding: 8px 16px; font-size: 12px; white-space: nowrap;">Apply</button>
             </div>
             <div id="coupon-feedback-msg" style="font-size: 11.5px; margin-top: 6px; display: none;"></div>
             
             <!-- Applied Discount Details -->
-            <div id="coupon-discount-breakdown" style="display: none; margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(0,0,0,0.1); font-size: 12px;">
+            <div id="coupon-discount-breakdown" style="display: none; margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 12px;">
               <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
                 <span class="muted">Course Standard Fee:</span>
                 <span id="chk-base-price">₹4,999</span>
               </div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 4px; color: #059669; font-weight: 700;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px; color: #10b981; font-weight: 700;">
                 <span>Coupon Savings (<span id="chk-coupon-tag"></span>):</span>
                 <span id="chk-discount-amt">-₹2,500</span>
               </div>
-              <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 13px; color: var(--ink);">
+              <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 13px; color: var(--text-main, #f0f0f0);">
                 <span>Final Amount to Pay:</span>
                 <span id="chk-final-amt" style="color: var(--gold);">₹2,499</span>
               </div>
@@ -736,6 +1197,6 @@
   </div>
 
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <script src="portal.js?v=20260917_05"></script>
+  <script src="portal.js?v=20260918_03"></script>
 </body>
 </html>

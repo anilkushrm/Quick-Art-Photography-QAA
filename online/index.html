@@ -14,11 +14,11 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>All Online Programs &amp; Masterclasses (सभी 9 ऑनलाइन कोर्सेज) | Quick Art Photography Academy</title>
-    <meta name="description" content="Explore and enroll in Quick Art Photography Academy's 9 professional online masterclasses in Hindi: Adobe Premiere Pro, EDIUS, DaVinci Resolve, Cinematic Wedding Filmmaking, Album Design, Marketing &amp; Automation. 4K RAW footage, project files and ISO 9001:2015 certificates included.">
+    <title>All Online Programs &amp; Masterclasses | Quick Art Photography Academy</title>
+    <meta name="description" content="Explore and enroll in Quick Art Photography Academy's professional online masterclasses in Hindi: Adobe Premiere Pro, EDIUS, DaVinci Resolve, Cinematic Wedding Filmmaking, Album Design, Marketing &amp; Automation. 4K RAW footage, project files and ISO 9001:2015 certificates included.">
     <link rel="canonical" href="https://quickartphotography.in/online/">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="All Online Programs &amp; Masterclasses (सभी 9 ऑनलाइन कोर्सेज) | Quick Art Academy">
+    <meta property="og:title" content="All Online Programs &amp; Masterclasses | Quick Art Academy">
     <meta property="og:description" content="Learn industry-standard video editing, cinematic wedding filmmaking, color grading, album design, and studio automation in 100% Hindi. Real 4K RAW footage, lifetime LMS access, and mentor WhatsApp hotline.">
     <meta property="og:url" content="https://quickartphotography.in/online/">
     <meta property="og:type" content="website">
@@ -190,6 +190,7 @@
         }
 
         .hub-title {
+            color: #ffffff !important;
             font-size: clamp(32px, 5.5vw, 60px);
             font-weight: 800;
             line-height: 1.15;
@@ -211,63 +212,83 @@
             line-height: 1.7;
         }
 
-        .hub-hero-stats {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px;
-            max-width: 980px;
-            margin: 0 auto 36px;
-        }
-
-        .hub-stat-pill {
+        /* Luxury Executive Trust Strip */
+        .hub-trust-strip {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 7px 15px;
+            justify-content: center;
+            gap: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 9999px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #e5e7eb;
+            padding: 8px 28px;
+            margin: 0 auto 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
-        /* Search & Filter Toolbar */
+        .hub-trust-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .hub-trust-num {
+            font-size: 15px;
+            font-weight: 800;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.01em;
+        }
+
+        .hub-trust-lbl {
+            font-size: 13px;
+            font-weight: 600;
+            color: #9ca3af;
+        }
+
+        .hub-trust-sep {
+            width: 1px;
+            height: 14px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Search & Filter Toolbar - Clean & Compact */
         .hub-toolbar-wrap {
-            max-width: 1080px;
+            max-width: 940px;
             margin: 0 auto;
-            padding: 24px;
-            background: rgba(18, 20, 29, 0.75);
+            padding: 14px 18px;
+            background: rgba(18, 20, 29, 0.88);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-radius: 18px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
         }
 
         .hub-search-box {
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .hub-search-icon {
             position: absolute;
-            left: 18px;
+            left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 18px;
+            font-size: 15px;
             color: #9ca3af;
             pointer-events: none;
         }
 
         .hub-search-input {
             width: 100%;
+            height: 40px;
             box-sizing: border-box;
-            background: rgba(10, 11, 17, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 14px;
-            padding: 15px 45px 15px 48px;
-            font-size: 15px;
+            background: rgba(10, 11, 17, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 0 36px 0 38px;
+            font-size: 13.5px;
             color: #fff;
             font-family: inherit;
             transition: all 0.25s ease;
@@ -277,25 +298,25 @@
             outline: none;
             border-color: var(--gold);
             background: rgba(14, 16, 25, 0.95);
-            box-shadow: 0 0 0 4px rgba(216, 161, 83, 0.15);
+            box-shadow: 0 0 0 3px rgba(216, 161, 83, 0.15);
         }
 
         .hub-search-clear {
             position: absolute;
-            right: 14px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             background: rgba(255, 255, 255, 0.1);
             border: none;
             color: #d1d5db;
-            width: 26px;
-            height: 26px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             cursor: pointer;
             display: none;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            font-size: 11px;
         }
 
         .hub-search-clear:hover {
@@ -303,25 +324,35 @@
             color: #fff;
         }
 
-        /* Filter Tabs */
+        /* Filter Tabs - Single Row Horizontal Scroll */
         .hub-category-tabs {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 8px;
             justify-content: center;
+            padding: 2px 2px 4px;
+        }
+
+        .hub-category-tabs::-webkit-scrollbar {
+            display: none;
         }
 
         .hub-cat-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: #d1d5db;
-            font-size: 13.5px;
+            font-size: 12.5px;
             font-weight: 600;
-            padding: 10px 20px;
+            padding: 6px 14px;
             border-radius: 9999px;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
             font-family: inherit;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .hub-cat-btn:hover {
@@ -335,36 +366,46 @@
             color: #0c0d12;
             font-weight: 700;
             border-color: var(--gold-light);
-            box-shadow: 0 4px 18px rgba(216, 161, 83, 0.35);
+            box-shadow: 0 4px 14px rgba(216, 161, 83, 0.35);
         }
 
-        /* Software Quick Tag Pills */
+        /* Software Quick Tag Pills - Compact Single Row */
         .hub-software-row {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 6px;
             justify-content: center;
-            margin-top: 16px;
-            padding-top: 16px;
+            margin-top: 8px;
+            padding-top: 8px;
             border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 2px;
+        }
+
+        .hub-software-row::-webkit-scrollbar {
+            display: none;
         }
 
         .hub-soft-tag {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.09);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             color: #9ca3af;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
-            padding: 5px 12px;
+            padding: 4px 9px;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .hub-soft-tag:hover, .hub-soft-tag.active {
             border-color: var(--gold);
             color: var(--gold-light);
-            background: rgba(216, 161, 83, 0.08);
+            background: rgba(216, 161, 83, 0.12);
         }
 
         /* Results Counter */
@@ -1093,31 +1134,275 @@
             border-color: rgba(255, 255, 255, 0.35);
         }
 
-        /* Responsive Breakpoints */
+        /* Comprehensive Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .hub-catalog-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                gap: 24px;
+            }
+            .hub-feat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 900px) {
             .hub-mentor-card {
                 grid-template-columns: 1fr;
             }
             .hub-mentor-img-col {
                 aspect-ratio: 16/10;
+                max-height: 320px;
             }
             .hub-vip-banner {
-                padding: 28px;
+                padding: 30px 24px;
+                gap: 24px;
+            }
+            .hub-reviews-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             }
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            .hub-hero {
+                padding: 95px 14px 22px;
+            }
+            .hub-hero-badge {
+                font-size: 10.5px;
+                padding: 4px 11px;
+                line-height: 1.35;
+                white-space: normal;
+                text-align: center;
+                margin-bottom: 12px;
+            }
+            .hub-title {
+                font-size: clamp(22px, 6.5vw, 32px);
+                margin-bottom: 10px;
+            }
+            .hub-subtitle {
+                font-size: 13.5px;
+                line-height: 1.55;
+                margin-bottom: 14px;
+            }
+            .hub-trust-strip {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px 12px;
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 14px;
+                padding: 10px 14px;
+                margin: 0 auto 16px;
+                width: 100%;
+                max-width: 380px;
+                box-sizing: border-box;
+            }
+            .hub-trust-item {
+                justify-content: center;
+                gap: 6px;
+            }
+            .hub-trust-num {
+                font-size: 13.5px;
+            }
+            .hub-trust-lbl {
+                font-size: 11px;
+            }
+            .hub-trust-sep {
+                display: none;
+            }
+            .hub-toolbar-wrap {
+                padding: 10px 12px;
+                border-radius: 14px;
+            }
+            .hub-search-box {
+                margin-bottom: 8px;
+            }
+            .hub-search-input {
+                height: 38px;
+                font-size: 13px;
+                padding: 0 32px 0 34px;
+                border-radius: 8px;
+            }
+            .hub-search-icon {
+                left: 10px;
+                font-size: 13px;
+            }
+            .hub-category-tabs {
+                justify-content: flex-start;
+                gap: 6px;
+                margin: 0 -4px;
+                padding: 0 4px 2px;
+            }
+            .hub-cat-btn {
+                font-size: 11.5px;
+                padding: 5px 11px;
+            }
+            .hub-software-row {
+                justify-content: flex-start;
+                gap: 5px;
+                margin-top: 8px;
+                padding-top: 8px;
+                margin-left: -4px;
+                margin-right: -4px;
+                padding-left: 4px;
+                padding-right: 4px;
+                padding-bottom: 2px;
+            }
+            .hub-soft-tag {
+                font-size: 10.5px;
+                padding: 3px 8px;
+            }
+            .hub-results-bar {
+                padding: 0 14px;
+                margin: 16px auto 10px;
+                font-size: 12.5px;
+            }
+            .hub-catalog-section {
+                padding: 0 16px 60px;
+            }
             .hub-catalog-grid {
                 grid-template-columns: 1fr;
+                gap: 22px;
+            }
+            .hub-vip-banner {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 24px 18px;
+                border-radius: 20px;
+                margin: 30px auto 60px;
+            }
+            .hub-vip-actions {
+                width: 100%;
+            }
+            .hub-vip-btn {
+                width: 100%;
+                box-sizing: border-box;
+                justify-content: center;
+                padding: 14px 20px;
+                font-size: 14.5px;
+            }
+            .hub-lms-section {
+                padding: 60px 16px;
+            }
+            .hub-sec-head {
+                margin-bottom: 34px;
+            }
+            .hub-sec-title {
+                font-size: clamp(24px, 5.5vw, 34px);
+            }
+            .hub-sec-desc {
+                font-size: 14px;
+            }
+            .hub-feat-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+            .hub-feat-card {
+                padding: 24px 20px;
+                border-radius: 18px;
+            }
+            .hub-mentor-section {
+                padding: 60px 16px;
+            }
+            .hub-mentor-info {
+                padding: 28px 20px;
+            }
+            .hub-mentor-name {
+                font-size: 26px;
+            }
+            .hub-mentor-bio {
+                font-size: 14px;
+            }
+            .hub-reviews-section {
+                padding: 60px 16px;
+            }
+            .hub-reviews-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+            .hub-rev-card {
+                padding: 22px 18px;
+                border-radius: 18px;
+            }
+            .hub-faq-section {
+                padding: 60px 16px;
+            }
+            .hub-faq-item summary {
+                padding: 16px 18px;
+                font-size: 15px;
+            }
+            .hub-faq-ans {
+                padding: 0 18px 18px;
+                font-size: 13.5px;
+            }
+            .hub-cta-section {
+                padding: 70px 16px;
+            }
+            .hub-cta-row {
+                flex-direction: column;
+                width: 100%;
+                gap: 12px;
+                margin-top: 24px;
+            }
+            .hub-cta-primary,
+            .hub-cta-secondary {
+                width: 100%;
+                box-sizing: border-box;
+                justify-content: center;
+                padding: 14px 20px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hub-hero {
+                padding-top: 85px;
+                padding-bottom: 18px;
+            }
+            .hub-title {
+                font-size: 24px;
+            }
+            .hub-toolbar-wrap {
+                padding: 10px;
+                border-radius: 12px;
+            }
+            .hub-search-input {
+                height: 36px;
+                font-size: 12.5px;
+                padding: 0 30px 0 32px;
+            }
+            .hub-cat-btn {
+                font-size: 11px;
+                padding: 5px 10px;
+            }
+            .hub-soft-tag {
+                font-size: 10px;
+                padding: 3px 7px;
+            }
+            .hub-card-body {
+                padding: 18px 14px;
+            }
+            .hub-card-title {
+                font-size: 17px;
+            }
+            .hub-card-desc {
+                font-size: 12.5px;
+            }
+            .hub-card-features li {
+                font-size: 11.5px;
+            }
+            .hub-cur-price {
+                font-size: 20px;
             }
             .hub-card-actions {
                 grid-template-columns: 1fr;
+                gap: 8px;
             }
-            .hub-hero {
-                padding-top: 110px;
-            }
-            .hub-toolbar-wrap {
-                padding: 16px;
+            .hub-btn-details,
+            .hub-btn-enroll {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 11px 12px;
+                font-size: 13px;
             }
         }
     </style>
@@ -1214,10 +1499,9 @@
             <button class="ref-menu-button" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="ref-mobile"><span aria-hidden="true">☰</span></button>
         </div>
         <nav class="ref-mobile" id="ref-mobile" aria-label="Mobile navigation" hidden>
-            <a class="ref-mobile-lms" href="../portal/index.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;background:linear-gradient(135deg,#d8a153,#f6d389);color:#0e0f12;font-weight:700;border-radius:10px;margin:8px 0 14px 0;text-decoration:none;font-size:14px;box-shadow:0 4px 12px rgba(216,161,83,0.35);">🎓 Student Portal (LMS Login) →</a>
             <details>
                 <summary>Online Programs</summary>
-                <a class="ref-mobile-all-online" href="index.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;margin:8px 0 14px;background:linear-gradient(135deg,#fff8ec,#ffe8b8);border:1px solid #e2bf7d;border-radius:10px;color:#8a5e1e;font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 3px 10px rgba(216,161,83,0.18);">🎓 View All Online Programs (सभी 9 ऑनलाइन कोर्सेज) →</a>
+                <a class="ref-mobile-all-online" href="index.html">View all online programs →</a>
                 <p class="ref-mobile-group">Video Editing</p>
                 <a class="ref-course" href="premiere-pro-course/index.html"><span class="ref-course-icon" aria-hidden="true">Pr</span><span>Adobe Premiere Pro Course</span></a>
                 <a class="ref-course" href="edius-course/index.html"><span class="ref-course-icon" aria-hidden="true">Ed</span><span>EDIUS Course</span></a>
@@ -1257,22 +1541,35 @@
         <section class="hub-hero">
             <div class="hub-hero-badge">
                 <span class="hub-pulse-dot"></span>
-                <span>ISO 9001:2015 CERTIFIED • 100% PRACTICAL HINDI • INSTANT LMS ACCESS</span>
+                <span>ISO 9001:2015 CERTIFIED • 100% PRACTICAL HINDI TRAINING</span>
             </div>
             <h1 class="hub-title">
                 All Online Programs &amp; <span class="hub-gold-grad">Masterclasses</span>
             </h1>
             <p class="hub-subtitle">
-                घर बैठे सीखिए इंडस्ट्री-स्टैंडर्ड वीडियो एडिटिंग, सिनेमैटिक वेडिंग फिल्ममेकिंग, कलर ग्रेडिंग, एल्बम डिज़ाइनिंग और स्टूडियो ऑटोमेशन। 4K RAW प्रोजेक्ट फाइल्स, लाइफटाइम वैलिडिटी, और मेंटर अनिल शर्मा का डायरेक्ट व्हाट्सएप डाउट सपोर्ट।
+                घर बैठे सीखिए इंडस्ट्री-स्टैंडर्ड वीडियो एडिटिंग, सिनेमैटिक वेडिंग फिल्ममेकिंग और एल्बम डिजाइनिंग — 4K RAW फुटेज और लाइफटाइम मेंटर सपोर्ट के साथ।
             </p>
 
-            <div class="hub-hero-stats">
-                <span class="hub-stat-pill">🎬 9 Pro Masterclasses</span>
-                <span class="hub-stat-pill">👥 1,800+ Trained Editors</span>
-                <span class="hub-stat-pill">📦 150+ GB 4K RAW Media</span>
-                <span class="hub-stat-pill">♾️ Lifetime LMS Validity</span>
-                <span class="hub-stat-pill">📱 Mobile App &amp; Web Sync</span>
-                <span class="hub-stat-pill">🏆 Verifiable Certificates</span>
+            <div class="hub-trust-strip">
+                <div class="hub-trust-item">
+                    <span class="hub-trust-num">9</span>
+                    <span class="hub-trust-lbl">Masterclasses</span>
+                </div>
+                <div class="hub-trust-sep" aria-hidden="true"></div>
+                <div class="hub-trust-item">
+                    <span class="hub-trust-num">1,800+</span>
+                    <span class="hub-trust-lbl">Trained Editors</span>
+                </div>
+                <div class="hub-trust-sep" aria-hidden="true"></div>
+                <div class="hub-trust-item">
+                    <span class="hub-trust-num">150+ GB</span>
+                    <span class="hub-trust-lbl">4K RAW Media</span>
+                </div>
+                <div class="hub-trust-sep" aria-hidden="true"></div>
+                <div class="hub-trust-item">
+                    <span class="hub-trust-num">Lifetime</span>
+                    <span class="hub-trust-lbl">LMS Access</span>
+                </div>
             </div>
 
             <!-- Search and Filter Toolbar -->
@@ -1280,31 +1577,31 @@
                 <!-- Search Input -->
                 <div class="hub-search-box">
                     <span class="hub-search-icon">🔍</span>
-                    <input type="text" id="hubSearchInput" class="hub-search-input" placeholder="Search by course name, software (Premiere, EDIUS, DaVinci, Photoshop) or topic…" autocomplete="off">
+                    <input type="text" id="hubSearchInput" class="hub-search-input" placeholder="Search course or software (Premiere, DaVinci...)" autocomplete="off">
                     <button type="button" id="hubSearchClear" class="hub-search-clear" aria-label="Clear search">✕</button>
                 </div>
 
                 <!-- Category Tabs -->
                 <div class="hub-category-tabs" id="hubCategoryTabs">
-                    <button type="button" class="hub-cat-btn active" data-cat="all">All Masterclasses (9)</button>
+                    <button type="button" class="hub-cat-btn active" data-cat="all">All (9)</button>
                     <button type="button" class="hub-cat-btn" data-cat="editing">🎬 Video Editing (4)</button>
-                    <button type="button" class="hub-cat-btn" data-cat="filmmaking">💍 Wedding Filmmaking (1)</button>
-                    <button type="button" class="hub-cat-btn" data-cat="design">🎨 Album &amp; Photo Design (1)</button>
-                    <button type="button" class="hub-cat-btn" data-cat="business">📈 Studio Growth &amp; AI (3)</button>
+                    <button type="button" class="hub-cat-btn" data-cat="filmmaking">💍 Wedding (1)</button>
+                    <button type="button" class="hub-cat-btn" data-cat="design">🎨 Album Design (1)</button>
+                    <button type="button" class="hub-cat-btn" data-cat="business">📈 Growth &amp; AI (3)</button>
                 </div>
 
                 <!-- Software Quick Filter Pills -->
                 <div class="hub-software-row" id="hubSoftwarePills">
-                    <button type="button" class="hub-soft-tag active" data-software="all">Show All</button>
+                    <button type="button" class="hub-soft-tag active" data-software="all">All</button>
                     <button type="button" class="hub-soft-tag" data-software="premiere">Premiere Pro</button>
                     <button type="button" class="hub-soft-tag" data-software="edius">EDIUS Pro</button>
                     <button type="button" class="hub-soft-tag" data-software="davinci">DaVinci Resolve</button>
-                    <button type="button" class="hub-soft-tag" data-software="cinematic">Cinematic Teasers</button>
+                    <button type="button" class="hub-soft-tag" data-software="cinematic">Cinematic</button>
                     <button type="button" class="hub-soft-tag" data-software="album">Album Design</button>
                     <button type="button" class="hub-soft-tag" data-software="prewedding">Pre-Wedding</button>
-                    <button type="button" class="hub-soft-tag" data-software="website">Website Design</button>
-                    <button type="button" class="hub-soft-tag" data-software="marketing">Meta &amp; Google Ads</button>
-                    <button type="button" class="hub-soft-tag" data-software="automation">AI CRM &amp; Bots</button>
+                    <button type="button" class="hub-soft-tag" data-software="website">Website</button>
+                    <button type="button" class="hub-soft-tag" data-software="marketing">Marketing &amp; Ads</button>
+                    <button type="button" class="hub-soft-tag" data-software="automation">AI CRM</button>
                 </div>
             </div>
         </section>
@@ -1322,7 +1619,7 @@
                 <!-- 1. Premiere Pro Masterclass -->
                 <article class="hub-card" data-category="editing" data-softwares="premiere editing video">
                     <div class="hub-card-thumb-wrap">
-                        <img src="../assets/premiere-pro-hero-640.webp" alt="Adobe Premiere Pro Masterclass" loading="lazy">
+                        <img src="../assets/course-video-editing.webp" alt="Adobe Premiere Pro Video Editing Masterclass" loading="lazy">
                         <div class="hub-thumb-overlay"></div>
                         <span class="hub-card-badge">FLAGSHIP MASTERCLASS</span>
                         <span class="hub-card-cat-tag">Video Editing</span>
@@ -1364,7 +1661,7 @@
                 <!-- 2. EDIUS Pro Fast Wedding Editing -->
                 <article class="hub-card" data-category="editing" data-softwares="edius editing video fast">
                     <div class="hub-card-thumb-wrap">
-                        <img src="../assets/edius-practice.webp" alt="EDIUS Pro Fast Wedding Editing" loading="lazy">
+                        <img src="../assets/course-edius-pro.webp" alt="EDIUS Pro Fast Wedding Editing" loading="lazy">
                         <div class="hub-thumb-overlay"></div>
                         <span class="hub-card-badge">HIGH SPEED WORKFLOW</span>
                         <span class="hub-card-cat-tag">Video Editing</span>
@@ -1406,7 +1703,7 @@
                 <!-- 3. DaVinci Resolve Color Grading -->
                 <article class="hub-card" data-category="editing" data-softwares="davinci resolve color colorist editing">
                     <div class="hub-card-thumb-wrap">
-                        <img src="../assets/resolve-hero.webp" alt="DaVinci Resolve Color Grading" loading="lazy">
+                        <img src="../assets/course-davinci-resolve.webp" alt="DaVinci Resolve Color Grading" loading="lazy">
                         <div class="hub-thumb-overlay"></div>
                         <span class="hub-card-badge">COLORIST MASTERCLASS</span>
                         <span class="hub-card-cat-tag">Video Editing</span>
@@ -1490,7 +1787,7 @@
                 <!-- 5. Wedding Album Design Masterclass -->
                 <article class="hub-card" data-category="design" data-softwares="album photoshop design karizma canvera retouching">
                     <div class="hub-card-thumb-wrap">
-                        <img src="../assets/editing-example-retouch.webp" alt="Wedding Album Design Masterclass" loading="lazy">
+                        <img src="../assets/course-photoshop-album.webp" alt="Wedding Album Design Masterclass in Photoshop" loading="lazy">
                         <div class="hub-thumb-overlay"></div>
                         <span class="hub-card-badge">STUDIO ESSENTIAL</span>
                         <span class="hub-card-cat-tag">Album &amp; Photo Design</span>

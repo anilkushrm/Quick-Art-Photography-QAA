@@ -128,6 +128,18 @@ function clean_phone($p) {
     return $num;
 }
 
+function extract_youtube_id($input) {
+    if (empty($input) || !is_string($input)) return '';
+    $input = trim($input);
+    if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i', $input, $m)) {
+        return $m[1];
+    }
+    if (preg_match('/^[a-zA-Z0-9_-]{11}$/', $input) && strpos($input, 'demo-') !== 0 && strpos($input, 'les-') !== 0) {
+        return $input;
+    }
+    return '';
+}
+
 // Student Token Sessions
 function create_student_session($phone) {
     if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
@@ -145,7 +157,17 @@ function create_student_session($phone) {
 }
 
 function require_student() {
-    $token = $_SERVER['HTTP_X_STUDENT_TOKEN'] ?? ($_GET['token'] ?? '');
+    $token = $_SERVER['HTTP_X_STUDENT_TOKEN'] ?? '';
+    if (!$token) {
+        $auth = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '');
+        if (preg_match('/Bearer\s+(.+)$/i', $auth, $m)) {
+            $token = trim($m[1]);
+        }
+    }
+    if (!$token) {
+        $token = $_GET['token'] ?? '';
+    }
+
     if (!$token || !file_exists(LMS_SESSIONS_FILE)) {
         json_err('Please login to continue', 401);
     }
@@ -154,10 +176,12 @@ function require_student() {
         json_err('Session expired, please login again', 401);
     }
 
-    $phone = $sessions[$token]['phone'];
+    $sessionIdentifier = strtolower(trim((string)$sessions[$token]['phone']));
     $students = load_students();
     foreach ($students as $stu) {
-        if ($stu['phone'] === $phone) {
+        $stuPhone = strtolower(trim((string)($stu['phone'] ?? '')));
+        $stuEmail = strtolower(trim((string)($stu['email'] ?? '')));
+        if (($stuPhone && $stuPhone === $sessionIdentifier) || ($stuEmail && $stuEmail === $sessionIdentifier)) {
             return $stu;
         }
     }
@@ -210,7 +234,10 @@ if ($action === 'send-otp' && $method === 'POST') {
     }
 
     $settings = load_lms_settings();
-    $demoMode = !empty($settings['otpDemoMode']);
+    $clientIp = $_SERVER['REMOTE_ADDR'] ?? '';
+    $serverName = $_SERVER['SERVER_NAME'] ?? '';
+    $isLocal = in_array($clientIp, ['127.0.0.1', '::1']) || in_array($serverName, ['localhost', '127.0.0.1']);
+    $demoMode = !empty($settings['otpDemoMode']) || $isLocal;
     $defaultOtp = $settings['defaultOtp'] ?? '123456';
 
     // Generate 6 digit OTP
@@ -227,24 +254,13 @@ if ($action === 'send-otp' && $method === 'POST') {
 
     // If Fast2SMS API key is set and not demo mode, send SMS
     if (!$demoMode && !empty($settings['fast2smsApiKey'])) {
-        $msg = "Your OTP for Quick Art Photography Academy login is {$otp}. Valid for 10 minutes.";
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => "https://www.fast2sms.com/dev/bulkV2",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode([
-                "route" => "otp",
-                "variables_values" => $otp,
-                "numbers" => $phone
-            ]),
-            CURLOPT_HTTPHEADER => [
-                "authorization: " . $settings['fast2smsApiKey'],
-                "Content-Type: application/json"
-            ]
-        ]);
-        curl_exec($curl);
-        curl_close($curl);
+        $sendRes = send_fast2sms_otp($phone, $otp, $settings['fast2smsApiKey'], $settings['fast2smsOtpTemplate'] ?? '');
+        if (!$sendRes['ok']) {
+            error_log("Fast2SMS OTP delivery failure for {$phone}: " . ($sendRes['error'] ?? 'Unknown error'));
+            if (!$isLocal) {
+                json_err("SMS bhejne me dikkat aayi: " . ($sendRes['error'] ?? 'Fast2SMS delivery error'), 502);
+            }
+        }
     }
 
     json_ok([
@@ -269,7 +285,10 @@ if ($action === 'verify-otp' && $method === 'POST') {
     $record = $otps[$phone] ?? null;
 
     $settings = load_lms_settings();
-    $isDemoMatch = (!empty($settings['otpDemoMode']) && $userOtp === ($settings['defaultOtp'] ?? '123456'));
+    $clientIp = $_SERVER['REMOTE_ADDR'] ?? '';
+    $serverName = $_SERVER['SERVER_NAME'] ?? '';
+    $isLocal = in_array($clientIp, ['127.0.0.1', '::1']) || in_array($serverName, ['localhost', '127.0.0.1']);
+    $isDemoMatch = ((!empty($settings['otpDemoMode']) || $isLocal) && $userOtp === ($settings['defaultOtp'] ?? '123456'));
 
     if (!$isDemoMatch && (!$record || $record['expiresAt'] < time() || $record['otp'] !== $userOtp)) {
         json_err('Invalid or expired OTP. Please try again.', 401);
@@ -327,7 +346,380 @@ if ($action === 'verify-otp' && $method === 'POST') {
     ]);
 }
 
-// 3. Current Student Info
+// 2.5 Send Email OTP (Registration & Forgot Password)
+if ($action === 'send-email-otp' && $method === 'POST') {
+    $body = read_json_body();
+    $email = strtolower(trim($body['email'] ?? ''));
+    $purpose = trim($body['purpose'] ?? 'register'); // 'register' or 'forgot-password'
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        json_err('Valid email address darj karein', 400);
+    }
+
+    $students = load_students();
+    $exists = false;
+    foreach ($students as $s) {
+        if (!empty($s['email']) && strtolower($s['email']) === $email) {
+            $exists = true;
+            break;
+        }
+    }
+
+    if ($purpose === 'register' && $exists) {
+        json_err('Is email se pehle se account registered hai. Login karein.', 409);
+    }
+
+    if ($purpose === 'forgot-password' && !$exists) {
+        json_err('Is email se koi student account registered nahi mila.', 404);
+    }
+
+    $otp = strval(random_int(100000, 999999));
+    $settings = load_lms_settings();
+    $sendRes = send_email_otp($email, $otp, $purpose, $settings);
+
+    if (!$sendRes['ok']) {
+        json_err($sendRes['error'] ?? 'Email OTP bhejne me error aaya', 500);
+    }
+
+    json_ok([
+        'message' => 'OTP aapke email address par bhej diya gaya hai.',
+        'email' => $email,
+        'purpose' => $purpose
+    ]);
+}
+
+// 2.6 Verify Email OTP
+if ($action === 'verify-email-otp' && $method === 'POST') {
+    $body = read_json_body();
+    $email = strtolower(trim($body['email'] ?? ''));
+    $otp = trim($body['otp'] ?? '');
+    $purpose = trim($body['purpose'] ?? '');
+    $settings = load_lms_settings();
+
+    $v = verify_email_otp($email, $otp, $purpose, $settings);
+    if (!$v['ok']) {
+        json_err($v['error'], 400);
+    }
+
+    json_ok(['verified' => true, 'message' => 'Email successfully verified!']);
+}
+
+// 2.7 Reset Password via Email OTP
+if ($action === 'email-reset-password' && $method === 'POST') {
+    $body = read_json_body();
+    $email = strtolower(trim($body['email'] ?? ''));
+    $otp = trim($body['otp'] ?? '');
+    $newPassword = trim($body['newPassword'] ?? '');
+
+    if (strlen($newPassword) < 6) {
+        json_err('Naya password kam se kam 6 characters ka hona chahiye', 400);
+    }
+
+    $settings = load_lms_settings();
+    $v = verify_email_otp($email, $otp, 'forgot-password', $settings);
+    if (!$v['ok']) {
+        json_err($v['error'], 400);
+    }
+
+    $students = load_students();
+    $found = false;
+    $studentPhone = null;
+    foreach ($students as &$s) {
+        if (!empty($s['email']) && strtolower($s['email']) === $email) {
+            $s['passwordHash'] = password_hash($newPassword, PASSWORD_DEFAULT);
+            $studentPhone = $s['phone'];
+            $found = true;
+            break;
+        }
+    }
+    unset($s);
+
+    if (!$found) {
+        json_err('Student account nahi mila', 404);
+    }
+
+    save_students($students);
+    consume_email_otp($email);
+
+    $token = create_student_session($studentPhone);
+    json_ok([
+        'message' => 'Password successfully reset ho gaya hai!',
+        'token' => $token
+    ]);
+}
+
+// 3. Email + Password Sign Up (Self-Registration with OTP verification)
+if ($action === 'email-signup' && $method === 'POST') {
+    $body     = read_json_body();
+    $name     = trim($body['name'] ?? '');
+    $rawPhone = $body['phone'] ?? '';
+    $phone    = clean_phone($rawPhone);
+    $email    = strtolower(trim($body['email'] ?? ''));
+    $password = trim($body['password'] ?? '');
+    $emailOtp = trim($body['otp'] ?? '');
+
+    if (!$name)                                     json_err('Naam required hai', 400);
+    if (strlen($phone) < 10)                        json_err('Valid 10-digit mobile number darj karein', 400);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) json_err('Valid email address darj karein', 400);
+    if (strlen($password) < 6)                      json_err('Password kam se kam 6 characters ka hona chahiye', 400);
+
+    // Verify email OTP
+    $settings = load_lms_settings();
+    if ($emailOtp) {
+        $v = verify_email_otp($email, $emailOtp, 'register', $settings);
+        if (!$v['ok']) json_err($v['error'], 400);
+        consume_email_otp($email);
+    } else {
+        $otps = load_email_otps();
+        $rec = $otps[$email] ?? null;
+        if (!$rec || empty($rec['verified']) || $rec['expiresAt'] < time()) {
+            json_err('Pehle email OTP verify karein', 400);
+        }
+        consume_email_otp($email);
+    }
+
+    $students = load_students();
+
+    // Check for duplicate phone or email
+    foreach ($students as $s) {
+        if ($s['phone'] === $phone) {
+            json_err('Is mobile number se pehle se account hai. Login karein ya OTP use karein.', 409);
+        }
+        if (!empty($s['email']) && strtolower($s['email']) === $email) {
+            json_err('Is email se pehle se account registered hai. Login tab use karein.', 409);
+        }
+    }
+
+    $settings       = load_lms_settings();
+    $allCourses     = load_courses();
+    // New signup gets no courses by default (admin assigns later)
+    $newStudent = [
+        'id'              => 'stu_' . substr(md5(uniqid($phone, true)), 0, 8),
+        'phone'           => $phone,
+        'name'            => $name,
+        'email'           => $email,
+        'passwordHash'    => password_hash($password, PASSWORD_DEFAULT),
+        'city'            => '',
+        'enrolledAt'      => date('c'),
+        'enrolledCourses' => [],
+        'completedLessons'=> [],
+        'lastActive'      => date('c'),
+        'signupMethod'    => 'email'
+    ];
+    $students[] = $newStudent;
+    save_students($students);
+
+    $token = create_student_session($phone);
+
+    json_ok([
+        'token'   => $token,
+        'student' => [
+            'id'             => $newStudent['id'],
+            'phone'          => $newStudent['phone'],
+            'name'           => $newStudent['name'],
+            'email'          => $newStudent['email'],
+            'enrolledCourses'=> []
+        ]
+    ]);
+}
+
+// 3.1 Supabase Auto-Login after email link confirmation
+if ($action === 'supabase-auto-login' && $method === 'POST') {
+    $body = read_json_body();
+    $email = strtolower(trim($body['email'] ?? ''));
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        json_err('Invalid email', 400);
+    }
+
+    $students = load_students();
+    $matched = null;
+    foreach ($students as $s) {
+        if (!empty($s['email']) && strtolower($s['email']) === $email) {
+            $matched = $s;
+            break;
+        }
+    }
+
+    if (!$matched) {
+        $matched = [
+            'id'              => 'stu_' . substr(md5(uniqid($email, true)), 0, 8),
+            'phone'           => '',
+            'name'            => explode('@', $email)[0],
+            'email'           => $email,
+            'passwordHash'    => '',
+            'city'            => '',
+            'enrolledAt'      => date('c'),
+            'enrolledCourses' => [],
+            'completedLessons'=> [],
+            'lastActive'      => date('c'),
+            'signupMethod'    => 'supabase-email'
+        ];
+        $students[] = $matched;
+        save_students($students);
+    }
+
+    $token = create_student_session($matched['phone'] ?: $matched['email']);
+    json_ok([
+        'token'   => $token,
+        'student' => [
+            'id'             => $matched['id'],
+            'phone'          => $matched['phone'],
+            'name'           => $matched['name'],
+            'email'          => $matched['email'],
+            'enrolledCourses'=> $matched['enrolledCourses'] ?? []
+        ]
+    ]);
+}
+
+// ─── Discussion / Comments API ────────────────────────────────────────────────
+define('LMS_DISCUSSIONS_FILE', DATA_DIR . '/discussions.json');
+
+function load_discussions() {
+    if (!file_exists(LMS_DISCUSSIONS_FILE)) return [];
+    return json_decode(file_get_contents(LMS_DISCUSSIONS_FILE), true) ?: [];
+}
+
+function save_discussions($data) {
+    if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+    file_put_contents(LMS_DISCUSSIONS_FILE, json_encode($data, JSON_PRETTY_PRINT), LOCK_EX);
+}
+
+// GET: List comments for a lesson
+if ($action === 'discussion-list') {
+    $stu      = require_student();
+    $courseId = trim($_GET['courseId'] ?? '');
+    $lessonId = trim($_GET['lessonId'] ?? '');
+    if (!$courseId || !$lessonId) json_err('courseId and lessonId required', 400);
+
+    $all      = load_discussions();
+    $key      = $courseId . '::' . $lessonId;
+    $comments = $all[$key] ?? [];
+
+    // Return in chronological order
+    json_ok(['comments' => array_values($comments)]);
+}
+
+// POST: Post a new comment
+if ($action === 'discussion-post' && $method === 'POST') {
+    $stu  = require_student();
+    $body = read_json_body();
+
+    $courseId = trim($body['courseId'] ?? '');
+    $lessonId = trim($body['lessonId'] ?? '');
+    $text     = trim($body['text'] ?? '');
+
+    if (!$courseId || !$lessonId) json_err('courseId and lessonId required', 400);
+    if (strlen($text) < 2)       json_err('Comment bahut chota hai', 400);
+    if (strlen($text) > 1000)    json_err('Comment 1000 characters se zyada nahi ho sakta', 400);
+
+    $all = load_discussions();
+    $key = $courseId . '::' . $lessonId;
+    if (!isset($all[$key])) $all[$key] = [];
+
+    $comment = [
+        'id'         => 'cmt_' . substr(md5(uniqid($stu['phone'], true)), 0, 10),
+        'authorName' => $stu['name'] ?? 'Student',
+        'authorId'   => $stu['id']   ?? '',
+        'isMentor'   => false,
+        'text'       => $text,
+        'likes'      => 0,
+        'createdAt'  => date('c'),
+    ];
+    $all[$key][] = $comment;
+    save_discussions($all);
+
+    json_ok(['comment' => $comment]);
+}
+
+// POST: Like / unlike a comment
+if ($action === 'discussion-like' && $method === 'POST') {
+    $stu  = require_student();
+    $body = read_json_body();
+
+    $commentId = trim($body['commentId'] ?? '');
+    $act       = trim($body['action'] ?? 'like');  // 'like' | 'unlike'
+    if (!$commentId) json_err('commentId required', 400);
+
+    $all = load_discussions();
+    $found = false;
+    foreach ($all as $key => &$comments) {
+        foreach ($comments as &$c) {
+            if ($c['id'] === $commentId) {
+                $c['likes'] = max(0, ($c['likes'] ?? 0) + ($act === 'unlike' ? -1 : 1));
+                $found = true;
+                break 2;
+            }
+        }
+    }
+    unset($c, $comments);
+    if ($found) save_discussions($all);
+
+    json_ok(['ok' => true]);
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 4. Email + Password Login
+if ($action === 'email-login' && $method === 'POST') {
+    $body = read_json_body();
+    $email    = strtolower(trim($body['email'] ?? ''));
+    $password = trim($body['password'] ?? '');
+
+    if (empty($email) || empty($password)) {
+        json_err('Email aur password dono required hain', 400);
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        json_err('Valid email address darj karein', 400);
+    }
+
+    $students = load_students();
+    $matched  = null;
+
+    foreach ($students as &$stu) {
+        $stuEmail = strtolower(trim($stu['email'] ?? ''));
+        if ($stuEmail === $email) {
+            // If passwordHash exists, verify it; else check plain-text legacy password
+            if (!empty($stu['passwordHash'])) {
+                if (password_verify($password, $stu['passwordHash'])) {
+                    $stu['lastActive'] = date('c');
+                    $matched = &$stu;
+                    break;
+                }
+            } elseif (!empty($stu['password'])) {
+                // Legacy plain-text (migrate on success)
+                if ($stu['password'] === $password) {
+                    $stu['passwordHash'] = password_hash($password, PASSWORD_DEFAULT);
+                    unset($stu['password']);
+                    $stu['lastActive'] = date('c');
+                    $matched = &$stu;
+                    break;
+                }
+            }
+            // Email found but password wrong
+            json_err('Galat password. Dobara try karein ya OTP se login karein.', 401);
+        }
+    }
+    unset($stu);
+
+    if (!$matched) {
+        json_err('Is email se koi student account nahi mila. Phone OTP se login try karein.', 404);
+    }
+
+    save_students($students);
+    $token = create_student_session($matched['phone']);
+
+    json_ok([
+        'token'   => $token,
+        'student' => [
+            'id'             => $matched['id'],
+            'phone'          => $matched['phone'],
+            'name'           => $matched['name'],
+            'email'          => $matched['email'],
+            'enrolledCourses'=> $matched['enrolledCourses'] ?? []
+        ]
+    ]);
+}
+
+// 4. Current Student Info
 if ($action === 'me' && $method === 'GET') {
     $student = require_student();
     $allCourses = load_courses();
@@ -394,7 +786,7 @@ if ($action === 'my-courses' && $method === 'GET') {
 // 5. Course Details & Curriculum
 if ($action === 'course-details' && $method === 'GET') {
     $student = require_student();
-    $courseId = $_GET['id'] ?? '';
+    $courseId = $_GET['id'] ?? ($_GET['courseId'] ?? '');
 
     if (!in_array($courseId, $student['enrolledCourses'] ?? [])) {
         json_err('You are not enrolled in this course', 403);
@@ -468,22 +860,31 @@ if ($action === 'get-lesson' && $method === 'GET') {
 
     $settings = load_lms_settings();
 
-    // Video URL resolution (Bunny.net Stream vs Direct/Fallback)
+    // Video URL resolution (YouTube vs Bunny.net Stream vs Direct/Fallback)
     $videoType = 'mp4';
     $streamUrl = $targetLesson['videoUrl'] ?? '';
+    $rawVideoId = $targetLesson['videoId'] ?? '';
+    $ytId = extract_youtube_id($rawVideoId) ?: extract_youtube_id($streamUrl);
 
-    // If videoId is a real Bunny Stream Video ID (not a placeholder demo-*), activate secure Bunny player
-    $isBunnyVideo = !empty($targetLesson['videoId']) && 
-                    strpos($targetLesson['videoId'], 'demo-') !== 0 && 
-                    !empty($settings['bunnyLibraryId']);
+    if ($ytId) {
+        $videoType = 'youtube';
+        // youtube-nocookie embed with privacy, minimal branding, disabled kb shortcuts and jsapi enabled
+        $streamUrl = "https://www.youtube-nocookie.com/embed/{$ytId}?enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3&controls=1&showinfo=0&disablekb=0&playsinline=1";
+    } else {
+        // If videoId is a real Bunny Stream Video ID (not a placeholder demo-*), activate secure Bunny player
+        $isBunnyVideo = !empty($rawVideoId) && 
+                        strpos($rawVideoId, 'demo-') !== 0 && 
+                        !empty($settings['bunnyLibraryId']) &&
+                        strlen($rawVideoId) > 15;
 
-    if ($isBunnyVideo) {
-        $videoType = 'bunny_stream';
-        $streamUrl = generate_bunny_video_url(
-            $settings['bunnyLibraryId'],
-            $targetLesson['videoId'],
-            $settings['bunnyTokenAuthKey'] ?? ''
-        );
+        if ($isBunnyVideo) {
+            $videoType = 'bunny_stream';
+            $streamUrl = generate_bunny_video_url(
+                $settings['bunnyLibraryId'],
+                $rawVideoId,
+                $settings['bunnyTokenAuthKey'] ?? ''
+            );
+        }
     }
 
     $completed = $student['completedLessons'][$courseId] ?? [];
@@ -497,6 +898,7 @@ if ($action === 'get-lesson' && $method === 'GET') {
             'resources' => $targetLesson['resources'] ?? [],
             'videoType' => $videoType,
             'streamUrl' => $streamUrl,
+            'youtubeId' => $ytId ?: '',
             'isCompleted' => in_array($targetLesson['id'], $completed)
         ],
         'watermark' => [
@@ -1073,5 +1475,56 @@ if ($action === 'verify-certificate' && $method === 'GET') {
     }
 }
 
+// Update student profile (name, email, city)
+if ($action === 'update-profile' && $method === 'POST') {
+    $stu  = require_student();
+    $body = read_json_body();
+
+    $name  = trim($body['name']  ?? '');
+    $email = strtolower(trim($body['email'] ?? ''));
+    $city  = trim($body['city']  ?? '');
+
+    if (!$name) json_err('Naam required hai', 400);
+    if ($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        json_err('Valid email address darj karein', 400);
+    }
+
+    $students = load_students();
+    $updated  = false;
+    foreach ($students as &$s) {
+        if ($s['phone'] === $stu['phone']) {
+            $s['name']  = $name;
+            if ($email) $s['email'] = $email;
+            if ($city)  $s['city']  = $city;
+            $updated = true;
+            break;
+        }
+    }
+    unset($s);
+
+    if ($updated) save_students($students);
+    json_ok(['updated' => $updated]);
+}
+
+// Change password
+if ($action === 'change-password' && $method === 'POST') {
+    $stu  = require_student();
+    $body = read_json_body();
+    $pw   = trim($body['password'] ?? '');
+    if (strlen($pw) < 6) json_err('Password min. 6 characters ka hona chahiye', 400);
+
+    $students = load_students();
+    foreach ($students as &$s) {
+        if ($s['phone'] === $stu['phone']) {
+            $s['passwordHash'] = password_hash($pw, PASSWORD_DEFAULT);
+            break;
+        }
+    }
+    unset($s);
+    save_students($students);
+    json_ok(['updated' => true]);
+}
+
 json_err('Unknown LMS action', 404);
+
 

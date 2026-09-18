@@ -511,12 +511,23 @@
     padding: 60px 0;
   }
 
+  .qa-roadmap-section .container {
+    padding-inline: 20px;
+    width: 100%;
+    max-width: 100%;
+  }
+
   .qa-roadmap-header {
     margin-bottom: 28px;
   }
 
+  .qa-week-card {
+    padding: 18px 16px;
+    border-radius: 16px;
+  }
+
   .qa-part-banner {
-    padding: 20px;
+    padding: 18px 16px;
     border-radius: 16px;
   }
 

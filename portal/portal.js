@@ -19,7 +19,10 @@ function toast(msg, ok = true) {
 }
 
 async function lmsApi(action, opts = {}) {
-  let url = '../api/lms.php?';
+  // If running on static live server (port 5500/5501/5502), connect to local PHP server on port 8000
+  const isStaticLiveServer = ['5500', '5501', '5502', '3000'].includes(window.location.port);
+  let url = isStaticLiveServer ? 'http://127.0.0.1:8000/api/lms.php?' : '../api/lms.php?';
+
   if (action.startsWith('?') || action.startsWith('&')) {
     url += action.replace(/^[?&]/, '');
   } else if (action.includes('&') || action.includes('=')) {
@@ -47,7 +50,7 @@ async function lmsApi(action, opts = {}) {
 // ---------- View Navigation ----------
 
 function switchView(viewName) {
-  ['view-login', 'view-dashboard', 'view-classroom'].forEach(id => {
+  ['view-login', 'view-dashboard', 'view-classroom', 'view-checkout'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.add('hidden');
   });
@@ -59,7 +62,7 @@ function switchView(viewName) {
   const guestNav = document.getElementById('header-guest-nav');
   const userNav = document.getElementById('header-user-nav');
 
-  if (viewName === 'login' || viewName === 'verify') {
+  if (viewName === 'login' || viewName === 'verify' || (viewName === 'checkout' && !studentToken)) {
     if (guestNav) guestNav.classList.remove('hidden');
     if (userNav) userNav.classList.add('hidden');
   } else {
@@ -168,11 +171,216 @@ async function logoutStudent() {
   currentCourse = null;
   currentLesson = null;
   resetToPhoneStep();
+  // Reset email form too
+  const emailForm  = document.getElementById('form-email-login');
+  const signupForm = document.getElementById('form-signup');
+  if (emailForm)  emailForm.reset();
+  if (signupForm) signupForm.reset();
+  switchLoginTab('phone');
   switchView('login');
   toast('You have been logged out.');
 }
 
-// ---------- 2. Dashboard View ----------
+// ---------- Email + Password Login ----------
+
+function switchLoginTab(tab) {
+  const tabs   = ['phone', 'email'];
+  const panels = { phone: 'panel-phone', email: 'panel-email' };
+  const focusIds = { phone: 'input-phone', email: 'input-email' };
+
+  tabs.forEach(t => {
+    const btn   = document.getElementById(`tab-${t}`);
+    const panel = document.getElementById(panels[t]);
+    if (!btn || !panel) return;
+    if (t === tab) {
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      panel.removeAttribute('hidden');
+    } else {
+      btn.classList.remove('active');
+      btn.setAttribute('aria-selected', 'false');
+      panel.setAttribute('hidden', '');
+    }
+  });
+
+  const focusEl = document.getElementById(focusIds[tab]);
+  if (focusEl) setTimeout(() => focusEl.focus(), 50);
+}
+
+function togglePasswordVisibility(inputId, btnId) {
+  const pwInput = document.getElementById(inputId || 'input-password');
+  const btn     = document.getElementById(btnId   || 'btn-toggle-pw');
+  if (!pwInput) return;
+  if (pwInput.type === 'password') {
+    pwInput.type = 'text';
+    if (btn) btn.textContent = '🙈';
+  } else {
+    pwInput.type = 'password';
+    if (btn) btn.textContent = '👁️';
+  }
+}
+
+async function handleSignUp(e) {
+  e.preventDefault();
+  const name     = document.getElementById('signup-name').value.trim();
+  const phone    = document.getElementById('signup-phone').value.replace(/\D/g, '');
+  const email    = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+
+  if (!name)                   { toast('Apna naam darj karein', false); return; }
+  if (phone.length < 10)       { toast('Valid 10-digit mobile number darj karein', false); return; }
+  if (!email)                  { toast('Email address darj karein', false); return; }
+  if (password.length < 6)     { toast('Password kam se kam 6 characters ka hona chahiye', false); return; }
+
+  const btn = document.getElementById('btn-signup');
+  btn.disabled = true;
+  btn.textContent = 'Creating account…';
+
+  try {
+    const res = await lmsApi('email-signup', {
+      method: 'POST',
+      body: { name, phone, email, password }
+    });
+    studentToken = res.token;
+    localStorage.setItem(TOKEN_KEY, studentToken);
+    currentStudent = res.student;
+    toast('🎉 Account ban gaya! Quick Art mein aapka swagat hai!');
+    await initStudentSession();
+  } catch (err) {
+    toast(err.message, false);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '✨ Create Account &amp; Login <span aria-hidden="true">→</span>';
+  }
+}
+
+async function handleEmailLogin(e) {
+  e.preventDefault();
+  const email    = document.getElementById('input-email').value.trim();
+  const password = document.getElementById('input-password').value;
+
+  if (!email || !password) {
+    toast('Email aur password dono darj karein', false);
+    return;
+  }
+
+  const btn = document.getElementById('btn-email-login');
+  btn.disabled = true;
+  btn.textContent = 'Logging in…';
+
+  try {
+    const res = await lmsApi('email-login', {
+      method: 'POST',
+      body: { email, password }
+    });
+    studentToken = res.token;
+    localStorage.setItem(TOKEN_KEY, studentToken);
+    currentStudent = res.student;
+    toast('Login successful! Welcome to Quick Art Academy.');
+    await initStudentSession();
+  } catch (err) {
+    toast(err.message, false);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Login &amp; Enter Classroom <span aria-hidden="true">→</span>';
+  }
+}
+
+// ── Forgot Password Modal (Email OTP) ──
+function openForgotPasswordModal() {
+  const modal = document.getElementById('modal-forgot-password');
+  if (modal) {
+    modal.classList.remove('hidden');
+    const emailInp = document.getElementById('input-email');
+    const forgotEmail = document.getElementById('forgot-email');
+    if (emailInp && forgotEmail && emailInp.value) {
+      forgotEmail.value = emailInp.value.trim();
+    }
+  }
+}
+
+function closeForgotPasswordModal() {
+  const modal = document.getElementById('modal-forgot-password');
+  if (modal) modal.classList.add('hidden');
+}
+
+async function sendForgotEmailOtp() {
+  const email = document.getElementById('forgot-email')?.value.trim();
+  if (!email || !email.includes('@')) {
+    toast('Valid email address darj karein', false);
+    return;
+  }
+  const btn = document.getElementById('btn-send-email-otp');
+  btn.disabled = true;
+  btn.textContent = 'Sending OTP…';
+
+  try {
+    const res = await lmsApi('send-email-otp', {
+      method: 'POST',
+      body: { email, purpose: 'forgot-password' }
+    });
+    toast('✅ ' + (res.message || 'OTP aapke email par bhej diya gaya hai!'));
+    const step2 = document.getElementById('forgot-step-2');
+    if (step2) step2.classList.remove('hidden');
+    document.getElementById('forgot-otp')?.focus();
+  } catch (err) {
+    toast(err.message, false);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Resend OTP';
+  }
+}
+
+async function handleForgotPwSubmit(e) {
+  e.preventDefault();
+  const email = document.getElementById('forgot-email')?.value.trim();
+  const otp = document.getElementById('forgot-otp')?.value.trim();
+  const newPassword = document.getElementById('forgot-new-pw')?.value;
+
+  if (!email || !otp || !newPassword) {
+    toast('Email, OTP aur Naya Password sabhi bharo', false);
+    return;
+  }
+  if (otp.length < 6) {
+    toast('6-digit OTP code enter karein', false);
+    return;
+  }
+  if (newPassword.length < 6) {
+    toast('Password kam se kam 6 characters ka hona chahiye', false);
+    return;
+  }
+
+  const btn = document.getElementById('btn-submit-reset-pw');
+  btn.disabled = true;
+  btn.textContent = 'Resetting password…';
+
+  try {
+    const res = await lmsApi('email-reset-password', {
+      method: 'POST',
+      body: { email, otp, newPassword }
+    });
+    toast('🎉 Password successfully reset ho gaya hai!');
+    closeForgotPasswordModal();
+    if (res.token) {
+      studentToken = res.token;
+      localStorage.setItem(TOKEN_KEY, studentToken);
+      await initStudentSession();
+    }
+  } catch (err) {
+    toast(err.message, false);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '🔒 Set New Password &amp; Login →';
+  }
+}
+
+
+
+
+// ── Global My Courses State ──
+window._allMyCourses = [];
+window._currentMyCoursesFilter = 'all';
+window._myCoursesSearchQuery = '';
 
 async function loadDashboard() {
   switchView('dashboard');
@@ -186,86 +394,97 @@ async function loadDashboard() {
     ]);
 
     currentStudent = meRes.student;
+    window._currentStudent = currentStudent;
 
-    // Header User details
+    // ── Header / Nav Dropdown & Dashboard Hero User Details ──
     const shortName = currentStudent.name.split(' ')[0];
-    document.getElementById('nav-user-name').textContent = currentStudent.name;
-    document.getElementById('nav-user-phone').textContent = `+91 ${currentStudent.phone}`;
-    document.getElementById('nav-user-avatar').textContent = shortName.charAt(0).toUpperCase();
+    const initials  = currentStudent.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+    const avatarUrl = currentStudent.avatarUrl || localStorage.getItem('qaa_avatar_' + currentStudent.id) || '';
 
-    // Dashboard greetings & stats
-    document.getElementById('dash-greeting').textContent = `Namaste, ${shortName}!`;
-    document.getElementById('stat-enrolled-count').textContent = meRes.stats.enrolledCoursesCount;
-    document.getElementById('stat-completed-count').textContent = meRes.stats.completedLessonsCount;
+    // Set name in nav and hero
+    const elName = document.getElementById('nav-user-name');
+    if (elName) elName.textContent = currentStudent.name;
 
-    const courses = coursesRes.courses || [];
-    document.getElementById('courses-count-label').textContent = `${courses.length} Active Courses`;
+    const elDName = document.getElementById('dropdown-user-name');
+    if (elDName) elDName.textContent = currentStudent.name;
 
-    if (courses.length === 0) {
-      grid.innerHTML = `
-        <div class="card" style="grid-column: 1/-1; padding: 40px; text-align: center; background: var(--bg-card); border-radius: 20px;">
-          <h3>No courses assigned yet</h3>
-          <p class="muted" style="margin: 8px 0 20px;">Contact academy support at +91 9939800780 to activate your batch access.</p>
-          <a href="../contact-us/index.html" class="btn btn-gold">Contact Academy Support →</a>
-        </div>
-      `;
-      return;
+    const elDPhone = document.getElementById('dropdown-user-phone');
+    if (elDPhone) elDPhone.textContent = `+91 ${currentStudent.phone}`;
+
+    // Nav initials
+    const navInitials = document.getElementById('nav-avatar-initials');
+    if (navInitials) navInitials.textContent = initials;
+
+    const dropInitials = document.getElementById('dropdown-avatar-initials');
+    if (dropInitials) dropInitials.textContent = initials;
+
+    // Dashboard Hero Avatar
+    const dashInitials = document.getElementById('dash-avatar-initials');
+    if (dashInitials) dashInitials.textContent = initials;
+
+    // Profile photo handling
+    if (avatarUrl) {
+      const navImg = document.getElementById('nav-avatar-img');
+      if (navImg) { navImg.src = avatarUrl; navImg.classList.remove('hidden'); }
+      if (navInitials) navInitials.classList.add('hidden');
+
+      const dropImg = document.getElementById('dropdown-avatar-img');
+      if (dropImg) { dropImg.src = avatarUrl; dropImg.classList.remove('hidden'); }
+      if (dropInitials) dropInitials.classList.add('hidden');
+
+      const dashImg = document.getElementById('dash-avatar-img');
+      if (dashImg) { dashImg.src = avatarUrl; dashImg.classList.remove('hidden'); }
+      if (dashInitials) dashInitials.classList.add('hidden');
     }
 
-    const completedCoursesList = courses.filter(c => c.isCompleted || c.progressPercent >= 100);
-    const celebrationBanner = completedCoursesList.length > 0 ? `
-      <div class="card celebration-banner" style="grid-column: 1/-1; background: linear-gradient(135deg, rgba(201,151,56,0.18) 0%, rgba(16,185,129,0.12) 100%); border: 1px solid var(--border-gold); padding: 18px 24px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 8px;">
-        <div style="display: flex; align-items: center; gap: 14px;">
-          <div style="font-size: 32px;">🏆</div>
-          <div>
-            <div style="font-size: 16px; font-weight: 800; color: #ecd394;">
-              Congratulations ${escapeHtml(currentStudent ? currentStudent.name : 'Student')}! You have completed ${completedCoursesList.length} course${completedCoursesList.length > 1 ? 's' : ''}!
-            </div>
-            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
-              Your official accredited certificate is ready with instant online verification, 1-click A4 PDF, and HD PNG download.
-            </div>
-          </div>
-        </div>
-        <button type="button" class="btn btn-gold" onclick="openCertificateModalFromCard('${completedCoursesList[0].id}', '${escapeHtml(completedCoursesList[0].title)}')">
-          🎓 View Official Certificate →
-        </button>
-      </div>
-    ` : '';
+    // Dashboard greeting
+    const greetingEl = document.getElementById('dash-greeting');
+    if (greetingEl) greetingEl.textContent = `Namaste, ${shortName}!`;
 
-    grid.innerHTML = celebrationBanner + courses.map(c => `
-      <article class="course-card">
-        <div class="course-thumb-wrap">
-          <img src="../${c.thumbnail || 'assets/editing-timeline.jpg'}" alt="${escapeHtml(c.title)}" loading="lazy" />
-          ${c.badge ? `<span class="course-badge">${escapeHtml(c.badge)}</span>` : ''}
-        </div>
-        <div class="course-card-body">
-          <span class="course-cat">${escapeHtml(c.category || 'Course')}</span>
-          <h3 class="course-card-title">${escapeHtml(c.title)}</h3>
-          <p class="course-card-sub">${escapeHtml(c.subtitle || '')}</p>
-          
-          <div class="course-progress-block">
-            <div class="course-progress-header">
-              <span>${c.completedCount} of ${c.totalLessons} lessons completed</span>
-              <span>${c.progressPercent}%</span>
-            </div>
-            <div class="progress-bar-wrap">
-              <div class="progress-bar-fill" style="width: ${c.progressPercent}%"></div>
-            </div>
-          </div>
+    const courses = coursesRes.courses || [];
+    window._allMyCourses = courses;
 
-          <div class="course-card-footer" style="flex-wrap: wrap; gap: 8px;">
-            <button type="button" class="btn btn-gold" style="flex: 1; min-width: 140px;" onclick="openCourseClassroom('${c.id}')">
-              ${c.completedCount > 0 ? 'Resume Course →' : 'Start Learning →'}
-            </button>
-            ${(c.isCompleted || c.progressPercent >= 100) ? `
-              <button type="button" class="btn btn-gold" style="border: 1px solid #ecd394; box-shadow: 0 4px 12px rgba(201,151,56,0.3);" onclick="openCertificateModalFromCard('${c.id}', '${escapeHtml(c.title)}')">
-                🎓 Official Certificate
-              </button>
-            ` : ''}
-          </div>
-        </div>
-      </article>
-    `).join('');
+    // Compute KPIs
+    const enrolledCount = courses.length;
+    const completedLessons = meRes.stats.completedLessonsCount || 0;
+    const completedCourses = courses.filter(c => c.isCompleted || c.progressPercent >= 100);
+    const certCount = completedCourses.length;
+    const avgProgress = enrolledCount > 0
+      ? Math.round(courses.reduce((sum, c) => sum + (c.progressPercent || 0), 0) / enrolledCount)
+      : 0;
+
+    // Update KPI UI
+    const statEnrolled = document.getElementById('stat-enrolled-count');
+    if (statEnrolled) statEnrolled.textContent = enrolledCount;
+
+    const statDone = document.getElementById('stat-completed-count');
+    if (statDone) statDone.textContent = completedLessons;
+
+    const statCert = document.getElementById('stat-cert-count');
+    if (statCert) statCert.textContent = certCount;
+
+    const statAvg = document.getElementById('stat-avg-progress');
+    if (statAvg) statAvg.textContent = `${avgProgress}%`;
+
+    const countLabel = document.getElementById('courses-count-label');
+    if (countLabel) countLabel.textContent = `${enrolledCount} Active Learning Programs`;
+
+    updateDropdownEnrolledBadge(enrolledCount);
+
+    // Update Filter Counts
+    const inProgressCount = courses.filter(c => c.completedCount > 0 && c.progressPercent < 100).length;
+    const cAll = document.getElementById('count-all');
+    if (cAll) cAll.textContent = enrolledCount;
+    const cProg = document.getElementById('count-in-progress');
+    if (cProg) cProg.textContent = inProgressCount;
+    const cComp = document.getElementById('count-completed');
+    if (cComp) cComp.textContent = certCount;
+
+    // Render Spotlight: "Continue Watching" card
+    renderResumeSpotlight(courses);
+
+    // Render Courses Grid with active filters
+    renderMyCoursesGrid();
 
   } catch (err) {
     if (err.message.includes('login') || err.message.includes('expired')) {
@@ -274,6 +493,177 @@ async function loadDashboard() {
       grid.innerHTML = `<div class="card" style="padding: 24px; color: var(--red);">Failed to load courses: ${err.message}</div>`;
     }
   }
+}
+
+// ── Render Spotlight "Continue Watching" Banner ──
+function renderResumeSpotlight(courses) {
+  const box = document.getElementById('resume-spotlight-box');
+  if (!box) return;
+
+  // Find course currently in progress, or fallback to first course with progress > 0
+  const inProgress = courses.find(c => c.completedCount > 0 && c.progressPercent < 100) ||
+                     (courses.length > 0 && courses[0].progressPercent < 100 ? courses[0] : null);
+
+  if (!inProgress) {
+    box.classList.add('hidden');
+    box.innerHTML = '';
+    return;
+  }
+
+  box.classList.remove('hidden');
+  box.innerHTML = `
+    <div class="resume-spotlight-card">
+      <div class="spotlight-left">
+        <div class="spotlight-thumb-wrap">
+          <img src="../${inProgress.thumbnail || 'assets/editing-timeline.jpg'}" alt="${escapeHtml(inProgress.title)}" />
+          <div class="spotlight-play-icon">▶</div>
+        </div>
+        <div class="spotlight-text">
+          <span class="spotlight-tag">⚡ CONTINUE WATCHING</span>
+          <h3 class="spotlight-title">${escapeHtml(inProgress.title)}</h3>
+          <div class="spotlight-progress-row">
+            <div class="spotlight-bar-bg">
+              <div class="spotlight-bar-fill" style="width:${inProgress.progressPercent}%"></div>
+            </div>
+            <span class="spotlight-percent">${inProgress.progressPercent}% • ${inProgress.completedCount}/${inProgress.totalLessons} lessons completed</span>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-gold spotlight-btn" onclick="openCourseClassroom('${inProgress.id}')">
+        Resume Masterclass ▶
+      </button>
+    </div>
+  `;
+}
+
+// ── Render My Courses Grid with Filters & Search ──
+function renderMyCoursesGrid() {
+  const grid = document.getElementById('courses-grid');
+  if (!grid) return;
+
+  const filter = window._currentMyCoursesFilter || 'all';
+  const query = (window._myCoursesSearchQuery || '').toLowerCase().trim();
+
+  let filtered = [...window._allMyCourses];
+
+  // 1. Status Filter
+  if (filter === 'in-progress') {
+    filtered = filtered.filter(c => c.completedCount > 0 && c.progressPercent < 100);
+  } else if (filter === 'completed') {
+    filtered = filtered.filter(c => c.isCompleted || c.progressPercent >= 100);
+  }
+
+  // 2. Search Query Filter
+  if (query) {
+    filtered = filtered.filter(c =>
+      (c.title && c.title.toLowerCase().includes(query)) ||
+      (c.category && c.category.toLowerCase().includes(query)) ||
+      (c.subtitle && c.subtitle.toLowerCase().includes(query))
+    );
+  }
+
+  // Empty state
+  if (filtered.length === 0) {
+    if (window._allMyCourses.length === 0) {
+      grid.innerHTML = `
+        <div class="card" style="grid-column: 1/-1; padding: 48px 24px; text-align: center; background: #111520; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px;">
+          <div style="font-size: 40px; margin-bottom: 12px;">🎓</div>
+          <h3 style="font-size: 20px; font-weight: 700; color: #fff;">No courses assigned yet</h3>
+          <p class="muted" style="margin: 8px auto 24px; max-width: 440px;">Your enrollment is being activated. Contact academy support or explore available masterclasses.</p>
+          <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <a href="../online/index.html" class="btn btn-gold">🌟 Browse All Masterclasses →</a>
+            <a href="https://wa.me/919939800780" target="_blank" class="btn btn-outline">WhatsApp Support 💬</a>
+          </div>
+        </div>
+      `;
+    } else {
+      grid.innerHTML = `
+        <div class="card" style="grid-column: 1/-1; padding: 40px 20px; text-align: center; background: #111520; border: 1px dashed rgba(255,255,255,0.12); border-radius: 18px;">
+          <div style="font-size: 32px; margin-bottom: 8px;">🔍</div>
+          <h4 style="color: #fff; font-size: 16px;">No courses match your filter</h4>
+          <p class="muted" style="font-size: 13px; margin: 6px 0 16px;">Try adjusting your search terms or view all courses.</p>
+          <button type="button" class="btn-sm btn-gold" onclick="filterMyCourses('all'); document.getElementById('mycourses-search-input').value=''; onSearchMyCourses('');">
+            View All Courses
+          </button>
+        </div>
+      `;
+    }
+    return;
+  }
+
+  // Course Cards
+  grid.innerHTML = filtered.map(c => {
+    const isDone = c.isCompleted || c.progressPercent >= 100;
+    const inProg = c.completedCount > 0 && !isDone;
+
+    let statusHtml = '';
+    if (isDone) {
+      statusHtml = `<span class="course-status-pill completed">✓ Completed</span>`;
+    } else if (inProg) {
+      statusHtml = `<span class="course-status-pill in-progress">${c.progressPercent}% Done</span>`;
+    } else {
+      statusHtml = `<span class="course-status-pill not-started">Not Started</span>`;
+    }
+
+    const durationText = c.duration || (c.totalLessons ? `${c.totalLessons} Lessons` : 'Full Course');
+
+    return `
+      <article class="course-card">
+        <div class="course-thumb-wrap">
+          <img src="../${c.thumbnail || 'assets/editing-timeline.jpg'}" alt="${escapeHtml(c.title)}" loading="lazy" />
+          <div class="course-thumb-overlay"></div>
+          ${c.badge ? `<span class="course-badge-top">${escapeHtml(c.badge)}</span>` : ''}
+          ${statusHtml}
+        </div>
+
+        <div class="course-card-body">
+          <div class="course-meta-row">
+            <span class="course-cat">${escapeHtml(c.category || 'MASTERCLASS')}</span>
+            <span class="course-duration-pill">⏱ ${escapeHtml(durationText)}</span>
+          </div>
+
+          <h3 class="course-card-title" title="${escapeHtml(c.title)}">${escapeHtml(c.title)}</h3>
+          <p class="course-card-sub">${escapeHtml(c.subtitle || 'Comprehensive practical editing and workflow masterclass.')}</p>
+
+          <div class="course-progress-block">
+            <div class="course-progress-header">
+              <span>Lessons: <b>${c.completedCount} / ${c.totalLessons || 0}</b></span>
+              <span><b>${c.progressPercent}%</b></span>
+            </div>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill ${isDone ? 'completed' : ''}" style="width: ${c.progressPercent}%"></div>
+            </div>
+          </div>
+
+          <div class="course-card-footer">
+            <button type="button" class="btn btn-gold" style="flex: 1;" onclick="openCourseClassroom('${c.id}')">
+              ${isDone ? 'Review Lessons ↺' : (c.completedCount > 0 ? 'Resume Lesson ▶' : 'Start Learning ▶')}
+            </button>
+            ${isDone ? `
+              <button type="button" class="btn btn-gold" style="box-shadow: 0 4px 14px rgba(216,161,83,0.35);" onclick="openCertificateModalFromCard('${c.id}', '${escapeHtml(c.title)}')">
+                🎓 Certificate
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+// ── Filter by Status Tab ──
+function filterMyCourses(filterType) {
+  window._currentMyCoursesFilter = filterType;
+  document.querySelectorAll('.mycourses-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === filterType);
+  });
+  renderMyCoursesGrid();
+}
+
+// ── Live Search My Courses ──
+function onSearchMyCourses(query) {
+  window._myCoursesSearchQuery = query;
+  renderMyCoursesGrid();
 }
 
 function showDashboard() {
@@ -289,9 +679,12 @@ async function openCourseClassroom(courseId, targetLessonId = null) {
     const res = await lmsApi(`course-details&id=${encodeURIComponent(courseId)}`);
     currentCourse = res.course;
 
-    document.getElementById('player-course-category').textContent = (currentCourse.category || 'VIDEO EDITING').toUpperCase();
-    document.getElementById('player-course-title').textContent = currentCourse.title;
-    document.getElementById('player-progress-badge').textContent = `${currentCourse.progressPercent}% Complete`;
+    const playerCourseCat = document.getElementById('player-course-category');
+    if (playerCourseCat) playerCourseCat.textContent = (currentCourse.category || 'VIDEO EDITING').toUpperCase();
+    const playerCourseTitle = document.getElementById('player-course-title');
+    if (playerCourseTitle) playerCourseTitle.textContent = currentCourse.title;
+    const playerProgBadge = document.getElementById('player-progress-badge');
+    if (playerProgBadge) playerProgBadge.textContent = `${currentCourse.progressPercent}% Complete`;
 
     // Render Curriculum Accordion
     renderCurriculum(currentCourse);
@@ -366,9 +759,26 @@ function renderCurriculum(course) {
 }
 
 async function loadLesson(courseId, lessonId) {
+  // Clear any existing countdown or overlay immediately
+  if (_autoNextTimer) { clearInterval(_autoNextTimer); _autoNextTimer = null; }
+  document.getElementById('autonext-overlay')?.remove();
+
   try {
     const res = await lmsApi(`get-lesson&courseId=${encodeURIComponent(courseId)}&lessonId=${encodeURIComponent(lessonId)}`);
     currentLesson = res.lesson;
+
+    // Update discussion context and auto-load comments (Comment tab is default)
+    setDiscussionContext(courseId, lessonId);
+    loadDiscussionComments();
+
+    // Reset tabs — activate Comment tab by default
+    document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
+    const discTab = document.querySelector('.lesson-tab[data-ltab="discussion"]');
+    if (discTab) discTab.classList.add('active');
+    ['notes','resources','quiz','discussion','support'].forEach(t => {
+      const el = document.getElementById(`ltab-${t}`);
+      if (el) el.classList.toggle('hidden', t !== 'discussion');
+    });
 
     // Highlight active lesson in curriculum sidebar
     document.querySelectorAll('.lesson-list-item').forEach(el => el.classList.remove('active'));
@@ -381,23 +791,120 @@ async function loadLesson(courseId, lessonId) {
 
     // Mount Video Player
     const videoMount = document.getElementById('video-mount');
-    videoMount.innerHTML = '';
+    videoMount.innerHTML = '';  // clear old player
 
-    if (currentLesson.videoType === 'bunny_stream') {
+    // Cleanup previous YouTube player instance
+    if (window._currentYtPlayer && window._currentYtPlayer.destroy) {
+      try { window._currentYtPlayer.destroy(); } catch (_) {}
+      window._currentYtPlayer = null;
+    }
+
+    if (currentLesson.videoType === 'youtube') {
+      // ── Custom Disguised YouTube Academy Player ──
+      const ytTarget = document.createElement('div');
+      ytTarget.id = 'yt-player-target';
+      videoMount.appendChild(ytTarget);
+
+      // Top shield: hides YouTube video title, channel logo & Share button
+      const topShield = document.createElement('div');
+      topShield.className = 'yt-shield-top';
+      topShield.innerHTML = `
+        <div class="yt-shield-content">
+          <span class="yt-shield-dot"></span>
+          <span class="yt-shield-badge">HD Masterclass • Quick Art Academy</span>
+        </div>
+      `;
+      videoMount.appendChild(topShield);
+
+      // Top-right blocker: intercepts click on YouTube Share/Watch Later icons
+      const shareBlocker = document.createElement('div');
+      shareBlocker.className = 'yt-shield-share-blocker';
+      videoMount.appendChild(shareBlocker);
+
+      // Bottom-right corner blocker: prevents clicking 'Watch on YouTube'
+      const cornerBlocker = document.createElement('div');
+      cornerBlocker.className = 'yt-shield-corner';
+      videoMount.appendChild(cornerBlocker);
+
+      // Load and mount via YouTube Iframe API
+      loadYouTubeIframeApi(() => {
+        try {
+          window._currentYtPlayer = new YT.Player('yt-player-target', {
+            videoId: currentLesson.youtubeId,
+            width: '100%',
+            height: '100%',
+            playerVars: {
+              autoplay: 0,
+              controls: 1,
+              rel: 0,
+              modestbranding: 1,
+              iv_load_policy: 3,
+              playsinline: 1,
+              disablekb: 0,
+              fs: 1,
+              origin: window.location.origin
+            },
+            events: {
+              onReady: (e) => {
+                if (window._currentVideoSpeed) {
+                  try { e.target.setPlaybackRate(window._currentVideoSpeed); } catch (_) {}
+                }
+              },
+              onStateChange: (e) => {
+                if (e.data === YT.PlayerState.ENDED) {
+                  handleVideoEnded();
+                }
+              }
+            }
+          });
+        } catch (err) {
+          console.error('YouTube player init error:', err);
+        }
+      });
+
+    } else if (currentLesson.videoType === 'bunny_stream') {
       // Bunny.net Stream Iframe embed
       const iframe = document.createElement('iframe');
-      iframe.src = currentLesson.streamUrl;
+      // Force fresh load (fix replay issue: add timestamp param)
+      const sep = currentLesson.streamUrl.includes('?') ? '&' : '?';
+      iframe.src = currentLesson.streamUrl + sep + '_t=' + Date.now();
+      iframe.id  = 'bunny-iframe';
       iframe.allow = 'accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen';
       iframe.allowFullscreen = true;
+      iframe.setAttribute('loading', 'lazy');
       videoMount.appendChild(iframe);
+
+      // Bunny.net fires 'message' event with {event:'ended'} when video ends
+      window._bunnyEndedListener && window.removeEventListener('message', window._bunnyEndedListener);
+      window._bunnyEndedListener = (e) => {
+        try {
+          const d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+          if (d?.event === 'ended' || d?.type === 'ended') {
+            handleVideoEnded();
+          }
+        } catch (_) {}
+      };
+      window.addEventListener('message', window._bunnyEndedListener);
+
     } else {
-      // Standard video tag (MP4 / HLS)
+      // Standard HTML5 video (MP4 / HLS / direct URL)
       const video = document.createElement('video');
-      video.src = currentLesson.streamUrl;
+      video.id       = 'main-video-el';
       video.controls = true;
       video.autoplay = false;
       video.playsInline = true;
+      video.setAttribute('controlslist', 'nodownload noplaybackrate');
+      video.setAttribute('disablepictureinpicture', 'true');
+      video.setAttribute('oncontextmenu', 'return false');
+      // Fix replay: always set src fresh and load
+      video.src = '';
+      video.load();
+      video.src = currentLesson.streamUrl;
+      video.load();
       videoMount.appendChild(video);
+
+      // Auto-next on video end
+      video.addEventListener('ended', handleVideoEnded);
     }
 
     // Configure Anti-Piracy Watermark
@@ -555,6 +1062,173 @@ function goToNextLesson() {
     }
   }
 }
+
+// ── YouTube IFrame API Loader ────────────────────────────────────────────────
+let _ytApiLoading = false;
+let _ytApiCallbacks = [];
+
+function loadYouTubeIframeApi(callback) {
+  if (window.YT && window.YT.Player) {
+    callback();
+    return;
+  }
+  _ytApiCallbacks.push(callback);
+  if (!_ytApiLoading) {
+    _ytApiLoading = true;
+    window.onYouTubeIframeAPIReady = () => {
+      _ytApiCallbacks.forEach(cb => {
+        try { cb(); } catch (e) { console.error(e); }
+      });
+      _ytApiCallbacks = [];
+    };
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  }
+}
+
+// ── Auto-Next Video on Ended & Replay ─────────────────────────────────────────
+let _autoNextTimer = null;
+
+function replayCurrentVideo() {
+  if (_autoNextTimer) { clearInterval(_autoNextTimer); _autoNextTimer = null; }
+  document.getElementById('autonext-overlay')?.remove();
+
+  // YouTube player replay
+  if (window._currentYtPlayer && typeof window._currentYtPlayer.seekTo === 'function') {
+    try {
+      window._currentYtPlayer.seekTo(0, true);
+      window._currentYtPlayer.playVideo();
+      return;
+    } catch (_) {}
+  }
+
+  const video = document.getElementById('main-video-el');
+  if (video) {
+    video.currentTime = 0;
+    const p = video.play();
+    if (p && p.catch) p.catch(() => {});
+    return;
+  }
+  const iframe = document.getElementById('bunny-iframe');
+  if (iframe && currentLesson && currentLesson.streamUrl) {
+    const sep = currentLesson.streamUrl.includes('?') ? '&' : '?';
+    iframe.src = currentLesson.streamUrl + sep + '_t=' + Date.now() + '&autoplay=true';
+    return;
+  }
+  if (currentCourse && currentLesson) {
+    loadLesson(currentCourse.id, currentLesson.id);
+  }
+}
+
+function handleVideoEnded() {
+  if (_autoNextTimer) { clearInterval(_autoNextTimer); _autoNextTimer = null; }
+  document.getElementById('autonext-overlay')?.remove();
+
+  if (!currentCourse || !currentLesson) return;
+
+  // Find next lesson
+  let foundCurrent = false;
+  let nextLesson = null;
+  for (const mod of currentCourse.modules || []) {
+    for (const les of mod.lessons || []) {
+      if (foundCurrent) { nextLesson = les; break; }
+      if (les.id === currentLesson.id) foundCurrent = true;
+    }
+    if (nextLesson) break;
+  }
+
+  // Auto-mark current as completed
+  if (!currentLesson.isCompleted) {
+    toggleLessonComplete().catch(() => {});
+  }
+
+  const videoMount = document.getElementById('video-mount');
+  if (!videoMount) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'autonext-overlay';
+
+  if (nextLesson) {
+    let seconds = 6;
+    overlay.innerHTML = `
+      <div class="autonext-card">
+        <div class="autonext-badge">▶ UP NEXT IN <span id="autonext-counter">${seconds}</span>s</div>
+        <div class="autonext-title">${escapeHtml(nextLesson.title)}</div>
+        <div class="autonext-progress-ring">
+          <svg width="56" height="56" style="transform:rotate(-90deg)">
+            <circle cx="28" cy="28" r="24" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="4"/>
+            <circle id="autonext-ring" cx="28" cy="28" r="24" fill="none" stroke="#d8a153" stroke-width="4"
+              stroke-dasharray="150.8" stroke-dashoffset="0" stroke-linecap="round"
+              style="transition:stroke-dashoffset 1s linear;"/>
+          </svg>
+          <button type="button" class="autonext-play-btn" onclick="confirmAutoNext('${nextLesson.id}')" title="Play Now">▶</button>
+        </div>
+        <div class="autonext-btn-row">
+          <button type="button" class="btn-replay-overlay" onclick="replayCurrentVideo()">
+            ↺ Replay
+          </button>
+          <button type="button" class="btn-cancel-overlay" onclick="cancelAutoNext()">
+            ✕ Cancel
+          </button>
+          <button type="button" class="btn-sm btn-gold btn-next-overlay" onclick="confirmAutoNext('${nextLesson.id}')">
+            Next Lesson ▶
+          </button>
+        </div>
+      </div>`;
+
+    videoMount.appendChild(overlay);
+
+    const ring = document.getElementById('autonext-ring');
+    const circumference = 150.8;
+
+    _autoNextTimer = setInterval(() => {
+      seconds--;
+      const el = document.getElementById('autonext-counter');
+      if (el) el.textContent = seconds;
+      if (ring) ring.style.strokeDashoffset = circumference * (1 - seconds / 6);
+
+      if (seconds <= 0) {
+        clearInterval(_autoNextTimer);
+        _autoNextTimer = null;
+        confirmAutoNext(nextLesson.id);
+      }
+    }, 1000);
+
+  } else {
+    // Last lesson finished!
+    updateCertificateUnlockState();
+    overlay.innerHTML = `
+      <div class="autonext-card">
+        <div style="font-size:32px;">🎓</div>
+        <div class="autonext-badge" style="color:#d8a153;">Course Completed!</div>
+        <div class="autonext-title">Aapne course ke sabhi lessons poore kar liye hain!</div>
+        <div class="autonext-btn-row">
+          <button type="button" class="btn-replay-overlay" onclick="replayCurrentVideo()">
+            ↺ Replay Video
+          </button>
+          <button type="button" class="btn-sm btn-gold btn-next-overlay" onclick="cancelAutoNext(); openCertificateModal();">
+            🎓 View Certificate
+          </button>
+        </div>
+      </div>`;
+    videoMount.appendChild(overlay);
+  }
+}
+
+function cancelAutoNext() {
+  if (_autoNextTimer) { clearInterval(_autoNextTimer); _autoNextTimer = null; }
+  document.getElementById('autonext-overlay')?.remove();
+}
+
+function confirmAutoNext(lessonId) {
+  if (_autoNextTimer) { clearInterval(_autoNextTimer); _autoNextTimer = null; }
+  document.getElementById('autonext-overlay')?.remove();
+  if (currentCourse && lessonId) {
+    loadLesson(currentCourse.id, lessonId);
+  }
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 function updateCertificateUnlockState() {
   const box = document.getElementById('certificate-unlock-box');
@@ -915,29 +1589,53 @@ function copyCertificateLink() {
 // ---------- Video Playback Controls ----------
 
 function setVideoSpeed(rate) {
+  window._currentVideoSpeed = rate;
   document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
   const btn = Array.from(document.querySelectorAll('.speed-btn')).find(b => b.textContent.includes(`${rate}`));
   if (btn) btn.classList.add('active');
 
+  // 1. HTML5 Video
   const video = document.querySelector('#video-mount video');
   if (video) {
     video.playbackRate = rate;
     toast(`Speed: ${rate}x`);
-  } else {
-    // If iframe, postMessage for Bunny player if applicable
-    const iframe = document.querySelector('#video-mount iframe');
-    if (iframe) {
-      iframe.contentWindow.postMessage(JSON.stringify({ event: 'setPlaybackRate', rate }), '*');
+    return;
+  }
+
+  // 2. YouTube Player
+  if (window._currentYtPlayer && typeof window._currentYtPlayer.setPlaybackRate === 'function') {
+    try {
+      window._currentYtPlayer.setPlaybackRate(rate);
       toast(`Speed: ${rate}x`);
-    }
+      return;
+    } catch (_) {}
+  }
+
+  // 3. Bunny iframe (postMessage)
+  const iframe = document.querySelector('#video-mount iframe');
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.postMessage(JSON.stringify({ event: 'setPlaybackRate', rate }), '*');
+    toast(`Speed: ${rate}x`);
   }
 }
 
 function skipVideo(delta) {
+  // 1. HTML5 Video
   const video = document.querySelector('#video-mount video');
   if (video) {
     video.currentTime = Math.max(0, video.currentTime + delta);
     toast(`${delta > 0 ? '+' : ''}${delta}s`);
+    return;
+  }
+
+  // 2. YouTube Player
+  if (window._currentYtPlayer && typeof window._currentYtPlayer.getCurrentTime === 'function') {
+    try {
+      const cur = window._currentYtPlayer.getCurrentTime();
+      window._currentYtPlayer.seekTo(Math.max(0, cur + delta), true);
+      toast(`${delta > 0 ? '+' : ''}${delta}s`);
+      return;
+    } catch (_) {}
   }
 }
 
@@ -1071,68 +1769,55 @@ function closeCatalogModal() {
   document.getElementById('modal-catalog').classList.remove('show');
 }
 
-// ---------- 6. Instant Checkout Modal ----------
+// ---------- 6. Instant 1-Step Checkout & Auto-Access Controller ----------
 
 let activeCheckoutCourse = null;
 let activeAppliedCoupon = null;
 
-async function openCheckoutModal(courseId) {
-  try {
-    const res = await fetch('../api/lms.php?action=catalog').then(r => r.json());
-    const course = (res.catalog || []).find(c => c.id === courseId);
-    if (!course) {
-      toast('Course not found', false);
-      return;
-    }
-    activeCheckoutCourse = course;
-    activeAppliedCoupon = null;
-
-    document.getElementById('checkout-course-id').value = course.id;
-    document.getElementById('checkout-course-title').textContent = course.title;
-    document.getElementById('checkout-course-price').textContent = `₹${course.price.toLocaleString()}`;
-    document.getElementById('checkout-course-orig').textContent = `₹${course.originalPrice.toLocaleString()}`;
-    document.getElementById('btn-pay-amount').textContent = `₹${course.price.toLocaleString()}`;
-
-    // Reset coupon UI
-    const cpInput = document.getElementById('checkout-coupon-input');
-    if (cpInput) cpInput.value = '';
-    const pill = document.getElementById('coupon-applied-pill');
-    if (pill) pill.style.display = 'none';
-    const msg = document.getElementById('coupon-feedback-msg');
-    if (msg) msg.style.display = 'none';
-    const breakdown = document.getElementById('coupon-discount-breakdown');
-    if (breakdown) breakdown.style.display = 'none';
-
-    // Auto-fill student details if already logged in
-    if (currentStudent) {
-      document.getElementById('checkout-name').value = currentStudent.name || '';
-      document.getElementById('checkout-phone').value = currentStudent.phone || '';
-      document.getElementById('checkout-email').value = currentStudent.email || '';
-    }
-
-    document.getElementById('modal-checkout').classList.add('show');
-  } catch (err) {
-    toast(`Could not open checkout: ${err.message}`, false);
+function handleCheckoutBack() {
+  if (window.history.length > 1 && (document.referrer.includes('quickart') || document.referrer.includes(window.location.host))) {
+    window.history.back();
+  } else {
+    window.location.href = '../index.html#courses';
   }
 }
 
-function closeCheckoutModal() {
-  document.getElementById('modal-checkout').classList.remove('show');
+function selectPayMethod(method) {
+  document.querySelectorAll('.pay-method-pill').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(`pill-${method}`);
+  if (target) {
+    target.classList.add('active');
+    const radio = target.querySelector('input[type="radio"]');
+    if (radio) radio.checked = true;
+  }
 }
 
-// Apply Coupon Function in Checkout
-async function applyCheckoutCoupon() {
-  const code = (document.getElementById('checkout-coupon-input')?.value || '').trim().toUpperCase();
-  const msgEl = document.getElementById('coupon-feedback-msg');
-  const pillEl = document.getElementById('coupon-applied-pill');
-  const breakdownEl = document.getElementById('coupon-discount-breakdown');
-  const btn = document.getElementById('btn-apply-coupon');
+function toggleCheckoutCoupon() {
+  const drawer = document.getElementById('checkout-coupon-drawer');
+  const arrow = document.getElementById('coupon-toggle-arrow');
+  if (!drawer) return;
+  const isHidden = drawer.classList.contains('hidden');
+  if (isHidden) {
+    drawer.classList.remove('hidden');
+    if (arrow) arrow.textContent = '▲';
+    const input = document.getElementById('view-coupon-code');
+    if (input) input.focus();
+  } else {
+    drawer.classList.add('hidden');
+    if (arrow) arrow.textContent = '▼';
+  }
+}
+
+async function applyViewCoupon() {
+  const code = (document.getElementById('view-coupon-code')?.value || '').trim().toUpperCase();
+  const msgEl = document.getElementById('view-coupon-feedback');
+  const breakdownEl = document.getElementById('view-coupon-breakdown');
+  const btn = document.getElementById('btn-apply-view-coupon');
 
   if (!code) {
     if (msgEl) {
       msgEl.textContent = 'Please enter a coupon code';
-      msgEl.style.color = '#ef4444';
-      msgEl.style.display = 'block';
+      msgEl.className = 'coupon-msg error';
     }
     return;
   }
@@ -1148,36 +1833,36 @@ async function applyCheckoutCoupon() {
 
     activeAppliedCoupon = res;
 
-    // Show success pill and breakdown
-    if (pillEl) pillEl.style.display = 'inline-block';
     if (msgEl) {
       msgEl.textContent = `✓ ${res.description || 'Coupon applied successfully!'}`;
-      msgEl.style.color = '#059669';
-      msgEl.style.display = 'block';
+      msgEl.className = 'coupon-msg success';
     }
 
     if (breakdownEl) {
-      document.getElementById('chk-base-price').textContent = `₹${res.originalPrice.toLocaleString()}`;
-      document.getElementById('chk-coupon-tag').textContent = res.code;
-      document.getElementById('chk-discount-amt').textContent = `-₹${res.discountAmount.toLocaleString()}`;
-      document.getElementById('chk-final-amt').textContent = `₹${res.finalPrice.toLocaleString()}`;
-      breakdownEl.style.display = 'block';
+      const bAmt = document.getElementById('v-base-amt');
+      if (bAmt) bAmt.textContent = `₹${Number(res.originalPrice || activeCheckoutCourse.price).toLocaleString()}`;
+      const cTag = document.getElementById('v-coupon-tag');
+      if (cTag) cTag.textContent = res.code;
+      const dAmt = document.getElementById('v-discount-amt');
+      if (dAmt) dAmt.textContent = `-₹${Number(res.discountAmount || 0).toLocaleString()}`;
+      const fAmt = document.getElementById('v-final-amt');
+      if (fAmt) fAmt.textContent = `₹${Number(res.finalPrice || 0).toLocaleString()}`;
+      breakdownEl.classList.remove('hidden');
     }
 
-    // Update Pay Button
-    document.getElementById('btn-pay-amount').textContent = `₹${res.finalPrice.toLocaleString()}`;
+    const payAmtEl = document.getElementById('view-btn-pay-amt');
+    if (payAmtEl) payAmtEl.textContent = `₹${Number(res.finalPrice || 0).toLocaleString()}`;
     toast(`🎟️ Coupon ${res.code} applied: ₹${res.discountAmount.toLocaleString()} saved!`);
 
   } catch (err) {
     activeAppliedCoupon = null;
-    if (pillEl) pillEl.style.display = 'none';
-    if (breakdownEl) breakdownEl.style.display = 'none';
+    if (breakdownEl) breakdownEl.classList.add('hidden');
     if (msgEl) {
       msgEl.textContent = err.message;
-      msgEl.style.color = '#ef4444';
-      msgEl.style.display = 'block';
+      msgEl.className = 'coupon-msg error';
     }
-    document.getElementById('btn-pay-amount').textContent = `₹${activeCheckoutCourse.price.toLocaleString()}`;
+    const payAmtEl = document.getElementById('view-btn-pay-amt');
+    if (payAmtEl) payAmtEl.textContent = `₹${Number(activeCheckoutCourse.price || 4999).toLocaleString()}`;
     toast(err.message, false);
   } finally {
     btn.disabled = false;
@@ -1185,66 +1870,180 @@ async function applyCheckoutCoupon() {
   }
 }
 
-// Payment method option click
-document.querySelectorAll('.pay-option').forEach(opt => {
-  opt.addEventListener('click', () => {
-    document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('active'));
-    opt.classList.add('active');
-  });
-});
+async function openCheckoutPage(courseId) {
+  try {
+    const catModal = document.getElementById('modal-catalog');
+    if (catModal) catModal.classList.remove('show');
+    const chkModal = document.getElementById('modal-checkout');
+    if (chkModal) chkModal.classList.remove('show');
 
-// Checkout Form Submission (Razorpay-first, fallback to direct enroll)
-document.getElementById('form-checkout').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const courseId = document.getElementById('checkout-course-id').value;
-  const name = document.getElementById('checkout-name').value.trim();
-  const phone = document.getElementById('checkout-phone').value.replace(/\D/g, '');
-  const email = document.getElementById('checkout-email').value.trim();
+    switchView('checkout');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    let course = null;
+    if (window._catalogCache && window._catalogCache.length) {
+      course = window._catalogCache.find(c => c.id === courseId);
+    }
+    if (!course) {
+      const res = await fetch('../api/lms.php?action=catalog').then(r => r.json());
+      window._catalogCache = res.catalog || [];
+      course = (res.catalog || []).find(c => c.id === courseId);
+    }
+    if (!course) {
+      course = {
+        id: courseId,
+        title: 'Masterclass Course',
+        price: 4999,
+        originalPrice: 9999,
+        category: 'Masterclass',
+        description: 'Complete Masterclass with 4K RAW projects and Hindi mentorship.'
+      };
+    }
+
+    activeCheckoutCourse = course;
+    activeAppliedCoupon = null;
+
+    const idInput = document.getElementById('view-course-id');
+    if (idInput) idInput.value = course.id;
+
+    const titleEl = document.getElementById('view-checkout-title');
+    if (titleEl) titleEl.textContent = course.title;
+
+    const formTitleEl = document.getElementById('form-course-title');
+    if (formTitleEl) formTitleEl.textContent = course.title;
+
+    const badgeEl = document.getElementById('view-checkout-badge');
+    if (badgeEl) badgeEl.textContent = (course.category || 'MASTERCLASS').toUpperCase();
+
+    const descEl = document.getElementById('view-checkout-desc');
+    if (descEl) descEl.textContent = course.description || 'Zero to Professional Level with 4K RAW Projects & Hindi Mentorship.';
+
+    const priceFormatted = `₹${Number(course.price || 4999).toLocaleString()}`;
+    const origFormatted = `₹${Number(course.originalPrice || (course.price * 2) || 9999).toLocaleString()}`;
+
+    const priceEl = document.getElementById('view-checkout-price');
+    if (priceEl) priceEl.textContent = priceFormatted;
+
+    const origEl = document.getElementById('view-checkout-orig');
+    if (origEl) origEl.textContent = origFormatted;
+
+    const btnAmtEl = document.getElementById('view-btn-pay-amt');
+    if (btnAmtEl) btnAmtEl.textContent = priceFormatted;
+
+    // Reset coupon UI
+    const drawer = document.getElementById('checkout-coupon-drawer');
+    if (drawer) drawer.classList.add('hidden');
+    const arrow = document.getElementById('coupon-toggle-arrow');
+    if (arrow) arrow.textContent = '▼';
+    const cInput = document.getElementById('view-coupon-code');
+    if (cInput) cInput.value = '';
+    const cMsg = document.getElementById('view-coupon-feedback');
+    if (cMsg) { cMsg.textContent = ''; cMsg.className = 'coupon-msg'; }
+    const cBd = document.getElementById('view-coupon-breakdown');
+    if (cBd) cBd.classList.add('hidden');
+
+    // Auto-fill student info if already logged in
+    if (currentStudent) {
+      const nameInp = document.getElementById('view-name');
+      if (nameInp && currentStudent.name && !nameInp.value) nameInp.value = currentStudent.name;
+      const phoneInp = document.getElementById('view-phone');
+      if (phoneInp && currentStudent.phone && !phoneInp.value) phoneInp.value = currentStudent.phone;
+    }
+
+  } catch (err) {
+    console.error("Error opening checkout view:", err);
+    toast(`Could not load checkout: ${err.message}`, false);
+  }
+}
+
+// Redirect modal triggers to dedicated checkout view
+function openCheckoutModal(courseId) {
+  openCheckoutPage(courseId);
+}
+
+function closeCheckoutModal() {
+  const chkModal = document.getElementById('modal-checkout');
+  if (chkModal) chkModal.classList.remove('show');
+}
+
+// Apply coupon inside modal if opened
+async function applyCheckoutCoupon() {
+  await applyViewCoupon();
+}
+
+// Unified 1-Step Form Submission (Razorpay-first + Auto-Access)
+async function handleCheckoutViewSubmit(e) {
+  if (e) e.preventDefault();
+
+  const courseId = document.getElementById('view-course-id')?.value || activeCheckoutCourse?.id;
+  const name = (document.getElementById('view-name')?.value || '').trim();
+  const phone = (document.getElementById('view-phone')?.value || '').replace(/\D/g, '');
   const couponCode = activeAppliedCoupon ? activeAppliedCoupon.code : '';
+  const paymentMethod = document.querySelector('input[name="view_payment_method"]:checked')?.value || 'UPI / QR Code';
 
-  if (phone.length < 10) {
-    toast('Please enter a valid 10-digit mobile number', false);
+  if (!phone || phone.length < 10) {
+    toast('Kripya valid 10-digit WhatsApp mobile number enter karein.', false);
+    document.getElementById('view-phone')?.focus();
+    return;
+  }
+  if (!name) {
+    toast('Kripya apna poora naam enter karein (Certificate ke liye).', false);
+    document.getElementById('view-name')?.focus();
+    return;
+  }
+  if (!courseId) {
+    toast('Course selection missing. Please refresh.', false);
     return;
   }
 
-  const btn = document.getElementById('btn-complete-enroll');
-  btn.disabled = true;
-  btn.textContent = 'Processing…';
+  const btn = document.getElementById('btn-submit-enroll');
+  const originalBtnHtml = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `
+      <span class="btn-pay-text">⏳ Connecting Payment Gateway...</span>
+      <span class="btn-pay-sub">Classroom access generate ho raha hai...</span>
+    `;
+  }
 
   try {
-    // Step 1: Try to create a Razorpay order
+    // Step 1: Check if Razorpay order can be created
     const orderRes = await fetch('../api/lms.php?action=create-razorpay-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ courseId, name, phone, email, couponCode })
+      body: JSON.stringify({ courseId, name, phone, email: '', couponCode })
     }).then(r => r.json());
 
     if (orderRes.ok && orderRes.razorpayEnabled && orderRes.orderId) {
-      // Step 2: Open Razorpay Checkout modal
+      // Step 2: Open Razorpay Checkout Modal
       const rzpOptions = {
         key: orderRes.keyId,
         amount: orderRes.amount,
         currency: orderRes.currency || 'INR',
         name: 'Quick Art Photography Academy',
-        description: orderRes.courseTitle || 'Course Enrollment',
+        description: orderRes.courseTitle || 'Instant Course Enrollment',
         order_id: orderRes.orderId,
         prefill: {
-          name: orderRes.studentName || name,
-          contact: orderRes.studentPhone || phone,
-          email: orderRes.studentEmail || email
+          name: name,
+          contact: phone
         },
         theme: { color: '#c99738' },
         modal: {
           ondismiss: () => {
-            btn.disabled = false;
-            const finalAmount = activeAppliedCoupon ? activeAppliedCoupon.finalPrice : (activeCheckoutCourse?.price || 4999);
-            btn.innerHTML = `Pay <span id="btn-pay-amount">₹${finalAmount.toLocaleString()}</span> &amp; Start Learning Now →`;
-            toast('Payment cancelled. Please try again.', false);
+            if (btn) {
+              btn.disabled = false;
+              btn.innerHTML = originalBtnHtml;
+            }
+            toast('Payment cancel hua. Dubara koshish kar sakte hain.', false);
           }
         },
         handler: async (response) => {
-          // Step 3: Verify payment signature server-side
-          btn.textContent = 'Verifying Payment…';
+          if (btn) {
+            btn.innerHTML = `
+              <span class="btn-pay-text">⚡ Verifying Payment &amp; Unlocking...</span>
+              <span class="btn-pay-sub">Classroom me redirect kiya ja raha hai...</span>
+            `;
+          }
           try {
             const verifyRes = await fetch('../api/lms.php?action=verify-razorpay-payment', {
               method: 'POST',
@@ -1256,7 +2055,7 @@ document.getElementById('form-checkout').addEventListener('submit', async (e) =>
                 courseId,
                 name,
                 phone,
-                email,
+                email: '',
                 couponCode
               })
             }).then(r => r.json());
@@ -1265,36 +2064,88 @@ document.getElementById('form-checkout').addEventListener('submit', async (e) =>
               throw new Error(verifyRes.error || 'Payment verification failed');
             }
 
-            // Step 4: Log in student & open classroom
+            // AUTO-ACCESS GRANTED!
             studentToken = verifyRes.token;
             localStorage.setItem(TOKEN_KEY, studentToken);
             currentStudent = verifyRes.student;
+            window._currentStudent = currentStudent;
 
-            closeCheckoutModal();
-            toast('🎉 Payment verified! Course unlocked instantly.');
+            toast(`🎉 Badhai ho ${name}! Aapka course unlock ho gaya.`);
+            window.history.replaceState(null, '', `index.html?course=${encodeURIComponent(courseId)}`);
             await openCourseClassroom(courseId);
 
           } catch (verifyErr) {
-            toast(`Verification error: ${verifyErr.message}. Contact support with Payment ID: ${response.razorpay_payment_id}`, false);
-            btn.disabled = false;
-            const finalAmount = activeAppliedCoupon ? activeAppliedCoupon.finalPrice : (activeCheckoutCourse?.price || 4999);
-            btn.innerHTML = `Pay <span id="btn-pay-amount">₹${finalAmount.toLocaleString()}</span> &amp; Start Learning Now →`;
+            toast(`Verification Error: ${verifyErr.message}. Payment ID: ${response.razorpay_payment_id}`, false);
+            if (btn) {
+              btn.disabled = false;
+              btn.innerHTML = originalBtnHtml;
+            }
           }
         }
       };
 
       const rzp = new Razorpay(rzpOptions);
       rzp.open();
-      // Button state is managed by modal dismiss / handler
-      btn.disabled = false;
-      btn.textContent = 'Pay with Razorpay';
 
     } else {
-      // Razorpay not enabled — fallback: direct enrollment
+      // Step 2 Fallback: Direct instant enrollment
       const res = await fetch('../api/lms.php?action=checkout-enroll', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courseId, name, phone, email, paymentMethod: 'Manual', couponCode })
+        body: JSON.stringify({ courseId, name, phone, email: '', paymentMethod, couponCode })
+      }).then(r => r.json());
+
+      if (!res.ok) throw new Error(res.error || 'Enrollment process failed');
+
+      // AUTO-ACCESS GRANTED!
+      studentToken = res.token;
+      localStorage.setItem(TOKEN_KEY, studentToken);
+      currentStudent = res.student;
+      window._currentStudent = currentStudent;
+
+      toast(`🎉 Badhai ho ${name}! Aapka course unlock ho gaya.`);
+      window.history.replaceState(null, '', `index.html?course=${encodeURIComponent(courseId)}`);
+      await openCourseClassroom(courseId);
+    }
+
+  } catch (err) {
+    console.error("Enrollment error:", err);
+    toast(`Error: ${err.message}`, false);
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalBtnHtml;
+    }
+  }
+}
+
+// Attach listener to checkout view form
+const viewCheckoutForm = document.getElementById('form-checkout-view');
+if (viewCheckoutForm) {
+  viewCheckoutForm.addEventListener('submit', handleCheckoutViewSubmit);
+}
+
+// Backward compatibility listener for modal checkout form
+const modalCheckoutForm = document.getElementById('form-checkout');
+if (modalCheckoutForm) {
+  modalCheckoutForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const courseId = document.getElementById('checkout-course-id')?.value;
+    const name = document.getElementById('checkout-name')?.value?.trim();
+    const phone = document.getElementById('checkout-phone')?.value?.replace(/\D/g, '');
+    const email = document.getElementById('checkout-email')?.value?.trim();
+    const couponCode = activeAppliedCoupon ? activeAppliedCoupon.code : '';
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'UPI / QR Code';
+
+    if (phone.length < 10) {
+      toast('Valid 10-digit mobile number required', false);
+      return;
+    }
+
+    try {
+      const res = await fetch('../api/lms.php?action=checkout-enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ courseId, name, phone, email, paymentMethod, couponCode })
       }).then(r => r.json());
 
       if (!res.ok) throw new Error(res.error || 'Enrollment failed');
@@ -1302,32 +2153,33 @@ document.getElementById('form-checkout').addEventListener('submit', async (e) =>
       studentToken = res.token;
       localStorage.setItem(TOKEN_KEY, studentToken);
       currentStudent = res.student;
+      window._currentStudent = currentStudent;
 
       closeCheckoutModal();
       toast('🎉 Enrollment successful! Course unlocked.');
+      window.history.replaceState(null, '', `index.html?course=${encodeURIComponent(courseId)}`);
       await openCourseClassroom(courseId);
+    } catch (err) {
+      toast(`Error: ${err.message}`, false);
     }
+  });
+}
 
-  } catch (err) {
-    toast(`Error: ${err.message}`, false);
-    btn.disabled = false;
-    const finalAmount = activeAppliedCoupon ? activeAppliedCoupon.finalPrice : (activeCheckoutCourse?.price || 4999);
-    btn.innerHTML = `Pay <span id="btn-pay-amount">₹${finalAmount.toLocaleString()}</span> &amp; Start Learning Now →`;
-  }
-});
-
-// Lesson Tabs Switcher (Updated to include quiz)
+// Lesson Tabs Switcher
 document.querySelectorAll('.lesson-tab').forEach(tab => {
   tab.addEventListener('click', (e) => {
     document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
     e.target.classList.add('active');
     const target = e.target.dataset.ltab;
-    ['notes', 'resources', 'quiz', 'support'].forEach(t => {
+    ['notes', 'resources', 'quiz', 'discussion', 'support'].forEach(t => {
       const el = document.getElementById(`ltab-${t}`);
       if (el) el.classList.toggle('hidden', t !== target);
     });
     if (target === 'quiz' && currentCourse) {
       renderQuiz(currentCourse);
+    }
+    if (target === 'discussion') {
+      loadDiscussionComments();
     }
   });
 });
@@ -1394,6 +2246,36 @@ async function verifyCertificateById(certId) {
 // ---------- Initial Bootstrap ----------
 
 async function initStudentSession() {
+  // 1. Detect Supabase email confirmation link redirect
+  const hash = window.location.hash ? window.location.hash.substring(1) : '';
+  const hashParams = new URLSearchParams(hash);
+  const sbAccessToken = hashParams.get('access_token');
+
+  if (sbAccessToken) {
+    try {
+      const uRes = await fetch('https://wysgdueraejdmphenjkp.supabase.co/auth/v1/user', {
+        headers: {
+          'Authorization': `Bearer ${sbAccessToken}`,
+          'apikey': 'sb_publishable_O9vYLYrO5Q84toHf0fpE0w_hrMfXNx1'
+        }
+      });
+      const sbUser = await uRes.json();
+      if (sbUser && sbUser.email) {
+        const autoRes = await lmsApi('supabase-auto-login', {
+          method: 'POST',
+          body: { email: sbUser.email }
+        });
+        if (autoRes.token) {
+          studentToken = autoRes.token;
+          localStorage.setItem(TOKEN_KEY, studentToken);
+          currentStudent = autoRes.student;
+          toast('🎉 Email verified successfully! Welcome to Quick Art Academy.');
+          window.history.replaceState(null, '', window.location.pathname);
+        }
+      }
+    } catch(e) {}
+  }
+
   const params = new URLSearchParams(window.location.search);
   const enrollParam = params.get('enroll');
   const catalogParam = params.get('catalog');
@@ -1406,10 +2288,12 @@ async function initStudentSession() {
   }
 
   if (!studentToken) {
-    switchView('login');
     if (enrollParam) {
-      openCheckoutModal(enrollParam);
-    } else if (catalogParam) {
+      await openCheckoutPage(enrollParam);
+      return;
+    }
+    switchView('login');
+    if (catalogParam) {
       openCatalogModal();
     }
     return;
@@ -1420,16 +2304,641 @@ async function initStudentSession() {
     if (courseParam) {
       await openCourseClassroom(courseParam);
     } else if (enrollParam) {
-      openCheckoutModal(enrollParam);
+      if (currentStudent && Array.isArray(currentStudent.enrolledCourses) && currentStudent.enrolledCourses.includes(enrollParam)) {
+        toast('Aap pehle se iss course me enrolled hain! Classroom open ho rahi hai...', true);
+        await openCourseClassroom(enrollParam);
+      } else {
+        await openCheckoutPage(enrollParam);
+      }
     } else if (catalogParam) {
       openCatalogModal();
     }
   } catch (err) {
     logoutStudent();
-    if (enrollParam) openCheckoutModal(enrollParam);
+    if (enrollParam) await openCheckoutPage(enrollParam);
     else if (catalogParam) openCatalogModal();
   }
 }
 
 initStudentSession();
 
+
+// ==========================================================================
+// Discussion / Comments System
+// ==========================================================================
+
+const LMS_API = '../api/lms.php';
+
+let _discussionCourseId  = null;
+let _discussionLessonId  = null;
+let _likedComments       = JSON.parse(localStorage.getItem('qaa_liked_comments') || '{}');
+
+/** Called whenever a lesson is opened — sets lesson context for discussion */
+function setDiscussionContext(courseId, lessonId) {
+  _discussionCourseId = courseId;
+  _discussionLessonId = lessonId;
+
+  // Update avatar initials
+  const stu = window._currentStudent;
+  if (stu && stu.name) {
+    const initials = stu.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+    const av = document.getElementById('discussion-avatar-initials');
+    if (av) av.textContent = initials;
+  }
+
+  // Setup char counter
+  const ta = document.getElementById('discussion-comment-input');
+  if (ta) {
+    ta.value = '';
+    ta.oninput = () => {
+      const cc = document.getElementById('discussion-char-count');
+      if (cc) cc.textContent = `${ta.value.length} / 1000`;
+    };
+  }
+}
+
+/** Load and render comments for current lesson */
+async function loadDiscussionComments() {
+  if (!_discussionCourseId || !_discussionLessonId) return;
+  const list = document.getElementById('discussion-comments-list');
+  if (!list) return;
+  list.innerHTML = '<div class="discussion-loading">Loading comments…</div>';
+
+  try {
+    const tok = localStorage.getItem('qaa_student_token') || '';
+    const res = await fetch(
+      `${LMS_API}?action=discussion-list&courseId=${encodeURIComponent(_discussionCourseId)}&lessonId=${encodeURIComponent(_discussionLessonId)}`,
+      { headers: { 'X-Student-Token': tok } }
+    );
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Failed to load');
+    renderDiscussionComments(data.comments || []);
+  } catch (e) {
+    const list = document.getElementById('discussion-comments-list');
+    if (list) list.innerHTML = `<div class="discussion-loading" style="color:var(--red,#ef4444)">Comments load nahi ho sake. Refresh karein.</div>`;
+  }
+}
+
+function renderDiscussionComments(comments) {
+  const list = document.getElementById('discussion-comments-list');
+  if (!list) return;
+
+  if (!comments.length) {
+    list.innerHTML = `
+      <div class="discussion-empty">
+        <div class="empty-icon">💬</div>
+        <div>Abhi tak koi comment nahi hai.</div>
+        <div style="font-size:12.5px;margin-top:4px;">Pehle sawaal poochne wale banein!</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = comments.map(c => {
+    const initials = (c.authorName || 'S').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+    const isMentor = c.isMentor;
+    const liked    = !!_likedComments[c.id];
+    const timeAgo  = formatCommentTime(c.createdAt);
+    return `
+      <div class="discussion-comment" id="comment-${c.id}">
+        <div class="comment-avatar ${isMentor ? 'is-mentor' : ''}">${initials}</div>
+        <div class="comment-body">
+          <div class="comment-meta">
+            <span class="comment-author">${escHtml(c.authorName)}</span>
+            ${isMentor ? '<span class="comment-mentor-tag">Mentor</span>' : ''}
+            <span class="comment-time">${timeAgo}</span>
+          </div>
+          <div class="comment-text">${escHtml(c.text)}</div>
+          <div class="comment-actions">
+            <button class="comment-like-btn ${liked ? 'liked' : ''}" onclick="toggleCommentLike('${c.id}', this)">
+              ${liked ? '👍' : '🤍'} <span class="like-count">${c.likes || 0}</span>
+            </button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/** Post a new comment */
+async function postDiscussionComment() {
+  const ta  = document.getElementById('discussion-comment-input');
+  const btn = document.getElementById('btn-post-comment');
+  if (!ta || !btn) return;
+
+  const text = ta.value.trim();
+  if (!text) { showToast('Comment likhein phir post karein', false); return; }
+  if (!_discussionCourseId || !_discussionLessonId) { showToast('Pehle ek lesson open karein', false); return; }
+
+  btn.disabled  = true;
+  btn.textContent = 'Posting…';
+
+  try {
+    const tok = localStorage.getItem('qaa_student_token') || '';
+    const res = await fetch(`${LMS_API}?action=discussion-post`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Student-Token': tok },
+      body: JSON.stringify({
+        courseId:  _discussionCourseId,
+        lessonId:  _discussionLessonId,
+        text:      text
+      })
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Failed');
+
+    ta.value = '';
+    const cc = document.getElementById('discussion-char-count');
+    if (cc) cc.textContent = '0 / 1000';
+    showToast('Comment post ho gaya! 💬');
+    await loadDiscussionComments();
+  } catch (e) {
+    showToast(e.message || 'Comment post nahi ho saka', false);
+  } finally {
+    btn.disabled  = false;
+    btn.textContent = 'Post Comment 💬';
+  }
+}
+
+/** Like / unlike a comment (client-side toggle + API call) */
+async function toggleCommentLike(commentId, btn) {
+  const liked = !!_likedComments[commentId];
+  const countEl = btn.querySelector('.like-count');
+  let count = parseInt(countEl?.textContent || '0');
+
+  if (liked) {
+    delete _likedComments[commentId];
+    count = Math.max(0, count - 1);
+    btn.classList.remove('liked');
+    btn.innerHTML = `🤍 <span class="like-count">${count}</span>`;
+  } else {
+    _likedComments[commentId] = true;
+    count++;
+    btn.classList.add('liked');
+    btn.innerHTML = `👍 <span class="like-count">${count}</span>`;
+  }
+  localStorage.setItem('qaa_liked_comments', JSON.stringify(_likedComments));
+
+  // Fire-and-forget API call
+  const tok = localStorage.getItem('qaa_student_token') || '';
+  fetch(`${LMS_API}?action=discussion-like`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Student-Token': tok },
+    body: JSON.stringify({ commentId, action: liked ? 'unlike' : 'like' })
+  }).catch(() => {});
+}
+
+/** Format ISO timestamp to "X minutes ago" style */
+function formatCommentTime(iso) {
+  if (!iso) return '';
+  const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+  if (diff < 60)  return 'Abhi';
+  if (diff < 3600) return `${Math.floor(diff / 60)} min pehle`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} ghante pehle`;
+  if (diff < 604800) return `${Math.floor(diff / 86400)} din pehle`;
+  return new Date(iso).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function escHtml(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+
+// ==========================================================================
+// User Dropdown Menu & Profile Modal
+// ==========================================================================
+
+/** Toggle dropdown open/close */
+function toggleUserMenu() {
+  const dropdown = document.getElementById('user-dropdown');
+  const trigger  = document.getElementById('user-menu-trigger');
+  if (!dropdown) return;
+
+  const isOpen = !dropdown.classList.contains('hidden');
+  if (isOpen) {
+    closeUserMenu();
+  } else {
+    dropdown.classList.remove('hidden');
+    trigger?.classList.add('menu-open');
+    trigger?.setAttribute('aria-expanded', 'true');
+  }
+}
+
+function closeUserMenu() {
+  const dropdown = document.getElementById('user-dropdown');
+  const trigger  = document.getElementById('user-menu-trigger');
+  dropdown?.classList.add('hidden');
+  trigger?.classList.remove('menu-open');
+  trigger?.setAttribute('aria-expanded', 'false');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const trigger  = document.getElementById('user-menu-trigger');
+  const dropdown = document.getElementById('user-dropdown');
+  if (!trigger || !dropdown) return;
+  if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+    closeUserMenu();
+  }
+});
+
+// Close on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { closeUserMenu(); closeProfileModal(); }
+});
+
+// ==========================================================================
+// My Profile Modal
+// ==========================================================================
+
+function openMyProfile() {
+  // Remove existing modal if any
+  const existing = document.getElementById('profile-modal-overlay');
+  if (existing) existing.remove();
+
+  const stu = window._currentStudent || {};
+  const avatarUrl = stu.avatarUrl || localStorage.getItem('qaa_avatar_' + stu.id) || '';
+  const initials  = (stu.name || 'S').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'profile-modal-overlay';
+  overlay.className = 'profile-modal-overlay';
+  overlay.innerHTML = `
+    <div class="profile-modal-card" role="dialog" aria-modal="true" aria-label="My Profile">
+      <div class="profile-modal-header">
+        <h2 class="profile-modal-title">👤 My Profile</h2>
+        <button class="profile-modal-close" onclick="closeProfileModal()" aria-label="Close">✕</button>
+      </div>
+
+      <!-- Avatar -->
+      <div class="profile-avatar-section">
+        <label for="profile-avatar-input" style="cursor:pointer;">
+          <div class="profile-avatar-large" id="profile-avatar-preview">
+            ${avatarUrl
+              ? `<img src="${avatarUrl}" alt="Profile" />`
+              : `<span id="profile-initials-big">${initials}</span>`}
+            <div class="profile-avatar-edit-badge">✏️</div>
+          </div>
+        </label>
+        <input type="file" id="profile-avatar-input" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)" />
+        <span class="profile-avatar-hint">Photo update karne ke liye tap karein</span>
+      </div>
+
+      <!-- Fields -->
+      <div class="profile-fields">
+        <div class="profile-field">
+          <label>Full Name</label>
+          <input type="text" id="profile-name-input" value="${escHtml(stu.name || '')}" placeholder="Apna naam darj karein" />
+        </div>
+        <div class="profile-field">
+          <label>Mobile Number</label>
+          <input type="text" value="+91 ${stu.phone || ''}" readonly />
+        </div>
+        <div class="profile-field">
+          <label>Email Address</label>
+          <input type="email" id="profile-email-input" value="${escHtml(stu.email || '')}" placeholder="Email (optional)" />
+        </div>
+        <div class="profile-field">
+          <label>City</label>
+          <input type="text" id="profile-city-input" value="${escHtml(stu.city || '')}" placeholder="Aapka sheher" />
+        </div>
+      </div>
+
+      <button class="btn btn-gold btn-block profile-save-btn" onclick="saveProfileChanges()">
+        💾 Save Changes
+      </button>
+    </div>
+  `;
+
+  // Close on overlay click
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeProfileModal();
+  });
+
+  document.body.appendChild(overlay);
+}
+
+function closeProfileModal() {
+  const modal = document.getElementById('profile-modal-overlay');
+  if (modal) modal.remove();
+}
+
+/** Handle profile picture selection — store as base64 in localStorage */
+function handleAvatarUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('Photo 2MB se choti honi chahiye', false); return; }
+
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const dataUrl = ev.target.result;
+    const stu = window._currentStudent || {};
+
+    // Save to localStorage
+    localStorage.setItem('qaa_avatar_' + stu.id, dataUrl);
+
+    // Update preview in modal
+    const preview = document.getElementById('profile-avatar-preview');
+    if (preview) {
+      preview.innerHTML = `<img src="${dataUrl}" alt="Profile" /><div class="profile-avatar-edit-badge">✏️</div>`;
+    }
+
+    // Update nav avatars immediately
+    ['nav-avatar-img', 'dropdown-avatar-img'].forEach(id => {
+      const img = document.getElementById(id);
+      if (img) { img.src = dataUrl; img.classList.remove('hidden'); }
+    });
+    ['nav-avatar-initials', 'dropdown-avatar-initials'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
+    });
+
+    showToast('Profile photo update ho gaya! 🎉');
+  };
+  reader.readAsDataURL(file);
+}
+
+/** Save profile name/email/city changes */
+async function saveProfileChanges() {
+  const name  = document.getElementById('profile-name-input')?.value.trim();
+  const email = document.getElementById('profile-email-input')?.value.trim();
+  const city  = document.getElementById('profile-city-input')?.value.trim();
+
+  if (!name) { showToast('Naam required hai', false); return; }
+
+  try {
+    const tok = localStorage.getItem('qaa_student_token') || '';
+    const res = await fetch(`../api/lms.php?action=update-profile`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Student-Token': tok },
+      body: JSON.stringify({ name, email, city })
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Failed');
+
+    // Update in-memory student
+    if (window._currentStudent) {
+      window._currentStudent.name  = name;
+      window._currentStudent.email = email;
+      window._currentStudent.city  = city;
+    }
+
+    // Update nav name
+    const navName = document.getElementById('nav-user-name');
+    if (navName) navName.textContent = name;
+    const dropName = document.getElementById('dropdown-user-name');
+    if (dropName) dropName.textContent = name;
+
+    showToast('Profile save ho gaya! ✅');
+    closeProfileModal();
+  } catch (err) {
+    showToast(err.message || 'Save nahi ho saka', false);
+  }
+}
+
+
+// ==========================================================================
+// My Certificates Modal
+// ==========================================================================
+
+async function openMyCertificates() {
+  // Remove existing
+  document.getElementById('certs-modal-overlay')?.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'certs-modal-overlay';
+  overlay.className = 'certs-modal-overlay';
+  overlay.innerHTML = `
+    <div class="certs-modal-card" role="dialog" aria-modal="true" aria-label="My Certificates">
+      <div class="certs-modal-header">
+        <h2 class="certs-modal-title">🏆 My Certificates</h2>
+        <button class="certs-modal-close" onclick="document.getElementById('certs-modal-overlay').remove()" aria-label="Close">✕</button>
+      </div>
+      <div id="certs-modal-body">
+        <div class="discussion-loading">Loading your certificates…</div>
+      </div>
+    </div>`;
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+
+  try {
+    const tok = localStorage.getItem('qaa_student_token') || '';
+    const res = await fetch('../api/lms.php?action=my-courses', {
+      headers: { 'X-Student-Token': tok }
+    });
+    const data = await res.json();
+    const courses = data.courses || [];
+
+    const body = document.getElementById('certs-modal-body');
+    if (!body) return;
+
+    if (!courses.length) {
+      body.innerHTML = `
+        <div class="certs-empty">
+          <div class="certs-empty-icon">🎓</div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:6px;">Koi certificate nahi abhi tak</div>
+          <div style="font-size:13px;">Course complete karo aur apna certificate earn karo!</div>
+        </div>`;
+      return;
+    }
+
+    body.innerHTML = `<div class="certs-list">${courses.map(c => {
+      const total     = c.totalLessons || 1;
+      const completed = c.completedCount || 0;
+      const pct       = Math.round((completed / total) * 100);
+      const earned    = pct >= 100;
+
+      return `
+        <div class="cert-list-item">
+          <div class="cert-list-icon">🎓</div>
+          <div class="cert-list-info">
+            <div class="cert-list-name">${escHtml(c.title)}</div>
+            <div class="cert-list-meta">${completed} / ${total} lessons • ${pct}% complete</div>
+          </div>
+          ${earned
+            ? `<span class="cert-list-status earned">✓ Earned</span>
+               <button class="cert-list-btn" onclick="document.getElementById('certs-modal-overlay')?.remove(); openCourseClassroom('${c.id}').then(()=>openCertificateModal())">View →</button>`
+            : `<span class="cert-list-status pending">${pct}%</span>`
+          }
+        </div>`;
+    }).join('')}</div>`;
+  } catch (e) {
+    const body = document.getElementById('certs-modal-body');
+    if (body) body.innerHTML = `<div class="certs-empty"><div class="certs-empty-icon">⚠️</div><div>Load nahi ho saka. Refresh karein.</div></div>`;
+  }
+}
+
+// ==========================================================================
+// Settings Modal
+// ==========================================================================
+
+function openMySettings() {
+  document.getElementById('settings-modal-overlay')?.remove();
+
+  const notifPref = localStorage.getItem('qaa_notif_pref') !== 'off';
+  const speedPref = localStorage.getItem('qaa_speed_pref') || '1';
+
+  const overlay = document.createElement('div');
+  overlay.id = 'settings-modal-overlay';
+  overlay.className = 'certs-modal-overlay';
+  overlay.innerHTML = `
+    <div class="settings-modal-card" role="dialog" aria-modal="true" aria-label="Settings">
+      <div class="certs-modal-header">
+        <h2 class="certs-modal-title">⚙️ Settings</h2>
+        <button class="certs-modal-close" onclick="document.getElementById('settings-modal-overlay').remove()" aria-label="Close">✕</button>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Playback</div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Default Speed</div>
+            <div class="settings-row-sub">Video ki default playback speed</div>
+          </div>
+          <select id="setting-speed" onchange="localStorage.setItem('qaa_speed_pref', this.value)" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f4f4f6;padding:6px 10px;font-size:13px;cursor:pointer;">
+            <option value="0.75" ${speedPref==='0.75'?'selected':''}>0.75x</option>
+            <option value="1"    ${speedPref==='1'?'selected':''}>1.0x (Normal)</option>
+            <option value="1.25" ${speedPref==='1.25'?'selected':''}>1.25x</option>
+            <option value="1.5"  ${speedPref==='1.5'?'selected':''}>1.5x</option>
+            <option value="2"    ${speedPref==='2'?'selected':''}>2.0x</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Notifications</div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Progress Reminders</div>
+            <div class="settings-row-sub">Course completion reminders</div>
+          </div>
+          <label class="settings-toggle">
+            <input type="checkbox" ${notifPref?'checked':''} onchange="localStorage.setItem('qaa_notif_pref', this.checked ? 'on' : 'off')" />
+            <span class="settings-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Account</div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Change Password</div>
+            <div class="settings-row-sub">Email login password update</div>
+          </div>
+          <button onclick="openChangePassword()" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f4f4f6;padding:6px 14px;font-size:12.5px;cursor:pointer;">Update →</button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label" style="color:rgba(239,68,68,0.85)">Clear Local Data</div>
+            <div class="settings-row-sub">Cached data & preferences reset</div>
+          </div>
+          <button onclick="clearLocalData()" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.20);border-radius:8px;color:#ef4444;padding:6px 14px;font-size:12.5px;cursor:pointer;">Clear</button>
+        </div>
+      </div>
+    </div>`;
+
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
+function clearLocalData() {
+  const keep = ['qaa_student_token'];
+  const saved = {};
+  keep.forEach(k => { const v = localStorage.getItem(k); if (v) saved[k] = v; });
+  localStorage.clear();
+  Object.entries(saved).forEach(([k,v]) => localStorage.setItem(k,v));
+  showToast('Local data cleared! ✅');
+  document.getElementById('settings-modal-overlay')?.remove();
+}
+
+function openChangePassword() {
+  const stu = window._currentStudent || {};
+  if (!stu.email) {
+    showToast('Password change ke liye pehle email set karein', false);
+    return;
+  }
+  document.getElementById('settings-modal-overlay')?.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'changepw-modal-overlay';
+  overlay.className = 'certs-modal-overlay';
+  overlay.innerHTML = `
+    <div class="settings-modal-card">
+      <div class="certs-modal-header">
+        <h2 class="certs-modal-title">🔑 Change Password</h2>
+        <button class="certs-modal-close" onclick="document.getElementById('changepw-modal-overlay').remove()">✕</button>
+      </div>
+      <div class="profile-fields" style="margin-top:4px;">
+        <div class="profile-field">
+          <label>New Password</label>
+          <input type="password" id="new-pw-input" placeholder="Min. 6 characters" class="portal-input" style="font-size:14px;min-height:44px;" />
+        </div>
+        <div class="profile-field">
+          <label>Confirm Password</label>
+          <input type="password" id="confirm-pw-input" placeholder="Dubara darj karein" class="portal-input" style="font-size:14px;min-height:44px;" />
+        </div>
+        <button class="btn btn-gold btn-block" style="margin-top:16px;" onclick="submitChangePassword()">Update Password →</button>
+      </div>
+    </div>`;
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
+async function submitChangePassword() {
+  const pw1 = document.getElementById('new-pw-input')?.value;
+  const pw2 = document.getElementById('confirm-pw-input')?.value;
+  if (!pw1 || pw1.length < 6) { showToast('Password min. 6 characters ka hona chahiye', false); return; }
+  if (pw1 !== pw2) { showToast('Passwords match nahi kar rahe', false); return; }
+
+  try {
+    const tok = localStorage.getItem('qaa_student_token') || '';
+    const res = await fetch('../api/lms.php?action=change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Student-Token': tok },
+      body: JSON.stringify({ password: pw1 })
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Failed');
+    showToast('Password update ho gaya! 🔑');
+    document.getElementById('changepw-modal-overlay')?.remove();
+  } catch (e) {
+    showToast(e.message || 'Update nahi ho saka', false);
+  }
+}
+
+// Update enrolled count badge in dropdown
+function updateDropdownEnrolledBadge(count) {
+  const badge = document.getElementById('dd-enrolled-count');
+  if (badge) badge.textContent = count > 0 ? count : '';
+}
+
+
+// ==========================================================================
+// Video Security & Anti-Download Protection
+// ==========================================================================
+(function initVideoSecurity() {
+  const blockEvents = (el) => {
+    if (!el) return;
+    el.addEventListener('contextmenu', e => { e.preventDefault(); return false; }, true);
+    el.addEventListener('dragstart', e => { e.preventDefault(); return false; }, true);
+    el.setAttribute('oncontextmenu', 'return false;');
+  };
+
+  const applySecurity = () => {
+    blockEvents(document.querySelector('.video-wrapper'));
+    blockEvents(document.querySelector('.video-container'));
+    blockEvents(document.getElementById('video-mount'));
+    document.querySelectorAll('#video-mount video, #video-mount iframe').forEach(blockEvents);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applySecurity);
+  } else {
+    applySecurity();
+  }
+
+  // Observe dynamically mounted videos
+  const mount = document.getElementById('video-mount');
+  if (mount && window.MutationObserver) {
+    new MutationObserver(() => applySecurity()).observe(mount, { childList: true, subtree: true });
+  }
+})();

@@ -236,6 +236,46 @@ if ($action === 'delete-student' && $method === 'POST') {
     json_ok(['deleted' => true, 'phone' => $phone]);
 }
 
+// 6.1 Set / Update Student Email & Password (Admin)
+if ($action === 'set-student-password' && $method === 'POST') {
+    $body     = read_json_body();
+    $phone    = preg_replace('/[^0-9]/', '', (string)($body['phone'] ?? ''));
+    if (strlen($phone) === 12 && substr($phone, 0, 2) === '91') $phone = substr($phone, 2);
+    $email    = strtolower(trim($body['email'] ?? ''));
+    $password = trim($body['password'] ?? '');
+
+    if (strlen($phone) < 10) json_err('Valid phone number required', 400);
+    if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) json_err('Valid email required', 400);
+    if (strlen($password) < 6) json_err('Password must be at least 6 characters', 400);
+
+    // Check email not used by another student
+    $students = get_all_students();
+    foreach ($students as $s) {
+        if (strtolower($s['email'] ?? '') === $email && $s['phone'] !== $phone) {
+            json_err('Yeh email kisi aur student ke saath registered hai', 409);
+        }
+    }
+
+    $found = false;
+    foreach ($students as &$stu) {
+        if ($stu['phone'] === $phone) {
+            $stu['email']        = $email;
+            $stu['passwordHash'] = password_hash($password, PASSWORD_DEFAULT);
+            unset($stu['password']); // remove any legacy plain-text
+            $found = true;
+            break;
+        }
+    }
+    unset($stu);
+
+    if (!$found) json_err('Student not found', 404);
+
+    save_all_students($students);
+    json_ok(['ok' => true, 'message' => 'Email aur password set ho gaya']);
+}
+
+
+
 // 7. Get LMS Settings
 if ($action === 'get-lms-settings' && $method === 'GET') {
     $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
@@ -249,21 +289,45 @@ if ($action === 'save-lms-settings' && $method === 'POST') {
     if (!is_array($currSettings)) $currSettings = [];
 
     $newSettings = [
-        'bunnyLibraryId' => trim($body['bunnyLibraryId'] ?? ''),
-        'bunnyApiKey' => trim($body['bunnyApiKey'] ?? ''),
-        'bunnyTokenAuthKey' => trim($body['bunnyTokenAuthKey'] ?? ''),
-        'bunnyHostname' => trim($body['bunnyHostname'] ?? 'iframe.mediadelivery.net'),
-        'bunnyAccountApiKey' => trim($body['bunnyAccountApiKey'] ?? ($currSettings['bunnyAccountApiKey'] ?? '')),
-        'razorpayEnabled' => !empty($body['razorpayEnabled']),
-        'razorpayKeyId' => trim($body['razorpayKeyId'] ?? ($currSettings['razorpayKeyId'] ?? '')),
-        'razorpayKeySecret' => trim($body['razorpayKeySecret'] ?? ($currSettings['razorpayKeySecret'] ?? '')),
-        'razorpayWebhookSecret' => trim($body['razorpayWebhookSecret'] ?? ($currSettings['razorpayWebhookSecret'] ?? '')),
-        'razorpayMode' => trim($body['razorpayMode'] ?? ($currSettings['razorpayMode'] ?? 'live')),
-        'watermarkEnabled' => !empty($body['watermarkEnabled']),
-        'watermarkOpacity' => floatval($body['watermarkOpacity'] ?? 0.35),
-        'otpDemoMode' => !empty($body['otpDemoMode']),
-        'defaultOtp' => trim($body['defaultOtp'] ?? '123456'),
-        'fast2smsApiKey' => trim($body['fast2smsApiKey'] ?? ''),
+        'bunnyLibraryId' => isset($body['bunnyLibraryId']) ? trim($body['bunnyLibraryId']) : ($currSettings['bunnyLibraryId'] ?? '755385'),
+        'bunnyApiKey' => isset($body['bunnyApiKey']) ? trim($body['bunnyApiKey']) : ($currSettings['bunnyApiKey'] ?? '50179050-0bf6-4266-bc61fb984600-4b08-47e3'),
+        'bunnyTokenAuthKey' => isset($body['bunnyTokenAuthKey']) ? trim($body['bunnyTokenAuthKey']) : ($currSettings['bunnyTokenAuthKey'] ?? '436c7112-8150-409c-b5f3-d29a1856b06b'),
+        'bunnyHostname' => isset($body['bunnyHostname']) ? trim($body['bunnyHostname']) : ($currSettings['bunnyHostname'] ?? 'iframe.mediadelivery.net'),
+        'bunnyAccountApiKey' => isset($body['bunnyAccountApiKey']) ? trim($body['bunnyAccountApiKey']) : ($currSettings['bunnyAccountApiKey'] ?? '174c5167-ecb1-4d9d-9b47-d085ebf2e098dd0da2e5-9071-45ad-b088-9683075c7ed1'),
+        'razorpayEnabled' => isset($body['razorpayEnabled']) ? !empty($body['razorpayEnabled']) : ($currSettings['razorpayEnabled'] ?? false),
+        'razorpayKeyId' => isset($body['razorpayKeyId']) ? trim($body['razorpayKeyId']) : ($currSettings['razorpayKeyId'] ?? ''),
+        'razorpayKeySecret' => isset($body['razorpayKeySecret']) ? trim($body['razorpayKeySecret']) : ($currSettings['razorpayKeySecret'] ?? ''),
+        'razorpayWebhookSecret' => isset($body['razorpayWebhookSecret']) ? trim($body['razorpayWebhookSecret']) : ($currSettings['razorpayWebhookSecret'] ?? ''),
+        'razorpayMode' => isset($body['razorpayMode']) ? trim($body['razorpayMode']) : ($currSettings['razorpayMode'] ?? 'live'),
+        'watermarkEnabled' => isset($body['watermarkEnabled']) ? !empty($body['watermarkEnabled']) : ($currSettings['watermarkEnabled'] ?? true),
+        'watermarkOpacity' => isset($body['watermarkOpacity']) ? floatval($body['watermarkOpacity']) : ($currSettings['watermarkOpacity'] ?? 0.35),
+        'otpDemoMode' => isset($body['otpDemoMode']) ? !empty($body['otpDemoMode']) : ($currSettings['otpDemoMode'] ?? false),
+        'defaultOtp' => isset($body['defaultOtp']) ? trim($body['defaultOtp']) : ($currSettings['defaultOtp'] ?? '123456'),
+        'fast2smsApiKey' => isset($body['fast2smsApiKey']) ? clean_fast2sms_key($body['fast2smsApiKey']) : ($currSettings['fast2smsApiKey'] ?? ''),
+        'fast2smsOtpTemplate' => isset($body['fast2smsOtpTemplate']) ? trim($body['fast2smsOtpTemplate']) : ($currSettings['fast2smsOtpTemplate'] ?? "Dear Student,\n\nYour Quick Art Photography Academy portal verification code is: {otp}\n\nValid for 10 minutes. Please do not share this OTP with anyone.\n\nWarm regards,\nAnil Sharma\nQuick Art Photography Academy\nHelpline: 9939800780"),
+        'supabaseUrl' => isset($body['supabaseUrl']) ? rtrim(trim($body['supabaseUrl']), '/') : ($currSettings['supabaseUrl'] ?? ''),
+        'supabaseAnonKey' => isset($body['supabaseAnonKey']) ? trim($body['supabaseAnonKey']) : ($currSettings['supabaseAnonKey'] ?? ''),
+        'supabaseSecretKey' => isset($body['supabaseSecretKey']) ? trim($body['supabaseSecretKey']) : ($currSettings['supabaseSecretKey'] ?? ''),
+        'emailSender' => isset($body['emailSender']) ? trim($body['emailSender']) : ($currSettings['emailSender'] ?? 'support@quickartphotography.in'),
+        'emailSenderName' => isset($body['emailSenderName']) ? trim($body['emailSenderName']) : ($currSettings['emailSenderName'] ?? 'Quick Art Photography Academy'),
+        'emailSubjectTemplate' => isset($body['emailSubjectTemplate']) ? trim($body['emailSubjectTemplate']) : ($currSettings['emailSubjectTemplate'] ?? 'Your Quick Art Academy Verification OTP: {otp}'),
+        'emailMessageCustom' => isset($body['emailMessageCustom']) ? trim($body['emailMessageCustom']) : ($currSettings['emailMessageCustom'] ?? "Dear Student,\n\nYour Quick Art Photography Academy portal verification code is: {otp}\n\nValid for 10 minutes. Please do not share this OTP with anyone.\n\nWarm regards,\nAnil Sharma\nQuick Art Photography Academy\nHelpline: 9939800780"),
+        'brevoApiKey' => isset($body['brevoApiKey']) ? trim($body['brevoApiKey']) : ($currSettings['brevoApiKey'] ?? ''),
+        'smtpHost' => isset($body['smtpHost']) ? trim($body['smtpHost']) : ($currSettings['smtpHost'] ?? ''),
+        'smtpPort' => isset($body['smtpPort']) ? intval($body['smtpPort']) : ($currSettings['smtpPort'] ?? 587),
+        'smtpUser' => isset($body['smtpUser']) ? trim($body['smtpUser']) : ($currSettings['smtpUser'] ?? 'support@quickartphotography.in'),
+        'smtpPass' => isset($body['smtpPass']) ? trim($body['smtpPass']) : ($currSettings['smtpPass'] ?? ''),
+        'collections' => $currSettings['collections'] ?? [
+            'course-premiere-pro' => 'e8c9044d-a305-465c-86ca-297e4e71436d',
+            'course-edius-pro' => '22652727-657c-4280-8d97-08504a594235',
+            'course-davinci-resolve' => '43e2437d-d1ac-4665-ad2b-15b5276d87b6',
+            'course-cinematic-wedding' => 'e7173751-87b3-4662-b85a-a481500acded',
+            'course-album-design' => '6a818a59-8758-4b3e-9d9f-0a33b8ff2d0e',
+            'course-pre-wedding' => 'ed57f97b-fb42-42de-893e-862aa9e9b744',
+            'course-website-design' => '9eb90731-0f25-42ee-91ae-190888872929',
+            'course-digital-marketing' => '23e69417-3b15-436e-bc23-52066132738f',
+            'course-automation' => 'e84c2f96-2763-490d-a250-111f8c7886e9'
+        ],
         'academyName' => 'Quick Art Photography Academy',
         'mentorName' => 'Anil Sharma',
         'updatedAt' => date('c')
@@ -345,6 +409,130 @@ if ($action === 'test-razorpay' && ($method === 'GET' || $method === 'POST')) {
         $data = json_decode($res, true);
         $errMsg = $data['error']['description'] ?? "HTTP {$httpCode} Unauthorized / Invalid credentials";
         json_err("Razorpay connection failed: {$errMsg}", 400);
+    }
+}
+
+// 8.3 Test Fast2SMS Live OTP Delivery
+if ($action === 'test-fast2sms' && $method === 'POST') {
+    $body = read_json_body();
+    $rawPhone = $body['phone'] ?? '';
+    $testPhone = preg_replace('/[^0-9]/', '', (string)$rawPhone);
+    if (strlen($testPhone) === 12 && substr($testPhone, 0, 2) === '91') {
+        $testPhone = substr($testPhone, 2);
+    }
+
+    $apiKey = clean_fast2sms_key($body['apiKey'] ?? '');
+    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    if (empty($apiKey)) {
+        $apiKey = clean_fast2sms_key($settings['fast2smsApiKey'] ?? '');
+    }
+    $template = trim($body['template'] ?? ($settings['fast2smsOtpTemplate'] ?? ''));
+
+    if (empty($apiKey)) {
+        json_err('Fast2SMS API Key darj karein pehle', 400);
+    }
+    if (strlen($testPhone) < 10) {
+        json_err('Valid 10-digit mobile number enter karein', 400);
+    }
+
+    $testOtp = strval(random_int(100000, 999999));
+    $sendRes = send_fast2sms_otp($testPhone, $testOtp, $apiKey, $template);
+
+    if ($sendRes['ok']) {
+        json_ok([
+            'success' => true,
+            'message' => "Test OTP [{$testOtp}] successfully delivered to +91 {$testPhone} via Fast2SMS ({$sendRes['route']} route)!",
+            'fast2smsResponse' => $sendRes['response'] ?? []
+        ]);
+    } else {
+        json_err("Fast2SMS error: " . ($sendRes['error'] ?? 'Delivery failed'), 400);
+    }
+}
+
+// 8.4 Check Fast2SMS Wallet Balance
+if ($action === 'fast2sms-balance' && ($method === 'GET' || $method === 'POST')) {
+    $body = read_json_body();
+    $apiKey = clean_fast2sms_key($_GET['apiKey'] ?? ($body['apiKey'] ?? ''));
+    if (empty($apiKey)) {
+        $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+        $apiKey = clean_fast2sms_key($settings['fast2smsApiKey'] ?? '');
+    }
+    if (empty($apiKey)) {
+        json_err('Fast2SMS API Key required', 400);
+    }
+
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+        CURLOPT_URL => "https://www.fast2sms.com/dev/wallet",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => [
+            "authorization: " . $apiKey,
+            "Content-Type: application/json"
+        ],
+        CURLOPT_TIMEOUT => 8
+    ]);
+    $raw = curl_exec($curl);
+    $curlErr = curl_error($curl);
+    @curl_close($curl);
+
+    if ($curlErr) {
+        json_err("Connection failed: " . $curlErr, 502);
+    }
+    $res = json_decode($raw, true);
+    if ($res && isset($res['wallet'])) {
+        json_ok([
+            'balance' => $res['wallet'],
+            'currency' => 'INR'
+        ]);
+    } else {
+        $msg = is_array($res['message'] ?? null) ? implode(', ', $res['message']) : ($res['message'] ?? 'Invalid key or wallet error');
+        json_err($msg, 400);
+    }
+}
+
+// 8.5 Test Brevo Live Email Delivery
+if ($action === 'test-brevo' && $method === 'POST') {
+    $body = read_json_body();
+    $testEmail = strtolower(trim($body['email'] ?? ''));
+    $apiKey = trim($body['apiKey'] ?? '');
+    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+
+    if (empty($apiKey)) {
+        $apiKey = trim($settings['brevoApiKey'] ?? '');
+    }
+    if (empty($apiKey)) {
+        json_err('Brevo API Key darj karein pehle', 400);
+    }
+    if (!filter_var($testEmail, FILTER_VALIDATE_EMAIL)) {
+        json_err('Valid email address enter karein', 400);
+    }
+
+    $testOtp = strval(random_int(100000, 999999));
+    $senderEmail = !empty($settings['emailSender']) ? trim($settings['emailSender']) : 'support@quickartphotography.in';
+    $senderName = !empty($settings['emailSenderName']) ? trim($settings['emailSenderName']) : 'Quick Art Photography Academy';
+    $subject = "Your Quick Art Academy Verification OTP: {$testOtp}";
+
+    $customMsg = !empty($settings['emailMessageCustom'])
+        ? str_replace(['{otp}', '{email}'], [$testOtp, $testEmail], $settings['emailMessageCustom'])
+        : "Dear Student,\n\nYour Quick Art Photography Academy portal verification code is: {$testOtp}\n\nValid for 10 minutes. Please do not share this OTP with anyone.\n\nWarm regards,\nAnil Sharma\nQuick Art Photography Academy\nHelpline: 9939800780";
+
+    $html = '<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;background:#0d1117;color:#e6edf3;padding:30px;margin:0;">'
+          . '<div style="max-width:540px;margin:0 auto;background:#161b22;border:1px solid rgba(216,161,83,0.35);border-radius:14px;padding:32px;text-align:center;">'
+          . '<div style="display:inline-block;padding:4px 12px;background:rgba(216,161,83,0.15);border:1px solid rgba(216,161,83,0.3);border-radius:9999px;font-size:11px;font-weight:700;color:#d8a153;letter-spacing:1px;margin-bottom:12px;">STUDENT LEARNING PORTAL</div>'
+          . '<h2 style="color:#d8a153;margin:0 0 8px;font-size:22px;letter-spacing:0.5px;">Quick Art Photography Academy</h2>'
+          . '<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:24px 20px;margin-bottom:24px;">'
+          . '<p style="color:#cbd5e1;font-size:14px;line-height:1.6;margin:0 0 18px;white-space:pre-line;">' . htmlspecialchars($customMsg) . '</p>'
+          . '<div style="font-size:34px;font-weight:bold;letter-spacing:8px;color:#d8a153;background:rgba(216,161,83,0.1);padding:16px 24px;border-radius:8px;display:inline-block;border:1px solid rgba(216,161,83,0.35);">' . htmlspecialchars($testOtp) . '</div>'
+          . '<p style="color:#f87171;font-size:12px;margin:18px 0 0;">Valid for 10 minutes. Do not share this OTP with anyone.</p>'
+          . '</div>'
+          . '</div></body></html>';
+
+    $res = send_brevo_email($testEmail, $subject, $html, $apiKey, $senderEmail, $senderName);
+    if ($res['ok']) {
+        json_ok(['message' => "Test OTP [{$testOtp}] successfully delivered to {$testEmail} via Brevo!"]);
+    } else {
+        json_err("Brevo delivery failed: " . ($res['error'] ?? 'Unknown error'), 400);
     }
 }
 
@@ -478,6 +666,9 @@ if ($action === 'assign-lesson-video' && $method === 'POST') {
                 foreach ($m['lessons'] as &$l) {
                     if ($l['id'] === $lessonId) {
                         $l['videoId'] = $videoId;
+                        if (preg_match('/^https?:\/\//i', $videoId)) {
+                            $l['videoUrl'] = $videoId;
+                        }
                         if ($duration) $l['duration'] = $duration;
                         $updated = true;
                         break 3;

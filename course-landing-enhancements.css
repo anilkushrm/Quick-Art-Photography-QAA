@@ -18,10 +18,25 @@ body.landing-page-body {
   font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
 }
 
-/* 2. HERO BACKGROUND ORBS */
+/* 2. HERO BACKGROUND & PROFESSIONAL TOP SPACING */
 .lp-hero {
   background: radial-gradient(ellipse at 70% -10%, rgba(216,161,83,0.13) 0%, transparent 60%),
               radial-gradient(ellipse at 5% 90%, rgba(99,102,241,0.08) 0%, transparent 55%);
+  padding: 94px 0 54px !important;
+}
+
+.lp-breadcrumb {
+  margin-bottom: 14px !important;
+}
+
+.lp-hero-grid {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .lp-hero {
+    padding: 76px 0 36px !important;
+  }
 }
 .lp-hero::before, .lp-hero::after {
   content: '';

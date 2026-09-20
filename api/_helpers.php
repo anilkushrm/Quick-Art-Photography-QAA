@@ -450,39 +450,106 @@ function send_email_otp($email, $otp, $purpose = 'register', $settings = []) {
     ];
     save_email_otps($otps);
 
-    // 2. Prepare professional branded HTML email
+    // Look up student name for personalized greeting
+    $displayName = '';
+    $studentsFile = DATA_DIR . '/students.json';
+    if (file_exists($studentsFile)) {
+        $stList = json_decode(@file_get_contents($studentsFile), true) ?: [];
+        foreach ($stList as $st) {
+            if (!empty($st['email']) && strtolower(trim($st['email'])) === $email) {
+                $displayName = trim($st['name'] ?? '');
+                break;
+            }
+        }
+    }
+    if (!empty($displayName)) {
+        $displayName = trim(preg_replace('/\s*\([^)]*\)/', '', $displayName));
+    }
+    if (empty($displayName)) {
+        $parts = explode('@', $email);
+        $uname = preg_replace('/[^a-zA-Z0-9]+/', ' ', $parts[0] ?? '');
+        $displayName = ucwords(trim($uname)) ?: 'Student';
+    }
+
+    $isForgot = ($purpose === 'forgot-password');
+    $cardTitle = $isForgot ? 'Password Reset Verification' : 'Sign In Verification';
+
     $senderEmail = !empty($settings['emailSender']) ? trim($settings['emailSender']) : 'support@quickartphotography.in';
     $senderName  = !empty($settings['emailSenderName']) ? trim($settings['emailSenderName']) : 'Quick Art Photography Academy';
 
     $subjectTpl = !empty($settings['emailSubjectTemplate']) 
         ? $settings['emailSubjectTemplate'] 
-        : (($purpose === 'forgot-password')
+        : ($isForgot
             ? "Password Reset Code: {otp} — Quick Art Photography Academy"
             : "Verification Code: {otp} — Quick Art Photography Academy");
     $subject = str_replace(['{otp}', '{email}'], [$otp, $email], $subjectTpl);
 
-    $customMsg = !empty($settings['emailMessageCustom'])
-        ? str_replace(['{otp}', '{email}'], [$otp, $email], $settings['emailMessageCustom'])
-        : (($purpose === 'forgot-password')
-            ? "Use the verification code below to reset your student portal password. If you did not request this, please ignore this email."
-            : "Welcome to Quick Art Photography Academy! Use the verification code below to complete your student registration.");
+    $requestDesc = $isForgot
+        ? 'We received a request to reset the password for your <strong>Quick Art Photography Academy</strong> account. Use the one-time verification code below to securely set your new password:'
+        : 'We received a request to access your <strong>Quick Art Photography Academy</strong> account. Use the one-time verification code below to securely sign in:';
 
-    $html = '<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;background:#0d1117;color:#e6edf3;padding:30px;margin:0;">'
-          . '<div style="max-width:540px;margin:0 auto;background:#161b22;border:1px solid rgba(216,161,83,0.35);border-radius:14px;padding:32px;text-align:center;">'
-          . '<div style="display:inline-block;padding:4px 12px;background:rgba(216,161,83,0.15);border:1px solid rgba(216,161,83,0.3);border-radius:9999px;font-size:11px;font-weight:700;color:#d8a153;letter-spacing:1px;margin-bottom:12px;">STUDENT LEARNING PORTAL</div>'
-          . '<h2 style="color:#d8a153;margin:0 0 8px;font-size:22px;letter-spacing:0.5px;">Quick Art Photography Academy</h2>'
-          . '<p style="color:#8b949e;font-size:13px;margin:0 0 24px;">Siwan &bull; Mentor: Anil Sharma</p>'
-          . '<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:24px 20px;margin-bottom:24px;">'
-          . '<p style="color:#cbd5e1;font-size:14px;line-height:1.6;margin:0 0 18px;white-space:pre-line;">' . htmlspecialchars($customMsg) . '</p>'
-          . '<div style="font-size:34px;font-weight:bold;letter-spacing:8px;color:#d8a153;background:rgba(216,161,83,0.1);padding:16px 24px;border-radius:8px;display:inline-block;border:1px solid rgba(216,161,83,0.35);">' . htmlspecialchars($otp) . '</div>'
-          . '<p style="color:#f87171;font-size:12px;margin:18px 0 0;">Valid for 10 minutes. Do not share this OTP with anyone.</p>'
+    $stepInstruction = $isForgot
+        ? 'Enter this 6-digit code on the verification screen to complete your password reset.'
+        : 'Enter this 6-digit code on the verification screen to complete your request.';
+
+    $warningDesc = $isForgot
+        ? 'If you did not attempt to reset your password, someone may have mistyped their email address. Your account remains completely safe and no action is needed.'
+        : 'If you did not attempt to sign in or register, someone may have mistyped their email address. Your account remains completely safe and no action is needed.';
+
+    $currentYear = date('Y');
+
+    $html = '<!DOCTYPE html>'
+          . '<html lang="en">'
+          . '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>' . htmlspecialchars($subject) . '</title></head>'
+          . '<body style="margin:0;padding:0;background-color:#090d16;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">'
+          . '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#090d16;padding:36px 14px;">'
+          . '<tr><td align="center">'
+          // Top pill header badge
+          . '<div style="text-align:center;margin-bottom:20px;">'
+          . '  <div style="display:inline-block;padding:8px 22px;background:#0c172a;border:1.5px solid #1e3a8a;border-radius:9999px;box-shadow:0 0 20px rgba(14,165,233,0.15);">'
+          . '    <span style="color:#38bdf8;font-size:13px;font-weight:800;letter-spacing:1px;">&#9889; QUICK ART</span> '
+          . '    <span style="color:#34d399;font-size:11px;font-weight:800;letter-spacing:0.8px;background:#064e3b;padding:2px 8px;border-radius:5px;margin-left:6px;">LMS</span>'
+          . '  </div>'
+          . '  <div style="color:#64748b;font-size:10.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-top:10px;">NEXT-GEN PHOTOGRAPHY &amp; FILMMAKING LMS</div>'
           . '</div>'
-          . '<div style="color:#8b949e;font-size:12px;line-height:1.6;border-top:1px solid #21262d;padding-top:16px;">'
-          . '<strong style="color:#e6edf3;">Quick Art Photography Academy</strong><br>'
-          . 'Director: Anil Sharma &bull; Helpline: <a href="tel:9939800780" style="color:#d8a153;text-decoration:none;">9939800780</a><br>'
-          . 'Email: <a href="mailto:' . htmlspecialchars($senderEmail) . '" style="color:#d8a153;text-decoration:none;">' . htmlspecialchars($senderEmail) . '</a> &bull; Web: <a href="https://quickartphotography.in" style="color:#d8a153;text-decoration:none;">quickartphotography.in</a>'
+          // Main Card
+          . '<div style="max-width:540px;margin:0 auto;background:#0d1322;border:1px solid #1e293b;border-radius:20px;padding:36px 32px;text-align:left;box-shadow:0 25px 50px -12px rgba(0,0,0,0.7);">'
+          . '  <div style="display:inline-block;padding:5px 14px;background:#064e3b;border:1px solid #059669;border-radius:9999px;color:#34d399;font-size:12px;font-weight:700;letter-spacing:0.3px;margin-bottom:18px;">&#128274; Security Verification</div>'
+          . '  <h1 style="margin:0 0 16px 0;color:#ffffff;font-size:24px;font-weight:800;letter-spacing:-0.4px;">' . $cardTitle . '</h1>'
+          . '  <p style="margin:0 0 10px 0;font-size:15px;color:#cbd5e1;line-height:1.5;">Hello <strong style="color:#ffffff;">' . htmlspecialchars($displayName) . '</strong>,</p>'
+          . '  <p style="margin:0 0 24px 0;font-size:14px;color:#94a3b8;line-height:1.6;">' . $requestDesc . '</p>'
+          // Passcode Box
+          . '  <div style="background:#090e17;border:1.5px solid #34d399;border-radius:14px;padding:26px 20px;text-align:center;margin:0 0 24px 0;box-shadow:0 0 24px rgba(52,211,153,0.12);">'
+          . '    <div style="color:#34d399;font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px;">YOUR ONE-TIME PASSCODE</div>'
+          . '    <div style="color:#34d399;font-size:42px;font-weight:800;letter-spacing:10px;font-family:\'SF Pro Display\',-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,\'Courier New\',monospace;margin:0 0 10px 0;text-shadow:0 0 16px rgba(52,211,153,0.38);">' . htmlspecialchars($otp) . '</div>'
+          . '    <div style="color:#94a3b8;font-size:12.5px;font-weight:500;">&#9201; Expires in <strong style="color:#f87171;font-weight:700;">10 minutes</strong></div>'
+          . '  </div>'
+          // Instructions
+          . '  <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;width:100%;">'
+          . '    <tr>'
+          . '      <td style="width:26px;vertical-align:top;font-size:15px;line-height:1.4;">&#8505;&#65039;</td>'
+          . '      <td style="color:#cbd5e1;font-size:13px;line-height:1.5;vertical-align:top;">' . $stepInstruction . '</td>'
+          . '    </tr>'
+          . '  </table>'
+          . '  <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;width:100%;">'
+          . '    <tr>'
+          . '      <td style="width:26px;vertical-align:top;font-size:15px;line-height:1.4;">&#128737;&#65039;</td>'
+          . '      <td style="color:#94a3b8;font-size:13px;line-height:1.5;vertical-align:top;"><strong style="color:#ffffff;">Never share this code.</strong> Quick Art Academy team members will never ask for your verification code or password.</td>'
+          . '    </tr>'
+          . '  </table>'
+          // Burgundy Warning Box
+          . '  <div style="background:#1c131a;border:1px solid #4a1c2c;border-radius:10px;padding:14px 18px;margin-top:20px;text-align:left;">'
+          . '    <strong style="color:#f87171;font-size:12.5px;display:inline;">Didn&#39;t request this code?</strong> '
+          . '    <span style="color:#fda4af;font-size:12px;line-height:1.5;">' . $warningDesc . '</span>'
+          . '  </div>'
           . '</div>'
-          . '</div></body></html>';
+          // Footer
+          . '<div style="margin-top:24px;text-align:center;color:#64748b;font-size:12px;line-height:1.8;">'
+          . '  <div>Need assistance? Contact our team at <a href="mailto:' . htmlspecialchars($senderEmail) . '" style="color:#34d399;text-decoration:none;font-weight:600;">' . htmlspecialchars($senderEmail) . '</a></div>'
+          . '  <div>&copy; ' . $currentYear . ' Quick Art Photography Academy. All rights reserved.</div>'
+          . '  <div style="font-size:11px;color:#475569;margin-top:4px;">This is an automated transactional message sent securely via Brevo.</div>'
+          . '</div>'
+          . '</td></tr></table></body></html>';
 
     // 3. Try Brevo REST API First (300 Free Emails / Day, No Monthly Subscription)
     $brevoApiKey = trim((string)($settings['brevoApiKey'] ?? ''));
@@ -560,9 +627,9 @@ function send_email_otp($email, $otp, $purpose = 'register', $settings = []) {
     return [
         'ok' => true,
         'message' => 'OTP sent to email successfully',
-        'supabase' => $supabaseSent,
-        'smtp' => $smtpSent,
-        'brevo' => $brevoSent
+        'supabase' => $supabaseSent ?? false,
+        'smtp' => $smtpSent ?? false,
+        'brevo' => $brevoSent ?? false
     ];
 }
 

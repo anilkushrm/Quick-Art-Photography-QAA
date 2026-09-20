@@ -57,7 +57,7 @@
 .ref-all:hover{color:#b9802d;text-decoration:underline}
 .ref-all-online{display:inline-flex;align-items:center;gap:4px;color:#8c5f20;font-size:13px;font-weight:600;margin-top:18px;padding:0;background:none;border:none;border-radius:0;text-decoration:none;box-shadow:none;transition:color .2s ease}
 .ref-all-online:hover{background:none;border:none;color:#b9802d;text-decoration:underline;transform:none;box-shadow:none}
-.ref-mobile-all-online{display:inline-flex !important;align-items:center;gap:4px;padding:4px 0 !important;margin:6px 0 10px !important;background:none !important;border:none !important;box-shadow:none !important;border-radius:0 !important;color:#8c5f20 !important;font-weight:600 !important;font-size:13px !important;text-decoration:none !important}
+.ref-mobile-all-online{display:inline-flex !important;align-items:center;gap:4px;padding:6px 0 !important;margin:12px 0 6px !important;background:none !important;border:none !important;box-shadow:none !important;border-radius:0 !important;color:#8c5f20 !important;font-weight:600 !important;font-size:13px !important;text-decoration:none !important}
 .ref-mobile-all-online:hover{color:#b9802d !important;text-decoration:underline !important}
 .ref-resources{position:relative}.ref-resource-panel{position:absolute;top:calc(100% + 10px);left:0;width:250px;padding:10px;background:#fff;border:1px solid #e9dfce;border-radius:12px;box-shadow:0 15px 35px #00000033}
 .ref-resource-panel a{display:block;color:#172033;padding:12px;border-radius:6px;font-size:15px}.ref-resource-panel a:hover{background:#fff6e5}

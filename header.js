@@ -60,14 +60,16 @@
    });
 
    const mobileOnline = header.querySelector('#ref-mobile details');
-   if(mobileOnline && !mobileOnline.querySelector('.ref-mobile-all-online')){
-    const allMobileLink = document.createElement('a');
-    allMobileLink.className = 'ref-mobile-all-online';
+   if(mobileOnline){
+    let allMobileLink = mobileOnline.querySelector('.ref-mobile-all-online');
+    if(!allMobileLink){
+     allMobileLink = document.createElement('a');
+     allMobileLink.className = 'ref-mobile-all-online';
+     allMobileLink.innerHTML = 'View all online programs →';
+    }
     allMobileLink.href = onlineHubHref;
-    allMobileLink.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:4px 0;margin:6px 0 10px;background:none;border:none;color:#8c5f20;font-weight:600;font-size:13px;text-decoration:none;';
-    allMobileLink.innerHTML = 'View all online programs →';
-    const summary = mobileOnline.querySelector('summary');
-    if(summary) summary.after(allMobileLink);
+    allMobileLink.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:6px 0;margin:12px 0 6px;background:none;border:none;color:#8c5f20;font-weight:600;font-size:13px;text-decoration:none;';
+    mobileOnline.append(allMobileLink);
    }
   }
 

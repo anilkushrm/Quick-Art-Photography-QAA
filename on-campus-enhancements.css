@@ -616,8 +616,7 @@ section.qa-section .text-black,
     box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6), 0 0 45px rgba(216, 161, 83, 0.12) !important;
 }
 
-.rounded-\[36px\].bg-ink .grid > div:first-child,
-.rounded-\[36px\].bg-ink .grid > div {
+.rounded-\[36px\].bg-ink .grid > div:first-child {
     background: transparent !important;
     border: none !important;
     border-radius: 0 !important;
@@ -625,6 +624,78 @@ section.qa-section .text-black,
     box-shadow: none !important;
     height: auto !important;
     display: block !important;
+}
+
+.rounded-\[36px\].bg-ink .flex-col,
+.rounded-\[36px\].bg-ink .grid > div:last-child {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 16px !important;
+    width: 100% !important;
+}
+
+.rounded-\[36px\].bg-ink .lp-btn-primary,
+.rounded-\[36px\].bg-ink .lp-btn-secondary {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 50px !important;
+    min-height: 50px !important;
+    padding: 0 24px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    border-radius: 14px !important;
+    white-space: nowrap !important;
+    text-decoration: none !important;
+    box-sizing: border-box !important;
+    gap: 8px !important;
+}
+
+.rounded-\[36px\].bg-ink .lp-btn-primary {
+    background: linear-gradient(135deg, #f5c879 0%, #d8a153 55%, #bd863a 100%) !important;
+    color: #0b0c10 !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    box-shadow: 0 8px 22px rgba(216, 161, 83, 0.35) !important;
+}
+
+.rounded-\[36px\].bg-ink .lp-btn-primary:hover {
+    background: linear-gradient(135deg, #fae0a2 0%, #dfad5e 55%, #c89243 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 28px rgba(216, 161, 83, 0.5) !important;
+}
+
+.rounded-\[36px\].bg-ink .lp-btn-secondary {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(216, 161, 83, 0.35) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    box-shadow: none !important;
+}
+
+.rounded-\[36px\].bg-ink .lp-btn-secondary:hover {
+    background: rgba(216, 161, 83, 0.16) !important;
+    border-color: rgba(216, 161, 83, 0.65) !important;
+    color: #f5c879 !important;
+    transform: translateY(-2px) !important;
+}
+
+.rounded-\[36px\].bg-ink .lp-btn-primary svg,
+.rounded-\[36px\].bg-ink .lp-btn-secondary svg {
+    width: 18px !important;
+    height: 18px !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
 }
 
 .rounded-\[36px\].bg-ink h3 {
@@ -1317,17 +1388,25 @@ a[class*="bg-white\/10"]:hover {
         border-radius: 22px !important;
     }
 
-    .rounded-\[36px\].bg-ink .grid > div:first-child,
-    .rounded-\[36px\].bg-ink .grid > div {
+    .rounded-\[36px\].bg-ink .grid > div:first-child {
         padding: 0 !important;
         border: none !important;
         background: transparent !important;
         box-shadow: none !important;
+        display: block !important;
     }
 
-    .rounded-\[36px\].bg-ink .flex-col.md\:items-end {
-        width: 100% !important;
+    .rounded-\[36px\].bg-ink .flex-col,
+    .rounded-\[36px\].bg-ink .grid > div:last-child {
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        display: flex !important;
+        flex-direction: column !important;
         align-items: stretch !important;
+        width: 100% !important;
+        gap: 12px !important;
     }
 
     .rounded-\[36px\].bg-ink .lp-btn-primary,

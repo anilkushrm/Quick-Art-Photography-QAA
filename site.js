@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rail = document.createElement('div'); rail.className = 'qa-float-actions';
     const contactHref = new URL('contact-us/index.html#enquiry', popupRoot).href;
     rail.innerHTML = `<a class="qa-float-demo" href="${contactHref}"><span>▣</span> Free demo · <b>Book Now</b> <strong>→</strong></a><div class="qa-float-stack"><a class="qa-float-whatsapp" href="https://wa.me/919939800780" target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp">◌</a><a class="qa-float-call" href="tel:+919939800780" aria-label="Call Quick Art">⌕</a></div>`;
-    if (isMaster) rail.classList.add('qa-float-show-stack');
+    if (!isHome) rail.classList.add('qa-float-show-stack');
     rail.querySelector('.qa-float-call').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.19 18a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.09 3.4 2 2 0 0 1 4.08 1.22h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.69 2.79a2 2 0 0 1-.45 2.11L8.05 9.11a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.89.33 1.83.57 2.79.69A2 2 0 0 1 22 16.92Z"/></svg>';
     rail.querySelector('.qa-float-whatsapp').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a9 9 0 0 1-13.4 7.9L3 21l1.6-4.6A9 9 0 1 1 21 11.5Z"/><path d="m8 7 1.5 3-1 1c1 2 2.5 3.5 4.5 4.5l1-1 3 1.5c-1 3-4 2-7-1S5 8 8 7Z"/></svg>';
     document.body.append(rail);

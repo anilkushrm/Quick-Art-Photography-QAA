@@ -1,15 +1,31 @@
 /* ==========================================================================
    Quick Art Photography Academy — On-Campus Luxury Programs Theme
-   Elevating all on-campus pages (Video Editing, Album Design,
-   AI Wedding Filmmaking, All Course Topics & Masterclass)
+   Matching 100% with the Online Programs Obsidian Dark Luxury Aesthetic
    ========================================================================== */
 
+:root {
+  --lp-bg: #0a0b0e;
+  --lp-card: #12141b;
+  --lp-card-hover: #181b24;
+  --lp-card-border: rgba(216, 161, 83, 0.18);
+  --lp-gold: #d8a153;
+  --lp-gold-light: #f6d389;
+  --lp-gold-glow: rgba(216, 161, 83, 0.25);
+  --lp-text: #f1f5f9;
+  --lp-text-muted: #94a3b8;
+  --lp-text-dim: #64748b;
+  --lp-gradient-gold: linear-gradient(135deg, #d8a153 0%, #f6d389 100%);
+  --lp-gradient-gold-hover: linear-gradient(135deg, #c89244 0%, #eec06e 100%);
+}
+
 /* ── Global Dark Theme & Smooth Transitions ── */
+body,
 body:has(.qa-texture-hero),
 body:has(.qa-topics-hero),
-body:has(.qa-master-hero) {
-    background-color: #07090e !important;
-    color: #e2e8f0 !important;
+body:has(.qa-master-hero),
+body.bg-\[\#FAFAFA\] {
+    background-color: #0a0b0e !important;
+    color: #f1f5f9 !important;
 }
 
 /* ── Breadcrumb Bar Polish ── */
@@ -45,30 +61,30 @@ body:has(.qa-master-hero) {
 }
 
 /* ── Hero Back Link Fix ── */
-.qa-texture-hero a[href*="index.html"]:not([class*="bg-gold"]),
-.qa-topics-hero a[href*="index.html"]:not([class*="bg-gold"]),
+.qa-texture-hero a[href*="index.html"]:not([class*="bg-gold"]):not([class*="lp-btn"]),
+.qa-topics-hero a[href*="index.html"]:not([class*="bg-gold"]):not([class*="lp-btn"]),
 .qa-back-link {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: rgba(255, 255, 255, 0.85) !important;
     font-weight: 500;
     font-size: 13.5px;
-    padding: 7px 16px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 8px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(216, 161, 83, 0.22);
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
     transition: all 0.25s ease;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
-.qa-texture-hero a[href*="index.html"]:not([class*="bg-gold"]):hover,
-.qa-topics-hero a[href*="index.html"]:not([class*="bg-gold"]):hover,
+.qa-texture-hero a[href*="index.html"]:not([class*="bg-gold"]):not([class*="lp-btn"]):hover,
+.qa-topics-hero a[href*="index.html"]:not([class*="bg-gold"]):not([class*="lp-btn"]):hover,
 .qa-back-link:hover {
     color: #f5c879 !important;
     background: rgba(216, 161, 83, 0.16);
-    border-color: rgba(216, 161, 83, 0.4);
+    border-color: rgba(216, 161, 83, 0.5);
     transform: translateX(-3px);
 }
 
@@ -87,7 +103,7 @@ body:has(.qa-master-hero) {
 /* ── Hero Stats KPI Cards ── */
 .qa-texture-hero .glass-dark,
 .qa-topics-hero .glass-dark {
-    background: linear-gradient(135deg, rgba(22, 26, 38, 0.88), rgba(12, 14, 22, 0.96)) !important;
+    background: linear-gradient(135deg, rgba(22, 26, 38, 0.92), rgba(12, 14, 22, 0.98)) !important;
     border: 1px solid rgba(216, 161, 83, 0.24) !important;
     border-radius: 18px !important;
     padding: 16px 18px !important;
@@ -121,8 +137,8 @@ body:has(.qa-master-hero) {
     gap: 16px;
     margin-top: 24px;
     padding: 12px 18px;
-    background: rgba(216, 161, 83, 0.06);
-    border: 1px solid rgba(216, 161, 83, 0.22);
+    background: rgba(216, 161, 83, 0.08);
+    border: 1px solid rgba(216, 161, 83, 0.25);
     border-radius: 14px;
     font-size: 13px;
     color: #cbd5e1;
@@ -137,8 +153,9 @@ body:has(.qa-master-hero) {
 }
 
 /* ── Campus Topic Note Bar ── */
-.qa-topic-note {
-    background: linear-gradient(90deg, rgba(216, 161, 83, 0.06) 0%, rgba(20, 24, 35, 0.95) 50%, rgba(216, 161, 83, 0.06) 100%) !important;
+.qa-topic-note,
+.qa-fee-note {
+    background: linear-gradient(90deg, rgba(216, 161, 83, 0.08) 0%, rgba(18, 20, 27, 0.95) 50%, rgba(216, 161, 83, 0.08) 100%) !important;
     border: 1px solid rgba(216, 161, 83, 0.28) !important;
     border-radius: 14px !important;
     color: #cbd5e1 !important;
@@ -151,52 +168,75 @@ body:has(.qa-master-hero) {
     text-align: center;
 }
 
-.qa-topic-note a {
+.qa-topic-note a,
+.qa-fee-note a {
     color: #f5c879 !important;
     font-weight: 700;
     text-decoration: underline;
     transition: color 0.2s ease;
 }
 
-.qa-topic-note a:hover {
+.qa-topic-note a:hover,
+.qa-fee-note a:hover {
     color: #ffffff !important;
 }
 
-/* ── Sections Background Overhaul ── */
-/* Replace harsh white bg-[#FAFAFA] with rich, luxurious dark-studio palette */
+/* ── Universal Section Background Overhaul (Obsidian Dark Luxury) ── */
+main > section,
 main > section.bg-\[\#FAFAFA\],
-main > section.bg-white {
-    background: #090b11 !important;
+main > section.bg-white,
+section.qa-section.qa-light,
+section.qa-section#curriculum,
+section.qa-topics-feedback {
+    background: #0a0b0e !important;
     color: #f1f5f9 !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    border-top: 1px solid rgba(216, 161, 83, 0.12) !important;
+}
+
+/* Alternate slight contrast for reading rhythm */
+main > section:nth-of-type(even) {
+    background: #0e1017 !important;
 }
 
 /* Headings in content sections */
+main > section h1,
 main > section h2,
-main > section h3 {
+main > section h3,
+main > section h4,
+.text-ink {
     color: #ffffff !important;
 }
 
-main > section p.text-black\/60 {
+main > section p.text-black\/60,
+main > section p.text-black\/70,
+main > section .text-black\/55,
+main > section .text-black\/60,
+main > section .text-black\/70 {
     color: #94a3b8 !important;
 }
 
 /* ── "What You'll Master" Highlight Cards ── */
 .lg\:col-span-2 > .flex.items-start,
-.qa-highlight-card {
-    background: linear-gradient(135deg, rgba(24, 28, 42, 0.85), rgba(13, 16, 25, 0.96)) !important;
+.qa-highlight-card,
+.group.relative.rounded-3xl.bg-white,
+.rounded-3xl.bg-white,
+.rounded-2xl.bg-white,
+.rounded-3xl.p-6.bg-\[\#FAFAFA\] {
+    background: linear-gradient(135deg, rgba(24, 28, 42, 0.88), rgba(13, 16, 25, 0.96)) !important;
     border: 1px solid rgba(216, 161, 83, 0.2) !important;
-    border-radius: 18px !important;
-    padding: 18px 20px !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35) !important;
     transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .lg\:col-span-2 > .flex.items-start:hover,
-.qa-highlight-card:hover {
+.qa-highlight-card:hover,
+.group.relative.rounded-3xl.bg-white:hover,
+.rounded-3xl.bg-white:hover,
+.rounded-2xl.bg-white:hover {
     transform: translateY(-3px) !important;
     border-color: rgba(216, 161, 83, 0.48) !important;
-    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.5), 0 0 24px rgba(216, 161, 83, 0.14) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 25px rgba(216, 161, 83, 0.15) !important;
 }
 
 .lg\:col-span-2 > .flex.items-start .text-ink,
@@ -206,17 +246,18 @@ main > section p.text-black\/60 {
     font-size: 15px !important;
 }
 
-.lg\:col-span-2 > .flex.items-start .bg-gold-gradient {
+.lg\:col-span-2 > .flex.items-start .bg-gold-gradient,
+.rounded-2xl.bg-gold-gradient {
     background: linear-gradient(135deg, #f5c879, #d8a153) !important;
     box-shadow: 0 0 16px rgba(216, 161, 83, 0.4) !important;
 }
 
 /* Left Student Count Card */
 .lg\:grid-cols-3 > div:first-child .bg-white {
-    background: linear-gradient(135deg, rgba(24, 28, 42, 0.9), rgba(13, 16, 25, 0.98)) !important;
+    background: linear-gradient(135deg, rgba(24, 28, 42, 0.92), rgba(13, 16, 25, 0.98)) !important;
     border: 1px solid rgba(216, 161, 83, 0.25) !important;
     border-radius: 20px !important;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4) !important;
 }
 
 .lg\:grid-cols-3 > div:first-child .text-black\/70 {
@@ -231,7 +272,8 @@ main > section p.text-black\/60 {
     color: #f5c879 !important;
 }
 
-.text-gold-700 {
+.text-gold-700,
+.text-gold-600 {
     color: #f5c879 !important;
 }
 
@@ -246,7 +288,7 @@ main > section p.text-black\/60 {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at center top, rgba(216, 161, 83, 0.08), transparent 70%);
+    background: radial-gradient(ellipse at center top, rgba(216, 161, 83, 0.1), transparent 70%);
     pointer-events: none;
 }
 
@@ -281,8 +323,8 @@ main > section p.text-black\/60 {
 }
 
 .qa-week {
-    background: linear-gradient(135deg, rgba(20, 24, 36, 0.88), rgba(12, 14, 22, 0.96)) !important;
-    border: 1px solid rgba(216, 161, 83, 0.2) !important;
+    background: linear-gradient(135deg, rgba(20, 24, 36, 0.9), rgba(12, 14, 22, 0.98)) !important;
+    border: 1px solid rgba(216, 161, 83, 0.22) !important;
     border-radius: 16px !important;
     overflow: hidden;
     transition: all 0.25s ease !important;
@@ -290,7 +332,7 @@ main > section p.text-black\/60 {
 
 .qa-week:hover {
     border-color: rgba(216, 161, 83, 0.45) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.38) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
 }
 
 .qa-week summary {
@@ -358,7 +400,7 @@ main > section p.text-black\/60 {
 
 .qa-week[open] {
     border-color: rgba(216, 161, 83, 0.5) !important;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(216, 161, 83, 0.1) !important;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(216, 161, 83, 0.12) !important;
 }
 
 .qa-week[open] summary {
@@ -367,7 +409,7 @@ main > section p.text-black\/60 {
 
 .qa-week > div {
     padding: 22px 24px !important;
-    background: rgba(10, 12, 18, 0.65) !important;
+    background: rgba(10, 12, 18, 0.75) !important;
     color: #cbd5e1 !important;
 }
 
@@ -422,7 +464,7 @@ main > section p.text-black\/60 {
 
 .grid.md\:grid-cols-2 > div:first-child span.rounded-full {
     background: rgba(255, 255, 255, 0.06) !important;
-    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border: 1px solid rgba(216, 161, 83, 0.22) !important;
     color: #f1f5f9 !important;
     padding: 8px 18px !important;
     font-weight: 600 !important;
@@ -623,6 +665,254 @@ main > section p.text-black\/60 {
     letter-spacing: 2px;
 }
 
+/* ==========================================================================
+   FLAGSHIP MASTER CLASS (master-class/index.html) LUXURY OBSIDIAN OVERHAUL
+   ========================================================================== */
+.qa-master-hero .lg\:col-span-2 > div.bg-white,
+.qa-master-hero .qa-master-form {
+    background: linear-gradient(135deg, rgba(20, 24, 35, 0.96), rgba(11, 13, 20, 0.99)) !important;
+    border: 1px solid rgba(216, 161, 83, 0.3) !important;
+    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.7), 0 0 35px rgba(216, 161, 83, 0.12) !important;
+    color: #f1f5f9 !important;
+}
+
+.qa-master-hero .lg\:col-span-2 > div.bg-white h3 {
+    color: #ffffff !important;
+}
+
+.qa-master-hero .lg\:col-span-2 > div.bg-white p {
+    color: #94a3b8 !important;
+}
+
+.qa-master-hero .qa-enquiry {
+    background: transparent !important;
+}
+
+.qa-master-hero .qa-enquiry h2,
+.qa-master-hero .qa-enquiry label {
+    color: #f1f5f9 !important;
+}
+
+.qa-master-hero .qa-enquiry .qa-kicker {
+    color: #f6d389 !important;
+}
+
+.qa-master-hero .qa-enquiry :is(input, select, textarea) {
+    background: #090a0f !important;
+    border: 1px solid rgba(216, 161, 83, 0.22) !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+}
+
+.qa-master-hero .qa-enquiry :is(input, select, textarea):focus {
+    border-color: #d8a153 !important;
+    box-shadow: 0 0 0 3px rgba(216, 161, 83, 0.25) !important;
+}
+
+.qa-master-hero .qa-enquiry .qa-consent {
+    color: #94a3b8 !important;
+}
+
+/* Masterclass Bonuses Section Dark Theme */
+.mc-bonuses {
+    background: #0a0b0e !important;
+    color: #f1f5f9 !important;
+    border-top: 1px solid rgba(216, 161, 83, 0.12) !important;
+}
+
+.mc-bonuses::before {
+    background: linear-gradient(90deg, transparent, rgba(216, 161, 83, 0.4), transparent) !important;
+}
+
+.mc-bonus-kicker {
+    background: rgba(216, 161, 83, 0.12) !important;
+    color: #f6d389 !important;
+    border-color: rgba(216, 161, 83, 0.35) !important;
+}
+
+.mc-bonus-intro h2 {
+    color: #ffffff !important;
+}
+
+.mc-bonus-intro > p {
+    color: #94a3b8 !important;
+}
+
+.mc-price {
+    background: linear-gradient(135deg, rgba(20, 24, 35, 0.95), rgba(11, 13, 20, 0.98)) !important;
+    border: 1px solid rgba(216, 161, 83, 0.28) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+}
+
+.mc-price-row strong {
+    color: #ffffff !important;
+}
+
+.mc-price-row del {
+    color: #64748b !important;
+}
+
+.mc-price p {
+    color: #34d399 !important;
+}
+
+.mc-price a {
+    background: linear-gradient(135deg, #f5c879 0%, #d8a153 55%, #bd863a 100%) !important;
+    color: #0b0c10 !important;
+    font-weight: 700 !important;
+    box-shadow: 0 8px 24px rgba(216, 161, 83, 0.35) !important;
+    transition: all 0.25s ease !important;
+}
+
+.mc-price a:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 30px rgba(216, 161, 83, 0.5) !important;
+}
+
+.mc-bonus-card {
+    background: linear-gradient(135deg, rgba(24, 28, 42, 0.88), rgba(13, 16, 25, 0.96)) !important;
+    border: 1px solid rgba(216, 161, 83, 0.2) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35) !important;
+    transition: all 0.25s ease !important;
+}
+
+.mc-bonus-card:hover {
+    transform: translateY(-3px) !important;
+    border-color: rgba(216, 161, 83, 0.48) !important;
+    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(216, 161, 83, 0.12) !important;
+}
+
+.mc-bonus-card h3 {
+    color: #ffffff !important;
+}
+
+.mc-bonus-card p {
+    color: #94a3b8 !important;
+}
+
+.mc-bonus-value del {
+    color: #64748b !important;
+}
+
+.mc-bonus-value strong {
+    color: #34d399 !important;
+}
+
+/* Masterclass Reviews Section Dark Theme */
+.mc-reviews {
+    background: #07090e !important;
+    color: #f1f5f9 !important;
+    border-top: 1px solid rgba(216, 161, 83, 0.12) !important;
+}
+
+.mc-reviews-heading h2 {
+    color: #ffffff !important;
+}
+
+.mc-reviews-heading > p {
+    color: #94a3b8 !important;
+}
+
+.mc-reviews-kicker {
+    background: rgba(216, 161, 83, 0.12) !important;
+    color: #f6d389 !important;
+    border-color: rgba(216, 161, 83, 0.35) !important;
+}
+
+.mc-review-card,
+.mc-review-card:nth-child(2) {
+    background: linear-gradient(135deg, rgba(24, 28, 42, 0.88), rgba(13, 16, 25, 0.96)) !important;
+    border: 1px solid rgba(216, 161, 83, 0.2) !important;
+    border-radius: 22px !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4) !important;
+    transition: all 0.25s ease !important;
+}
+
+.mc-review-card:hover {
+    transform: translateY(-4px) !important;
+    border-color: rgba(216, 161, 83, 0.5) !important;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55), 0 0 25px rgba(216, 161, 83, 0.14) !important;
+}
+
+.mc-review-card blockquote {
+    color: #cbd5e1 !important;
+}
+
+.mc-review-author {
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.mc-review-author h3 {
+    color: #ffffff !important;
+}
+
+.mc-review-author p {
+    color: #94a3b8 !important;
+}
+
+/* ==========================================================================
+   BUTTON STYLES & TOUCH TARGETS (MATCHING ONLINE LANDING PAGES)
+   ========================================================================== */
+.lp-btn-primary,
+a[class*="bg-gold-gradient"],
+button.qa-demo {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    padding: 14px 28px !important;
+    background: linear-gradient(135deg, #f5c879 0%, #d8a153 55%, #bd863a 100%) !important;
+    color: #0b0c10 !important;
+    font-weight: 700 !important;
+    font-size: 15.5px !important;
+    border-radius: 14px !important;
+    text-decoration: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 10px 25px -5px rgba(216, 161, 83, 0.4) !important;
+    transition: all 0.25s ease !important;
+    cursor: pointer !important;
+}
+
+.lp-btn-primary:hover,
+a[class*="bg-gold-gradient"]:hover,
+button.qa-demo:hover {
+    background: linear-gradient(135deg, #fae0a2 0%, #dfad5e 55%, #c89243 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 14px 30px -5px rgba(216, 161, 83, 0.55) !important;
+}
+
+.lp-btn-secondary,
+a[class*="border-white\/25"],
+a[class*="bg-white\/5"],
+a[class*="bg-white\/10"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 14px 24px !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    border-radius: 14px !important;
+    text-decoration: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    transition: all 0.2s ease !important;
+}
+
+.lp-btn-secondary:hover,
+a[class*="border-white\/25"]:hover,
+a[class*="bg-white\/5"]:hover,
+a[class*="bg-white\/10"]:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(216, 161, 83, 0.5) !important;
+    color: #f6d389 !important;
+    transform: translateY(-2px) !important;
+}
+
 /* ── Mobile Polish (≤ 768px) ── */
 @media (max-width: 768px) {
     .qa-texture-hero {
@@ -660,3 +950,4 @@ main > section p.text-black\/60 {
         border-radius: 24px !important;
     }
 }
+

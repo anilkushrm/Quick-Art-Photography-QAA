@@ -136,10 +136,10 @@ html, body {
   .qa-popup-top > span { padding: 3px 8px; font-size: 9px; letter-spacing: .08em; border-radius: 999px; }
   .qa-popup-top h2 { margin: 6px 0 3px; font-size: 17px; line-height: 1.25; font-weight: 800; letter-spacing: -.02em; }
   .qa-popup-top p { margin: 0; font-size: 11.5px; line-height: 1.4; color: #cfcac2; }
-  .qa-popup-close { right: 12px; top: 12px; font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center; background: transparent; border: none; color: rgba(255,255,255,.9); z-index: 50; cursor: pointer; padding: 4px; }
-  .qa-popup-form { padding: 12px 16px 14px; display: grid; gap: 7px; }
-  .qa-popup-form input { padding: 8px 12px; border-radius: 8px; font-size: 12.5px; height: 38px; min-height: 38px; }
-  .qa-popup-form > button { padding: 9px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; height: 40px; min-height: 40px; }
+  .qa-popup-close { right: 8px; top: 8px; width: 44px; height: 44px; font-size: 20px; line-height: 1; display: flex; align-items: center; justify-content: center; background: transparent; border: none; color: rgba(255,255,255,.9); z-index: 50; cursor: pointer; padding: 0; }
+  .qa-popup-form { padding: 12px 16px 14px; display: grid; gap: 9px; }
+  .qa-popup-form input { padding: 10px 14px; border-radius: 10px; font-size: 16px !important; min-height: 44px; }
+  .qa-popup-form > button { padding: 12px 16px; border-radius: 10px; font-size: 15px; font-weight: 700; min-height: 46px; }
   .qa-popup-form small { font-size: 10px; line-height: 1.35; margin-top: 1px; }
   .qa-popup-status { font-size: 11.5px; }
 

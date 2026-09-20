@@ -531,13 +531,14 @@ body.landing-page-body {
 
 /* 22. MOBILE */
 @media (max-width: 480px) {
-  .lp-btn-primary { width: 100% !important; padding: 17px 24px !important; justify-content: center !important; }
-  .lp-btn-secondary { width: 100% !important; padding: 15px 24px !important; justify-content: center !important; }
+  .lp-btn-primary { width: 100% !important; padding: 15px 20px !important; justify-content: center !important; font-size: 15px !important; }
+  .lp-btn-secondary { width: 100% !important; padding: 14px 20px !important; justify-content: center !important; font-size: 14px !important; }
   .lp-hero-guarantee { flex-direction: column !important; gap: 10px !important; padding: 14px !important; }
-  .lp-pricing-price { font-size: 44px !important; }
-  .lp-pricing-box { padding: 32px 20px !important; }
-  .lp-sec-title { font-size: 26px !important; }
+  .lp-pricing-price { font-size: clamp(32px, 8vw, 42px) !important; }
+  .lp-pricing-box { padding: 28px 18px !important; }
+  .lp-sec-title { font-size: clamp(22px, 6vw, 26px) !important; text-wrap: balance; }
   .lp-stat-item:not(:last-child)::after { display: none; }
+  .lp-media-card, .lp-preview-card { border-radius: 16px !important; }
 }
 
 /* 23. MENTOR CARD */

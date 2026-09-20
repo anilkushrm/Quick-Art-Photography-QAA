@@ -23,3 +23,157 @@ main :is(.qa-demo,.qa-outline,.ec-button,.ec-secondary,.qaa-play-download){trans
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}main *,main *::before,main *::after{animation:none!important;transition:none!important}.qa-pending{opacity:1!important;transform:none!important}}
 @media print{.qa-pending{opacity:1!important;transform:none!important}.ref-header,.ref-drawer-backdrop,.fixed.bottom-5.right-5{display:none!important}}
+
+/* ==========================================================================
+   Quick Art Academy — Comprehensive Mobile Responsiveness & Button/Typography Polish
+   ========================================================================== */
+
+/* 1. Universal Anti-Overflow & Sizing */
+html, body {
+  max-width: 100vw;
+  overflow-x: clip;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* 2. Responsive Typography Scaling */
+h1, .qa-hero-title, .lp-hero-title {
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+h2, .qa-sec-title, .lp-sec-title {
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+/* 3. Button Styling & Minimum Touch Targets (44px+) */
+:is(.qa-demo, .qa-outline, .ec-button, .ec-secondary, .lp-btn-primary, .lp-btn-secondary, .hub-btn-details, .hub-btn-enroll, .btn, .btn-gold, .btn-outline, .ref-all-online) {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s ease, box-shadow 0.22s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+:is(.qa-demo, .qa-outline, .ec-button, .ec-secondary, .lp-btn-primary, .lp-btn-secondary, .hub-btn-details, .hub-btn-enroll, .btn, .btn-gold):active {
+  transform: scale(0.97) !important;
+}
+
+/* 4. Luxury Gold Gradient Buttons */
+:is(.qa-demo, .lp-btn-primary, .hub-btn-enroll, .btn-gold) {
+  background: linear-gradient(135deg, #f5c879 0%, #d8a153 55%, #bd863a 100%) !important;
+  color: #0f1117 !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 4px 18px rgba(216, 161, 83, 0.32) !important;
+  text-shadow: none !important;
+}
+
+:is(.qa-demo, .lp-btn-primary, .hub-btn-enroll, .btn-gold):hover {
+  background: linear-gradient(135deg, #fae0a2 0%, #dfad5e 55%, #c89243 100%) !important;
+  box-shadow: 0 6px 24px rgba(216, 161, 83, 0.45) !important;
+  transform: translateY(-2px);
+}
+
+/* 5. Luxury Glass Outline / Secondary Buttons */
+:is(.qa-outline, .lp-btn-secondary, .hub-btn-details, .btn-outline) {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #f1ede5 !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+:is(.qa-outline, .lp-btn-secondary, .hub-btn-details, .btn-outline):hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(216, 161, 83, 0.5) !important;
+  color: #f6d389 !important;
+  transform: translateY(-2px);
+}
+
+/* 6. Form Fields & iOS Safari Auto-Zoom Fix */
+@media (max-width: 768px) {
+  :is(input[type="text"], input[type="tel"], input[type="email"], input[type="number"], select, textarea) {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+}
+
+/* 7. Mobile Layout Polish (<= 640px) */
+@media (max-width: 640px) {
+  .lp-cta-row,
+  .qa-cta-row,
+  .hub-card-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .lp-cta-row > a,
+  .lp-cta-row > button,
+  .hub-card-actions > a,
+  .qa-cta-row > a {
+    width: 100% !important;
+    text-align: center;
+  }
+
+  .lp-sticky-cta,
+  #mobileStickyCta {
+    padding: 10px 16px max(10px, env(safe-area-inset-bottom)) !important;
+  }
+
+  body:has(#mobileStickyCta.lp-sticky-visible) .fixed.bottom-5.right-5,
+  body:has(#mobileStickyCta.lp-sticky-visible) .qa-float-stack {
+    bottom: calc(76px + env(safe-area-inset-bottom)) !important;
+    transition: bottom 0.25s ease;
+  }
+
+  .lp-breadcrumb,
+  .qa-breadcrumb {
+    white-space: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-bottom: 4px !important;
+  }
+  .lp-breadcrumb::-webkit-scrollbar,
+  .qa-breadcrumb::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
+/* 8. Extra Small Screens (<= 375px: iPhone SE, etc.) */
+@media (max-width: 375px) {
+  h1, .lp-hero-title, .qa-hero-title {
+    font-size: 27px !important;
+    line-height: 1.18 !important;
+  }
+
+  h2, .lp-sec-title, .qa-sec-title {
+    font-size: 21px !important;
+    line-height: 1.25 !important;
+  }
+
+  .lp-pricing-price {
+    font-size: 36px !important;
+  }
+
+  .lp-pricing-box {
+    padding: 20px 14px !important;
+  }
+
+  .lp-media-thumb {
+    border-radius: 12px !important;
+  }
+
+  .hub-card-body {
+    padding: 14px 10px !important;
+  }
+}

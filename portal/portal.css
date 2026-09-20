@@ -4264,14 +4264,18 @@ a {
   }
   .lesson-actions #btn-next-lesson {
     grid-column: 1 / -1;
-    min-height: 42px;
-    font-size: 13.5px;
+    min-height: 46px;
+    font-size: 14px;
+    font-weight: 700;
   }
 
   /* Tabs */
   .lesson-tab {
     font-size: 12px;
-    padding: 6px 11px;
+    padding: 8px 12px;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
   }
 
   /* Discussion */
@@ -4285,7 +4289,7 @@ a {
     flex-shrink: 0;
   }
   .discussion-textarea {
-    font-size: 13.5px;
+    font-size: 16px !important;
     min-height: 75px;
   }
   .discussion-form-footer {
@@ -4296,6 +4300,8 @@ a {
   #btn-post-comment {
     width: 100%;
     justify-content: center;
+    min-height: 44px;
+    font-weight: 700;
   }
 
   /* Curriculum sidebar */

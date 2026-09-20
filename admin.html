@@ -741,7 +741,7 @@
             <div class="grid" style="grid-template-columns:repeat(3, 1fr);gap:16px;margin-top:16px">
               <div>
                 <label>Course Duration</label>
-                <input type="text" id="courseDurationInput" placeholder="e.g. 18 Hours" value="18 Hours" />
+                <input type="text" id="courseDurationInput" placeholder="e.g. 65+ Hours" value="65+ Hours" />
               </div>
               <div>
                 <label>Skill Level</label>
@@ -2607,6 +2607,7 @@ function renderLmsCourses() {
         <td>
           <span style="font-weight:700;color:var(--gold)">${(c.modules || []).length} Modules</span>
           <span class="muted" style="font-size:11.5px">(${lessonCount} Video Lessons)</span>
+          ${c.duration ? `<div style="margin-top:4px"><span class="badge" style="background:rgba(216,161,83,0.12);color:var(--gold);border:1px solid rgba(216,161,83,0.25);font-size:11px">⏱️ ${escapeHtml(c.duration)}</span></div>` : ''}
         </td>
         <td>
           ${badgeHtml}
@@ -2661,7 +2662,7 @@ function openCourseStudio(courseId) {
     document.getElementById('editCourseId').value = '';
     document.getElementById('courseTitleInput').value = '';
     document.getElementById('courseCategoryInput').value = 'Video Editing';
-    document.getElementById('courseDurationInput').value = '18 Hours';
+    document.getElementById('courseDurationInput').value = '45+ Hours';
     document.getElementById('courseLevelInput').value = 'All Levels';
     document.getElementById('courseBadgeInput').value = 'New Launch';
     document.getElementById('coursePriceInput').value = 4999;

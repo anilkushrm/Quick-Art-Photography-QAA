@@ -603,6 +603,57 @@ document.addEventListener('DOMContentLoaded', () => {
                     mediaImg.src = thumbUrl;
                 }
             }
+
+            // 3. Sync Course Duration
+            if (course.duration) {
+                const durStr = formatCourseDuration(course.duration);
+                const durNumMatch = durStr.match(/\d+/);
+                const durNum = durNumMatch ? parseFloat(durNumMatch[0]) : null;
+
+                // A. Hero highlight badges / chips (e.g. "65+ Hours 4K Lessons", "45+ Hours HD Video")
+                document.querySelectorAll('.lp-h-item, .lp-chip').forEach(item => {
+                    const textEl = item.querySelector('.lp-h-text') || item;
+                    if (/\b\d+\+?\s*(?:Hours?|Hrs?)\b/i.test(textEl.textContent)) {
+                        textEl.textContent = textEl.textContent.replace(/\b\d+\+?\s*(?:Hours?|Hrs?)\b/i, durStr);
+                    }
+                });
+
+                // B. Stats bar KPI values (.lp-stat-val, .lp-stat-num)
+                document.querySelectorAll('.lp-stat-val, .lp-stat-num').forEach(el => {
+                    if (/\b\d+\+?\s*(?:Hours?|Hrs?)\b/i.test(el.textContent) || (el.id && el.id.includes('duration'))) {
+                        el.textContent = durStr;
+                        if (el._counterItem) {
+                            el._counterItem.raw = durStr;
+                            if (durNum !== null) el._counterItem.target = durNum;
+                        }
+                    }
+                });
+
+                // C. Curriculum section header stat (#cs-stat-duration)
+                const csDur = document.getElementById('cs-stat-duration');
+                if (csDur) {
+                    csDur.textContent = durStr;
+                }
+
+                // D. Pricing checklist & bonus items (e.g. "Complete 65+ Hours Step-by-Step Curriculum")
+                document.querySelectorAll('.lp-pricing-list li, .lp-pricing-card li, .lp-bonus-card li, .cs-curriculum-header').forEach(el => {
+                    if (/\b\d+\+?\s*(?:Hours?|Hrs?)\b/i.test(el.innerHTML)) {
+                        el.innerHTML = el.innerHTML.replace(/\b\d+\+?\s*(?:Hours?|Hrs?)\b/gi, durStr);
+                    }
+                });
+            }
+        }
+
+        function formatCourseDuration(raw) {
+            if (!raw) return '';
+            const str = String(raw).trim();
+            const numMatch = str.match(/\d+/);
+            if (!numMatch) return str;
+            const num = numMatch[0];
+            if (/^\d+$/.test(str) || /^\d+\s*(?:hours?|hrs?)$/i.test(str)) {
+                return num + '+ Hours';
+            }
+            return str;
         }
 
         function applyCoursesToHub(coursesList) {
@@ -623,6 +674,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (course.thumbnail) {
                     const img = card.querySelector('.hub-card-thumb-wrap img');
                     if (img) img.src = resolveAssetUrl(course.thumbnail);
+                }
+
+                // Sync Duration Badge
+                if (course.duration) {
+                    const durStr = formatCourseDuration(course.duration);
+                    card.querySelectorAll('.hub-thumb-pill').forEach(pill => {
+                        if (pill.textContent.includes('Hours') || pill.textContent.includes('⏱️')) {
+                            pill.textContent = '⏱️ ' + durStr;
+                        }
+                    });
                 }
 
                 // Sync Price
@@ -647,6 +708,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (titleEl) titleEl.textContent = course.title;
                 }
             });
+
+            // Sync Total Hours in Hub Trust Strip
+            let totalHours = 0;
+            coursesList.forEach(c => {
+                if (c && c.duration) {
+                    const m = String(c.duration).match(/(\d+)/);
+                    if (m) totalHours += parseInt(m[1], 10);
+                }
+            });
+            if (totalHours > 0) {
+                document.querySelectorAll('.hub-trust-item').forEach(item => {
+                    const lbl = item.querySelector('.hub-trust-lbl');
+                    const num = item.querySelector('.hub-trust-num');
+                    if (lbl && lbl.textContent.includes('Hours Content') && num) {
+                        num.textContent = totalHours + '+';
+                    }
+                });
+            }
         }
 
         const courseId = landingSection ? landingSection.dataset.courseId : null;
@@ -679,6 +758,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(err => console.debug('Live course sync fetch notice:', err));
+
+        // 3. Real-time Cross-tab Sync via Storage Event
+        window.addEventListener('storage', (e) => {
+            if (!e.key || !e.newValue) return;
+            try {
+                if (courseId && e.key === 'qaa_course_' + courseId) {
+                    applyCourseToLanding(JSON.parse(e.newValue));
+                } else if (isHubPage && e.key === 'qaa_local_courses') {
+                    applyCoursesToHub(JSON.parse(e.newValue));
+                }
+            } catch (_) {}
+        });
     };
 
     if (document.readyState === 'loading') {
@@ -729,7 +820,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const hasDot = numStr.includes('.');
                 const decimals = hasDot ? (numStr.split('.')[1] || '').length : 0;
 
-                items.push({
+                const counterItem = {
                     el,
                     raw,
                     prefix,
@@ -738,7 +829,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     hasComma,
                     decimals,
                     started: false
-                });
+                };
+                items.push(counterItem);
+                el._counterItem = counterItem;
 
                 // Set initial visual state to 0 so when page loads it starts from 0
                 const initialFormatted = hasComma ? '0' : (decimals > 0 ? (0).toFixed(decimals) : '0');

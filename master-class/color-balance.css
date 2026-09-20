@@ -444,3 +444,309 @@ main > section.qa-master-hero .qa-proof-text .qa-proof-rating {
 .qa-fee-note a {
   color: #f6d389 !important;
 }
+
+/* ── 5. COURSE STRUCTURE (WEEKS 01 - 14) MOBILE RESPONSIVENESS OVERHAUL ── */
+@media (max-width: 640px) {
+  .course-structure-section {
+    padding: 44px 0 !important;
+  }
+
+  .cs-container {
+    padding: 0 14px !important;
+  }
+
+  .cs-header {
+    margin-bottom: 24px !important;
+  }
+
+  .cs-badge {
+    font-size: 10px !important;
+    padding: 5px 12px !important;
+    letter-spacing: 0.08em !important;
+    line-height: 1.4 !important;
+    text-align: center !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .cs-main-heading {
+    font-size: clamp(28px, 8vw, 36px) !important;
+    line-height: 1.15 !important;
+    margin: 8px 0 10px !important;
+  }
+
+  .cs-subtitle {
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+    color: #94a3b8 !important;
+  }
+
+  /* Stats 2x2 Grid */
+  .cs-stats-bar {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    padding: 12px !important;
+    background: rgba(20, 24, 36, 0.75) !important;
+    border: 1px solid rgba(216, 161, 83, 0.22) !important;
+    border-radius: 14px !important;
+    margin-bottom: 24px !important;
+  }
+
+  .cs-stat-item {
+    border-right: none !important;
+    padding: 8px 6px !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 10px !important;
+  }
+
+  .cs-stat-val {
+    font-size: 17px !important;
+    font-weight: 900 !important;
+    color: #f5c879 !important;
+  }
+
+  .cs-stat-label {
+    font-size: 10px !important;
+    color: #94a3b8 !important;
+    letter-spacing: 0.04em !important;
+  }
+
+  /* PART Dividers */
+  .course-structure-section div > span.cs-tag {
+    display: inline-block !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+    padding: 6px 14px !important;
+    border-radius: 8px !important;
+    text-align: left !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    letter-spacing: 0.08em !important;
+    font-weight: 800 !important;
+  }
+
+  .cs-modules-list {
+    gap: 12px !important;
+  }
+
+  /* Week 01 - 14 Cards */
+  .cs-mod-card {
+    border-radius: 14px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: #11131a !important;
+  }
+
+  .cs-mod-card[open] {
+    border-color: rgba(216, 161, 83, 0.45) !important;
+    background: #131622 !important;
+  }
+
+  /* Summary Layout: Top Left Badge, Top Right Chevron, Full Width Title Below */
+  .cs-mod-summary {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 14px 14px !important;
+    position: relative !important;
+  }
+
+  .cs-mod-left {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    width: 100% !important;
+    padding-right: 36px !important; /* leaves space for chevron */
+  }
+
+  .cs-mod-num {
+    display: inline-flex !important;
+    align-items: center !important;
+    font-size: 10.5px !important;
+    font-weight: 800 !important;
+    padding: 3.5px 9px !important;
+    border-radius: 6px !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    color: #0b0c10 !important;
+    background: linear-gradient(135deg, #f5c879 0%, #d8a153 100%) !important;
+  }
+
+  .cs-mod-title-group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    width: 100% !important;
+    text-align: left !important;
+  }
+
+  .cs-mod-title {
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    line-height: 1.35 !important;
+    letter-spacing: -0.01em !important;
+    word-break: break-word !important;
+  }
+
+  .cs-mod-meta {
+    font-size: 11.5px !important;
+    color: #94a3b8 !important;
+    gap: 6px !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+  }
+
+  .cs-mod-right {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .cs-mod-right .cs-tag {
+    font-size: 9.5px !important;
+    padding: 3px 8px !important;
+    border-radius: 5px !important;
+    letter-spacing: 0.08em !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+  }
+
+  .cs-chevron {
+    position: absolute !important;
+    top: 14px !important;
+    right: 14px !important;
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 13px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Body Content When Opened */
+  .cs-mod-body {
+    padding: 0 14px 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .cs-mod-desc {
+    font-size: 12.5px !important;
+    line-height: 1.55 !important;
+    color: #cbd5e1 !important;
+    padding: 12px 0 10px !important;
+  }
+
+  .cs-lessons-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+  }
+
+  .cs-lesson-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    padding: 10px 12px !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: 10px !important;
+    font-size: 12px !important;
+  }
+
+  .cs-lesson-left {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .cs-lesson-bullet {
+    width: 5px !important;
+    height: 5px !important;
+    background: #d8a153 !important;
+    border-radius: 50% !important;
+    margin-top: 6px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .cs-lesson-details {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3px !important;
+    flex: 1 !important;
+  }
+
+  .cs-lesson-title {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    line-height: 1.3 !important;
+  }
+
+  .cs-lesson-desc {
+    font-size: 11.5px !important;
+    color: #94a3b8 !important;
+    line-height: 1.45 !important;
+  }
+
+  .cs-lesson-right {
+    align-self: flex-start !important;
+    margin-left: 13px !important;
+  }
+
+  .cs-lesson-tag {
+    font-size: 9.5px !important;
+    padding: 2px 7px !important;
+    background: rgba(216, 161, 83, 0.12) !important;
+    color: #f5c879 !important;
+    border: 1px solid rgba(216, 161, 83, 0.25) !important;
+    border-radius: 5px !important;
+    font-weight: 600 !important;
+  }
+
+  /* Bottom CTA Banner */
+  .cs-cta-banner,
+  .cs-action-banner {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    text-align: center !important;
+    padding: 24px 16px !important;
+    gap: 16px !important;
+    margin-top: 32px !important;
+    border-radius: 16px !important;
+    background: linear-gradient(135deg, rgba(30, 24, 18, 0.95), rgba(15, 17, 24, 0.98)) !important;
+  }
+
+  .cs-cta-content h3,
+  .cs-action-content h3 {
+    font-size: 19px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 6px !important;
+  }
+
+  .cs-cta-content p,
+  .cs-action-content p {
+    font-size: 12.5px !important;
+    line-height: 1.5 !important;
+  }
+
+  .btn-cs-enroll,
+  .cs-action-btn {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 13px 20px !important;
+    font-size: 14.5px !important;
+    border-radius: 12px !important;
+  }
+}

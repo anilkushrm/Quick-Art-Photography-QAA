@@ -1631,14 +1631,14 @@
     {
         "id": "course-website-design",
         "slug": "website-design-course",
-        "title": "Studio & Portfolio Website Design",
+        "title": "Website Design Course",
         "subtitle": "Custom Luxury Photography Websites, Client Proofing & Local Google SEO",
         "category": "Design & Business",
         "level": "All Levels",
         "duration": "30 Hours",
         "price": 2999,
         "originalPrice": 5999,
-        "thumbnail": "assets/premiere-pro-laptop-editing-screen.webp",
+        "thumbnail": "assets/course-website-design-hindi.webp",
         "badge": "Essential Skill",
         "description": "Build a modern, luxury portfolio website for your photography studio. Learn mobile-first layout, high-speed 4K image compression, WhatsApp inquiry integrations, and ranking #1 on Google Local Maps.",
         "modules": [

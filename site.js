@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.querySelector('.qa-popup-overlay')) return;
         markAutoPopupShown();
         const overlay = document.createElement('div'); overlay.className = 'qa-popup-overlay';
-        overlay.innerHTML = '<div class="qa-popup" role="dialog" aria-modal="true" aria-labelledby="qa-popup-title"><div class="qa-popup-top"><button class="qa-popup-close" type="button" aria-label="Close popup" title="Close">✕</button><span>♔ LIMITED SEATS LEFT</span><h2 id="qa-popup-title">Get a <em>FREE</em> Career Consultation</h2><p>Leave your details — our mentor will call within 60 minutes and guide you on the best course for your goals.</p></div><form class="qa-popup-form"><input name="name" required placeholder="Your Full Name *" autocomplete="name"><input name="phone" required type="tel" placeholder="WhatsApp Number *" autocomplete="tel"><input name="city" placeholder="Your City (optional)" autocomplete="address-level2"><input name="course" placeholder="Which course are you interested in? (optional)"><button type="submit">Request Free Callback <span>→</span></button>' + getProofHTML() + '<p class="qa-popup-status" role="status"></p></form></div>';
+        overlay.innerHTML = '<div class="qa-popup" role="dialog" aria-modal="true" aria-labelledby="qa-popup-title"><div class="qa-popup-top"><button class="qa-popup-close" type="button" aria-label="Close popup" title="Close">✕</button><span>♔ LIMITED SEATS LEFT</span><h2 id="qa-popup-title">Get a <em>FREE</em> Course Consultation</h2><p>Leave your details — our mentor will call within 60 minutes and guide you on the best course for your goals.</p></div><form class="qa-popup-form"><input name="name" required placeholder="Your Full Name *" autocomplete="name"><input name="phone" required type="tel" placeholder="WhatsApp Number *" autocomplete="tel"><input name="city" placeholder="Your City (optional)" autocomplete="address-level2"><input name="course" placeholder="Which course are you interested in? (optional)"><button type="submit">Request Free Callback <span>→</span></button>' + getProofHTML() + '<p class="qa-popup-status" role="status"></p></form></div>';
         document.body.append(overlay);
         const close = () => overlay.remove();
         overlay.querySelector('.qa-popup-close').addEventListener('click', close);
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const status = overlay.querySelector('.qa-popup-status'), button = form.querySelector('button');
             const data = Object.fromEntries(new FormData(form));
             if (data.phone.replace(/\D/g, '').length < 8) { status.textContent = 'Please enter a valid phone number.'; return; }
-            data.source = 'career-popup'; data.consent = true; button.disabled = true; status.textContent = 'Sending your enquiry…';
+            data.source = 'course-popup'; data.consent = true; button.disabled = true; status.textContent = 'Sending your enquiry…';
             const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 20000);
             try {
                 const popupEndpoint = ['5500', '5501', '5502', '3000'].includes(location.port) ? 'http://127.0.0.1:8000/api/leads.php' : new URL('api/leads.php', popupRoot);

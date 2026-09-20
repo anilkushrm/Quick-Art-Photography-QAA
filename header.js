@@ -27,13 +27,25 @@
    const groups=mobileOnline.querySelectorAll('.ref-mobile-group');
    if(groups[0])groups[0].innerHTML=label;
    if(groups[2]){groups[2].textContent='Graphics Design Course';const card=onlineAlbumCard.cloneNode(true);groups[2].after(card);const heading=document.createElement('p');heading.className='ref-mobile-group';heading.textContent='Digital Marketing';card.after(heading);}
-  const marketingCard=marketing.querySelector('a[href*="digital-marketing-course/"]');
-  const marketingCards=['Google and Facebook Ads Course','SEO Course','GMB Profile Course'].map((title,i)=>{const card=marketingCard.cloneNode(true);card.querySelector('.ref-course-icon').textContent=['Ads','SEO','GMB'][i];card.querySelector('span:last-child').textContent=title;return card;});
-  marketing.querySelector('.ref-card-grid').replaceChildren(...marketingCards);
-  const oldMobileMarketing=mobileOnline.querySelector('a[href*="digital-marketing-course/"]');
-  if(oldMobileMarketing){oldMobileMarketing.replaceWith(...marketingCards.map(card=>card.cloneNode(true)));}
-  mobileOnline.querySelectorAll('a[href*="website-design-course/"],a[href*="automation-course/"]').forEach(card=>card.remove());
- }
+   let onlineAutomationHref='online/automation-course/index.html';
+   if(onlineSample){
+    const s=onlineSample.getAttribute('href');
+    if(s.includes('premiere-pro-course/index.html'))onlineAutomationHref=s.replace('premiere-pro-course/index.html','automation-course/index.html');
+    else if(s.includes('edius-course/index.html'))onlineAutomationHref=s.replace('edius-course/index.html','automation-course/index.html');
+    else if(s.includes('online/'))onlineAutomationHref=s.replace(/online\/.*$/,'online/automation-course/index.html');
+    else onlineAutomationHref=s.replace(/[^/]+\/index\.html$/,'automation-course/index.html');
+   }
+   const marketingCard=marketing.querySelector('a[href*="digital-marketing-course/"]');
+   const marketingCards=['Google and Facebook Ads Course','SEO Course','GMB Profile Course'].map((title,i)=>{const card=marketingCard.cloneNode(true);card.querySelector('.ref-course-icon').textContent=['Ads','SEO','GMB'][i];card.querySelector('span:last-child').textContent=title;return card;});
+   const automationCard=marketingCard.cloneNode(true);
+   automationCard.href=onlineAutomationHref;
+   automationCard.querySelector('.ref-course-icon').textContent='AI';
+   automationCard.querySelector('span:last-child').textContent='Studio Automation & AI CRM';
+   marketing.querySelector('.ref-card-grid').replaceChildren(...marketingCards, automationCard);
+   mobileOnline.querySelectorAll('a[href*="website-design-course/"],a[href*="automation-course/"]').forEach(card=>card.remove());
+   const oldMobileMarketing=mobileOnline.querySelector('a[href*="digital-marketing-course/"]');
+   if(oldMobileMarketing){oldMobileMarketing.replaceWith(...marketingCards.map(card=>card.cloneNode(true)), automationCard.cloneNode(true));}
+  }
 
   // Ensure "View All Online Programs" is prominently present in all online panels & mobile nav
   if(online){

@@ -45,42 +45,43 @@ html, body {
     align-items: center;
   }
 
-  /* Homepage Hero Main Heading — Large, cinematic, and professional */
+  /* Homepage Hero Main Heading — Balanced, cinematic, and professional */
   .qa-home-hero #home-title,
-  .qa-home-hero .qa-hero-inner h1 {
-    font-size: clamp(38px, 7.5vw, 54px) !important;
-    font-weight: 900 !important;
-    line-height: 1.1 !important;
-    letter-spacing: -0.035em !important;
-    margin-bottom: 20px !important;
-    text-wrap: balance;
-  }
-  .qa-home-hero #home-title span,
-  .qa-home-hero .qa-hero-inner h1 span {
-    font-weight: 900 !important;
-  }
-
-  /* On-Campus Course Pages Hero Main Heading — Ultra bold & large on mobile */
-  .qa-texture-hero h1,
-  .qa-topics-hero h1,
-  .qa-master-hero h1,
-  section.qa-texture-hero h1,
-  main > section.relative.bg-ink h1 {
-    font-size: clamp(40px, 9.5vw, 54px) !important;
-    font-weight: 900 !important;
-    line-height: 1.04 !important;
-    letter-spacing: -0.03em !important;
+  .qa-home-hero .qa-hero-inner h1,
+  section.qa-home-hero h1,
+  section.qa-home-hero.qa-texture-hero h1 {
+    font-size: clamp(26px, 6.2vw, 34px) !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.02em !important;
     margin-bottom: 16px !important;
     text-wrap: balance !important;
-    -webkit-text-stroke: 0.4px rgba(255, 255, 255, 0.4) !important;
+    -webkit-text-stroke: 0 !important;
   }
-  .qa-texture-hero h1 span,
+  .qa-home-hero #home-title span,
+  .qa-home-hero .qa-hero-inner h1 span,
+  section.qa-home-hero h1 span {
+    font-weight: 800 !important;
+    -webkit-text-stroke: 0 !important;
+  }
+
+  /* On-Campus Course Pages Hero Main Heading (excluding homepage) */
+  section.qa-texture-hero:not(.qa-home-hero) h1,
+  .qa-topics-hero h1,
+  .qa-master-hero h1,
+  main > section.relative.bg-ink h1 {
+    font-size: clamp(34px, 8.5vw, 48px) !important;
+    font-weight: 800 !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.025em !important;
+    margin-bottom: 16px !important;
+    text-wrap: balance !important;
+  }
+  section.qa-texture-hero:not(.qa-home-hero) h1 span,
   .qa-topics-hero h1 span,
   .qa-master-hero h1 span,
-  section.qa-texture-hero h1 span,
   main > section.relative.bg-ink h1 span {
-    font-weight: 900 !important;
-    -webkit-text-stroke: 0.4px rgba(255, 255, 255, 0.4) !important;
+    font-weight: 800 !important;
   }
 
   /* Section headings */
@@ -216,42 +217,43 @@ html, body {
   h1 { font-size: clamp(24px, 7vw, 36px) !important; }
   h2 { font-size: clamp(20px, 5.5vw, 28px) !important; }
 
-  /* Homepage Hero Main Heading — Extra Bold, noticeably larger & prominent on mobile */
+  /* Homepage Hero Main Heading — Clean & Balanced on small screens */
   .qa-home-hero #home-title,
-  .qa-home-hero .qa-hero-inner h1 {
-    font-size: clamp(36px, 10vw, 44px) !important;
-    font-weight: 900 !important;
-    line-height: 1.08 !important;
-    letter-spacing: -0.025em !important;
-    margin-bottom: 16px !important;
-    text-wrap: balance;
-  }
-  .qa-home-hero #home-title span,
-  .qa-home-hero .qa-hero-inner h1 span {
-    font-weight: 900 !important;
-  }
-
-  /* On-Campus Course Pages Hero Main Heading — Extra Bold & Prominent on small mobile */
-  .qa-texture-hero h1,
-  .qa-topics-hero h1,
-  .qa-master-hero h1,
-  section.qa-texture-hero h1,
-  main > section.relative.bg-ink h1 {
-    font-size: clamp(38px, 11vw, 48px) !important;
-    font-weight: 900 !important;
-    line-height: 1.04 !important;
-    letter-spacing: -0.025em !important;
+  .qa-home-hero .qa-hero-inner h1,
+  section.qa-home-hero h1,
+  section.qa-home-hero.qa-texture-hero h1 {
+    font-size: clamp(23px, 6.8vw, 30px) !important;
+    font-weight: 800 !important;
+    line-height: 1.22 !important;
+    letter-spacing: -0.02em !important;
     margin-bottom: 14px !important;
     text-wrap: balance !important;
-    -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.4) !important;
+    -webkit-text-stroke: 0 !important;
   }
-  .qa-texture-hero h1 span,
+  .qa-home-hero #home-title span,
+  .qa-home-hero .qa-hero-inner h1 span,
+  section.qa-home-hero h1 span {
+    font-weight: 800 !important;
+    -webkit-text-stroke: 0 !important;
+  }
+
+  /* On-Campus Course Pages Hero Main Heading (excluding homepage) */
+  section.qa-texture-hero:not(.qa-home-hero) h1,
+  .qa-topics-hero h1,
+  .qa-master-hero h1,
+  main > section.relative.bg-ink h1 {
+    font-size: clamp(30px, 9vw, 42px) !important;
+    font-weight: 800 !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 14px !important;
+    text-wrap: balance !important;
+  }
+  section.qa-texture-hero:not(.qa-home-hero) h1 span,
   .qa-topics-hero h1 span,
   .qa-master-hero h1 span,
-  section.qa-texture-hero h1 span,
   main > section.relative.bg-ink h1 span {
-    font-weight: 900 !important;
-    -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.4) !important;
+    font-weight: 800 !important;
   }
   .qa-home-hero .qa-hero-badge {
     font-size: 13px !important;
@@ -314,38 +316,39 @@ html, body {
 
 @media (max-width: 360px) {
   .qa-home-hero #home-title,
-  .qa-home-hero .qa-hero-inner h1 {
-    font-size: 33px !important;
-    font-weight: 900 !important;
-    line-height: 1.1 !important;
-    letter-spacing: -0.025em !important;
+  .qa-home-hero .qa-hero-inner h1,
+  section.qa-home-hero h1,
+  section.qa-home-hero.qa-texture-hero h1 {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    line-height: 1.24 !important;
+    letter-spacing: -0.02em !important;
+    -webkit-text-stroke: 0 !important;
   }
   .qa-home-hero #home-title span,
-  .qa-home-hero .qa-hero-inner h1 span {
-    font-weight: 900 !important;
+  .qa-home-hero .qa-hero-inner h1 span,
+  section.qa-home-hero h1 span {
+    font-weight: 800 !important;
+    -webkit-text-stroke: 0 !important;
   }
 
-  /* On-Campus Course Pages Hero Main Heading — Extra Bold & Prominent on small mobile */
-  .qa-texture-hero h1,
+  /* On-Campus Course Pages Hero Main Heading (excluding homepage) */
+  section.qa-texture-hero:not(.qa-home-hero) h1,
   .qa-topics-hero h1,
   .qa-master-hero h1,
-  section.qa-texture-hero h1,
   main > section.relative.bg-ink h1 {
-    font-size: clamp(38px, 11vw, 48px) !important;
-    font-weight: 900 !important;
-    line-height: 1.04 !important;
-    letter-spacing: -0.025em !important;
-    margin-bottom: 14px !important;
+    font-size: clamp(26px, 9vw, 36px) !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 12px !important;
     text-wrap: balance !important;
-    -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.4) !important;
   }
-  .qa-texture-hero h1 span,
+  section.qa-texture-hero:not(.qa-home-hero) h1 span,
   .qa-topics-hero h1 span,
   .qa-master-hero h1 span,
-  section.qa-texture-hero h1 span,
   main > section.relative.bg-ink h1 span {
-    font-weight: 900 !important;
-    -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.4) !important;
+    font-weight: 800 !important;
   }
   .qa-home-hero .qa-hero-badge {
     font-size: 12px !important;
@@ -592,103 +595,43 @@ img {
   }
 }
 
-/* ── Homepage Hero Mobile-Only Typography Boost ── */
+/* ── Homepage Hero Mobile Typography ── */
 @media (max-width: 768px) {
   .qa-home-hero .qa-hero-badge {
-    font-size: 13.5px !important;
+    font-size: 12px !important;
     font-weight: 700 !important;
-    letter-spacing: 0.035em !important;
-    padding: 7px 18px !important;
-    margin-bottom: 18px !important;
+    letter-spacing: 0.04em !important;
+    padding: 6px 16px !important;
+    margin-bottom: 14px !important;
     display: inline-flex !important;
   }
   .qa-home-hero #home-title,
-  .qa-home-hero .qa-hero-inner h1 {
-    font-size: clamp(38px, 9.8vw, 48px) !important;
-    font-weight: 900 !important;
-    line-height: 1.08 !important;
-    letter-spacing: -0.03em !important;
-    margin-bottom: 18px !important;
-    text-wrap: balance;
-  }
-  .qa-home-hero #home-title span,
-  .qa-home-hero .qa-hero-inner h1 span {
-    font-weight: 900 !important;
-  }
-
-  /* On-Campus Course Pages Hero Main Heading — Extra Bold & Prominent on small mobile */
-  .qa-texture-hero h1,
-  .qa-topics-hero h1,
-  .qa-master-hero h1,
-  section.qa-texture-hero h1,
-  main > section.relative.bg-ink h1 {
-    font-size: clamp(38px, 11vw, 48px) !important;
-    font-weight: 900 !important;
-    line-height: 1.04 !important;
-    letter-spacing: -0.025em !important;
+  .qa-home-hero .qa-hero-inner h1,
+  section.qa-home-hero h1,
+  section.qa-home-hero.qa-texture-hero h1 {
+    font-size: clamp(23px, 6.5vw, 30px) !important;
+    font-weight: 800 !important;
+    line-height: 1.22 !important;
+    letter-spacing: -0.02em !important;
     margin-bottom: 14px !important;
     text-wrap: balance !important;
-    -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.4) !important;
+    -webkit-text-stroke: 0 !important;
   }
-  .qa-texture-hero h1 span,
-  .qa-topics-hero h1 span,
-  .qa-master-hero h1 span,
-  section.qa-texture-hero h1 span,
-  main > section.relative.bg-ink h1 span {
-    font-weight: 900 !important;
-    -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.4) !important;
+  .qa-home-hero #home-title span,
+  .qa-home-hero .qa-hero-inner h1 span,
+  section.qa-home-hero h1 span {
+    font-weight: 800 !important;
+    -webkit-text-stroke: 0 !important;
   }
   .qa-home-hero .qa-hero-copy > p {
-    font-size: 14.5px !important;
-    line-height: 1.62 !important;
-    color: #94a3b8 !important;
-    margin-bottom: 22px !important;
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+    color: #cbd5e1 !important;
+    margin-bottom: 20px !important;
     margin-inline: auto !important;
     max-width: 420px !important;
     text-wrap: balance !important;
     text-align: center !important;
-  }
-  .qa-home-hero .qa-hero-copy > p strong {
-    display: inline !important;
-    font-size: inherit !important;
-    font-weight: 600 !important;
-    color: #f1ebd8 !important;
-    margin-top: 0 !important;
-  }
-  .qa-home-hero .qa-hero-copy > p strong:last-child {
-    display: block !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    color: #e2c285 !important;
-    margin-top: 8px !important;
-    letter-spacing: 0.3px !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .qa-home-hero .qa-hero-badge {
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    padding: 7px 16px !important;
-    margin-bottom: 16px !important;
-  }
-  .qa-home-hero #home-title,
-  .qa-home-hero .qa-hero-inner h1 {
-    font-size: clamp(36px, 10vw, 44px) !important;
-    font-weight: 900 !important;
-    line-height: 1.08 !important;
-    letter-spacing: -0.025em !important;
-    margin-bottom: 16px !important;
-  }
-  .qa-home-hero .qa-hero-copy > p {
-    font-size: 14px !important;
-    line-height: 1.6 !important;
-    color: #94a3b8 !important;
-    margin-inline: auto !important;
-    max-width: 380px !important;
-    text-wrap: balance !important;
-    text-align: center !important;
-    margin-bottom: 22px !important;
   }
   .qa-home-hero .qa-hero-copy > p strong {
     display: inline !important;
@@ -705,6 +648,7 @@ img {
     margin-top: 8px !important;
     letter-spacing: 0.3px !important;
   }
+}
 }
 
 /* ============================================================

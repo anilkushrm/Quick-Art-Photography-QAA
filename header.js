@@ -202,6 +202,9 @@
     }
     if (demo) drawerActions.append(demo);
 
+    // Remove any legacy student portal button so all pages have the identical clean mobile drawer as homepage
+    menu.querySelectorAll('.ref-mobile-lms').forEach(el => el.remove());
+
     while (menu.firstChild) drawerBody.append(menu.firstChild);
     menu.append(drawerHead, drawerBody, drawerActions);
 

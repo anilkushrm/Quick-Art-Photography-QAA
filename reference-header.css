@@ -5,9 +5,7 @@
 .ref-header .ref-ai-label.ref-highlight-badge{display:table;margin-top:5px}
 .ref-header .ref-free-badge{display:block;margin:4px 0 0;text-transform:uppercase}
 .ref-header .ref-updated-label{display:block;margin:4px 0 0}
-.ref-header .ref-highlight-badge.ref-course-update{display:block;margin-top:4px;color:#c52b32;text-transform:none}
-.ref-header{position:fixed;inset:0 0 auto;width:auto;max-width:100%;min-width:0;margin:0;z-index:9999;background:#101114;font-family:Arial,Helvetica,sans-serif;color:#fff;box-shadow:0 1px 0 #ffffff18}
-.ref-header [hidden]{display:none!important}
+.ref-header{position:fixed;inset:0 0 auto;width:auto;max-width:100%;min-width:0;margin:0;z-index:9999;background:rgba(14,16,22,0.82);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);font-family:Arial,Helvetica,sans-serif;color:#fff;border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 20px rgba(0,0,0,0.2)}
 .ref-ai-label{display:block;font:500 12px/1.5 Arial;color:#9a702e;letter-spacing:.02em;margin-top:3px}
 .ref-categories button .ref-category-label{font:500 14px/1.4 Arial;color:inherit}
 /* Obsolete mobile block removed */
@@ -130,9 +128,10 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
     width: 100% !important;
     padding: 8px 14px !important;
     min-height: 56px !important;
-    background: #101114 !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: transparent !important;
+    border-bottom: none !important;
     box-sizing: border-box !important;
+    transition: padding 0.25s ease, min-height 0.25s ease !important;
   }
   .ref-header .ref-brand {
     display: inline-flex !important;
@@ -560,31 +559,32 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
 }
 
 /* ============================================================
-   SCROLLED HEADER: LUXURY FROSTED GLASS OVER LIGHT BACKGROUNDS
+   SCROLLED HEADER: SLEEK SMOKED GLASS (ADAPTS TO BOTH DARK & LIGHT)
    ============================================================ */
 .ref-header.ref-scrolled {
-  background: rgba(255, 255, 255, 0.94) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 0 rgba(216, 161, 83, 0.28) !important;
-  color: #111114 !important;
+  background: rgba(10, 12, 18, 0.84) !important;
+  backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
+  border-bottom: 1px solid rgba(216, 161, 83, 0.35) !important;
+  box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.42), 0 1px 0 rgba(216, 161, 83, 0.18) !important;
+  color: #ffffff !important;
 }
 
 .ref-header.ref-scrolled .ref-bar {
   background: transparent !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+  border-bottom: none !important;
 }
 
-/* Brand text shifts from white/pale-gold to rich dark/amber */
+/* Brand styling: white + luminous gold (always crisp & clear on smoked glass over both dark and light backgrounds) */
 .ref-header.ref-scrolled .ref-brand {
-  color: #111114 !important;
+  color: #ffffff !important;
 }
 .ref-header.ref-scrolled .ref-brand b {
-  color: #c5903b !important;
+  color: #ffe09c !important;
 }
 .ref-header.ref-scrolled .ref-brand small {
-  color: #64748b !important;
-  font-weight: 600 !important;
+  color: #94a3b8 !important;
+  font-weight: 500 !important;
 }
 
 /* Mobile Scrolled Controls (< 1150px) */
@@ -592,29 +592,27 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
   .ref-header.ref-scrolled .ref-bar {
     padding: 6px 14px !important;
     min-height: 52px !important;
-    background: transparent !important;
-    border-bottom: 1px solid rgba(216, 161, 83, 0.22) !important;
   }
 
-  /* "Programs ▾" button: warm luxury ivory-gold pill */
+  /* "Programs ▾" button: refined gold-bordered pill on dark glass */
   .ref-header.ref-scrolled .ref-mobile-programs {
-    background: #fff8eb !important;
-    border: 1.5px solid #d8a153 !important;
-    color: #18130b !important;
+    background: rgba(216, 161, 83, 0.15) !important;
+    border: 1.5px solid rgba(216, 161, 83, 0.7) !important;
+    color: #fce3a8 !important;
     font-weight: 700 !important;
-    box-shadow: 0 2px 8px rgba(216, 161, 83, 0.18) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25), 0 0 12px rgba(216, 161, 83, 0.12) !important;
   }
   .ref-header.ref-scrolled .ref-mobile-programs:hover,
   .ref-header.ref-scrolled .ref-mobile-programs:active {
-    background: rgba(216, 161, 83, 0.25) !important;
-    border-color: #b9802d !important;
-    color: #000000 !important;
+    background: rgba(216, 161, 83, 0.28) !important;
+    border-color: #ffd27a !important;
+    color: #ffffff !important;
   }
   .ref-header.ref-scrolled .ref-mobile-programs .ref-programs-arrow {
-    stroke: #8c5f20 !important;
+    stroke: #ffd27a !important;
   }
 
-  /* When drawer is open while scrolled */
+  /* When drawer is open */
   .ref-header.ref-scrolled .ref-mobile-programs[aria-expanded="true"] {
     background: linear-gradient(110deg, #f3d695, #d8a447) !important;
     border-color: #d8a153 !important;
@@ -624,25 +622,25 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
     stroke: #17120b !important;
   }
 
-  /* Login Icon Button: clean white card with crisp gold border */
+  /* Login Icon Button */
   .ref-header.ref-scrolled .ref-mobile-login {
-    background: #ffffff !important;
+    background: rgba(255, 255, 255, 0.08) !important;
     border: 1.5px solid rgba(216, 161, 83, 0.6) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-    color: #8c5f20 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+    color: #fce3a8 !important;
   }
   .ref-header.ref-scrolled .ref-mobile-login svg {
-    stroke: #8c5f20 !important;
+    stroke: #ffd27a !important;
   }
   .ref-header.ref-scrolled .ref-mobile-login:hover,
   .ref-header.ref-scrolled .ref-mobile-login:active {
-    background: #fff8eb !important;
-    border-color: #b9802d !important;
+    background: rgba(216, 161, 83, 0.2) !important;
+    border-color: #ffd27a !important;
     transform: translateY(-1px) !important;
   }
   .ref-header.ref-scrolled .ref-mobile-login:hover svg,
   .ref-header.ref-scrolled .ref-mobile-login:active svg {
-    stroke: #b9802d !important;
+    stroke: #ffffff !important;
   }
 }
 
@@ -651,36 +649,30 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
   .ref-header.ref-scrolled .ref-bar {
     padding: 8px 28px !important;
     min-height: 58px !important;
-    background: transparent !important;
   }
   .ref-header.ref-scrolled .ref-nav > a,
   .ref-header.ref-scrolled .ref-toggle {
-    color: #1e293b !important;
+    color: #ffffff !important;
   }
   .ref-header.ref-scrolled .ref-nav > a:hover,
   .ref-header.ref-scrolled .ref-toggle:hover {
-    background: rgba(0, 0, 0, 0.05) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
   }
   .ref-header.ref-scrolled .ref-nav .ref-toggle[aria-controls="ref-online"],
   .ref-header.ref-scrolled .ref-nav > .ref-dropdown:first-child > .ref-toggle {
-    border-color: rgba(216, 161, 83, 0.55) !important;
-    background: rgba(216, 161, 83, 0.1) !important;
-    color: #17120b !important;
-  }
-  .ref-header.ref-scrolled .ref-nav .ref-toggle[aria-controls="ref-online"]:hover,
-  .ref-header.ref-scrolled .ref-nav > .ref-dropdown:first-child > .ref-toggle:hover {
-    background: rgba(216, 161, 83, 0.2) !important;
+    border-color: rgba(216, 161, 83, 0.65) !important;
+    background: rgba(216, 161, 83, 0.15) !important;
+    color: #fce3a8 !important;
   }
   .ref-header.ref-scrolled .ref-login {
-    color: #8c5f20 !important;
+    color: #f5d596 !important;
     border-color: #b9955d !important;
-    background: #fff8eb !important;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+    background: rgba(216, 161, 83, 0.12) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
   }
   .ref-header.ref-scrolled .ref-login:hover {
-    background: #111114 !important;
-    color: #ffffff !important;
-    border-color: #111114 !important;
+    background: #ffffff !important;
+    color: #101114 !important;
   }
 }
 

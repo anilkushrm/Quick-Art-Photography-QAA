@@ -12,7 +12,7 @@ main :is(.qa-demo,.qa-outline,.ec-button,.ec-secondary,.qaa-play-download){trans
 .qa-enquiry :is(input,select,textarea):focus{border-color:#bd9147;box-shadow:0 0 0 3px #bd914718}
 .qa-footer{border-top:1px solid #d6ac6229}
 @media(hover:hover) and (pointer:fine){
- .qaa-examples-grid figure:hover{transform:translateY(-4px);border-color:#d7bd8d;box-shadow:0 16px 34px #3a2a0c10}
+ .qaa-examples-grid figure:hover{transform:translateY(-4px);border-color:#d8a153;box-shadow:0 18px 42px rgba(0,0,0,0.65),0 0 24px rgba(216,161,83,0.15)}
  main :is(.qa-demo,.ec-button):hover{box-shadow:0 8px 22px #bd914724}
 }
 @media(max-width:700px){

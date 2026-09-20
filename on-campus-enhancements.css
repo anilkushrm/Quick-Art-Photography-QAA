@@ -1454,6 +1454,15 @@ a[class*="bg-white\/10"]:hover {
     text-decoration: none !important;
 }
 
+.qa-footer .qa-brand img,
+.qa-brand img {
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    object-fit: contain !important;
+}
+
 .qa-footer .qa-brand > span,
 .qa-brand > span {
     display: block !important;

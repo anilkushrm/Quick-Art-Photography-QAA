@@ -1011,11 +1011,13 @@ body.landing-page-body {
 }
 
 .qa-footer .qa-brand img {
-  width: 48px !important;
-  height: 48px !important;
-  border-radius: 8px !important;
-  object-fit: cover !important;
-  border: 1px solid rgba(216, 161, 83, 0.3) !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 0 !important;
+  object-fit: contain !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .qa-footer .qa-brand span {

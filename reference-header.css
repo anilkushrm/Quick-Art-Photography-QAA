@@ -40,6 +40,13 @@
 }
 .ref-login{display:inline-flex;align-items:center;justify-content:center;height:40px;box-sizing:border-box;color:#f3d695;border:1px solid #b9955d;border-radius:7px;padding:0 18px;font-size:14px;font-weight:600;flex-shrink:0}
 .ref-login:hover{background:#fff;color:#101114}
+.ref-mega[hidden],
+.ref-resource-panel[hidden],
+.ref-dropdown [hidden],
+.ref-panels [role="tabpanel"][hidden],
+.ref-header [hidden] {
+  display: none !important;
+}
 .ref-mega{position:absolute;top:100%;left:220px;width:min(900px,calc(100% - 248px));background:#fff;color:#172033;display:grid;grid-template-columns:220px minmax(0,1fr);min-height:244px;border-radius:12px;box-shadow:0 16px 36px #00000026;overflow:hidden;border:1px solid #e5e9f5}
 .ref-categories{padding:16px 0 16px 12px;border-right:1px solid #e0e4ed}
 .ref-categories button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;background:transparent;border:0;border-right:2px solid transparent;border-radius:7px 0 0 7px;color:#536077;padding:13px 12px;font:500 14px/1.4 Arial;cursor:pointer}

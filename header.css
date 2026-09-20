@@ -588,3 +588,11 @@
 }
 
 @media(max-width:1024px){.qaa-mobile-badge{display:table;margin-top:5px;padding:2px 7px;border:1px solid #e8cfa3;border-radius:20px;background:#faf5eb;color:#88632e;font-size:9px;font-style:normal;font-weight:600;letter-spacing:.07em}.qaa-mobile-course .qaa-icon svg{width:25px;height:25px}.qaa-mobile-menu a.qaa-mobile-login{color:#171717!important}}
+
+.ref-mega[hidden],
+.ref-resource-panel[hidden],
+.ref-dropdown [hidden],
+.ref-panels [role="tabpanel"][hidden],
+.ref-header [hidden] {
+  display: none !important;
+}

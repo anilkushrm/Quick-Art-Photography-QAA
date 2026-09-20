@@ -122,26 +122,71 @@
    const badge=document.createElement('small');badge.className='ref-highlight-badge ref-free-badge';badge.textContent='Free';label.append(badge);
   }
  });
- function set(drop,open){const button=drop.querySelector('.ref-toggle');const panel=document.getElementById(button.getAttribute('aria-controls'));button.setAttribute('aria-expanded',String(open));panel.hidden=!open;}
- function closeAll(){drops.forEach(d=>set(d,false));}
- drops.forEach(drop=>{
-  const toggle=drop.querySelector('.ref-toggle');
-  let closeTimer;
-  drop.addEventListener('pointerenter',event=>{
-   if(event.pointerType!=='mouse'||!matchMedia('(min-width:1151px)').matches)return;
-   clearTimeout(closeTimer);closeAll();set(drop,true);
+  function set(drop,open){
+    const button=drop.querySelector('.ref-toggle');
+    if(!button) return;
+    const panel=document.getElementById(button.getAttribute('aria-controls'));
+    if(!panel) return;
+    button.setAttribute('aria-expanded',String(open));
+    panel.hidden=!open;
+    panel.style.display = open ? '' : 'none';
+  }
+  function closeAll(){drops.forEach(d=>set(d,false));}
+  drops.forEach(drop=>{
+   const toggle=drop.querySelector('.ref-toggle');
+   if(!toggle) return;
+
+   toggle.addEventListener('click',event=>{
+    event.stopPropagation();
+    const open=toggle.getAttribute('aria-expanded')!=='true';
+    closeAll();
+    set(drop,open);
+   });
+
+   drop.addEventListener('keydown',event=>{
+    if(event.key==='Escape'){
+      event.stopPropagation();
+      set(drop,false);
+      toggle.focus();
+    }
+   });
+
+   drop.addEventListener('focusout',event=>{
+    if(!drop.contains(event.relatedTarget))set(drop,false);
+   });
+
+   const tabs=[...drop.querySelectorAll('[role=tab]')];
+   function select(tab){
+    tabs.forEach(t=>{
+      const active=t===tab;
+      t.setAttribute('aria-selected',String(active));
+      t.tabIndex=active?0:-1;
+      const targetPanel = document.getElementById(t.getAttribute('aria-controls'));
+      if(targetPanel) {
+        targetPanel.hidden=!active;
+        targetPanel.style.display = active ? '' : 'none';
+      }
+    });
+   }
+   tabs.forEach((tab,i)=>{
+    tab.addEventListener('click',()=>select(tab));
+    tab.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse')select(tab);});
+    tab.addEventListener('keydown',event=>{
+      let next;
+      if(event.key==='ArrowDown')next=(i+1)%tabs.length;
+      else if(event.key==='ArrowUp')next=(i+tabs.length-1)%tabs.length;
+      else if(event.key==='Home')next=0;
+      else if(event.key==='End')next=tabs.length-1;
+      else return;
+      event.preventDefault();
+      select(tabs[next]);
+      tabs[next].focus();
+    });
+   });
   });
-  drop.addEventListener('pointerleave',event=>{
-   if(event.pointerType!=='mouse')return;
-   closeTimer=setTimeout(()=>{if(!drop.contains(document.activeElement))set(drop,false);},180);
-  });
-  toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';closeAll();set(drop,open);});
-  drop.addEventListener('keydown',event=>{if(event.key==='Escape'){event.stopPropagation();set(drop,false);toggle.focus();}});
-  drop.addEventListener('focusout',event=>{if(!drop.contains(event.relatedTarget))set(drop,false);});
-  const tabs=[...drop.querySelectorAll('[role=tab]')];
-  function select(tab){tabs.forEach(t=>{const active=t===tab;t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1;document.getElementById(t.getAttribute('aria-controls')).hidden=!active;});}
-  tabs.forEach((tab,i)=>{tab.addEventListener('click',()=>select(tab));tab.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse')select(tab);});tab.addEventListener('keydown',event=>{let next;if(event.key==='ArrowDown')next=(i+1)%tabs.length;else if(event.key==='ArrowUp')next=(i+tabs.length-1)%tabs.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=tabs.length-1;else return;event.preventDefault();select(tabs[next]);tabs[next].focus();});});
- });
+
+  // Ensure all dropdowns are strictly closed by default on initial page load
+  closeAll();
   const menu = header.querySelector('#ref-mobile');
   if (menu) {
     const originalLogin = header.querySelector('.ref-login');

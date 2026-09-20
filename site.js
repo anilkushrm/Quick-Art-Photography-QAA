@@ -687,3 +687,24 @@ document.addEventListener('DOMContentLoaded', () => {
         runSync();
     }
 })();
+
+// Luxury Course Feature Badges Dynamic Enhancer
+(() => {
+    const enhanceHighlightBadges = () => {
+        document.querySelectorAll('.lp-h-item, .lp-chip').forEach(item => {
+            if (item.querySelector('.lp-h-icon')) return;
+            const raw = item.innerHTML.trim();
+            const match = raw.match(/^([\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF]|[\u2300-\u23FF]|[\u2B50-\u2B55]|[\uFE00-\uFE0F]|⚡|✓|📷|🎨|🎬|📈|🌐|🤖|📖|🖨️|🏆|♾️|✨|📐)\s*(.+)$/u);
+            if (match) {
+                item.innerHTML = '<span class="lp-h-icon">' + match[1] + '</span><span class="lp-h-text">' + match[2] + '</span>';
+            }
+        });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', enhanceHighlightBadges);
+    } else {
+        enhanceHighlightBadges();
+    }
+})();
+

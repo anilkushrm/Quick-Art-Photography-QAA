@@ -411,5 +411,20 @@ h2, .qa-sec-title, .lp-sec-title {
   white-space: nowrap !important;
 }
 
+/* Universal CTA Banner: Single unified luxury container, no nested inner boxes */
+.rounded-\[36px\].bg-ink .grid > div:first-child,
+.rounded-\[36px\].bg-ink .grid > div,
+section .rounded-\[36px\] .grid > div:first-child,
+section .rounded-\[36px\] .grid > div {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  height: auto !important;
+  display: block !important;
+}
+
+
 
 

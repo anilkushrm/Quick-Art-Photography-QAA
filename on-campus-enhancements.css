@@ -549,15 +549,15 @@ section.qa-section .text-black,
 }
 
 /* ── Tools & Career Outcomes Section ── */
-.grid.md\:grid-cols-2 > div:first-child,
-.grid.md\:grid-cols-2 > div.bg-ink {
+.grid.md\:grid-cols-2 > div.rounded-3xl:first-child,
+.grid.md\:grid-cols-2 > div.rounded-3xl.bg-ink {
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
     height: 100% !important;
 }
 
-.grid.md\:grid-cols-2 > div:first-child {
+.grid.md\:grid-cols-2 > div.rounded-3xl:first-child {
     background: radial-gradient(ellipse at top left, rgba(216, 161, 83, 0.15), transparent 60%),
                 linear-gradient(135deg, rgba(24, 28, 42, 0.95), rgba(13, 16, 25, 0.98)) !important;
     border: 1px solid rgba(216, 161, 83, 0.28) !important;
@@ -566,11 +566,11 @@ section.qa-section .text-black,
     box-shadow: 0 16px 45px rgba(0, 0, 0, 0.45) !important;
 }
 
-.grid.md\:grid-cols-2 > div:first-child h3 {
+.grid.md\:grid-cols-2 > div.rounded-3xl:first-child h3 {
     color: #ffffff !important;
 }
 
-.grid.md\:grid-cols-2 > div:first-child span.rounded-full {
+.grid.md\:grid-cols-2 > div.rounded-3xl:first-child span.rounded-full {
     background: rgba(255, 255, 255, 0.06) !important;
     border: 1px solid rgba(216, 161, 83, 0.22) !important;
     color: #f1f5f9 !important;
@@ -580,7 +580,7 @@ section.qa-section .text-black,
     transition: all 0.2s ease;
 }
 
-.grid.md\:grid-cols-2 > div:first-child span.rounded-full:hover {
+.grid.md\:grid-cols-2 > div.rounded-3xl:first-child span.rounded-full:hover {
     border-color: rgba(216, 161, 83, 0.5) !important;
     background: rgba(216, 161, 83, 0.16) !important;
     color: #f5c879 !important;
@@ -588,7 +588,7 @@ section.qa-section .text-black,
 }
 
 /* Career Outcomes Box */
-.grid.md\:grid-cols-2 > div.bg-ink {
+.grid.md\:grid-cols-2 > div.rounded-3xl.bg-ink {
     background: radial-gradient(ellipse at top right, rgba(216, 161, 83, 0.2), transparent 60%),
                 linear-gradient(135deg, #131622 0%, #090a10 100%) !important;
     border: 1px solid rgba(216, 161, 83, 0.32) !important;
@@ -596,24 +596,35 @@ section.qa-section .text-black,
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
 }
 
-.grid.md\:grid-cols-2 > div.bg-ink li {
+.grid.md\:grid-cols-2 > div.rounded-3xl.bg-ink li {
     font-size: 14.5px !important;
     color: #f1f5f9 !important;
     font-weight: 500;
 }
 
-.grid.md\:grid-cols-2 > div.bg-ink li svg {
+.grid.md\:grid-cols-2 > div.rounded-3xl.bg-ink li svg {
     color: #f5c879 !important;
     filter: drop-shadow(0 0 6px rgba(245, 200, 121, 0.4));
 }
 
-/* ── Bottom CTA Callout Banner ── */
+/* ── Bottom CTA Callout Banner (Clean single container, no inner box) ── */
 .rounded-\[36px\].bg-ink {
     background: radial-gradient(ellipse at top right, rgba(216, 161, 83, 0.28), transparent 65%),
                 linear-gradient(135deg, #141824 0%, #080a0f 100%) !important;
     border: 1px solid rgba(216, 161, 83, 0.35) !important;
     border-radius: 32px !important;
     box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6), 0 0 45px rgba(216, 161, 83, 0.12) !important;
+}
+
+.rounded-\[36px\].bg-ink .grid > div:first-child,
+.rounded-\[36px\].bg-ink .grid > div {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    height: auto !important;
+    display: block !important;
 }
 
 .rounded-\[36px\].bg-ink h3 {
@@ -1280,23 +1291,23 @@ a[class*="bg-white\/10"]:hover {
         gap: 16px !important;
     }
 
-    .grid.md\:grid-cols-2 > div:first-child,
-    .grid.md\:grid-cols-2 > div.bg-ink {
+    .grid.md\:grid-cols-2 > div.rounded-3xl:first-child,
+    .grid.md\:grid-cols-2 > div.rounded-3xl.bg-ink {
         padding: 20px 16px !important;
         border-radius: 18px !important;
     }
 
-    .grid.md\:grid-cols-2 > div:first-child span.rounded-full {
+    .grid.md\:grid-cols-2 > div.rounded-3xl:first-child span.rounded-full {
         padding: 6px 12px !important;
         font-size: 12px !important;
     }
 
-    .grid.md\:grid-cols-2 > div.bg-ink ul.grid-cols-2 {
+    .grid.md\:grid-cols-2 > div.rounded-3xl.bg-ink ul.grid-cols-2 {
         grid-template-columns: 1fr !important;
         gap: 8px !important;
     }
 
-    .grid.md\:grid-cols-2 > div.bg-ink li {
+    .grid.md\:grid-cols-2 > div.rounded-3xl.bg-ink li {
         font-size: 13.5px !important;
     }
 
@@ -1304,6 +1315,14 @@ a[class*="bg-white\/10"]:hover {
     .rounded-\[36px\].bg-ink {
         padding: 26px 18px !important;
         border-radius: 22px !important;
+    }
+
+    .rounded-\[36px\].bg-ink .grid > div:first-child,
+    .rounded-\[36px\].bg-ink .grid > div {
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
     }
 
     .rounded-\[36px\].bg-ink .flex-col.md\:items-end {

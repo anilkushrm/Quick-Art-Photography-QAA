@@ -595,11 +595,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // 2. Sync Poster / Thumbnail
+            // 2. Sync Poster / Thumbnail (handles both picture source and img)
             if (course.thumbnail) {
                 const thumbUrl = resolveAssetUrl(course.thumbnail);
-                document.querySelectorAll('.lp-media-thumb img, .lp-preview-img, .lp-media-card img, .lp-hero-preview img, .lp-video-poster').forEach(img => {
-                    if (thumbUrl) img.src = thumbUrl;
+                document.querySelectorAll('.lp-media-thumb, .lp-preview-img, .lp-media-card, .lp-hero-preview, .lp-video-poster').forEach(container => {
+                    container.querySelectorAll('picture source').forEach(src => {
+                        src.srcset = thumbUrl;
+                    });
+                    container.querySelectorAll('img').forEach(img => {
+                        img.src = thumbUrl;
+                        if (course.title) img.alt = course.title;
+                    });
+                });
+                document.querySelectorAll('.lp-media-thumb img, .lp-preview-img img, .lp-media-card img, .lp-hero-preview img, .lp-video-poster img').forEach(img => {
+                    img.src = thumbUrl;
                     if (course.title) img.alt = course.title;
                 });
             }
@@ -662,11 +671,61 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (ogDesc) ogDesc.setAttribute('content', desc);
             }
 
-            // 5. Sync Course Badge
+            // 5. Sync Course Title & Breadcrumbs
+            if (course.title) {
+                const breadcrumbActive = document.querySelector('.lp-breadcrumb .active');
+                if (breadcrumbActive) breadcrumbActive.textContent = course.title;
+                const pricingTitle = document.querySelector('.lp-pricing-title');
+                if (pricingTitle) pricingTitle.textContent = course.title;
+            }
+
+            // 6. Sync Course Badge
             if (course.badge) {
                 document.querySelectorAll('.lp-badge-tag').forEach(el => {
                     el.textContent = course.badge;
                 });
+            }
+
+            // 7. Sync Curriculum Modules & Lessons
+            if (Array.isArray(course.modules) && course.modules.length) {
+                const modulesList = document.getElementById('cs-modules-list');
+                if (modulesList) {
+                    const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                    const parseDur = d => { if (!d) return 0; const p = String(d).split(':'); return parseInt(p[0] || 0, 10); };
+                    let totalLessons = 0, totalMins = 0;
+                    course.modules.forEach(m => {
+                        (m.lessons || []).forEach(l => { totalLessons++; totalMins += parseDur(l.duration); });
+                    });
+                    const hrs = Math.floor(totalMins / 60);
+                    const durStr = course.duration || (hrs + ' Hour' + (hrs !== 1 ? 's' : ''));
+
+                    const badgeEl = document.getElementById('cs-badge-text');
+                    const subEl = document.getElementById('cs-subtitle');
+                    const modStat = document.getElementById('cs-stat-modules');
+                    const lesStat = document.getElementById('cs-stat-lessons');
+                    const durStat = document.getElementById('cs-stat-duration');
+
+                    if (badgeEl) badgeEl.textContent = (course.badge ? course.badge + ' • ' : '') + course.modules.length + ' MODULES • ' + totalLessons + ' SESSIONS';
+                    if (subEl) subEl.textContent = (course.title ? course.title + ' — ' : '') + (course.subtitle || course.description || 'Comprehensive step-by-step curriculum.');
+                    if (modStat) modStat.textContent = course.modules.length;
+                    if (lesStat) lesStat.textContent = totalLessons + '+';
+                    if (durStat) durStat.textContent = durStr;
+
+                    modulesList.innerHTML = course.modules.map((mod, index) => {
+                        const isFirst = index === 0;
+                        const lessons = (mod.lessons || []).map(les => {
+                            const res = (les.resources && les.resources.length) ? '<span class="cs-lesson-resource-tag" title="Includes downloadable resources">&#128206;</span>' : '';
+                            return `<li class="cs-lesson-item"><div class="cs-lesson-left"><span class="cs-lesson-bullet"></span><div class="cs-lesson-details"><span class="cs-lesson-title">${esc(les.title)}</span>${les.summary ? `<span class="cs-lesson-desc">${esc(les.summary)}</span>` : ''}</div></div><div class="cs-lesson-right">${res}${les.duration ? `<span class="cs-lesson-dur">${esc(les.duration)}</span>` : ''}</div></li>`;
+                        }).join('');
+                        const numStr = String(index + 1).padStart(2, '0');
+                        return `<details class="cs-mod-card"${isFirst ? ' open' : ''}><summary class="cs-mod-summary"><div class="cs-mod-left"><span class="cs-mod-num">Module ${numStr}</span><div class="cs-mod-title-group"><div class="cs-mod-title">${esc(mod.title)}</div><div class="cs-mod-meta"><span>${(mod.lessons || []).length} Lesson${(mod.lessons || []).length !== 1 ? 's' : ''}</span></div></div></div><div class="cs-mod-right"><span class="cs-chevron" aria-hidden="true">+</span></div></summary><div class="cs-mod-body"><ul class="cs-lessons-list">${lessons}</ul></div></details>`;
+                    }).join('');
+
+                    const banner = document.getElementById('cs-action-banner');
+                    const actTitle = document.getElementById('cs-action-title');
+                    if (banner) banner.style.display = '';
+                    if (actTitle && course.title) actTitle.textContent = 'Ready to Master this Complete ' + course.title + '?';
+                }
             }
         }
 

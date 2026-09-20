@@ -708,3 +708,124 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 })();
 
+// Animated Number Counter on Scroll (Stats Bar Countdown/Count-up Effect)
+(() => {
+    const initStatsCounter = () => {
+        const statEls = document.querySelectorAll('.lp-stat-val, .lp-stat-num, .cs-stat-val');
+        if (!statEls.length) return;
+
+        const items = [];
+        statEls.forEach(el => {
+            const raw = el.textContent.trim();
+            // Match leading text, numbers (with optional commas/decimals), and trailing text
+            const match = raw.match(/^([^\d]*)([\d,]+(?:\.\d+)?)(.*)$/);
+            if (match) {
+                const prefix = match[1] || '';
+                const numStr = match[2].replace(/,/g, '');
+                const suffix = match[3] || '';
+                const target = parseFloat(numStr);
+                if (isNaN(target)) return;
+                const hasComma = match[2].includes(',');
+                const hasDot = numStr.includes('.');
+                const decimals = hasDot ? (numStr.split('.')[1] || '').length : 0;
+
+                items.push({
+                    el,
+                    raw,
+                    prefix,
+                    target,
+                    suffix,
+                    hasComma,
+                    decimals,
+                    started: false
+                });
+
+                // Set initial visual state to 0 so when page loads it starts from 0
+                const initialFormatted = hasComma ? '0' : (decimals > 0 ? (0).toFixed(decimals) : '0');
+                el.textContent = prefix + initialFormatted + suffix;
+            } else {
+                // Non-numeric items like "Lifetime" or "Zero Lag": subtle scale/glow entry
+                el.style.opacity = '0.4';
+                el.style.transform = 'scale(0.92)';
+                el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+            }
+        });
+
+        if (!items.length) return;
+
+        const easeOutExpo = t => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
+
+        const runCounter = item => {
+            if (item.started) return;
+            item.started = true;
+            let startTime = null;
+            const duration = 1400; // 1.4s smooth countdown/count-up effect
+
+            const step = timestamp => {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = easeOutExpo(progress);
+                const current = item.target * eased;
+
+                let formattedNum;
+                if (item.decimals > 0) {
+                    formattedNum = current.toFixed(item.decimals);
+                } else {
+                    const rounded = Math.round(current);
+                    formattedNum = item.hasComma ? rounded.toLocaleString('en-IN') : String(rounded);
+                }
+
+                item.el.textContent = item.prefix + formattedNum + item.suffix;
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    item.el.textContent = item.raw;
+                }
+            };
+
+            requestAnimationFrame(step);
+        };
+
+        const revealNonNumeric = () => {
+            statEls.forEach(el => {
+                const raw = el.textContent.trim();
+                if (!/\d/.test(raw)) {
+                    el.style.opacity = '1';
+                    el.style.transform = 'scale(1)';
+                }
+            });
+        };
+
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        items.forEach(item => runCounter(item));
+                        revealNonNumeric();
+                        observer.disconnect();
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -20px 0px' });
+
+            const container = document.querySelector('.lp-stats-bar, .cs-stats-bar, .lp-stats-grid');
+            if (container) {
+                observer.observe(container);
+            } else {
+                statEls.forEach(el => observer.observe(el));
+            }
+        } else {
+            items.forEach(runCounter);
+            revealNonNumeric();
+        }
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initStatsCounter);
+    } else {
+        initStatsCounter();
+    }
+})();
+
+

@@ -293,3 +293,86 @@ h2, .qa-sec-title, .lp-sec-title {
   }
 }
 
+/* 10. Refined Compact Stats Bar & Counter */
+.lp-stats-bar {
+  background: linear-gradient(180deg, rgba(14, 16, 23, 0.98) 0%, rgba(18, 20, 29, 0.98) 100%) !important;
+  border-top: 1px solid rgba(216, 161, 83, 0.22) !important;
+  border-bottom: 1px solid rgba(216, 161, 83, 0.22) !important;
+  padding: 24px 0 !important;
+  margin-bottom: 44px !important;
+  position: relative !important;
+}
+
+.lp-stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+  align-items: stretch !important;
+}
+
+.lp-stat-item,
+.lp-stats-grid > div {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
+  border: 1px solid rgba(216, 161, 83, 0.22) !important;
+  border-radius: 14px !important;
+  padding: 16px 12px !important;
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  box-sizing: border-box !important;
+}
+
+.lp-stat-val,
+.lp-stat-num {
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  background: linear-gradient(135deg, #f8dfaa 0%, #d8a153 50%, #b88238 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  line-height: 1.15 !important;
+  margin-bottom: 5px !important;
+  letter-spacing: -0.02em !important;
+}
+
+.lp-stat-label,
+.lp-stat-lbl {
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+  font-weight: 600 !important;
+  color: #94a3b8 !important;
+  line-height: 1.35 !important;
+}
+
+@media (max-width: 768px) {
+  .lp-stats-bar {
+    padding: 18px 0 !important;
+    margin-bottom: 32px !important;
+  }
+  .lp-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+  .lp-stat-item,
+  .lp-stats-grid > div {
+    padding: 12px 8px !important;
+    border-radius: 12px !important;
+  }
+  .lp-stat-val,
+  .lp-stat-num {
+    font-size: 20px !important;
+  }
+  .lp-stat-label,
+  .lp-stat-lbl {
+    font-size: 10px !important;
+  }
+}
+
+

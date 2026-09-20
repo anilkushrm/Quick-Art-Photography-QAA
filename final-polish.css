@@ -375,4 +375,41 @@ h2, .qa-sec-title, .lp-sec-title {
   }
 }
 
+/* Universal Footer Brand: Keep "Quick Art" strictly on a single line */
+.qa-footer .qa-brand,
+.qa-brand {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  text-decoration: none !important;
+}
+
+.qa-footer .qa-brand > span,
+.qa-brand > span {
+  display: block !important;
+  white-space: nowrap !important;
+  line-height: 1.15 !important;
+}
+
+.qa-footer .qa-brand > span b,
+.qa-brand > span b {
+  display: inline !important;
+  color: #d7ac59 !important;
+}
+
+.qa-footer .qa-brand > span small,
+.qa-brand > span small,
+.qa-brand > span > small {
+  display: block !important;
+  font-size: 8.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 1px !important;
+  color: #94a3b8 !important;
+  margin-top: 3px !important;
+  text-transform: uppercase !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+}
+
+
 

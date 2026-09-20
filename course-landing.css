@@ -1023,21 +1023,24 @@ body.landing-page-body {
   font-weight: 700 !important;
   color: #ffffff !important;
   line-height: 1.15 !important;
-  display: flex !important;
-  flex-direction: column !important;
+  display: block !important;
+  white-space: nowrap !important;
 }
 
 .qa-footer .qa-brand span b {
+  display: inline !important;
   color: #d8a153 !important;
 }
 
 .qa-footer .qa-brand span small {
+  display: block !important;
   font-size: 8.5px !important;
   font-weight: 600 !important;
   letter-spacing: 1px !important;
   color: #94a3b8 !important;
   margin-top: 3px !important;
   text-transform: uppercase !important;
+  line-height: 1.2 !important;
 }
 
 .qa-footer p {

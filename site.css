@@ -28,7 +28,14 @@
   line-height: 1.1
 }
 
+.qa-brand > span {
+  display: block;
+  white-space: nowrap;
+  line-height: 1.15;
+}
+
 .qa-brand b {
+  display: inline;
   color: #d7ac59
 }
 

@@ -131,29 +131,51 @@
     panel.hidden=!open;
     panel.style.display = open ? '' : 'none';
   }
-  function closeAll(){drops.forEach(d=>set(d,false));}
-  drops.forEach(drop=>{
-   const toggle=drop.querySelector('.ref-toggle');
-   if(!toggle) return;
+  let hoverTimer = null;
 
-   toggle.addEventListener('click',event=>{
-    event.stopPropagation();
-    const open=toggle.getAttribute('aria-expanded')!=='true';
-    closeAll();
-    set(drop,open);
-   });
+  drops.forEach(drop => {
+    const toggle = drop.querySelector('.ref-toggle');
+    if (!toggle) return;
 
-   drop.addEventListener('keydown',event=>{
-    if(event.key==='Escape'){
+    // Desktop Mouse Hover: Open megamenu on mouse hover
+    drop.addEventListener('mouseenter', () => {
+      if (window.matchMedia && !window.matchMedia('(hover: hover)').matches) return;
+      if (hoverTimer) {
+        clearTimeout(hoverTimer);
+        hoverTimer = null;
+      }
+      drops.forEach(d => { if (d !== drop) set(d, false); });
+      set(drop, true);
+    });
+
+    // Desktop Mouse Hover: Close megamenu when mouse leaves with comfortable 180ms buffer
+    drop.addEventListener('mouseleave', () => {
+      if (window.matchMedia && !window.matchMedia('(hover: hover)').matches) return;
+      if (hoverTimer) clearTimeout(hoverTimer);
+      hoverTimer = setTimeout(() => {
+        set(drop, false);
+      }, 180);
+    });
+
+    // Click behavior (works for touch/mobile devices or manual clicks)
+    toggle.addEventListener('click', event => {
       event.stopPropagation();
-      set(drop,false);
-      toggle.focus();
-    }
-   });
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      closeAll();
+      set(drop, open);
+    });
 
-   drop.addEventListener('focusout',event=>{
-    if(!drop.contains(event.relatedTarget))set(drop,false);
-   });
+    drop.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        event.stopPropagation();
+        set(drop, false);
+        toggle.focus();
+      }
+    });
+
+    drop.addEventListener('focusout', event => {
+      if (!drop.contains(event.relatedTarget)) set(drop, false);
+    });
 
    const tabs=[...drop.querySelectorAll('[role=tab]')];
    function select(tab){
@@ -183,6 +205,15 @@
       tabs[next].focus();
     });
    });
+  });
+
+  // Close open dropdowns immediately when hovering over other top links or brand
+  header.querySelectorAll('.ref-nav > a, .ref-brand, .ref-login').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      if (window.matchMedia && !window.matchMedia('(hover: hover)').matches) return;
+      if (hoverTimer) clearTimeout(hoverTimer);
+      closeAll();
+    });
   });
 
   // Ensure all dropdowns are strictly closed by default on initial page load

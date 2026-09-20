@@ -4525,31 +4525,67 @@ h3 {
   margin-left: 8px
 }
 
-.qa-float-stack {
+.qa-float-stack,
+.fixed.bottom-5.right-5 {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 40;
   display: flex;
   flex-direction: column;
-  gap: 10px
+  gap: 0.625rem;
+  align-items: flex-end;
 }
 
-.qa-float-stack a {
-  display: grid;
-  place-items: center;
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  font-size: 29px;
-  box-shadow: 0 10px 25px #0003
+.qa-float-stack a,
+.fixed.bottom-5.right-5 a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
 }
 
-.qa-float-whatsapp {
-  background: #12bd82;
-  color: #fff
+.qa-float-whatsapp,
+.fixed.bottom-5.right-5 a[aria-label="Chat on WhatsApp"] {
+  background-color: #10b981;
+  color: #ffffff;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+  animation: float 3s ease-in-out infinite;
 }
 
-.qa-float-call {
-  background: #fff;
-  color: #12110f;
-  border: 1px solid #ece8e0
+.qa-float-whatsapp:hover,
+.fixed.bottom-5.right-5 a[aria-label="Chat on WhatsApp"]:hover {
+  background-color: #059669;
+}
+
+.qa-float-call,
+.fixed.bottom-5.right-5 a[aria-label="Call Us"] {
+  background-color: #ffffff;
+  color: #17130c;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.qa-float-call:hover,
+.fixed.bottom-5.right-5 a[aria-label="Call Us"]:hover {
+  background-color: #eab308;
+  color: #000000;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 
 .qa-popup-overlay {
@@ -4840,40 +4876,25 @@ h3 {
   }
 }
 
-.qa-float-actions {
-  left: 22px;
-  right: auto;
-  align-items: flex-start
-}
-
-.qa-float-stack {
-  display: none
-}
-
-@media(max-width:600px) {
-  .qa-float-actions {
-    left: 14px;
-    right: auto;
-    bottom: 14px
-  }
-
-  .qa-float-demo {
-    font-size: 13px;
-    padding: 8px 12px
-  }
-}
-
-.qa-float-actions.qa-float-show-stack .qa-float-stack {
-  display: flex;
-  position: fixed;
-  right: 22px;
-  bottom: 24px
+.qa-float-actions,
+.qa-float-stack,
+.fixed.bottom-5.right-5 {
+  display: flex !important;
+  position: fixed !important;
+  right: 1.25rem !important;
+  bottom: 1.25rem !important;
+  z-index: 40 !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  left: auto !important;
 }
 
 @media(max-width:600px) {
-  .qa-float-actions.qa-float-show-stack .qa-float-stack {
-    right: 14px;
-    bottom: 14px
+  .qa-float-actions,
+  .qa-float-stack,
+  .fixed.bottom-5.right-5 {
+    right: max(16px, env(safe-area-inset-right)) !important;
+    bottom: calc(16px + env(safe-area-inset-bottom)) !important;
   }
 }
 

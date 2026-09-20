@@ -306,16 +306,17 @@ document.addEventListener('DOMContentLoaded', () => {
         path === new URL('index.html', popupRoot).pathname;
     const isMaster = /\/master-class(?:\/index\.html|\/)?$/i.test(path) || path.includes('/master-class');
 
-    const rail = document.createElement('div'); rail.className = 'qa-float-actions';
-    const contactHref = new URL('contact-us/index.html#enquiry', popupRoot).href;
-    rail.innerHTML = `<a class="qa-float-demo" href="${contactHref}"><span>▣</span> Free demo · <b>Book Now</b> <strong>→</strong></a><div class="qa-float-stack"><a class="qa-float-whatsapp" href="https://wa.me/919939800780" target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp">◌</a><a class="qa-float-call" href="tel:+919939800780" aria-label="Call Quick Art">⌕</a></div>`;
-    if (!isHome) rail.classList.add('qa-float-show-stack');
-    rail.querySelector('.qa-float-call').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.19 18a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.09 3.4 2 2 0 0 1 4.08 1.22h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.69 2.79a2 2 0 0 1-.45 2.11L8.05 9.11a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.89.33 1.83.57 2.79.69A2 2 0 0 1 22 16.92Z"/></svg>';
-    rail.querySelector('.qa-float-whatsapp').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a9 9 0 0 1-13.4 7.9L3 21l1.6-4.6A9 9 0 1 1 21 11.5Z"/><path d="m8 7 1.5 3-1 1c1 2 2.5 3.5 4.5 4.5l1-1 3 1.5c-1 3-4 2-7-1S5 8 8 7Z"/></svg>';
-    document.body.append(rail);
-
-    // Remove the side Free Demo promotion on every page.
-    rail.querySelector('.qa-float-demo')?.remove();
+    let rail = document.querySelector('.fixed.bottom-5.right-5, .qa-float-stack, .qa-float-actions');
+    const floatMarkup = `<a href="https://wa.me/919939800780?text=Hi%2C%20I%20want%20to%20know%20about%20the%20Video%20Editing%20Course" target="_blank" rel="noreferrer" class="h-14 w-14 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-2xl shadow-emerald-500/40 animate-float qa-float-whatsapp" aria-label="Chat on WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle h-6 w-6" aria-hidden="true" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg></a><a href="tel:+919939800780" class="h-14 w-14 rounded-full bg-white text-ink flex items-center justify-center shadow-2xl border border-black/5 hover:bg-gold-500 hover:text-black transition qa-float-call" aria-label="Call Us"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone h-6 w-6" aria-hidden="true" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path></svg></a>`;
+    if (!rail) {
+        rail = document.createElement('div');
+        rail.className = 'fixed bottom-5 right-5 z-40 flex flex-col gap-2.5 items-end qa-float-stack';
+        rail.innerHTML = floatMarkup;
+        document.body.append(rail);
+    } else {
+        rail.className = 'fixed bottom-5 right-5 z-40 flex flex-col gap-2.5 items-end qa-float-stack';
+        rail.innerHTML = floatMarkup;
+    }
 
     // Automatic popup tracking: Har customer ko poori website pe kewal EK hi baar automatic popup dikhe
     const AUTO_POPUP_KEY = 'qaa_popup_auto_shown';

@@ -129,6 +129,77 @@ body.bg-\[\#FAFAFA\] {
     font-weight: 800;
 }
 
+/* ── Hero Section Main Heading (Bold, Large & Cinematic — Matching Page Hierarchy) ── */
+.qa-texture-hero h1,
+.qa-topics-hero h1,
+.qa-master-hero h1,
+section.qa-texture-hero h1,
+section.qa-topics-hero h1,
+section.qa-master-hero h1,
+main > section.relative.bg-ink h1,
+.qa-texture-hero .max-w-3xl h1,
+.qa-texture-hero .max-w-4xl h1,
+.qa-texture-hero .lg\:col-span-7 h1,
+.qa-master-hero-grid h1 {
+    font-family: 'Outfit', 'Plus Jakarta Sans', var(--font-heading, "Inter", sans-serif) !important;
+    font-size: clamp(48px, 4.8vw, 64px) !important;
+    font-weight: 900 !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.03em !important;
+    color: #ffffff !important;
+    text-wrap: balance !important;
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.75) !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Allow breathing room on desktop so large heading isn't cramped */
+.qa-texture-hero .max-w-3xl {
+    max-width: 52rem !important;
+}
+
+/* Spans inside Hero Headings */
+.qa-texture-hero h1 span:not(.mc-ai-heading),
+.qa-topics-hero h1 span:not(.mc-ai-heading),
+.qa-master-hero h1 span:not(.mc-ai-heading),
+section.qa-texture-hero h1 span:not(.mc-ai-heading),
+section.qa-topics-hero h1 span:not(.mc-ai-heading),
+main > section.relative.bg-ink h1 span:not(.mc-ai-heading) {
+    font-weight: 900 !important;
+}
+
+.qa-texture-hero h1 .text-gold-gradient,
+.qa-topics-hero h1 .text-gold-gradient,
+.qa-master-hero h1 .qa-heading-gradient {
+    display: inline !important;
+    font-weight: 900 !important;
+    background: linear-gradient(115deg, #fff5df 0%, #efca83 42%, #d5a24f 76%, #f5dcaa 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    filter: drop-shadow(0 2px 14px rgba(216, 161, 83, 0.35)) !important;
+}
+
+@media (max-width: 1023px) {
+    .qa-texture-hero h1,
+    .qa-topics-hero h1,
+    .qa-master-hero h1,
+    section.qa-texture-hero h1,
+    section.qa-topics-hero h1,
+    section.qa-master-hero h1,
+    main > section.relative.bg-ink h1,
+    .qa-texture-hero .max-w-3xl h1,
+    .qa-texture-hero .max-w-4xl h1,
+    .qa-master-hero-grid h1 {
+        font-size: clamp(42px, 6vw, 54px) !important;
+        font-weight: 900 !important;
+        line-height: 1.06 !important;
+        letter-spacing: -0.028em !important;
+    }
+}
+
 /* ── Campus High-Trust Strip ── */
 .qa-campus-trust-strip {
     display: flex;
@@ -1193,7 +1264,9 @@ a[class*="bg-white\/10"]:hover {
     section.qa-topics-hero h1,
     main > section.relative.bg-ink h1,
     .qa-texture-hero .max-w-3xl h1,
-    .qa-texture-hero .lg\:col-span-7 h1 {
+    .qa-texture-hero .max-w-4xl h1,
+    .qa-texture-hero .lg\:col-span-7 h1,
+    .qa-master-hero-grid h1 {
         font-size: clamp(40px, 9.5vw, 54px) !important;
         font-weight: 900 !important;
         line-height: 1.04 !important;
@@ -1532,12 +1605,15 @@ a[class*="bg-white\/10"]:hover {
     .qa-master-hero h1,
     section.qa-texture-hero h1,
     section.qa-topics-hero h1,
-    main > section.relative.bg-ink h1 {
-        font-size: clamp(32px, 9.4vw, 40px) !important;
+    main > section.relative.bg-ink h1,
+    .qa-texture-hero .max-w-3xl h1,
+    .qa-master-hero-grid h1 {
+        font-size: clamp(36px, 10.2vw, 46px) !important;
         font-weight: 900 !important;
-        line-height: 1.08 !important;
+        line-height: 1.05 !important;
         letter-spacing: -0.025em !important;
         text-wrap: balance !important;
+        -webkit-text-stroke: 0.45px rgba(255, 255, 255, 0.4) !important;
     }
 
     .qa-texture-hero h1 span,
@@ -1547,6 +1623,7 @@ a[class*="bg-white\/10"]:hover {
     section.qa-topics-hero h1 span,
     main > section.relative.bg-ink h1 span {
         font-weight: 900 !important;
+        -webkit-text-stroke: 0.45px rgba(255, 255, 255, 0.4) !important;
     }
 }
 
@@ -1556,11 +1633,14 @@ a[class*="bg-white\/10"]:hover {
     .qa-master-hero h1,
     section.qa-texture-hero h1,
     section.qa-topics-hero h1,
-    main > section.relative.bg-ink h1 {
-        font-size: 32px !important;
+    main > section.relative.bg-ink h1,
+    .qa-texture-hero .max-w-3xl h1,
+    .qa-master-hero-grid h1 {
+        font-size: clamp(33px, 9.8vw, 38px) !important;
         font-weight: 900 !important;
-        line-height: 1.1 !important;
+        line-height: 1.08 !important;
         letter-spacing: -0.025em !important;
+        -webkit-text-stroke: 0.45px rgba(255, 255, 255, 0.4) !important;
     }
 
     .qa-campus-trust-strip {

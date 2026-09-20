@@ -126,7 +126,13 @@
         if (hero) {
             hero.classList.add('qa-master-hero');
             const heroGrid = hero.querySelector('.container.relative > .grid');
-            if (heroGrid) { heroGrid.classList.add('qa-master-hero-grid'); heroGrid.style.gridTemplateColumns = 'minmax(0,1.08fr) minmax(390px,.72fr)'; heroGrid.style.alignItems = 'center'; }
+            if (heroGrid) {
+                heroGrid.classList.add('qa-master-hero-grid');
+                if (window.innerWidth >= 1024) {
+                    heroGrid.style.gridTemplateColumns = 'minmax(0,1.08fr) minmax(390px,.72fr)';
+                    heroGrid.style.alignItems = 'center';
+                }
+            }
             const badge = hero.querySelector('.container.relative .lg\\:col-span-3 > .inline-flex span');
             if (badge) badge.textContent = 'Limited seats · New batch starting soon';
             const countdown = hero.querySelector('.lg\\:col-span-3 .mt-9');

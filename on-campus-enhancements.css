@@ -162,13 +162,13 @@ main > section.relative.bg-ink h1,
 }
 
 /* Spans inside Hero Headings — Matching Homepage Fiery Gradient & Glow */
-.qa-texture-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
-.qa-topics-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
-.qa-master-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
-section.qa-texture-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
-section.qa-topics-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
-section.qa-master-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
-main > section.relative.bg-ink h1 span:not(.mc-ai-heading):not(.mc-master-white),
+.qa-texture-hero h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
+.qa-topics-hero h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
+.qa-master-hero h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
+section.qa-texture-hero h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
+section.qa-topics-hero h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
+section.qa-master-hero h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
+main > section.relative.bg-ink h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
 .qa-texture-hero h1 .text-gold-gradient,
 .qa-topics-hero h1 .text-gold-gradient,
 .qa-master-hero h1 .qa-heading-gradient {
@@ -1624,13 +1624,13 @@ a[class*="bg-white\/10"]:hover {
         max-width: 100% !important;
     }
 
-    .qa-texture-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
-    .qa-topics-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
-    .qa-master-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
-    section.qa-texture-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
-    section.qa-topics-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
-    section.qa-master-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
-    main > section.relative.bg-ink h1 span:not(.mc-ai-heading):not(.mc-master-white),
+    .qa-texture-hero h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
+    .qa-topics-hero h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
+    .qa-master-hero h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
+    section.qa-texture-hero h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
+    section.qa-topics-hero h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
+    section.qa-master-hero h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
+    main > section.relative.bg-ink h1 span:not(.mc-ai-heading):not(.mc-master-white):not(.mc-desktop-title):not(.mc-mobile-title):not(.mc-mob-line1):not(.mc-mob-line2),
     .qa-master-hero h1 .qa-heading-gradient {
         font-weight: 900 !important;
         background: linear-gradient(100deg, #ffc21b 0%, #ff9635 48%, #f73c64 100%) !important;

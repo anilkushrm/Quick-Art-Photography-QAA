@@ -89,6 +89,46 @@ function load_settings() {
     return $data;
 }
 
+if (!defined('LMS_SETTINGS_FILE')) {
+    define('LMS_SETTINGS_FILE', DATA_DIR . '/lms-settings.json');
+}
+if (!defined('LMS_ENV_SETTINGS_FILE')) {
+    define('LMS_ENV_SETTINGS_FILE', __DIR__ . '/../.env.lms-settings.json');
+}
+
+function load_lms_settings() {
+    $settings = [
+        'bunnyLibraryId' => '',
+        'bunnyApiKey' => '',
+        'bunnyTokenAuthKey' => '',
+        'bunnyHostname' => 'iframe.mediadelivery.net',
+        'watermarkEnabled' => true,
+        'watermarkOpacity' => 0.35,
+        'otpDemoMode' => false,
+        'defaultOtp' => '123456',
+        'fast2smsApiKey' => '',
+        'academyName' => 'Quick Art Photography Academy',
+        'mentorName' => 'Anil Sharma'
+    ];
+    if (file_exists(LMS_ENV_SETTINGS_FILE)) {
+        $env = json_decode(file_get_contents(LMS_ENV_SETTINGS_FILE), true);
+        if (is_array($env)) {
+            $settings = array_merge($settings, $env);
+        }
+    }
+    if (file_exists(LMS_SETTINGS_FILE)) {
+        $stored = json_decode(file_get_contents(LMS_SETTINGS_FILE), true);
+        if (is_array($stored)) {
+            foreach ($stored as $k => $v) {
+                if ($v !== '' && $v !== null) {
+                    $settings[$k] = $v;
+                }
+            }
+        }
+    }
+    return $settings;
+}
+
 function save_settings($data) {
     if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
     $data['updatedAt'] = date('c');

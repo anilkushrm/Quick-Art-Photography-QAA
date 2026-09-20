@@ -88,23 +88,6 @@ function evaluate_coupon($code, $courseId, $coursePrice) {
     ];
 }
 
-function load_lms_settings() {
-    if (!file_exists(LMS_SETTINGS_FILE)) {
-        return [
-            'bunnyLibraryId' => '',
-            'bunnyApiKey' => '',
-            'bunnyTokenAuthKey' => '',
-            'bunnyHostname' => 'iframe.mediadelivery.net',
-            'watermarkEnabled' => true,
-            'watermarkOpacity' => 0.35,
-            'otpDemoMode' => true,
-            'defaultOtp' => '123456',
-            'fast2smsApiKey' => ''
-        ];
-    }
-    return json_decode(file_get_contents(LMS_SETTINGS_FILE), true) ?: [];
-}
-
 function load_courses() {
     if (!file_exists(LMS_COURSES_FILE)) return [];
     return json_decode(file_get_contents(LMS_COURSES_FILE), true) ?: [];
@@ -260,6 +243,11 @@ if ($action === 'send-otp' && $method === 'POST') {
             if (!$isLocal) {
                 json_err("SMS bhejne me dikkat aayi: " . ($sendRes['error'] ?? 'Fast2SMS delivery error'), 502);
             }
+        }
+    } elseif (!$demoMode && empty($settings['fast2smsApiKey'])) {
+        error_log("SMS Gateway (Fast2SMS API Key) is not configured for phone: {$phone}");
+        if (!$isLocal) {
+            json_err("SMS gateway configured nahi hai. Kripya helpline +91 9939800780 par sampark karein.", 503);
         }
     }
 

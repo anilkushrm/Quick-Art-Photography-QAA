@@ -13,7 +13,6 @@ html, body {
 
 section,
 main,
-header,
 footer,
 .cs-section,
 .mc-bonuses,
@@ -23,6 +22,17 @@ footer,
 .qa-master-hero {
   overflow: hidden !important;
   max-width: 100vw !important;
+}
+
+/* ── HEADER MEGA MENU FIX: do NOT clip the header or its dropdowns ── */
+.ref-header {
+  overflow: visible !important;
+  z-index: 9999 !important;
+}
+.ref-mega,
+.ref-resource-panel {
+  overflow: visible !important;
+  z-index: 99999 !important;
 }
 
 /* Fix PART heading tags in course structure to wrap gracefully on mobile */

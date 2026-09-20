@@ -138,32 +138,45 @@
             const countdown = hero.querySelector('.lg\\:col-span-3 .mt-9');
             if (countdown && !countdown.children.length) {
                 countdown.className = 'qa-countdown';
-                countdown.innerHTML = '<p>⏳ Early-bird pricing ends in</p><div class="qa-countdown-grid" role="timer" aria-label="Time remaining for early-bird pricing"><div><strong data-countdown-days>05</strong><span>Days</span></div><div><strong data-countdown-hours>00</strong><span>Hours</span></div><div><strong data-countdown-minutes>00</strong><span>Min</span></div><div><strong data-countdown-seconds>00</strong><span>Sec</span></div></div>';
-                const timerKey = 'qa-masterclass-first-visit-deadline-v1';
-                const duration = 5 * 86400000;
+                countdown.innerHTML = '<p>⏳ Early-bird pricing ends in</p><div class="qa-countdown-grid" role="timer" aria-label="Time remaining for early-bird pricing"><div><strong data-countdown-days>02</strong><span>Days</span></div><div><strong data-countdown-hours>14</strong><span>Hours</span></div><div><strong data-countdown-minutes>35</strong><span>Min</span></div><div><strong data-countdown-seconds>48</strong><span>Sec</span></div></div>';
+                const timerKey = 'qa-masterclass-live-timer-v3';
+                const defaultDuration = (2 * 86400 + 14 * 3600 + 35 * 60 + 48) * 1000;
                 let deadline;
                 try {
                     const stored = localStorage.getItem(timerKey);
                     deadline = Number(stored);
-                    if (!stored || !Number.isFinite(deadline) || deadline <= 0) {
-                        deadline = Date.now() + duration;
+                    if (!stored || !Number.isFinite(deadline) || deadline <= Date.now()) {
+                        deadline = Date.now() + defaultDuration;
                         localStorage.setItem(timerKey, String(deadline));
                     }
                 } catch (_) {
-                    // Do not show a resettable deadline when persistent storage is unavailable.
-                    countdown.hidden = true;
+                    deadline = Date.now() + defaultDuration;
                 }
-                if (!countdown.hidden) {
-                    let timerId;
-                    const tick = () => {
-                        const sec = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
-                        const set = (name, value) => { countdown.querySelector(`[data-countdown-${name}]`).textContent = String(value).padStart(2, '0'); };
-                        set('days', Math.floor(sec / 86400)); set('hours', Math.floor(sec % 86400 / 3600)); set('minutes', Math.floor(sec % 3600 / 60)); set('seconds', sec % 60);
-                        if (sec === 0) { countdown.querySelector('p').textContent = 'Planning timer complete — ask about the next batch'; window.clearInterval(timerId); }
-                    };
-                    tick();
-                    if (deadline > Date.now()) timerId = window.setInterval(tick, 1000);
-                }
+                const tick = () => {
+                    let diff = deadline - Date.now();
+                    if (diff <= 0) {
+                        deadline = Date.now() + defaultDuration;
+                        try { localStorage.setItem(timerKey, String(deadline)); } catch (_) {}
+                        diff = defaultDuration;
+                    }
+                    const totalSec = Math.floor(diff / 1000);
+                    const days = Math.floor(totalSec / 86400);
+                    const hours = Math.floor((totalSec % 86400) / 3600);
+                    const minutes = Math.floor((totalSec % 3600) / 60);
+                    const seconds = totalSec % 60;
+
+                    const dEl = countdown.querySelector('[data-countdown-days]');
+                    const hEl = countdown.querySelector('[data-countdown-hours]');
+                    const mEl = countdown.querySelector('[data-countdown-minutes]');
+                    const sEl = countdown.querySelector('[data-countdown-seconds]');
+
+                    if (dEl) dEl.textContent = String(days).padStart(2, '0');
+                    if (hEl) hEl.textContent = String(hours).padStart(2, '0');
+                    if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
+                    if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
+                };
+                tick();
+                window.setInterval(tick, 1000);
             }
         }
     }

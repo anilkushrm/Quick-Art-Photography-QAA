@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap');
+
 /* ==========================================================================
    Quick Art Photography Academy — On-Campus Luxury Programs Theme
    Matching 100% with the Online Programs Obsidian Dark Luxury Aesthetic
@@ -129,7 +131,7 @@ body.bg-\[\#FAFAFA\] {
     font-weight: 800;
 }
 
-/* ── Hero Section Main Heading (Bold, Large & Cinematic — Matching Page Hierarchy) ── */
+/* ── Hero Section Main Heading (Bold, Large & Cinematic — 100% Matching Homepage Style) ── */
 .qa-texture-hero h1,
 .qa-topics-hero h1,
 .qa-master-hero h1,
@@ -142,44 +144,44 @@ main > section.relative.bg-ink h1,
 .qa-texture-hero .lg\:col-span-7 h1,
 .qa-master-hero-grid h1 {
     font-family: 'Outfit', 'Plus Jakarta Sans', var(--font-heading, "Inter", sans-serif) !important;
-    font-size: clamp(48px, 4.8vw, 64px) !important;
+    font-size: clamp(48px, 5.2vw, 68px) !important;
     font-weight: 900 !important;
-    line-height: 1.05 !important;
-    letter-spacing: -0.03em !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.035em !important;
     color: #ffffff !important;
     text-wrap: balance !important;
     margin-top: 20px !important;
     margin-bottom: 20px !important;
-    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.75) !important;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
 }
 
 /* Allow breathing room on desktop so large heading isn't cramped */
 .qa-texture-hero .max-w-3xl {
-    max-width: 52rem !important;
+    max-width: 54rem !important;
 }
 
-/* Spans inside Hero Headings */
-.qa-texture-hero h1 span:not(.mc-ai-heading),
-.qa-topics-hero h1 span:not(.mc-ai-heading),
-.qa-master-hero h1 span:not(.mc-ai-heading),
-section.qa-texture-hero h1 span:not(.mc-ai-heading),
-section.qa-topics-hero h1 span:not(.mc-ai-heading),
-main > section.relative.bg-ink h1 span:not(.mc-ai-heading) {
-    font-weight: 900 !important;
-}
-
+/* Spans inside Hero Headings — Matching Homepage Fiery Gradient & Glow */
+.qa-texture-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
+.qa-topics-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
+.qa-master-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
+section.qa-texture-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
+section.qa-topics-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
+section.qa-master-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
+main > section.relative.bg-ink h1 span:not(.mc-ai-heading):not(.mc-master-white),
 .qa-texture-hero h1 .text-gold-gradient,
 .qa-topics-hero h1 .text-gold-gradient,
 .qa-master-hero h1 .qa-heading-gradient {
-    display: inline !important;
+    font-family: 'Outfit', 'Plus Jakarta Sans', var(--font-heading, "Inter", sans-serif) !important;
     font-weight: 900 !important;
-    background: linear-gradient(115deg, #fff5df 0%, #efca83 42%, #d5a24f 76%, #f5dcaa 100%) !important;
+    display: inline-block !important;
+    background: linear-gradient(100deg, #ffc21b 0%, #ff9635 48%, #f73c64 100%) !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
-    filter: drop-shadow(0 2px 14px rgba(216, 161, 83, 0.35)) !important;
+    color: transparent !important;
+    filter: drop-shadow(0 2px 14px rgba(255, 150, 53, 0.28)) !important;
+    letter-spacing: -0.035em !important;
 }
 
 @media (max-width: 1023px) {
@@ -1605,25 +1607,38 @@ a[class*="bg-white\/10"]:hover {
     .qa-master-hero h1,
     section.qa-texture-hero h1,
     section.qa-topics-hero h1,
+    section.qa-master-hero h1,
     main > section.relative.bg-ink h1,
     .qa-texture-hero .max-w-3xl h1,
-    .qa-master-hero-grid h1 {
-        font-size: clamp(36px, 10.2vw, 46px) !important;
+    .qa-texture-hero .max-w-4xl h1,
+    .qa-master-hero-grid h1,
+    main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
+        font-family: 'Outfit', 'Plus Jakarta Sans', var(--font-heading, "Inter", sans-serif) !important;
+        font-size: clamp(38px, 11.8vw, 52px) !important;
         font-weight: 900 !important;
-        line-height: 1.05 !important;
-        letter-spacing: -0.025em !important;
+        line-height: 1.04 !important;
+        letter-spacing: -0.035em !important;
+        color: #ffffff !important;
         text-wrap: balance !important;
-        -webkit-text-stroke: 0.45px rgba(255, 255, 255, 0.4) !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
-    .qa-texture-hero h1 span,
-    .qa-topics-hero h1 span,
-    .qa-master-hero h1 span,
-    section.qa-texture-hero h1 span,
-    section.qa-topics-hero h1 span,
-    main > section.relative.bg-ink h1 span {
+    .qa-texture-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
+    .qa-topics-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
+    .qa-master-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
+    section.qa-texture-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
+    section.qa-topics-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
+    section.qa-master-hero h1 span:not(.mc-ai-heading):not(.mc-master-white),
+    main > section.relative.bg-ink h1 span:not(.mc-ai-heading):not(.mc-master-white),
+    .qa-master-hero h1 .qa-heading-gradient {
         font-weight: 900 !important;
-        -webkit-text-stroke: 0.45px rgba(255, 255, 255, 0.4) !important;
+        background: linear-gradient(100deg, #ffc21b 0%, #ff9635 48%, #f73c64 100%) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        color: transparent !important;
+        filter: drop-shadow(0 2px 14px rgba(255, 150, 53, 0.28)) !important;
     }
 }
 
@@ -1633,14 +1648,20 @@ a[class*="bg-white\/10"]:hover {
     .qa-master-hero h1,
     section.qa-texture-hero h1,
     section.qa-topics-hero h1,
+    section.qa-master-hero h1,
     main > section.relative.bg-ink h1,
     .qa-texture-hero .max-w-3xl h1,
-    .qa-master-hero-grid h1 {
-        font-size: clamp(33px, 9.8vw, 38px) !important;
+    .qa-texture-hero .max-w-4xl h1,
+    .qa-master-hero-grid h1,
+    main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
+        font-family: 'Outfit', 'Plus Jakarta Sans', var(--font-heading, "Inter", sans-serif) !important;
+        font-size: clamp(36px, 11.5vw, 46px) !important;
         font-weight: 900 !important;
-        line-height: 1.08 !important;
-        letter-spacing: -0.025em !important;
-        -webkit-text-stroke: 0.45px rgba(255, 255, 255, 0.4) !important;
+        line-height: 1.05 !important;
+        letter-spacing: -0.035em !important;
+        color: #ffffff !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
     .qa-campus-trust-strip {

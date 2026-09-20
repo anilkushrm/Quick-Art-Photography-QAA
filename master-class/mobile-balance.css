@@ -13,7 +13,7 @@ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child>p{font-size:17
 main>section:not(.qa-master-hero){padding-top:72px;padding-bottom:72px}
 .qa-master-hero h1{max-width:820px}
 main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{line-height:1.1!important}
-.qa-master-hero h1 .qa-heading-gradient{display:block;line-height:1.1;padding-bottom:.04em;background:linear-gradient(115deg,#fff5df 0%,#efca83 42%,#d5a24f 76%,#f5dcaa 100%);background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.qa-master-hero h1 .qa-heading-gradient{display:block;line-height:1.1;padding-bottom:.04em;background:linear-gradient(100deg, #ffc21b 0%, #ff9635 48%, #f73c64 100%)!important;background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 14px rgba(255, 150, 53, 0.28))!important}
 .qa-master-hero h1 .mc-ai-heading{display:flex;align-items:center;gap:.4em;width:fit-content;margin-bottom:6px;color:#ff666b;font-size:clamp(13px,1.2vw,16px);font-weight:650;line-height:1.4;letter-spacing:.04em}
 .qa-master-hero h1 .mc-master-white{color:#fff;-webkit-text-fill-color:#fff;background:none}
 .qa-master-hero .mc-ai-heading svg{width:1em;height:1em;flex-shrink:0;color:currentColor;filter:none}
@@ -39,7 +39,7 @@ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{line-height
  .mc-mentor-stats>div>div:last-child{font-size:12px;line-height:1.45;margin-top:5px}
  main>section:not(.qa-master-hero){padding-top:44px;padding-bottom:44px}
  main>section.qa-master-hero{padding-top:30px;padding-bottom:44px}
- main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{font-size:clamp(34px,9.3vw,47px)!important;line-height:1.1!important;letter-spacing:-.025em!important;overflow-wrap:normal;text-wrap:balance;margin-top:18px}
+ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{font-family:'Outfit','Plus Jakarta Sans',sans-serif!important;font-size:clamp(38px,11.8vw,52px)!important;font-weight:900!important;line-height:1.04!important;letter-spacing:-.035em!important;overflow-wrap:normal;text-wrap:balance;margin-top:18px}
  .qa-master-hero h1 .qa-heading-gradient{display:block}
  .qa-master-hero h1+p{font-size:16px!important;line-height:1.65!important;margin-top:18px;max-width:40ch}
  .qa-master-hero .qa-price-row{gap:10px;flex-wrap:wrap;margin-top:22px}

@@ -30,6 +30,7 @@
     <link rel="icon" href="../../home-assets/ec55a6be3747a9.webp">
     <link rel="stylesheet" href="../../reference-header.css">
     <link rel="stylesheet" href="../../course-landing.css">
+    <link rel="stylesheet" href="../../course-landing-enhancements.css">
     <link rel="stylesheet" href="../../site.css">
     <script defer src="../../site.js"></script>
     <script defer src="../../header.js"></script>
@@ -385,469 +386,159 @@
         <!-- Pricing Card -->
         
         <!-- Decorated High-Level Course Structure Section -->
-        <section class="course-structure-section" id="curriculum">
+        
+        <!-- Dynamic Course Structure — auto-syncs from Course Builder -->
+        <section class="course-structure-section" id="curriculum"
+                 data-course-id="course-davinci-resolve"
+                 data-enroll-url="../../portal/index.html?enroll=course-davinci-resolve">
             <div class="cs-container">
+
                 <div class="cs-header">
                     <div class="cs-badge">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        Industry Standard • 8 MODULES • 14 SESSIONS
+                        <span id="cs-badge-text">Loading…</span>
                     </div>
                     <h2 class="cs-main-heading">Course <span class="cs-gold">Structure</span></h2>
-                    <p class="cs-subtitle">DaVinci Resolve Color Grading & Studio Finishing — High-level, step-by-step master curriculum designed with real project files, raw multi-cam footage, and industry production workflows.</p>
+                    <p class="cs-subtitle" id="cs-subtitle">Loading course curriculum…</p>
                 </div>
 
-                <div class="cs-stats-bar">
-                    <div class="cs-stat-item">
-                        <span class="cs-stat-val">8</span>
-                        <span class="cs-stat-label">Core Modules</span>
-                    </div>
-                    <div class="cs-stat-item">
-                        <span class="cs-stat-val">14+</span>
-                        <span class="cs-stat-label">Hands-on Lessons</span>
-                    </div>
-                    <div class="cs-stat-item">
-                        <span class="cs-stat-val">16 Hours</span>
-                        <span class="cs-stat-label">Total Duration</span>
-                    </div>
-                    <div class="cs-stat-item">
-                        <span class="cs-stat-val">100%</span>
-                        <span class="cs-stat-label">Project-Based Files</span>
-                    </div>
+                <div class="cs-stats-bar" id="cs-stats-bar">
+                    <div class="cs-stat-item"><span class="cs-stat-val" id="cs-stat-modules">—</span><span class="cs-stat-label">Core Modules</span></div>
+                    <div class="cs-stat-item"><span class="cs-stat-val" id="cs-stat-lessons">—</span><span class="cs-stat-label">Hands-on Lessons</span></div>
+                    <div class="cs-stat-item"><span class="cs-stat-val" id="cs-stat-duration">—</span><span class="cs-stat-label">Total Duration</span></div>
+                    <div class="cs-stat-item"><span class="cs-stat-val">100%</span><span class="cs-stat-label">Project-Based Files</span></div>
                 </div>
 
-                <div class="cs-modules-list">
-                    
-      <details class="cs-mod-card" open>
-        <summary class="cs-mod-summary">
-          <div class="cs-mod-left">
-            <span class="cs-mod-num">Module 01</span>
-            <div class="cs-mod-title-group">
-              <div class="cs-mod-title">Module 1: Color Science, RCM Color Management & Node Graphs</div>
-              <div class="cs-mod-meta">
-                <span>2 Detailed Lessons</span>
-                <span>•</span>
-                <span>2 Hours</span>
-              </div>
-            </div>
-          </div>
-          <div class="cs-mod-right">
-            
-            <span class="cs-chevron" aria-hidden="true">+</span>
-          </div>
-        </summary>
-        <div class="cs-mod-body">
-          <p class="cs-mod-desc"></p>
-          
-        <ul class="cs-lessons-list">
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">1.1 DaVinci YRGB Color Managed (RCM) vs ACES</span>
-                  <span class="cs-lesson-desc">Understand scene-referred color spaces, timeline color gamuts (DaVinci Wide Gamut), and output transforms for consistent color accuracy.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">18:40</span>
-              </div>
-            </li>
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">1.2 Fixed Node Tree Architecture for Cinematic Workflows</span>
-                  <span class="cs-lesson-desc">Build an organized node tree with dedicated nodes: Exposure, White Balance, Contrast, Skin Tones, Look LUT, and Film Grain.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">21:15</span>
-              </div>
-            </li>
-          
-        </ul>
-      
-        </div>
-      </details>
-    
-      <details class="cs-mod-card">
-        <summary class="cs-mod-summary">
-          <div class="cs-mod-left">
-            <span class="cs-mod-num">Module 02</span>
-            <div class="cs-mod-title-group">
-              <div class="cs-mod-title">Module 2: Primary Correction: Lift, Gamma, Gain & HDR Wheels</div>
-              <div class="cs-mod-meta">
-                <span>2 Detailed Lessons</span>
-                <span>•</span>
-                <span>2 Hours</span>
-              </div>
-            </div>
-          </div>
-          <div class="cs-mod-right">
-            
-            <span class="cs-chevron" aria-hidden="true">+</span>
-          </div>
-        </summary>
-        <div class="cs-mod-body">
-          <p class="cs-mod-desc"></p>
-          
-        <ul class="cs-lessons-list">
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">2.1 Primary Wheels, Offset & Reading Scopes Accurately</span>
-                  <span class="cs-lesson-desc">Use Waveform, RGB Parade, and Vectorscope to nail exposure, avoid crushed blacks, and recover highlight detail in bright dresses.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">22:30</span>
-              </div>
-            </li>
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">2.2 HDR Color Wheels: Zone-Based Precision Grading</span>
-                  <span class="cs-lesson-desc">Isolate specular highlights, lights, shadows, and darks without bleeding into surrounding image values.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">19:45</span>
-              </div>
-            </li>
-          
-        </ul>
-      
-        </div>
-      </details>
-    
-      <details class="cs-mod-card">
-        <summary class="cs-mod-summary">
-          <div class="cs-mod-left">
-            <span class="cs-mod-num">Module 03</span>
-            <div class="cs-mod-title-group">
-              <div class="cs-mod-title">Module 3: Multi-Camera Matching: Sony S-Log3, Canon C-Log3 & Panasonic</div>
-              <div class="cs-mod-meta">
-                <span>2 Detailed Lessons</span>
-                <span>•</span>
-                <span>2 Hours</span>
-              </div>
-            </div>
-          </div>
-          <div class="cs-mod-right">
-            
-            <span class="cs-chevron" aria-hidden="true">+</span>
-          </div>
-        </summary>
-        <div class="cs-mod-body">
-          <p class="cs-mod-desc"></p>
-          
-        <ul class="cs-lessons-list">
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">3.1 Color Space Transform (CST) from Log to Rec.709</span>
-                  <span class="cs-lesson-desc">Convert flat Log profiles to rich contrast Rec.709 with mathematical precision using CST nodes.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">24:10</span>
-              </div>
-            </li>
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">3.2 Matching Different Camera Colors Across Events</span>
-                  <span class="cs-lesson-desc">Match Sony cold greens with Canon warm skin tones so every angle looks shot on the exact same camera.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">26:50</span>
-              </div>
-            </li>
-          
-        </ul>
-      
-        </div>
-      </details>
-    
-      <details class="cs-mod-card">
-        <summary class="cs-mod-summary">
-          <div class="cs-mod-left">
-            <span class="cs-mod-num">Module 04</span>
-            <div class="cs-mod-title-group">
-              <div class="cs-mod-title">Module 4: Secondary Grading: Qualifiers, Power Windows & Skin Tones</div>
-              <div class="cs-mod-meta">
-                <span>2 Detailed Lessons</span>
-                <span>•</span>
-                <span>2 Hours</span>
-              </div>
-            </div>
-          </div>
-          <div class="cs-mod-right">
-            
-            <span class="cs-chevron" aria-hidden="true">+</span>
-          </div>
-        </summary>
-        <div class="cs-mod-body">
-          <p class="cs-mod-desc"></p>
-          
-        <ul class="cs-lessons-list">
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">4.1 3D Qualifiers & Tracking Power Windows</span>
-                  <span class="cs-lesson-desc">Selectively adjust bridal lehenga colors, jewelry shine, and groom sherwani textures with 3D tracking.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">20:15</span>
-              </div>
-            </li>
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">4.2 Aligning Skin Tones on the Vectorscope Skin Indicator</span>
-                  <span class="cs-lesson-desc">Align Indian bridal skin tones precisely along the vectorscope indicator line to ensure natural, healthy radiance.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">18:40</span>
-              </div>
-            </li>
-          
-        </ul>
-      
-        </div>
-      </details>
-    
-      <details class="cs-mod-card">
-        <summary class="cs-mod-summary">
-          <div class="cs-mod-left">
-            <span class="cs-mod-num">Module 05</span>
-            <div class="cs-mod-title-group">
-              <div class="cs-mod-title">Module 5: Hollywood Looks, Film Emulation & LUT Science</div>
-              <div class="cs-mod-meta">
-                <span>2 Detailed Lessons</span>
-                <span>•</span>
-                <span>2 Hours</span>
-              </div>
-            </div>
-          </div>
-          <div class="cs-mod-right">
-            
-            <span class="cs-chevron" aria-hidden="true">+</span>
-          </div>
-        </summary>
-        <div class="cs-mod-body">
-          <p class="cs-mod-desc"></p>
-          
-        <ul class="cs-lessons-list">
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">5.1 Kodak 2383 & Fuji 3513 Print Film Emulation</span>
-                  <span class="cs-lesson-desc">Recreate organic film halation, subtractive color saturation, and film grain for high-end cinematic wedding trailers.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">23:05</span>
-              </div>
-            </li>
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">5.2 Building & Exporting Custom 3D LUTs for Production</span>
-                  <span class="cs-lesson-desc">Create signature color looks and export 33-point / 65-point 3D LUTs for client monitors and camera displays.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">17:30</span>
-              </div>
-            </li>
-          
-        </ul>
-      
-        </div>
-      </details>
-    
-      <details class="cs-mod-card">
-        <summary class="cs-mod-summary">
-          <div class="cs-mod-left">
-            <span class="cs-mod-num">Module 06</span>
-            <div class="cs-mod-title-group">
-              <div class="cs-mod-title">Module 6: Fusion VFX Essentials for Wedding Filmmakers</div>
-              <div class="cs-mod-meta">
-                <span>2 Detailed Lessons</span>
-                <span>•</span>
-                <span>2 Hours</span>
-              </div>
-            </div>
-          </div>
-          <div class="cs-mod-right">
-            
-            <span class="cs-chevron" aria-hidden="true">+</span>
-          </div>
-        </summary>
-        <div class="cs-mod-body">
-          <p class="cs-mod-desc"></p>
-          
-        <ul class="cs-lessons-list">
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">6.1 3D Monogram Titles & Gold Metallic Shimmers</span>
-                  <span class="cs-lesson-desc">Create glowing 3D logo reveals and elegant wedding titles directly within DaVinci Resolve Fusion.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">19:20</span>
-              </div>
-            </li>
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">6.2 Clean Plate Object Removal & Sky Replacement</span>
-                  <span class="cs-lesson-desc">Erase stray mic cables, unwanted background guests, and replace overcast white skies with warm golden clouds.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">21:40</span>
-              </div>
-            </li>
-          
-        </ul>
-      
-        </div>
-      </details>
-    
-      <details class="cs-mod-card">
-        <summary class="cs-mod-summary">
-          <div class="cs-mod-left">
-            <span class="cs-mod-num">Module 07</span>
-            <div class="cs-mod-title-group">
-              <div class="cs-mod-title">Module 7: Fairlight Audio Mastering to Broadcast Standards</div>
-              <div class="cs-mod-meta">
-                <span>1 Detailed Lessons</span>
-                <span>•</span>
-                <span>2 Hours</span>
-              </div>
-            </div>
-          </div>
-          <div class="cs-mod-right">
-            
-            <span class="cs-chevron" aria-hidden="true">+</span>
-          </div>
-        </summary>
-        <div class="cs-mod-body">
-          <p class="cs-mod-desc"></p>
-          
-        <ul class="cs-lessons-list">
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">7.1 Fairlight Noise Reduction & Dialogue Leveler</span>
-                  <span class="cs-lesson-desc">Clean ambient drone hum and crowd noise with Fairlight voice isolation and multi-band dynamics.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">18:15</span>
-              </div>
-            </li>
-          
-        </ul>
-      
-        </div>
-      </details>
-    
-      <details class="cs-mod-card">
-        <summary class="cs-mod-summary">
-          <div class="cs-mod-left">
-            <span class="cs-mod-num">Module 08</span>
-            <div class="cs-mod-title-group">
-              <div class="cs-mod-title">Module 8: Full Wedding Film Capstone & Master ProRes Delivery</div>
-              <div class="cs-mod-meta">
-                <span>1 Detailed Lessons</span>
-                <span>•</span>
-                <span>2 Hours</span>
-              </div>
-            </div>
-          </div>
-          <div class="cs-mod-right">
-            
-            <span class="cs-chevron" aria-hidden="true">+</span>
-          </div>
-        </summary>
-        <div class="cs-mod-body">
-          <p class="cs-mod-desc"></p>
-          
-        <ul class="cs-lessons-list">
-          
-            <li class="cs-lesson-item">
-              <div class="cs-lesson-left">
-                <span class="cs-lesson-bullet"></span>
-                <div class="cs-lesson-details">
-                  <span class="cs-lesson-title">8.1 Full Wedding Grade Project Assembly & Delivery Settings</span>
-                  <span class="cs-lesson-desc">Render master archive ProRes 422HQ and YouTube 4K deliverables with custom metadata and chapters.</span>
-                </div>
-              </div>
-              <div class="cs-lesson-right">
-                
-                <span class="cs-lesson-dur">25:30</span>
-              </div>
-            </li>
-          
-        </ul>
-      
-        </div>
-      </details>
-    
+                <div class="cs-modules-list" id="cs-modules-list">
+                    <div class="cs-skeleton-card"></div>
+                    <div class="cs-skeleton-card"></div>
+                    <div class="cs-skeleton-card"></div>
                 </div>
 
-                <div class="cs-action-banner">
+                <div class="cs-action-banner" id="cs-action-banner" style="display:none;">
                     <div class="cs-action-content">
-                        <h3>Ready to Master this Complete Course Structure?</h3>
-                        <p>Get instant access to all 8 modules, project files, sound effects, LUTs, and lifetime community support.</p>
+                        <h3 id="cs-action-title">Ready to Master this Complete Course?</h3>
+                        <p>Get instant access to all modules, project files, and lifetime community support.</p>
                     </div>
-                    <a href="#pricing" class="cs-action-btn">Enroll In Course Now →</a>
+                    <a href="../../portal/index.html?enroll=course-davinci-resolve" class="cs-action-btn" id="cs-action-btn">Enroll In Course Now →</a>
                 </div>
+
             </div>
         </section>
+
+        <!-- Course Structure Dynamic Loader — reads courses.json directly -->
+        <script>
+        (function() {
+            var section = document.querySelector('.course-structure-section[data-course-id]');
+            if (!section) return;
+            var courseId  = section.dataset.courseId;
+            var enrollUrl = section.dataset.enrollUrl || '#';
+            var JSON_PATH = '../../data/courses.json';
+
+            function esc(s) {
+                return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            }
+            function parseDur(d) {
+                if (!d) return 0;
+                var p = d.split(':'); return parseInt(p[0]||0,10);
+            }
+            function buildModule(mod, index) {
+                var isFirst = index === 0;
+                var lessons = (mod.lessons || []).map(function(les) {
+                    var resIcon = (les.resources && les.resources.length) ? '<span class="cs-lesson-resource-tag" title="Includes downloadable resources">&#x1F4CE;</span>' : '';
+                    return '<li class="cs-lesson-item"><div class="cs-lesson-left"><span class="cs-lesson-bullet"></span><div class="cs-lesson-details"><span class="cs-lesson-title">' + esc(les.title) + '</span>' + (les.summary ? '<span class="cs-lesson-desc">' + esc(les.summary) + '</span>' : '') + '</div></div><div class="cs-lesson-right">' + resIcon + (les.duration ? '<span class="cs-lesson-dur">' + esc(les.duration) + '</span>' : '') + '</div></li>';
+                }).join('');
+                var numStr = String(index + 1).padStart(2, '0');
+                return '<details class="cs-mod-card"' + (isFirst ? ' open' : '') + '><summary class="cs-mod-summary"><div class="cs-mod-left"><span class="cs-mod-num">Module ' + numStr + '</span><div class="cs-mod-title-group"><div class="cs-mod-title">' + esc(mod.title) + '</div><div class="cs-mod-meta"><span>' + (mod.lessons||[]).length + ' Lesson' + ((mod.lessons||[]).length !== 1 ? 's' : '') + '</span></div></div></div><div class="cs-mod-right"><span class="cs-chevron" aria-hidden="true">+</span></div></summary><div class="cs-mod-body"><ul class="cs-lessons-list">' + lessons + '</ul></div></details>';
+            }
+            function render(course) {
+                var modules = course.modules || [];
+                var totalLessons = 0, totalMins = 0;
+                modules.forEach(function(m) {
+                    (m.lessons||[]).forEach(function(l) { totalLessons++; totalMins += parseDur(l.duration); });
+                });
+                var hrs = Math.floor(totalMins/60);
+                var durStr = course.duration || (hrs + ' Hour' + (hrs!==1?'s':''));
+                var b = document.getElementById('cs-badge-text');
+                var s = document.getElementById('cs-subtitle');
+                var m = document.getElementById('cs-stat-modules');
+                var l = document.getElementById('cs-stat-lessons');
+                var d = document.getElementById('cs-stat-duration');
+                var list = document.getElementById('cs-modules-list');
+                var banner = document.getElementById('cs-action-banner');
+                var at = document.getElementById('cs-action-title');
+                var ab = document.getElementById('cs-action-btn');
+                if (b) b.textContent = (course.badge ? course.badge + ' • ' : '') + modules.length + ' MODULES • ' + totalLessons + ' SESSIONS';
+                if (s) s.textContent = course.title + ' — ' + (course.subtitle || course.description || 'Comprehensive step-by-step curriculum.');
+                if (m) m.textContent = modules.length;
+                if (l) l.textContent = totalLessons + '+';
+                if (d) d.textContent = durStr;
+                if (list) list.innerHTML = modules.map(function(mod,i){ return buildModule(mod,i); }).join('');
+                if (banner) banner.style.display = '';
+                if (at) at.textContent = 'Ready to Master this Complete ' + course.title + '?';
+                if (ab) ab.href = enrollUrl;
+            }
+            function showError(msg) {
+                var el = document.getElementById('cs-modules-list');
+                if (el) el.innerHTML = '<p style="color:#94a3b8;text-align:center;padding:32px;font-size:14px;">' + esc(msg) + '</p>';
+            }
+                        var rendered = false;
+            // 1. Instant check from Course Builder localStorage
+            try {
+                var cached = localStorage.getItem('qaa_course_' + courseId);
+                if (cached) {
+                    var parsed = JSON.parse(cached);
+                    if (parsed && parsed.modules && parsed.modules.length) {
+                        render(parsed);
+                        rendered = true;
+                    }
+                }
+            } catch(e) {}
+
+            // 2. Try public PHP API endpoint (works live on server)
+            function tryApi() {
+                var apiUrl = '/api/lms.php?action=public-course-structure&id=' + encodeURIComponent(courseId);
+                return fetch(apiUrl)
+                    .then(function(r) { if (!r.ok) throw new Error('API ' + r.status); return r.json(); })
+                    .then(function(d) {
+                        if (d && d.ok && d.modules) {
+                            render(d);
+                            rendered = true;
+                            return true;
+                        }
+                        throw new Error((d && d.error) || 'API failed');
+                    });
+            }
+
+            // 3. Fallback to direct courses.json file
+            function tryStaticJson() {
+                return fetch(JSON_PATH + '?_=' + Date.now())
+                    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                    .then(function(all) {
+                        var list = Array.isArray(all) ? all : [];
+                        var course = null;
+                        for (var i = 0; i < list.length; i++) {
+                            if (list[i].id === courseId || list[i].slug === courseId) { course = list[i]; break; }
+                        }
+                        if (course && course.modules) {
+                            render(course);
+                            rendered = true;
+                            return true;
+                        }
+                        throw new Error('Course not found');
+                    });
+            }
+
+            tryApi()
+                .catch(function() { return tryStaticJson(); })
+                .catch(function(err) {
+                    if (!rendered) {
+                        showError('Unable to load curriculum. Please refresh the page.');
+                    }
+                });
+        })();
+        </script>
+
 
         <!-- Free Bonus Assets Box -->
         <section class="lp-section" id="bonuses">
@@ -1140,5 +831,26 @@
             </div>
         </div>
     </footer>
+<script>
+(function() {
+  var sticky = document.getElementById("mobileStickyCta");
+  if (sticky) {
+    var triggered = false;
+    function onScroll() {
+      if (window.scrollY > 350) { if (!triggered) { sticky.classList.add("lp-sticky-visible"); triggered = true; } }
+      else { if (triggered) { sticky.classList.remove("lp-sticky-visible"); triggered = false; } }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+  if ("IntersectionObserver" in window) {
+    var fadeEls = document.querySelectorAll(".lp-learn-card, .lp-review-card, .lp-rev-card, .lp-bonus-card, .lp-stat-item");
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { e.target.style.opacity = "1"; e.target.style.transform = "translateY(0)"; io.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    fadeEls.forEach(function(el) { el.style.opacity = "0"; el.style.transform = "translateY(22px)"; el.style.transition = "opacity 0.55s ease, transform 0.55s ease"; io.observe(el); });
+  }
+})();
+</script>
 </body>
 </html>

@@ -1,0 +1,634 @@
+/* ==========================================================================
+   Quick Art Academy — Premium Course Landing Page ENHANCEMENTS
+   Applied on top of course-landing.css for all online course pages
+   Goal: Maximum Visual Impact + Maximum Conversion Rate
+   ========================================================================== */
+
+/* 1. GOOGLE FONTS */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+
+body.landing-page-body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: radial-gradient(ellipse at 20% 0%, rgba(216,161,83,0.07) 0%, transparent 55%),
+              radial-gradient(ellipse at 80% 100%, rgba(99,102,241,0.06) 0%, transparent 55%),
+              #090a0d;
+}
+
+.lp-hero-title, .lp-sec-title, .lp-pricing-title {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+}
+
+/* 2. HERO BACKGROUND ORBS */
+.lp-hero {
+  background: radial-gradient(ellipse at 70% -10%, rgba(216,161,83,0.13) 0%, transparent 60%),
+              radial-gradient(ellipse at 5% 90%, rgba(99,102,241,0.08) 0%, transparent 55%);
+}
+.lp-hero::before, .lp-hero::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: orbFloat 8s ease-in-out infinite alternate;
+}
+.lp-hero::before {
+  width: 600px; height: 600px;
+  top: -200px; right: -150px;
+  background: radial-gradient(circle, rgba(216,161,83,0.10) 0%, transparent 70%);
+}
+.lp-hero::after {
+  width: 400px; height: 400px;
+  bottom: -100px; left: -100px;
+  background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
+  animation-delay: -4s;
+}
+@keyframes orbFloat {
+  from { transform: translateY(0px) scale(1); }
+  to   { transform: translateY(-30px) scale(1.05); }
+}
+
+/* 3. URGENCY BANNER */
+.lp-urgency-bar {
+  background: linear-gradient(90deg, #7c3aed 0%, #b8730a 50%, #7c3aed 100%);
+  background-size: 200% 100%;
+  animation: shimmerBg 4s linear infinite;
+  color: #fff;
+  text-align: center;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  position: relative;
+  z-index: 100;
+}
+.lp-urgency-pill {
+  background: rgba(0,0,0,0.25);
+  border-radius: 999px;
+  padding: 2px 10px;
+  margin: 0 6px;
+  font-size: 12px;
+}
+@keyframes shimmerBg {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* 4. HERO TITLE */
+.lp-hero-title {
+  font-size: 36px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em !important;
+}
+@media (min-width: 640px) { .lp-hero-title { font-size: 48px !important; } }
+@media (min-width: 1024px) { .lp-hero-title { font-size: 56px !important; } }
+
+/* Animated gold shimmer */
+.lp-hero-title span.gold, .lp-gold-text {
+  background: linear-gradient(90deg, #d8a153 0%, #f6d389 30%, #d8a153 60%, #f6d389 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: goldShimmer 3s linear infinite;
+}
+@keyframes goldShimmer {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* 5. BADGE PILL — PULSE */
+.lp-badge-pill {
+  background: rgba(216,161,83,0.14) !important;
+  border: 1px solid rgba(216,161,83,0.45) !important;
+  animation: pulseBorder 2.5s ease-in-out infinite;
+}
+@keyframes pulseBorder {
+  0%, 100% { border-color: rgba(216,161,83,0.45); box-shadow: 0 0 0 0 rgba(216,161,83,0.25); }
+  50%       { border-color: rgba(216,161,83,0.8);  box-shadow: 0 0 0 5px rgba(216,161,83,0); }
+}
+.lp-badge-hot {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border-radius: 999px;
+  font-size: 11px; font-weight: 700; color: #fff;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  animation: hotPulse 1.5s ease-in-out infinite;
+}
+@keyframes hotPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
+  50%       { box-shadow: 0 0 0 7px rgba(239,68,68,0); }
+}
+
+/* 6. PRIMARY BUTTON — ANIMATED SHINE + GLOW */
+.lp-btn-primary {
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 16px 32px !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  border-radius: 14px !important;
+  animation: btnPulseGlow 2.5s ease-in-out infinite;
+}
+.lp-btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+  animation: btnShine 2.5s ease-in-out infinite;
+}
+@keyframes btnShine {
+  0%       { left: -100%; }
+  50%, 100% { left: 150%; }
+}
+@keyframes btnPulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(216,161,83,0.4), 0 12px 28px -6px rgba(216,161,83,0.5); }
+  50%       { box-shadow: 0 0 0 10px rgba(216,161,83,0), 0 18px 36px -6px rgba(216,161,83,0.7); }
+}
+.lp-btn-primary:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+}
+
+/* 7. SECONDARY / WHATSAPP BUTTON */
+.lp-btn-secondary {
+  background: rgba(37,211,102,0.08) !important;
+  border: 1px solid rgba(37,211,102,0.3) !important;
+  color: #f1f5f9 !important;
+  font-weight: 700 !important;
+}
+.lp-btn-secondary:hover {
+  background: rgba(37,211,102,0.15) !important;
+  border-color: rgba(37,211,102,0.6) !important;
+  color: #4ade80 !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 8. HERO GUARANTEE STRIP */
+.lp-hero-guarantee {
+  background: rgba(255,255,255,0.03) !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  border-radius: 12px !important;
+  padding: 14px 18px !important;
+  gap: 20px !important;
+  font-size: 12.5px !important;
+}
+
+/* 9. MEDIA CARD — GLOW */
+.lp-media-card, .lp-preview-card {
+  box-shadow:
+    0 0 0 1px rgba(216,161,83,0.22),
+    0 30px 65px -10px rgba(0,0,0,0.75),
+    0 0 65px -20px rgba(216,161,83,0.3) !important;
+  border-color: rgba(216,161,83,0.28) !important;
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+.lp-media-card:hover, .lp-preview-card:hover {
+  box-shadow:
+    0 0 0 1px rgba(216,161,83,0.45),
+    0 35px 75px -10px rgba(0,0,0,0.85),
+    0 0 85px -15px rgba(216,161,83,0.45) !important;
+  transform: translateY(-5px);
+}
+.lp-play-badge {
+  animation: playRing 2.2s ease-in-out infinite;
+}
+@keyframes playRing {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(216,161,83,0.55), 0 0 30px rgba(216,161,83,0.25); }
+  50%       { box-shadow: 0 0 0 14px rgba(216,161,83,0), 0 0 45px rgba(216,161,83,0.45); }
+}
+.lp-discount-badge {
+  background: linear-gradient(135deg, #166534, #15803d) !important;
+  animation: greenPulse 2.2s ease-in-out infinite;
+}
+@keyframes greenPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+  50%       { box-shadow: 0 0 0 7px rgba(34,197,94,0); }
+}
+
+/* 10. STATS BAR */
+.lp-stats-bar {
+  background: linear-gradient(90deg, rgba(18,20,27,0.97) 0%, rgba(22,25,35,0.97) 100%) !important;
+  border-top: 1px solid rgba(216,161,83,0.18) !important;
+  border-bottom: 1px solid rgba(216,161,83,0.18) !important;
+  padding: 34px 0 !important;
+}
+.lp-stat-item { position: relative; padding: 10px 20px !important; }
+.lp-stat-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 15%; height: 70%;
+  width: 1px;
+  background: rgba(255,255,255,0.07);
+}
+.lp-stat-val {
+  font-size: 30px !important;
+  font-weight: 900 !important;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: linear-gradient(135deg, #d8a153, #f6d389) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+.lp-stat-label {
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.9px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+}
+
+/* 11. LEARN CARDS */
+.lp-learn-card {
+  background: linear-gradient(145deg, rgba(22,25,35,0.9) 0%, rgba(14,15,21,0.9) 100%) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  border-radius: 18px !important;
+  padding: 28px 24px !important;
+  position: relative;
+  overflow: hidden;
+}
+.lp-learn-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(216,161,83,0.06) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.lp-learn-card:hover {
+  border-color: rgba(216,161,83,0.5) !important;
+  transform: translateY(-6px) !important;
+  box-shadow: 0 22px 45px -10px rgba(0,0,0,0.65), 0 0 32px -10px rgba(216,161,83,0.22) !important;
+}
+.lp-learn-card:hover::before { opacity: 1; }
+.lp-card-icon, .lp-learn-icon {
+  width: 52px !important; height: 52px !important;
+  border-radius: 14px !important;
+  background: rgba(216,161,83,0.11) !important;
+  border: 1px solid rgba(216,161,83,0.32) !important;
+  font-size: 22px !important;
+  margin-bottom: 18px !important;
+  transition: all 0.3s ease;
+}
+.lp-learn-card:hover .lp-card-icon,
+.lp-learn-card:hover .lp-learn-icon {
+  background: rgba(216,161,83,0.22) !important;
+  transform: scale(1.1) rotate(-4deg);
+}
+
+/* 12. SECTION HEADING */
+.lp-sec-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 2.5px !important;
+}
+.lp-sec-tag::before {
+  content: '';
+  display: inline-block;
+  width: 22px; height: 2px;
+  background: var(--lp-gold);
+  border-radius: 1px;
+}
+.lp-sec-title {
+  font-size: 30px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.2 !important;
+}
+@media (min-width: 640px) { .lp-sec-title { font-size: 38px !important; } }
+.lp-sec-head { margin-bottom: 52px !important; }
+
+/* 13. BONUS CARDS */
+.lp-bonus-card {
+  background: linear-gradient(145deg, rgba(216,161,83,0.09) 0%, rgba(14,15,21,0.92) 100%) !important;
+  border: 1px solid rgba(216,161,83,0.32) !important;
+  border-radius: 18px !important;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.lp-bonus-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, #d8a153, transparent);
+}
+.lp-bonus-card:hover {
+  border-color: rgba(216,161,83,0.6) !important;
+  transform: translateY(-5px);
+  box-shadow: 0 18px 45px -10px rgba(216,161,83,0.28);
+}
+.lp-bonus-val {
+  display: inline-block !important;
+  background: rgba(34,197,94,0.1) !important;
+  color: #4ade80 !important;
+  border: 1px solid rgba(34,197,94,0.25) !important;
+  border-radius: 999px !important;
+  padding: 2px 10px !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.8px !important;
+}
+
+/* 14. REVIEW CARDS */
+.lp-review-card, .lp-rev-card {
+  background: linear-gradient(145deg, rgba(22,25,35,0.95) 0%, rgba(14,15,21,0.95) 100%) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  border-radius: 18px !important;
+  padding: 28px 24px !important;
+  position: relative; overflow: hidden;
+  transition: all 0.3s ease;
+}
+.lp-review-card::before, .lp-rev-card::before {
+  content: '"';
+  position: absolute; top: 12px; right: 20px;
+  font-size: 70px; line-height: 1;
+  color: rgba(216,161,83,0.07);
+  font-family: Georgia, serif; font-weight: 900;
+  pointer-events: none;
+}
+.lp-review-card:hover, .lp-rev-card:hover {
+  border-color: rgba(216,161,83,0.38) !important;
+  transform: translateY(-5px);
+  box-shadow: 0 18px 45px -10px rgba(0,0,0,0.55);
+}
+.lp-review-avatar, .lp-rev-avatar {
+  background: linear-gradient(135deg, #d8a153, #f6d389) !important;
+  color: #000 !important;
+  font-weight: 800 !important;
+  width: 44px !important; height: 44px !important;
+  font-size: 15px !important;
+}
+
+/* 15. PRICING BOX */
+.lp-pricing-box {
+  background: linear-gradient(160deg, #14161f 0%, #0e1017 100%) !important;
+  border: 2px solid rgba(216,161,83,0.65) !important;
+  border-radius: 24px !important;
+  padding: 44px 34px !important;
+  box-shadow:
+    0 0 0 1px rgba(216,161,83,0.1),
+    0 35px 75px -15px rgba(216,161,83,0.32),
+    inset 0 1px 0 rgba(255,255,255,0.05) !important;
+  position: relative; overflow: hidden;
+}
+.lp-pricing-box::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #d8a153, #f6d389, #d8a153);
+  background-size: 200% 100%;
+  animation: goldShimmer 2.5s linear infinite;
+}
+.lp-pricing-price {
+  font-size: 54px !important;
+  font-weight: 900 !important;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: linear-gradient(135deg, #d8a153, #f6d389) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  line-height: 1 !important;
+}
+.lp-pricing-btn {
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  padding: 19px 24px !important;
+  border-radius: 14px !important;
+  position: relative; overflow: hidden;
+}
+.lp-pricing-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+  animation: btnShine 2.2s ease-in-out infinite;
+}
+
+/* 16. FAQ */
+.lp-faq-item {
+  border-radius: 16px !important;
+  transition: all 0.22s ease;
+}
+.lp-faq-item[open] {
+  border-color: rgba(216,161,83,0.5) !important;
+  box-shadow: 0 8px 28px -6px rgba(216,161,83,0.18) !important;
+}
+.lp-faq-item[open] summary { color: #f6d389 !important; }
+.lp-faq-item summary { padding: 20px 24px !important; font-size: 15.5px !important; }
+.lp-faq-ans { padding: 0 24px 22px !important; font-size: 14.5px !important; line-height: 1.72 !important; }
+
+/* 17. MOBILE STICKY CTA */
+.lp-mobile-sticky {
+  background: rgba(10,11,15,0.97) !important;
+  backdrop-filter: blur(22px) !important;
+  border-top: 1px solid rgba(216,161,83,0.45) !important;
+  padding: 14px 18px !important;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.lp-mobile-sticky.lp-sticky-visible {
+  transform: translateY(0) !important;
+}
+.lp-sticky-price {
+  font-size: 21px !important;
+  font-weight: 900 !important;
+  background: linear-gradient(135deg, #d8a153, #f6d389) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+.lp-sticky-btn {
+  padding: 14px 22px !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  position: relative; overflow: hidden;
+  animation: btnPulseGlow 2.2s ease-in-out infinite;
+}
+.lp-sticky-btn::after {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: btnShine 2s ease-in-out 0.5s infinite;
+}
+
+/* 18. CURRICULUM MODULES */
+.lp-module, .lp-curriculum-mod {
+  border-radius: 16px !important;
+}
+.lp-module[open], .lp-curriculum-mod[open] {
+  border-color: rgba(216,161,83,0.52) !important;
+  box-shadow: 0 8px 28px -6px rgba(216,161,83,0.18) !important;
+}
+
+/* 19. SOCIAL PROOF STRIP */
+.lp-social-proof-strip {
+  background: linear-gradient(90deg, rgba(14,15,21,0.9), rgba(22,25,35,0.9), rgba(14,15,21,0.9));
+  border: 1px solid rgba(255,255,255,0.065);
+  border-radius: 14px;
+  padding: 16px 24px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 24px; flex-wrap: wrap;
+  margin: 0 0 28px;
+  font-size: 13px; color: #94a3b8;
+}
+.lp-social-proof-strip strong { color: #f6d389; }
+.lp-social-proof-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 7px rgba(34,197,94,0.7);
+  animation: liveDot 1.5s ease-in-out infinite;
+  display: inline-block;
+}
+@keyframes liveDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.65); }
+}
+
+/* 20. URGENCY / SEATS NOTICE */
+.lp-seats-notice {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(239,68,68,0.09);
+  border: 1px solid rgba(239,68,68,0.28);
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-size: 13px; font-weight: 700; color: #fca5a5;
+  margin-bottom: 16px;
+  animation: urgencyPulse 2.2s ease-in-out infinite;
+}
+.lp-seats-notice .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 9px rgba(239,68,68,0.8);
+  flex-shrink: 0;
+  animation: liveDot 1.2s ease-in-out infinite;
+}
+@keyframes urgencyPulse {
+  0%, 100% { border-color: rgba(239,68,68,0.28); }
+  50%       { border-color: rgba(239,68,68,0.55); }
+}
+
+/* 21. HIGHLIGHT PILLS */
+.lp-h-item, .lp-chip {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  border-radius: 10px !important;
+  padding: 7px 14px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  transition: all 0.22s ease;
+}
+.lp-h-item:hover, .lp-chip:hover {
+  background: rgba(216,161,83,0.09) !important;
+  border-color: rgba(216,161,83,0.32) !important;
+  color: #f6d389 !important;
+}
+
+/* 22. MOBILE */
+@media (max-width: 480px) {
+  .lp-btn-primary { width: 100% !important; padding: 17px 24px !important; justify-content: center !important; }
+  .lp-btn-secondary { width: 100% !important; padding: 15px 24px !important; justify-content: center !important; }
+  .lp-hero-guarantee { flex-direction: column !important; gap: 10px !important; padding: 14px !important; }
+  .lp-pricing-price { font-size: 44px !important; }
+  .lp-pricing-box { padding: 32px 20px !important; }
+  .lp-sec-title { font-size: 26px !important; }
+  .lp-stat-item:not(:last-child)::after { display: none; }
+}
+
+/* 23. MENTOR CARD */
+.lp-mentor-card {
+  border: 1px solid rgba(216,161,83,0.28) !important;
+  box-shadow: 0 20px 55px -10px rgba(0,0,0,0.55), 0 0 45px -15px rgba(216,161,83,0.22) !important;
+}
+.lp-mentor-role {
+  background: linear-gradient(90deg, #d8a153, #f6d389) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  letter-spacing: 1.5px !important;
+}
+
+/* 24. TRUST STRIP */
+.lp-trust-strip {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  margin-top: 16px;
+  font-size: 12.5px; color: #94a3b8;
+}
+.lp-trust-item { display: flex; align-items: center; gap: 6px; font-weight: 500; }
+
+/* 25. SECTION ALT */
+.lp-section-alt {
+  background: linear-gradient(180deg, rgba(255,255,255,0.013) 0%, rgba(255,255,255,0.02) 100%) !important;
+  border-top: 1px solid rgba(255,255,255,0.048) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.048) !important;
+}
+
+/* 26. PRICING GUARANTEE */
+.lp-pricing-guarantee {
+  display: flex; align-items: center; justify-content: center;
+  gap: 18px; flex-wrap: wrap;
+  margin-top: 18px; padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  font-size: 12px; color: #64748b;
+}
+.lp-pricing-guarantee span { display: flex; align-items: center; gap: 5px; font-weight: 500; }
+
+/* 27. LIVE COUNTER */
+.lp-live-counter {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 700; color: #4ade80;
+  background: rgba(34,197,94,0.09);
+  border: 1px solid rgba(34,197,94,0.22);
+  border-radius: 999px; padding: 4px 12px; margin-bottom: 14px;
+}
+.lp-live-counter .live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #22c55e; box-shadow: 0 0 7px rgba(34,197,94,0.9);
+  animation: liveDot 1s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Dynamic Course Structure — Skeleton Loading & Resource Tag
+   ========================================================================== */
+
+/* Skeleton loading cards */
+.cs-skeleton-card {
+  height: 68px;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.09) 50%,
+    rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.6s ease-in-out infinite;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 12px;
+}
+@keyframes skeletonShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Resource icon tag in lesson row */
+.cs-lesson-resource-tag {
+  font-size: 13px;
+  opacity: 0.7;
+  margin-right: 4px;
+  cursor: default;
+}
+
+/* Smooth fade-in when modules load */
+.cs-mod-card {
+  animation: fadeInUp 0.4s ease both;
+}

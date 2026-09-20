@@ -783,7 +783,73 @@ if ($action === 'my-courses' && $method === 'GET') {
     json_ok(['courses' => $result]);
 }
 
+// 5a. PUBLIC Course Structure for Landing Pages (no auth required)
+if ($action === 'public-course-structure' && $method === 'GET') {
+    $courseId = $_GET['id'] ?? $_GET['courseId'] ?? '';
+    if (!$courseId) json_err('Course ID required', 400);
+
+    // CORS: allow landing pages to call this
+    header('Access-Control-Allow-Origin: *');
+    header('Cache-Control: public, max-age=300'); // 5 min cache
+
+    $allCourses = load_courses();
+    $course = null;
+    foreach ($allCourses as $c) {
+        if ($c['id'] === $courseId || $c['slug'] === $courseId) {
+            $course = $c;
+            break;
+        }
+    }
+    if (!$course) json_err('Course not found', 404);
+
+    // Return only public-safe fields (no videoUrls, no student data)
+    $totalLessons = 0;
+    $totalDurationMins = 0;
+    $publicModules = [];
+
+    foreach (($course['modules'] ?? []) as $mod) {
+        $publicLessons = [];
+        foreach (($mod['lessons'] ?? []) as $les) {
+            $totalLessons++;
+            // Parse duration "MM:SS" -> minutes
+            if (!empty($les['duration'])) {
+                $parts = explode(':', $les['duration']);
+                $totalDurationMins += intval($parts[0]);
+            }
+            $publicLessons[] = [
+                'id'       => $les['id'],
+                'title'    => $les['title'],
+                'duration' => $les['duration'] ?? '',
+                'summary'  => $les['summary'] ?? '',
+                'hasResources' => !empty($les['resources']),
+            ];
+        }
+        $publicModules[] = [
+            'id'      => $mod['id'],
+            'title'   => $mod['title'],
+            'lessons' => $publicLessons,
+            'lessonCount' => count($publicLessons),
+        ];
+    }
+
+    $hours = floor($totalDurationMins / 60);
+    $mins  = $totalDurationMins % 60;
+
+    json_ok([
+        'courseId'      => $course['id'],
+        'title'         => $course['title'],
+        'subtitle'      => $course['subtitle'] ?? '',
+        'duration'      => $course['duration'] ?? ($hours . ' Hours ' . ($mins ? $mins . ' Mins' : '')),
+        'totalModules'  => count($publicModules),
+        'totalLessons'  => $totalLessons,
+        'totalDurationMins' => $totalDurationMins,
+        'badge'         => $course['badge'] ?? '',
+        'modules'       => $publicModules,
+    ]);
+}
+
 // 5. Course Details & Curriculum
+
 if ($action === 'course-details' && $method === 'GET') {
     $student = require_student();
     $courseId = $_GET['id'] ?? ($_GET['courseId'] ?? '');

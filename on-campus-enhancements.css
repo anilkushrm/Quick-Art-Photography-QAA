@@ -1723,5 +1723,30 @@ a[class*="bg-white\/10"]:hover {
     white-space: nowrap !important;
 }
 
+/* ====================================================================
+   MASTER CLASS PAGE — Mobile H1 Override
+   These rules MUST stay at the bottom (loaded after generic hero rules).
+   They downsize the headline on phone screens for readability.
+   ==================================================================== */
+@media (max-width: 480px) {
+    body:has(.qa-master-hero) main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1,
+    body:has(.qa-master-hero) .qa-master-hero-grid h1,
+    body:has(.qa-master-hero) .qa-master-hero h1 {
+        font-size: clamp(26px, 7.5vw, 36px) !important;
+        font-weight: 800 !important;
+        line-height: 1.12 !important;
+        letter-spacing: -0.025em !important;
+        text-wrap: balance !important;
+    }
+}
 
-
+@media (max-width: 375px) {
+    body:has(.qa-master-hero) main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1,
+    body:has(.qa-master-hero) .qa-master-hero-grid h1,
+    body:has(.qa-master-hero) .qa-master-hero h1 {
+        font-size: clamp(22px, 6.8vw, 30px) !important;
+        font-weight: 800 !important;
+        line-height: 1.14 !important;
+        letter-spacing: -0.02em !important;
+    }
+}

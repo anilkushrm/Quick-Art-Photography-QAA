@@ -20,9 +20,10 @@ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{line-height
 .qa-master-hero h1+p{line-height:1.65;font-weight:400;color:#d1d3d6}
 .qa-float-stack svg{display:block;width:23px;height:23px}
 @media(max-width:1023px){
- .qa-float-actions.qa-float-show-stack .qa-float-stack{right:20px;bottom:calc(94px + env(safe-area-inset-bottom));gap:10px}
- .qa-float-stack a{width:48px;height:48px;border-radius:50%;box-shadow:0 5px 16px #0002}
- main>.fixed.bottom-0{padding-bottom:env(safe-area-inset-bottom);background:#111}
+ .qa-float-stack,
+ .fixed.bottom-5.right-5{right:16px!important;bottom:calc(84px + env(safe-area-inset-bottom))!important;gap:10px!important;z-index:50!important}
+ .qa-float-stack a{width:48px!important;height:48px!important;border-radius:50%!important;box-shadow:0 5px 16px rgba(0,0,0,0.35)!important}
+ main>.fixed.bottom-0,#mobileStickyCta{padding-bottom:env(safe-area-inset-bottom);background:rgba(17,17,17,0.96)!important;z-index:45!important}
  .qa-footer{padding-bottom:calc(100px + env(safe-area-inset-bottom))}
 }
 @media(max-width:760px){
@@ -38,16 +39,16 @@ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{line-height
  .mc-mentor-stats>div>div:first-child{font-size:clamp(16px,4.3vw,23px);line-height:1.25;letter-spacing:-.03em;white-space:nowrap}
  .mc-mentor-stats>div>div:last-child{font-size:12px;line-height:1.45;margin-top:5px}
  main>section:not(.qa-master-hero){padding-top:44px;padding-bottom:44px}
- main>section.qa-master-hero{padding-top:30px;padding-bottom:44px}
- main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{font-family:'Outfit','Plus Jakarta Sans',sans-serif!important;font-size:clamp(38px,11.8vw,52px)!important;font-weight:900!important;line-height:1.04!important;letter-spacing:-.035em!important;overflow-wrap:normal;text-wrap:balance;margin-top:18px}
- .qa-master-hero h1 .qa-heading-gradient{display:block}
- .qa-master-hero h1+p{font-size:16px!important;line-height:1.65!important;margin-top:18px;max-width:40ch}
- .qa-master-hero .qa-price-row{gap:10px;flex-wrap:wrap;margin-top:22px}
- .qa-master-hero .qa-price-current{font-size:38px!important;line-height:1.15}
- .qa-master-hero .qa-price-original{font-size:17px}
- main>section.relative.bg-ink .qa-master-hero-grid{gap:28px!important}
- main>section.relative.bg-ink .qa-master-hero-grid>div:first-child>p{font-size:16px!important;line-height:1.65!important;margin-top:18px}
- main>section.relative.bg-ink .qa-master-hero-grid>div:last-child>div{padding:22px!important;border-radius:20px!important}
+ main>section.qa-master-hero{padding-top:24px;padding-bottom:36px}
+ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{font-family:'Outfit','Plus Jakarta Sans',sans-serif!important;font-size:clamp(24px,6.8vw,34px)!important;font-weight:800!important;line-height:1.15!important;letter-spacing:-.02em!important;overflow-wrap:normal;text-wrap:balance;margin-top:14px}
+ .qa-master-hero h1 .qa-heading-gradient{display:inline}
+ .qa-master-hero h1+p{font-size:15px!important;line-height:1.6!important;margin-top:14px!important;max-width:100%!important;color:rgba(255,255,255,0.85)!important}
+ .qa-master-hero .qa-price-row{gap:10px;flex-wrap:wrap;margin-top:18px}
+ .qa-master-hero .qa-price-current{font-size:36px!important;line-height:1.15}
+ .qa-master-hero .qa-price-original{font-size:16px}
+ main>section.relative.bg-ink .qa-master-hero-grid{gap:24px!important}
+ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child>p{font-size:15px!important;line-height:1.6!important;margin-top:14px!important}
+ main>section.relative.bg-ink .qa-master-hero-grid>div:last-child>div{padding:20px!important;border-radius:20px!important}
  .qa-master-hero .qa-enquiry p{font-size:14px;line-height:1.6}
  .mc-price-row strong{font-weight:900}
 }

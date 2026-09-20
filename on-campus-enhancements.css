@@ -1280,9 +1280,8 @@ a[class*="bg-white\/10"]:hover {
         padding-bottom: 48px !important;
     }
 
-    .qa-texture-hero,
-    .qa-topics-hero,
-    .qa-master-hero {
+    .qa-texture-hero:not(.qa-master-hero),
+    .qa-topics-hero {
         padding-top: 36px !important;
         padding-bottom: 44px !important;
     }

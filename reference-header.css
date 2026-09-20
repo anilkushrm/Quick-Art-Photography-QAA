@@ -109,11 +109,21 @@
   .ref-mega .ref-course{padding:16px;min-height:74px}
 }
 
-/* ── Homepage Hero Top Breathing Room (No touching fixed header) ── */
+/* ── Homepage & Masterclass Hero Top Breathing Room (No touching fixed header) ── */
 .ref-header ~ main .qa-home-hero{padding-top:116px !important}
+.ref-header ~ main .qa-master-hero{padding-top:124px !important}
+@media(max-width:1023px){
+  .ref-header ~ main .qa-master-hero{padding-top:104px !important}
+}
 @media(max-width:950px){.ref-header ~ main .qa-home-hero{padding-top:104px !important}}
+@media(max-width:760px){
+  .ref-header ~ main .qa-master-hero{padding-top:86px !important}
+}
 @media(max-width:600px){.ref-header ~ main .qa-home-hero{padding-top:98px !important}}
-@media(max-width:480px){.ref-header ~ main .qa-home-hero{padding-top:94px !important}}
+@media(max-width:480px){
+  .ref-header ~ main .qa-home-hero{padding-top:94px !important}
+  .ref-header ~ main .qa-master-hero{padding-top:82px !important}
+}
 
 /* ── Mobile Navigation Drawer Backdrop ── */
 body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}

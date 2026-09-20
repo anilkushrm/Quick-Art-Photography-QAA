@@ -1,7 +1,8 @@
 .qa-master-hero .qa-price-current{font-weight:950!important;letter-spacing:-.045em;color:#f1cd89;-webkit-text-stroke:.65px currentColor;text-shadow:0 1px 0 #fff2,0 0 14px #e5b96526}
 .qa-master-hero .qa-price-save{font-size:10px!important;line-height:1.3;padding:4px 7px!important;letter-spacing:.02em}
-/* A consistent hierarchy for the longer, approved course title. */
-main>section.qa-master-hero{padding-top:48px;padding-bottom:60px;min-height:0}
+.qa-breadcrumb{display:none!important}
+main>section.qa-master-hero,
+section.qa-master-hero{padding-top:124px!important;padding-bottom:64px!important;min-height:0}
 main>section.relative.bg-ink .qa-master-hero-grid{align-items:start;gap:40px!important}
 main>section.relative.bg-ink .qa-master-hero-grid>div{min-width:0}
 main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{font-size:clamp(46px,4.6vw,70px)!important;letter-spacing:-.025em;max-width:720px;margin:20px 0 0;text-align:left;text-wrap:balance}
@@ -24,6 +25,8 @@ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{line-height
 .qa-float-call:hover{background-color:#f59e0b!important;color:#000!important}
 .qa-float-call:hover svg{stroke:#000!important;color:#000!important}
 @media(max-width:1023px){
+ main>section.qa-master-hero,
+ section.qa-master-hero{padding-top:104px!important}
  .qa-float-stack,
  .fixed.bottom-5.right-5{right:16px!important;bottom:calc(84px + env(safe-area-inset-bottom))!important;gap:10px!important;z-index:50!important}
  .qa-float-stack a{width:48px!important;height:48px!important;border-radius:50%!important;box-shadow:0 5px 16px rgba(0,0,0,0.35)!important}
@@ -31,6 +34,15 @@ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{line-height
  .qa-footer{padding-bottom:calc(100px + env(safe-area-inset-bottom))}
 }
 @media(max-width:760px){
+ .qa-master-hero-grid > div:first-child > .inline-flex,
+ .qa-master-hero .inline-flex.glass-dark {
+   max-width: 100% !important;
+   font-size: clamp(10px, 3.1vw, 12px) !important;
+   padding: 5px 12px !important;
+   white-space: normal !important;
+   text-align: center !important;
+   box-sizing: border-box !important;
+ }
  .qa-master-hero .qa-countdown{text-align:center;margin-inline:auto}
  .qa-master-hero .qa-countdown p{justify-content:center;text-align:center}
  .qa-master-hero .qa-countdown-grid{justify-content:center;margin-inline:auto}
@@ -43,7 +55,8 @@ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{line-height
  .mc-mentor-stats>div>div:first-child{font-size:clamp(16px,4.3vw,23px);line-height:1.25;letter-spacing:-.03em;white-space:nowrap}
  .mc-mentor-stats>div>div:last-child{font-size:12px;line-height:1.45;margin-top:5px}
  main>section:not(.qa-master-hero){padding-top:44px;padding-bottom:44px}
- main>section.qa-master-hero{padding-top:24px;padding-bottom:36px}
+ main>section.qa-master-hero,
+ section.qa-master-hero{padding-top:86px!important;padding-bottom:36px!important}
  main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{font-family:'Outfit','Plus Jakarta Sans',sans-serif!important;font-size:clamp(24px,6.8vw,34px)!important;font-weight:800!important;line-height:1.15!important;letter-spacing:-.02em!important;overflow-wrap:normal;text-wrap:balance;margin-top:14px}
  .qa-master-hero h1 .qa-heading-gradient{display:inline}
  .qa-master-hero h1+p{font-size:15px!important;line-height:1.6!important;margin-top:14px!important;max-width:100%!important;color:rgba(255,255,255,0.85)!important}
@@ -55,4 +68,8 @@ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{line-height
  main>section.relative.bg-ink .qa-master-hero-grid>div:last-child>div{padding:20px!important;border-radius:20px!important}
  .qa-master-hero .qa-enquiry p{font-size:14px;line-height:1.6}
  .mc-price-row strong{font-weight:900}
+}
+@media(max-width:480px){
+ main>section.qa-master-hero,
+ section.qa-master-hero{padding-top:82px!important}
 }

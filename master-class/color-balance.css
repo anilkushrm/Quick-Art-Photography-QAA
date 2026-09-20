@@ -103,8 +103,8 @@ footer,
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 4px !important;
-    margin-top: 10px !important;
+    gap: 1px !important;
+    margin-top: 8px !important;
     width: 100% !important;
   }
   .qa-master-hero h1 .mc-mob-line1 {
@@ -115,17 +115,18 @@ footer,
     text-stroke: 0 !important;
     font-family: 'Outfit', 'Plus Jakarta Sans', var(--font-heading, "Inter", sans-serif) !important;
     font-size: clamp(30px, 9vw, 42px) !important;
-    line-height: 1.05 !important;
+    line-height: 1.0 !important;
     font-weight: 800 !important;
     letter-spacing: -0.02em !important;
     text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7) !important;
   }
   .qa-master-hero h1 .mc-mob-line2 {
     display: block !important;
-    font-size: clamp(22px, 6.8vw, 34px) !important;
-    line-height: 1.15 !important;
-    margin: 3px 0 !important;
-    white-space: normal !important;
+    white-space: nowrap !important;
+    font-size: clamp(24px, 7.6vw, 36px) !important;
+    line-height: 1.06 !important;
+    letter-spacing: -0.025em !important;
+    margin: 1px 0 !important;
   }
   .qa-master-hero h1 .mc-mob-line3 {
     display: block !important;
@@ -137,7 +138,7 @@ footer,
     filter: none !important;
     font-family: 'Outfit', 'Plus Jakarta Sans', var(--font-heading, "Inter", sans-serif) !important;
     font-size: clamp(30px, 9vw, 42px) !important;
-    line-height: 1.05 !important;
+    line-height: 1.0 !important;
     font-weight: 800 !important;
     letter-spacing: -0.02em !important;
     text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7) !important;

@@ -146,27 +146,40 @@ html, body {
   /* Footer mobile: single column */
   .qa-footer-grid {
     grid-template-columns: 1fr !important;
-    gap: 28px;
+    gap: 30px !important;
   }
   .qa-footer-brand-col { grid-column: 1 !important; }
-  .qa-footer h2 { font-size: 15px; margin-bottom: 12px; }
-  .qa-footer-grid > div > a:not(.qa-brand) { font-size: 13.5px; margin: 8px 0; }
+  .qa-footer h2,
+  .qa-footer h3,
+  .qa-footer .qa-footer-heading { font-size: 14.5px !important; margin-bottom: 12px !important; color: #f5c879 !important; }
+  .qa-footer-links-list a,
+  .qa-footer-grid > div > a:not(.qa-brand):not(.qa-contact-link) {
+    font-size: 13.5px !important;
+    min-height: 40px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 6px 0 !important;
+  }
 
   /* Footer base: stack vertically */
   .qa-footer-base {
     flex-direction: column !important;
-    gap: 12px;
-    text-align: center;
+    gap: 12px !important;
+    text-align: center !important;
   }
   .qa-footer-base-links {
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    font-size: 12px;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 8px 12px !important;
+    font-size: 12px !important;
   }
 
   /* Contact links in footer */
-  .qa-contact-link { font-size: 12.5px !important; padding: 7px 12px !important; }
+  .qa-contact-link {
+    font-size: 13px !important;
+    padding: 9px 14px !important;
+    min-height: 42px !important;
+  }
 }
 
 /* ============================================================

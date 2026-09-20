@@ -515,3 +515,175 @@ document.addEventListener('DOMContentLoaded', () => {
         initScrollAnimation();
     }
 })();
+
+/* =========================================================================
+   LIVE COURSE SYNC: Auto-sync prices, discounts, and posters from Course Builder
+   ========================================================================= */
+(function initLiveCourseSync() {
+    const runSync = () => {
+        const landingSection = document.querySelector('.course-structure-section[data-course-id]');
+        const isLandingPage = !!landingSection;
+        const isHubPage = !!document.querySelector('.hub-card');
+        if (!isLandingPage && !isHubPage) return;
+
+        function getRelativeRoot() {
+            const segs = window.location.pathname.replace(/^\/|\/(?:index\.html)?$/g, '').split('/').filter(Boolean);
+            return segs.length > 0 ? '../'.repeat(segs.length) : '';
+        }
+
+        function resolveAssetUrl(path) {
+            if (!path) return '';
+            if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('//') || path.startsWith('data:')) return path;
+            if (path.startsWith('/')) return path;
+            return getRelativeRoot() + path.replace(/^\.?\//, '');
+        }
+
+        function applyCourseToLanding(course) {
+            if (!course) return;
+
+            // 1. Sync Price & Discounts
+            if (course.price) {
+                const salePrice = Number(course.price);
+                const origPrice = Number(course.originalPrice || (salePrice * 2));
+                const curStr = '₹' + salePrice.toLocaleString('en-IN');
+                const origStr = '₹' + origPrice.toLocaleString('en-IN');
+                const savings = origPrice > salePrice ? (origPrice - salePrice) : 0;
+                const savingsStr = '₹' + savings.toLocaleString('en-IN');
+                const discountPct = origPrice > salePrice ? Math.round(((origPrice - salePrice) / origPrice) * 100) : 0;
+
+                // Price display elements
+                document.querySelectorAll('.lp-current-price, .lp-pricing-price').forEach(el => {
+                    el.textContent = curStr;
+                });
+                document.querySelectorAll('.lp-original-price, .lp-pricing-strike').forEach(el => {
+                    el.textContent = origStr;
+                });
+
+                // Sticky Mobile Bottom Bar
+                const stickyEl = document.querySelector('.lp-sticky-price');
+                if (stickyEl) {
+                    stickyEl.innerHTML = `${curStr} <span class="lp-sticky-orig">${origStr}</span>`;
+                }
+
+                // Discount Badge & Urgency Pills
+                if (discountPct > 0) {
+                    document.querySelectorAll('.lp-discount-badge').forEach(el => {
+                        el.textContent = `${discountPct}% OFF TODAY`;
+                    });
+                    document.querySelectorAll('.lp-urgency-pill').forEach(el => {
+                        el.textContent = `${discountPct}% OFF`;
+                    });
+                }
+
+                // Urgency Banner Savings
+                const urgencyBar = document.querySelector('.lp-urgency-bar');
+                if (urgencyBar && savings > 0) {
+                    urgencyBar.innerHTML = `🔥 सीमित समय ऑफर: <span class="lp-urgency-pill">${discountPct}% OFF</span> आज ही Enroll करें और ${savingsStr} बचाएं! <strong>ऑफर जल्द समाप्त होने वाला है।</strong>`;
+                }
+
+                // Pricing Tagline
+                const tagline = document.querySelector('.lp-pricing-tagline');
+                if (tagline && savings > 0) {
+                    tagline.textContent = `Save ${savingsStr} Today · Instant Classroom Activation`;
+                }
+
+                // Action Buttons with Price (e.g. "⚡ Enroll Now & Start Watching — ₹4,999")
+                document.querySelectorAll('.lp-btn-primary, .lp-pricing-btn, .lp-sticky-btn').forEach(btn => {
+                    if (btn.textContent.includes('₹')) {
+                        btn.innerHTML = btn.innerHTML.replace(/₹[\d,]+/g, curStr);
+                    }
+                });
+            }
+
+            // 2. Sync Poster / Thumbnail
+            if (course.thumbnail) {
+                const thumbUrl = resolveAssetUrl(course.thumbnail);
+                const mediaImg = document.querySelector('.lp-media-thumb img');
+                if (mediaImg && thumbUrl) {
+                    mediaImg.src = thumbUrl;
+                }
+            }
+        }
+
+        function applyCoursesToHub(coursesList) {
+            if (!Array.isArray(coursesList) || !coursesList.length) return;
+            const map = {};
+            coursesList.forEach(c => { if (c && c.id) map[c.id] = c; });
+
+            document.querySelectorAll('.hub-card').forEach(card => {
+                const enrollLink = card.querySelector('a.hub-btn-enroll[href*="enroll="]');
+                if (!enrollLink) return;
+                const match = enrollLink.href.match(/enroll=([^&#]+)/);
+                if (!match) return;
+                const cId = match[1];
+                const course = map[cId];
+                if (!course) return;
+
+                // Sync Thumbnail
+                if (course.thumbnail) {
+                    const img = card.querySelector('.hub-card-thumb-wrap img');
+                    if (img) img.src = resolveAssetUrl(course.thumbnail);
+                }
+
+                // Sync Price
+                if (course.price) {
+                    const salePrice = Number(course.price);
+                    const origPrice = Number(course.originalPrice || (salePrice * 2));
+                    const curPriceEl = card.querySelector('.hub-cur-price');
+                    const origPriceEl = card.querySelector('.hub-orig-price');
+                    const badgeEl = card.querySelector('.hub-discount-badge');
+
+                    if (curPriceEl) curPriceEl.textContent = '₹' + salePrice.toLocaleString('en-IN');
+                    if (origPriceEl) origPriceEl.textContent = '₹' + origPrice.toLocaleString('en-IN');
+                    if (badgeEl && origPrice > salePrice) {
+                        const discountPct = Math.round(((origPrice - salePrice) / origPrice) * 100);
+                        badgeEl.textContent = `${discountPct}% OFF`;
+                    }
+                }
+
+                // Sync Title
+                if (course.title) {
+                    const titleEl = card.querySelector('.hub-card-title');
+                    if (titleEl) titleEl.textContent = course.title;
+                }
+            });
+        }
+
+        const courseId = landingSection ? landingSection.dataset.courseId : null;
+
+        // 1. Instant check from localStorage
+        if (courseId) {
+            try {
+                const cached = localStorage.getItem('qaa_course_' + courseId);
+                if (cached) applyCourseToLanding(JSON.parse(cached));
+            } catch (_) {}
+        } else if (isHubPage) {
+            try {
+                const localList = JSON.parse(localStorage.getItem('qaa_local_courses') || '[]');
+                if (localList.length) applyCoursesToHub(localList);
+            } catch (_) {}
+        }
+
+        // 2. Fetch live data from courses.json
+        const jsonPath = resolveAssetUrl('data/courses.json') + '?_=' + Date.now();
+        fetch(jsonPath)
+            .then(res => { if (!res.ok) throw new Error(res.statusText); return res.json(); })
+            .then(courses => {
+                if (!Array.isArray(courses)) return;
+                if (courseId) {
+                    const found = courses.find(c => c.id === courseId || c.slug === courseId);
+                    if (found) applyCourseToLanding(found);
+                }
+                if (isHubPage) {
+                    applyCoursesToHub(courses);
+                }
+            })
+            .catch(err => console.debug('Live course sync fetch notice:', err));
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', runSync);
+    } else {
+        runSync();
+    }
+})();

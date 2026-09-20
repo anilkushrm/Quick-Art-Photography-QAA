@@ -797,14 +797,46 @@ if ($action === 'upload-resource' && $method === 'POST') {
         json_err('Failed to save uploaded file to disk', 500);
     }
 
-    $bytes = filesize($dest);
-    $sizeFormatted = $bytes > 1048576 ? round($bytes / 1048576, 1) . ' MB' : round($bytes / 1024, 1) . ' KB';
-
     json_ok([
         'url'  => '/uploads/practice-files/' . $finalName,
         'name' => $origName,
         'size' => $sizeFormatted,
         'type' => $ext
+    ]);
+}
+
+// 19. Upload Course Thumbnail / Poster Image
+if ($action === 'upload-thumbnail' && $method === 'POST') {
+    if (empty($_FILES['file'])) {
+        json_err('No image file uploaded', 400);
+    }
+    $file = $_FILES['file'];
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        json_err('Upload error code: ' . $file['error'], 400);
+    }
+
+    $uploadDir = __DIR__ . '/../uploads/thumbnails';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    $origName = basename($file['name']);
+    $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+    $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+    if (!in_array($ext, $allowed)) {
+        json_err('Invalid image format. Allowed: JPG, PNG, WEBP', 400);
+    }
+
+    $finalName = 'thumb_' . substr(md5(uniqid()), 0, 8) . '.' . $ext;
+    $dest = $uploadDir . '/' . $finalName;
+
+    if (!move_uploaded_file($file['tmp_name'], $dest)) {
+        json_err('Failed to save uploaded image to disk', 500);
+    }
+
+    json_ok([
+        'url'  => 'uploads/thumbnails/' . $finalName,
+        'name' => $origName
     ]);
 }
 

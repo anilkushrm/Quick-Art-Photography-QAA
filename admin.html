@@ -776,9 +776,15 @@
                 <input type="number" id="courseOrigPriceInput" placeholder="9999" value="9999" oninput="updatePriceDiscountPreview()" />
               </div>
               <div>
-                <label>Thumbnail Path / URL</label>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                  <label style="margin:0">Thumbnail / Poster Image</label>
+                  <label for="courseThumbFileInput" class="btn-sm btn-outline" style="cursor:pointer;font-size:11px;padding:3px 10px;color:var(--gold);border-color:rgba(216,161,83,0.4);display:inline-flex;align-items:center;gap:4px">
+                    📸 <span id="btnUploadThumbText">Upload Image</span>
+                  </label>
+                  <input type="file" id="courseThumbFileInput" accept="image/jpeg,image/png,image/webp,image/jpg" style="display:none" onchange="uploadCourseThumbnailFile(this)">
+                </div>
                 <div style="display:flex;gap:10px;align-items:center">
-                  <input type="text" id="courseThumbInput" placeholder="assets/premiere-pro-hero-640.webp" oninput="updateThumbPreview()" style="flex:1" />
+                  <input type="text" id="courseThumbInput" placeholder="assets/premiere-pro-hero-640.webp or upload above" oninput="updateThumbPreview()" style="flex:1" />
                   <div id="courseThumbPreviewBox" style="width:52px;height:38px;background:#090d16;border:1px solid rgba(255,255,255,0.1);border-radius:8px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center">
                     <img id="courseThumbPreviewImg" src="assets/premiere-pro-hero-640.webp" style="width:100%;height:100%;object-fit:cover" onerror="this.src='https://customer-assets-lxgj4vgw.emergentagent.net/job_art-academy-demo/artifacts/pj82qe8v_Logo.webp'" />
                   </div>
@@ -3316,6 +3322,40 @@ function updateThumbPreview() {
   const img = document.getElementById('courseThumbPreviewImg');
   if (input && img) {
     img.src = input.value.trim() || 'assets/premiere-pro-hero-640.webp';
+  }
+}
+
+async function uploadCourseThumbnailFile(inputEl) {
+  if (!inputEl.files || !inputEl.files[0]) return;
+  const file = inputEl.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const labelText = document.getElementById('btnUploadThumbText');
+  const oldText = labelText ? labelText.textContent : 'Upload Image';
+  if (labelText) labelText.textContent = 'Uploading…';
+  toast('Uploading poster image: ' + file.name + '…');
+
+  try {
+    const res = await fetch(`${API_HOST}api/lms-admin.php?action=upload-thumbnail`, {
+      method: 'POST',
+      headers: {
+        'X-Admin-Token': token || '',
+        'X-Admin-Pass': token || ''
+      },
+      body: formData
+    });
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.error || 'Upload failed');
+    
+    document.getElementById('courseThumbInput').value = data.url;
+    updateThumbPreview();
+    toast('✅ Poster / Thumbnail uploaded successfully!', true);
+  } catch (e) {
+    toast('❌ Upload failed: ' + e.message, false);
+  } finally {
+    if (labelText) labelText.textContent = oldText;
+    inputEl.value = '';
   }
 }
 

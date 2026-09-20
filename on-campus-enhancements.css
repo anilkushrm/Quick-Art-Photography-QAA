@@ -213,6 +213,15 @@ section.qa-section h4,
 }
 
 /* Universal high-contrast text fix for obsidian dark backgrounds */
+main > section p,
+section.qa-section p,
+.qa-intro,
+.qa-week > div p,
+main > section .text-slate-200 {
+    color: #e2e8f0 !important;
+    line-height: 1.68 !important;
+}
+
 main > section [class*="text-black/"],
 main > section .text-black,
 section.qa-section [class*="text-black/"],
@@ -221,7 +230,15 @@ section.qa-section .text-black,
 .qa-master-hero [class*="text-black/"],
 .mc-mentor-stats [class*="text-black/"],
 #testimonials [class*="text-black/"],
-#book [class*="text-black/"] {
+#book [class*="text-black/"],
+.text-white\/70,
+.text-white\/80 {
+    color: #cbd5e1 !important;
+}
+
+.text-white\/50,
+.text-white\/55,
+.text-white\/60 {
     color: #94a3b8 !important;
 }
 
@@ -238,14 +255,14 @@ section.qa-section .text-black,
 
 /* Universal Intro paragraph readable color */
 .qa-intro {
-    color: #94a3b8 !important;
-    font-size: 16px !important;
-    line-height: 1.65 !important;
+    color: #e2e8f0 !important;
+    font-size: 16.5px !important;
+    line-height: 1.7 !important;
 }
 
 .qa-intro a {
     color: #f5c879 !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
     text-decoration: underline !important;
     transition: color 0.2s ease;
 }
@@ -532,12 +549,21 @@ section.qa-section .text-black,
 }
 
 /* ── Tools & Career Outcomes Section ── */
+.grid.md\:grid-cols-2 > div:first-child,
+.grid.md\:grid-cols-2 > div.bg-ink {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    height: 100% !important;
+}
+
 .grid.md\:grid-cols-2 > div:first-child {
-    background: linear-gradient(135deg, rgba(24, 28, 42, 0.9), rgba(13, 16, 25, 0.98)) !important;
-    border: 1px solid rgba(216, 161, 83, 0.22) !important;
+    background: radial-gradient(ellipse at top left, rgba(216, 161, 83, 0.15), transparent 60%),
+                linear-gradient(135deg, rgba(24, 28, 42, 0.95), rgba(13, 16, 25, 0.98)) !important;
+    border: 1px solid rgba(216, 161, 83, 0.28) !important;
     border-radius: 24px !important;
     padding: 32px !important;
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35) !important;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.45) !important;
 }
 
 .grid.md\:grid-cols-2 > div:first-child h3 {

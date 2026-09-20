@@ -323,5 +323,20 @@
       closeAll();
       closeMobile();
     });
+
+    // Dynamic header style on scroll (transitions from dark hero header to frosted light-glass over light page backgrounds)
+    let scrollTicking = false;
+    function updateHeaderScroll() {
+      const scrolled = (window.pageYOffset || document.documentElement.scrollTop || window.scrollY || 0) > 20;
+      header.classList.toggle('ref-scrolled', scrolled);
+      scrollTicking = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        window.requestAnimationFrame(updateHeaderScroll);
+        scrollTicking = true;
+      }
+    }, { passive: true });
+    updateHeaderScroll();
   }
 })();

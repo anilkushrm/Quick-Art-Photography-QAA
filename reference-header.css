@@ -531,3 +531,157 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
 @keyframes ref-drawer-in{from{transform:translateX(-100%)}to{transform:translateX(0)}}
 @media(prefers-reduced-motion:reduce){.ref-header .ref-mobile{animation:none}}
 
+/* ============================================================
+   SMOOTH TRANSITIONS FOR HEADER ELEMENTS
+   ============================================================ */
+.ref-header,
+.ref-header .ref-bar,
+.ref-header .ref-brand,
+.ref-header .ref-brand > span,
+.ref-header .ref-brand b,
+.ref-header .ref-brand small,
+.ref-header .ref-mobile-programs,
+.ref-header .ref-mobile-programs span,
+.ref-header .ref-programs-arrow,
+.ref-header .ref-mobile-login,
+.ref-header .ref-mobile-login svg,
+.ref-header .ref-nav > a,
+.ref-header .ref-toggle,
+.ref-header .ref-login {
+  transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.25s ease,
+              border-color 0.25s ease,
+              box-shadow 0.3s ease,
+              backdrop-filter 0.3s ease,
+              -webkit-backdrop-filter 0.3s ease,
+              padding 0.25s ease,
+              min-height 0.25s ease,
+              transform 0.2s ease !important;
+}
+
+/* ============================================================
+   SCROLLED HEADER: LUXURY FROSTED GLASS OVER LIGHT BACKGROUNDS
+   ============================================================ */
+.ref-header.ref-scrolled {
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 0 rgba(216, 161, 83, 0.28) !important;
+  color: #111114 !important;
+}
+
+.ref-header.ref-scrolled .ref-bar {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Brand text shifts from white/pale-gold to rich dark/amber */
+.ref-header.ref-scrolled .ref-brand {
+  color: #111114 !important;
+}
+.ref-header.ref-scrolled .ref-brand b {
+  color: #c5903b !important;
+}
+.ref-header.ref-scrolled .ref-brand small {
+  color: #64748b !important;
+  font-weight: 600 !important;
+}
+
+/* Mobile Scrolled Controls (< 1150px) */
+@media(max-width: 1150px) {
+  .ref-header.ref-scrolled .ref-bar {
+    padding: 6px 14px !important;
+    min-height: 52px !important;
+    background: transparent !important;
+    border-bottom: 1px solid rgba(216, 161, 83, 0.22) !important;
+  }
+
+  /* "Programs ▾" button: warm luxury ivory-gold pill */
+  .ref-header.ref-scrolled .ref-mobile-programs {
+    background: #fff8eb !important;
+    border: 1.5px solid #d8a153 !important;
+    color: #18130b !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 8px rgba(216, 161, 83, 0.18) !important;
+  }
+  .ref-header.ref-scrolled .ref-mobile-programs:hover,
+  .ref-header.ref-scrolled .ref-mobile-programs:active {
+    background: rgba(216, 161, 83, 0.25) !important;
+    border-color: #b9802d !important;
+    color: #000000 !important;
+  }
+  .ref-header.ref-scrolled .ref-mobile-programs .ref-programs-arrow {
+    stroke: #8c5f20 !important;
+  }
+
+  /* When drawer is open while scrolled */
+  .ref-header.ref-scrolled .ref-mobile-programs[aria-expanded="true"] {
+    background: linear-gradient(110deg, #f3d695, #d8a447) !important;
+    border-color: #d8a153 !important;
+    color: #17120b !important;
+  }
+  .ref-header.ref-scrolled .ref-mobile-programs[aria-expanded="true"] .ref-programs-arrow {
+    stroke: #17120b !important;
+  }
+
+  /* Login Icon Button: clean white card with crisp gold border */
+  .ref-header.ref-scrolled .ref-mobile-login {
+    background: #ffffff !important;
+    border: 1.5px solid rgba(216, 161, 83, 0.6) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    color: #8c5f20 !important;
+  }
+  .ref-header.ref-scrolled .ref-mobile-login svg {
+    stroke: #8c5f20 !important;
+  }
+  .ref-header.ref-scrolled .ref-mobile-login:hover,
+  .ref-header.ref-scrolled .ref-mobile-login:active {
+    background: #fff8eb !important;
+    border-color: #b9802d !important;
+    transform: translateY(-1px) !important;
+  }
+  .ref-header.ref-scrolled .ref-mobile-login:hover svg,
+  .ref-header.ref-scrolled .ref-mobile-login:active svg {
+    stroke: #b9802d !important;
+  }
+}
+
+/* Desktop Scrolled Controls (>= 1151px) */
+@media(min-width: 1151px) {
+  .ref-header.ref-scrolled .ref-bar {
+    padding: 8px 28px !important;
+    min-height: 58px !important;
+    background: transparent !important;
+  }
+  .ref-header.ref-scrolled .ref-nav > a,
+  .ref-header.ref-scrolled .ref-toggle {
+    color: #1e293b !important;
+  }
+  .ref-header.ref-scrolled .ref-nav > a:hover,
+  .ref-header.ref-scrolled .ref-toggle:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+  .ref-header.ref-scrolled .ref-nav .ref-toggle[aria-controls="ref-online"],
+  .ref-header.ref-scrolled .ref-nav > .ref-dropdown:first-child > .ref-toggle {
+    border-color: rgba(216, 161, 83, 0.55) !important;
+    background: rgba(216, 161, 83, 0.1) !important;
+    color: #17120b !important;
+  }
+  .ref-header.ref-scrolled .ref-nav .ref-toggle[aria-controls="ref-online"]:hover,
+  .ref-header.ref-scrolled .ref-nav > .ref-dropdown:first-child > .ref-toggle:hover {
+    background: rgba(216, 161, 83, 0.2) !important;
+  }
+  .ref-header.ref-scrolled .ref-login {
+    color: #8c5f20 !important;
+    border-color: #b9955d !important;
+    background: #fff8eb !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+  }
+  .ref-header.ref-scrolled .ref-login:hover {
+    background: #111114 !important;
+    color: #ffffff !important;
+    border-color: #111114 !important;
+  }
+}
+
+

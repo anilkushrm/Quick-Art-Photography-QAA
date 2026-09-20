@@ -203,27 +203,69 @@ main > section h1,
 main > section h2,
 main > section h3,
 main > section h4,
+main > section h5,
+section.qa-section h1,
+section.qa-section h2,
+section.qa-section h3,
+section.qa-section h4,
 .text-ink {
     color: #ffffff !important;
 }
 
-main > section p.text-black\/60,
-main > section p.text-black\/70,
-main > section .text-black\/55,
-main > section .text-black\/60,
-main > section .text-black\/70 {
+/* Universal high-contrast text fix for obsidian dark backgrounds */
+main > section [class*="text-black/"],
+main > section .text-black,
+section.qa-section [class*="text-black/"],
+section.qa-section .text-black,
+.qa-topics-page [class*="text-black/"],
+.qa-master-hero [class*="text-black/"],
+.mc-mentor-stats [class*="text-black/"],
+#testimonials [class*="text-black/"],
+#book [class*="text-black/"] {
     color: #94a3b8 !important;
 }
 
-/* ── "What You'll Master" Highlight Cards ── */
+/* Universal Kicker & Eyebrows gold color */
+.qa-kicker,
+.qa-eyebrow,
+.mc-bonus-kicker,
+.mc-reviews-kicker {
+    color: #d8a153 !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.18em !important;
+    font-size: 11.5px !important;
+}
+
+/* Universal Intro paragraph readable color */
+.qa-intro {
+    color: #94a3b8 !important;
+    font-size: 16px !important;
+    line-height: 1.65 !important;
+}
+
+.qa-intro a {
+    color: #f5c879 !important;
+    font-weight: 600 !important;
+    text-decoration: underline !important;
+    transition: color 0.2s ease;
+}
+
+.qa-intro a:hover {
+    color: #ffffff !important;
+}
+
+/* ── "What You'll Master", Mentor Stats, Roadmaps & All Feature Cards ── */
 .lg\:col-span-2 > .flex.items-start,
 .qa-highlight-card,
 .group.relative.rounded-3xl.bg-white,
 .rounded-3xl.bg-white,
 .rounded-2xl.bg-white,
-.rounded-3xl.p-6.bg-\[\#FAFAFA\] {
-    background: linear-gradient(135deg, rgba(24, 28, 42, 0.88), rgba(13, 16, 25, 0.96)) !important;
-    border: 1px solid rgba(216, 161, 83, 0.2) !important;
+.rounded-3xl.p-6.bg-\[\#FAFAFA\],
+.rounded-2xl.bg-\[\#FAFAFA\],
+.mc-mentor-stats > div,
+.qa-road-card {
+    background: linear-gradient(135deg, rgba(22, 26, 38, 0.9), rgba(12, 14, 22, 0.98)) !important;
+    border: 1px solid rgba(216, 161, 83, 0.22) !important;
     border-radius: 20px !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35) !important;
     transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -233,10 +275,50 @@ main > section .text-black\/70 {
 .qa-highlight-card:hover,
 .group.relative.rounded-3xl.bg-white:hover,
 .rounded-3xl.bg-white:hover,
-.rounded-2xl.bg-white:hover {
+.rounded-2xl.bg-white:hover,
+.mc-mentor-stats > div:hover,
+.qa-road-card:hover {
     transform: translateY(-3px) !important;
     border-color: rgba(216, 161, 83, 0.48) !important;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 25px rgba(216, 161, 83, 0.15) !important;
+}
+
+/* ── AI Wedding Filmmaking Roadmap Cards ── */
+.qa-road-card {
+    padding: 26px !important;
+}
+
+.qa-road-card h3 {
+    color: #ffffff !important;
+    font-size: 19px !important;
+    font-weight: 700 !important;
+    margin-bottom: 14px !important;
+}
+
+.qa-road-card ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+}
+
+.qa-road-card li {
+    position: relative !important;
+    padding-left: 20px !important;
+    color: #94a3b8 !important;
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+}
+
+.qa-road-card li::before {
+    content: '•' !important;
+    position: absolute !important;
+    left: 2px !important;
+    top: -1px !important;
+    color: #d8a153 !important;
+    font-size: 18px !important;
 }
 
 .lg\:col-span-2 > .flex.items-start .text-ink,
@@ -913,41 +995,409 @@ a[class*="bg-white\/10"]:hover {
     transform: translateY(-2px) !important;
 }
 
-/* ── Mobile Polish (≤ 768px) ── */
+/* ── #book Lead Generation Card & Form Fix ── */
+#book .rounded-3xl.bg-white {
+    background: linear-gradient(135deg, rgba(20, 24, 35, 0.96), rgba(11, 13, 20, 0.99)) !important;
+    border: 1px solid rgba(216, 161, 83, 0.3) !important;
+    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.7), 0 0 35px rgba(216, 161, 83, 0.12) !important;
+    color: #f1f5f9 !important;
+}
+
+#book .text-ink {
+    color: #ffffff !important;
+}
+
+#book .text-black\/55 {
+    color: #94a3b8 !important;
+}
+
+#book form.qa-enquiry .qa-field label {
+    display: block !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #f1f5f9 !important;
+    margin-bottom: 6px !important;
+}
+
+#book form.qa-enquiry :is(input, select, textarea) {
+    width: 100% !important;
+    height: 48px !important;
+    padding: 0 14px !important;
+    font-size: 14.5px !important;
+    color: #ffffff !important;
+    background: #090a0f !important;
+    border: 1px solid rgba(216, 161, 83, 0.22) !important;
+    border-radius: 12px !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#book form.qa-enquiry textarea {
+    height: auto !important;
+    min-height: 80px !important;
+    padding: 12px 14px !important;
+}
+
+#book form.qa-enquiry :is(input, select, textarea):focus {
+    border-color: #d8a153 !important;
+    box-shadow: 0 0 0 3px rgba(216, 161, 83, 0.25) !important;
+    outline: none !important;
+}
+
+#book form.qa-enquiry label.qa-consent {
+    color: #94a3b8 !important;
+    font-size: 12.5px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+}
+
+/* ==========================================================================
+   COMPREHENSIVE ON-CAMPUS MOBILE RESPONSIVENESS (≤ 768px & ≤ 480px)
+   ========================================================================== */
+
 @media (max-width: 768px) {
-    .qa-texture-hero {
-        padding-top: 40px !important;
-        padding-bottom: 50px !important;
+    /* Section Pacing & Breathing Room */
+    main > section,
+    section.qa-section,
+    section.qa-section#curriculum,
+    section.qa-section.qa-light,
+    section.course-structure-section,
+    section.mc-bonuses,
+    section.mc-reviews,
+    section.bg-\[\#FAFAFA\],
+    section.bg-white {
+        padding-top: 48px !important;
+        padding-bottom: 48px !important;
     }
 
+    .qa-texture-hero,
+    .qa-topics-hero,
+    .qa-master-hero {
+        padding-top: 36px !important;
+        padding-bottom: 44px !important;
+    }
+
+    /* Typography Scale */
     .qa-texture-hero h1,
-    .qa-topics-hero h1 {
-        font-size: clamp(2rem, 8vw, 3rem) !important;
-        line-height: 1.08 !important;
+    .qa-topics-hero h1,
+    .qa-master-hero h1 {
+        font-size: clamp(28px, 7.5vw, 40px) !important;
+        line-height: 1.12 !important;
+        letter-spacing: -0.025em !important;
     }
 
+    main > section h2,
+    section.qa-section h2,
+    .qa-topics-feedback h2,
+    .course-structure-section h2,
+    .mc-bonus-intro h2,
+    .mc-reviews-heading h2 {
+        font-size: clamp(24px, 6vw, 32px) !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.02em !important;
+    }
+
+    main > section h3,
+    section.qa-section h3 {
+        font-size: clamp(20px, 5vw, 25px) !important;
+        line-height: 1.25 !important;
+    }
+
+    .qa-texture-hero p,
+    .qa-topics-hero p {
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+    }
+
+    /* Hero Buttons — Full-Width Tap Friendly */
+    .qa-texture-hero .flex.flex-wrap.gap-3,
+    .qa-topics-hero .flex.flex-wrap.gap-3,
+    .qa-master-hero .flex.flex-wrap.gap-3 {
+        flex-direction: column !important;
+        gap: 10px !important;
+        width: 100% !important;
+    }
+
+    .qa-texture-hero .lp-btn-primary,
+    .qa-texture-hero .lp-btn-secondary,
+    .qa-topics-hero .lp-btn-primary,
+    .qa-topics-hero .lp-btn-secondary,
+    .qa-master-hero .lp-btn-primary,
+    .qa-master-hero .lp-btn-secondary {
+        width: 100% !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 13px 20px !important;
+        font-size: 14.5px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Campus Trust Strip — Sleek 2x2 Grid on Mobile */
     .qa-campus-trust-strip {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        padding: 12px 14px !important;
+        margin-top: 18px !important;
+        font-size: 11.5px !important;
+        border-radius: 12px !important;
+    }
+
+    .qa-campus-trust-strip span {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+        white-space: normal !important;
+        line-height: 1.35 !important;
+    }
+
+    /* Hero 4 KPI Cards — Compact & Symmetrical */
+    .qa-texture-hero .grid.grid-cols-2,
+    .qa-topics-hero .grid.grid-cols-2 {
+        gap: 8px !important;
+        margin-top: 24px !important;
+    }
+
+    .qa-texture-hero .glass-dark,
+    .qa-topics-hero .glass-dark {
+        padding: 12px 10px !important;
+        text-align: center !important;
+        border-radius: 14px !important;
+    }
+
+    .qa-texture-hero .glass-dark .font-heading,
+    .qa-topics-hero .glass-dark .font-heading {
+        font-size: 17px !important;
+        line-height: 1.2 !important;
+    }
+
+    .qa-texture-hero .glass-dark div:last-child,
+    .qa-topics-hero .glass-dark div:last-child {
+        font-size: 9.5px !important;
+        letter-spacing: 0.05em !important;
+    }
+
+    /* "What You'll Master" Grid & Cards */
+    .lg\:col-span-2.grid.sm\:grid-cols-2 {
+        gap: 8px !important;
+    }
+
+    .lg\:col-span-2 > .flex.items-start {
+        padding: 13px 14px !important;
+        border-radius: 14px !important;
+    }
+
+    .lg\:col-span-2 > .flex.items-start .text-ink {
+        font-size: 13.5px !important;
+    }
+
+    /* Curriculum Accordion (album-design, video-editing, masterclass) */
+    .qa-week-list {
+        gap: 10px !important;
+    }
+
+    .qa-week {
+        border-radius: 14px !important;
     }
 
     .qa-week summary {
-        padding: 14px 16px !important;
+        padding: 12px 14px !important;
+        gap: 10px !important;
+    }
+
+    .qa-week summary span {
+        padding: 3px 8px !important;
+        font-size: 10px !important;
+        border-radius: 6px !important;
     }
 
     .qa-week summary strong {
+        font-size: 14px !important;
+        line-height: 1.35 !important;
+    }
+
+    .qa-week summary b {
+        width: 24px !important;
+        height: 24px !important;
         font-size: 15px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .qa-week > div {
+        padding: 16px 14px !important;
+    }
+
+    .qa-week > div p {
+        font-size: 13.5px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .qa-week > div li {
+        font-size: 13px !important;
+        padding-left: 18px !important;
+        line-height: 1.5 !important;
+    }
+
+    /* AI Wedding Filmmaking Roadmap */
+    .qa-roadmap {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    .qa-road-card {
+        padding: 20px 18px !important;
+        border-radius: 16px !important;
+    }
+
+    /* Tools & Career Outcomes */
+    .grid.md\:grid-cols-2 {
+        gap: 16px !important;
     }
 
     .grid.md\:grid-cols-2 > div:first-child,
     .grid.md\:grid-cols-2 > div.bg-ink {
-        padding: 22px !important;
+        padding: 20px 16px !important;
+        border-radius: 18px !important;
     }
 
+    .grid.md\:grid-cols-2 > div:first-child span.rounded-full {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+    }
+
+    .grid.md\:grid-cols-2 > div.bg-ink ul.grid-cols-2 {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+    }
+
+    .grid.md\:grid-cols-2 > div.bg-ink li {
+        font-size: 13.5px !important;
+    }
+
+    /* Bottom Demo Class CTA Card */
     .rounded-\[36px\].bg-ink {
-        padding: 28px 20px !important;
-        border-radius: 24px !important;
+        padding: 26px 18px !important;
+        border-radius: 22px !important;
+    }
+
+    .rounded-\[36px\].bg-ink .flex-col.md\:items-end {
+        width: 100% !important;
+        align-items: stretch !important;
+    }
+
+    .rounded-\[36px\].bg-ink .lp-btn-primary,
+    .rounded-\[36px\].bg-ink .lp-btn-secondary {
+        width: 100% !important;
+        justify-content: center !important;
+        text-align: center !important;
+    }
+
+    /* "Other Courses You Might Love" */
+    .grid.md\:grid-cols-2 > a.group.rounded-3xl {
+        border-radius: 18px !important;
+    }
+
+    .grid.md\:grid-cols-2 > a.group.rounded-3xl .p-6 {
+        padding: 16px !important;
+    }
+
+    .grid.md\:grid-cols-2 > a.group.rounded-3xl .text-ink {
+        font-size: 17px !important;
+    }
+
+    /* Catalog Page (courses/index.html) */
+    .qa-topics-page .grid > a.group {
+        border-radius: 20px !important;
+    }
+
+    .qa-topics-page .grid > a.group .p-6 {
+        padding: 18px 16px !important;
+    }
+
+    .qa-topics-page .grid > a.group h3.text-white {
+        font-size: 19px !important;
+    }
+
+    .qa-feedback-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    .qa-feedback-grid blockquote {
+        padding: 18px !important;
+        border-radius: 16px !important;
+    }
+
+    /* Master Class Specific Mobile Rules */
+    .mc-bonuses .mc-bonus-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .mc-bonus-card {
+        padding: 16px !important;
+        border-radius: 14px !important;
+    }
+
+    .mc-price {
+        padding: 20px 16px !important;
+        border-radius: 16px !important;
+    }
+
+    .mc-mentor-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+    }
+
+    .mc-mentor-stats > div {
+        padding: 10px 4px !important;
+        text-align: center !important;
+        border-radius: 12px !important;
+    }
+
+    .mc-mentor-stats > div .font-heading {
+        font-size: 16px !important;
+    }
+
+    .mc-mentor-stats > div .text-xs {
+        font-size: 10px !important;
+    }
+
+    #book .rounded-3xl.bg-white {
+        padding: 20px 16px !important;
+        border-radius: 20px !important;
+    }
+
+    #book form.qa-enquiry {
+        grid-template-columns: 1fr !important;
+    }
+
+    #book form.qa-enquiry .qa-field,
+    #book form.qa-enquiry .qa-consent,
+    #book form.qa-enquiry .qa-demo {
+        grid-column: span 1 !important;
     }
 }
+
+@media (max-width: 480px) {
+    .qa-texture-hero h1,
+    .qa-topics-hero h1,
+    .qa-master-hero h1 {
+        font-size: 27px !important;
+    }
+
+    .qa-campus-trust-strip {
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+    }
+
+    .qa-week summary {
+        padding: 11px 12px !important;
+    }
+
+    .qa-week summary strong {
+        font-size: 13.5px !important;
+    }
+}
+
 

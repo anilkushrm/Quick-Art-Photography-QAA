@@ -598,10 +598,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // 2. Sync Poster / Thumbnail
             if (course.thumbnail) {
                 const thumbUrl = resolveAssetUrl(course.thumbnail);
-                const mediaImg = document.querySelector('.lp-media-thumb img');
-                if (mediaImg && thumbUrl) {
-                    mediaImg.src = thumbUrl;
-                }
+                document.querySelectorAll('.lp-media-thumb img, .lp-preview-img, .lp-media-card img, .lp-hero-preview img, .lp-video-poster').forEach(img => {
+                    if (thumbUrl) img.src = thumbUrl;
+                    if (course.title) img.alt = course.title;
+                });
             }
 
             // 3. Sync Course Duration
@@ -635,11 +635,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     csDur.textContent = durStr;
                 }
 
-                // D. Pricing checklist & bonus items (e.g. "Complete 65+ Hours Step-by-Step Curriculum")
-                document.querySelectorAll('.lp-pricing-list li, .lp-pricing-card li, .lp-bonus-card li, .cs-curriculum-header').forEach(el => {
+                // D. Pricing checklist, feature bullets, & bonus items
+                document.querySelectorAll('.lp-pricing-list li, .lp-pricing-card li, .lp-bonus-card li, .lp-feature-bullets li, .cs-curriculum-header').forEach(el => {
                     if (/\b\d+\+?\s*(?:Hours?|Hrs?)\b/i.test(el.innerHTML)) {
                         el.innerHTML = el.innerHTML.replace(/\b\d+\+?\s*(?:Hours?|Hrs?)\b/gi, durStr);
                     }
+                });
+            }
+
+            // 4. Sync Course Description & Subtitle
+            const desc = course.description || course.subtitle;
+            if (desc) {
+                // Hero Section description / subtitle
+                document.querySelectorAll('.lp-hero-sub, .lp-hero-desc').forEach(el => {
+                    el.textContent = desc;
+                });
+                // Curriculum header subtitle
+                const csSub = document.getElementById('cs-subtitle');
+                if (csSub) {
+                    csSub.textContent = (course.title ? course.title + ' — ' : '') + desc;
+                }
+                // SEO meta tags
+                const metaDesc = document.querySelector('meta[name="description"]');
+                if (metaDesc) metaDesc.setAttribute('content', desc);
+                const ogDesc = document.querySelector('meta[property="og:description"]');
+                if (ogDesc) ogDesc.setAttribute('content', desc);
+            }
+
+            // 5. Sync Course Badge
+            if (course.badge) {
+                document.querySelectorAll('.lp-badge-tag').forEach(el => {
+                    el.textContent = course.badge;
                 });
             }
         }
@@ -706,6 +732,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (course.title) {
                     const titleEl = card.querySelector('.hub-card-title');
                     if (titleEl) titleEl.textContent = course.title;
+                }
+
+                // Sync Description
+                const desc = course.description || course.subtitle;
+                if (desc) {
+                    const descEl = card.querySelector('.hub-card-desc');
+                    if (descEl) descEl.textContent = desc;
+                }
+
+                // Sync Badge
+                if (course.badge) {
+                    const badgeEl = card.querySelector('.hub-card-badge');
+                    if (badgeEl) badgeEl.textContent = course.badge.toUpperCase();
+                }
+
+                // Sync Skill Level
+                if (course.level) {
+                    const levelEl = card.querySelector('.hub-card-level');
+                    if (levelEl) levelEl.textContent = course.level;
                 }
             });
 

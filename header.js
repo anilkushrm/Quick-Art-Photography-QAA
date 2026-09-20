@@ -134,16 +134,19 @@
    const badge=document.createElement('small');badge.className='ref-highlight-badge ref-free-badge';badge.textContent='Free';label.append(badge);
   }
  });
-  function set(drop,open){
-    const button=drop.querySelector('.ref-toggle');
-    if(!button) return;
-    const panel=document.getElementById(button.getAttribute('aria-controls'));
-    if(!panel) return;
-    button.setAttribute('aria-expanded',String(open));
-    panel.hidden=!open;
-    panel.style.display = open ? '' : 'none';
-  }
-  let hoverTimer = null;
+   function set(drop,open){
+     const button=drop.querySelector('.ref-toggle');
+     if(!button) return;
+     const panel=document.getElementById(button.getAttribute('aria-controls'));
+     if(!panel) return;
+     button.setAttribute('aria-expanded',String(open));
+     panel.hidden=!open;
+     panel.style.display = open ? '' : 'none';
+   }
+   function closeAll(){
+     drops.forEach(d => set(d, false));
+   }
+   let hoverTimer = null;
 
   drops.forEach(drop => {
     const toggle = drop.querySelector('.ref-toggle');
@@ -269,38 +272,47 @@
       mobileLogin.before(programsBtn);
     }
 
-    const drawerHead = document.createElement('div');
-    drawerHead.className = 'ref-drawer-head';
-    const brandImg = header.querySelector('.ref-brand img');
-    const imgSrc = brandImg ? brandImg.getAttribute('src') : 'home-assets/ec55a6be3747a9.webp';
-    drawerHead.innerHTML = `<div class="ref-drawer-title"><img src="${imgSrc}" width="30" height="30" alt="Quick Art" style="object-fit:contain;border-radius:6px;"><span>Quick <b>Art</b> <small>ACADEMY</small></span></div><button type="button" class="ref-drawer-close" aria-label="Close navigation"><span aria-hidden="true">✕</span></button>`;
-    
-    const drawerBody = document.createElement('div');
-    drawerBody.className = 'ref-drawer-body';
-    
-    const drawerActions = document.createElement('div');
-    drawerActions.className = 'ref-drawer-actions';
-    
-    const demo = menu.querySelector('.ref-demo-cta');
-    if (originalLogin) {
-      const login = originalLogin.cloneNode(true);
-      login.classList.add('ref-drawer-login');
-      login.textContent = 'Login';
-      drawerActions.append(login);
+    if (!menu.querySelector('.ref-drawer-head')) {
+      const drawerHead = document.createElement('div');
+      drawerHead.className = 'ref-drawer-head';
+      const brandImg = header.querySelector('.ref-brand img');
+      const imgSrc = brandImg ? brandImg.getAttribute('src') : 'home-assets/ec55a6be3747a9.webp';
+      drawerHead.innerHTML = `<div class="ref-drawer-title"><img src="${imgSrc}" width="30" height="30" alt="Quick Art" style="object-fit:contain;border-radius:6px;"><span>Quick <b>Art</b> <small>ACADEMY</small></span></div><button type="button" class="ref-drawer-close" aria-label="Close navigation"><span aria-hidden="true">✕</span></button>`;
+      
+      const drawerBody = document.createElement('div');
+      drawerBody.className = 'ref-drawer-body';
+      
+      const drawerActions = document.createElement('div');
+      drawerActions.className = 'ref-drawer-actions';
+      
+      const demo = menu.querySelector('.ref-demo-cta');
+      if (originalLogin) {
+        const login = originalLogin.cloneNode(true);
+        login.classList.add('ref-drawer-login');
+        login.textContent = 'Login';
+        drawerActions.append(login);
+      }
+      if (demo) drawerActions.append(demo);
+
+      // Remove any legacy student portal button so all pages have the identical clean mobile drawer as homepage
+      menu.querySelectorAll('.ref-mobile-lms').forEach(el => el.remove());
+
+      while (menu.firstChild) drawerBody.append(menu.firstChild);
+      menu.append(drawerHead, drawerBody, drawerActions);
     }
-    if (demo) drawerActions.append(demo);
 
-    // Remove any legacy student portal button so all pages have the identical clean mobile drawer as homepage
-    menu.querySelectorAll('.ref-mobile-lms').forEach(el => el.remove());
-
-    while (menu.firstChild) drawerBody.append(menu.firstChild);
-    menu.append(drawerHead, drawerBody, drawerActions);
-
-    const backdrop = document.createElement('div');
-    backdrop.className = 'ref-drawer-backdrop';
-    backdrop.hidden = true;
-    document.body.appendChild(backdrop);
-    document.body.appendChild(menu);
+    let backdrop = document.querySelector('.ref-drawer-backdrop');
+    if (!backdrop) {
+      backdrop = document.createElement('div');
+      backdrop.className = 'ref-drawer-backdrop';
+      backdrop.hidden = true;
+      backdrop.setAttribute('hidden', '');
+      backdrop.style.display = 'none';
+      document.body.appendChild(backdrop);
+    }
+    if (menu.parentElement !== document.body) {
+      document.body.appendChild(menu);
+    }
 
     // Ensure all accordions start closed initially
     menu.querySelectorAll('details').forEach(d => { d.open = false; });
@@ -308,8 +320,12 @@
     function drawerState(open) {
       backdrop.hidden = !open;
       if (open) {
+        backdrop.removeAttribute('hidden');
+        backdrop.style.display = 'block';
         document.body.classList.add('ref-nav-locked');
       } else {
+        backdrop.setAttribute('hidden', '');
+        backdrop.style.display = 'none';
         document.body.classList.remove('ref-nav-locked');
       }
     }
@@ -317,10 +333,12 @@
     function openMobile() {
       // Ensure all accordions are collapsed so the clean main menu is shown
       menu.querySelectorAll('details').forEach(d => { d.open = false; });
+      const drawerBody = menu.querySelector('.ref-drawer-body');
       if (drawerBody) {
         drawerBody.scrollTop = 0;
       }
       menu.hidden = false;
+      menu.removeAttribute('hidden');
       menu.classList.add('ref-mobile-open');
       drawerState(true);
       if (programsBtn) {
@@ -331,6 +349,7 @@
 
     function closeMobile() {
       menu.hidden = true;
+      menu.setAttribute('hidden', '');
       menu.classList.remove('ref-mobile-open');
       drawerState(false);
       if (programsBtn) {
@@ -339,11 +358,16 @@
       menu.querySelectorAll('details').forEach(d => { d.open = false; });
     }
 
+    let lastToggleTime = 0;
     function toggleMobile(e) {
       if (e) {
-        e.preventDefault();
+        if (e.cancelable) e.preventDefault();
         e.stopPropagation();
       }
+      const now = Date.now();
+      if (now - lastToggleTime < 350) return;
+      lastToggleTime = now;
+
       if (menu.hidden || !menu.classList.contains('ref-mobile-open')) {
         openMobile();
       } else {
@@ -352,31 +376,31 @@
     }
 
     if (programsBtn) {
-      programsBtn.addEventListener('click', toggleMobile);
-      programsBtn.addEventListener('touchend', toggleMobile);
+      programsBtn.onclick = toggleMobile;
+      programsBtn.ontouchend = toggleMobile;
     }
 
-    backdrop.addEventListener('click', (e) => {
-      e.stopPropagation();
+    backdrop.onclick = (e) => {
+      e?.stopPropagation();
       closeMobile();
-    });
-    backdrop.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    };
+    backdrop.ontouchend = (e) => {
+      if (e && e.cancelable) e.preventDefault();
+      e?.stopPropagation();
       closeMobile();
-    });
+    };
 
-    const closeBtn = drawerHead.querySelector('.ref-drawer-close');
+    const closeBtn = menu.querySelector('.ref-drawer-close');
     if (closeBtn) {
-      closeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
+      closeBtn.onclick = (e) => {
+        e?.stopPropagation();
         closeMobile();
-      });
-      closeBtn.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+      };
+      closeBtn.ontouchend = (e) => {
+        if (e && e.cancelable) e.preventDefault();
+        e?.stopPropagation();
         closeMobile();
-      });
+      };
     }
 
     // Stop click events inside drawer from bubbling to document (prevents drawer closing on + / -)
@@ -410,10 +434,13 @@
       }
     });
 
-    matchMedia('(min-width:1151px)').addEventListener('change', () => {
-      closeAll();
-      closeMobile();
-    });
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      const mq = window.matchMedia('(min-width:1151px)');
+      mq?.addEventListener?.('change', () => {
+        closeAll();
+        closeMobile();
+      });
+    }
 
     // Dynamic header style on scroll (transitions from dark hero header to frosted light-glass over light page backgrounds)
     let scrollTicking = false;

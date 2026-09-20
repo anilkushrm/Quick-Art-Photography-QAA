@@ -4562,17 +4562,34 @@ h3 {
 }
 
 .qa-float-call,
-.fixed.bottom-5.right-5 a[aria-label="Call Us"] {
-  background-color: #ffffff;
-  color: #17130c;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+.fixed.bottom-5.right-5 a[aria-label="Call Us"],
+a.qa-float-call {
+  background-color: #ffffff !important;
+  color: #17130c !important;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
+.qa-float-call svg,
+.fixed.bottom-5.right-5 a[aria-label="Call Us"] svg,
+a.qa-float-call svg {
+  stroke: #17130c !important;
+  color: #17130c !important;
+  display: block;
+}
+
 .qa-float-call:hover,
-.fixed.bottom-5.right-5 a[aria-label="Call Us"]:hover {
-  background-color: #eab308;
-  color: #000000;
+.fixed.bottom-5.right-5 a[aria-label="Call Us"]:hover,
+a.qa-float-call:hover {
+  background-color: #eab308 !important;
+  color: #000000 !important;
+}
+
+.qa-float-call:hover svg,
+.fixed.bottom-5.right-5 a[aria-label="Call Us"]:hover svg,
+a.qa-float-call:hover svg {
+  stroke: #000000 !important;
+  color: #000000 !important;
 }
 
 @keyframes float {

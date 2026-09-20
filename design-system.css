@@ -316,3 +316,31 @@ main.qa-topics-page { display:block; }
  .qa-banner-figure img { height:200px; }
  .qa-mentor-figure { height:320px; }
 }
+
+/* Floating actions universal call button */
+.qa-float-call,
+.fixed.bottom-5.right-5 a[aria-label="Call Us"],
+a.qa-float-call {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+.qa-float-call svg,
+.fixed.bottom-5.right-5 a[aria-label="Call Us"] svg,
+a.qa-float-call svg {
+  stroke: #111827 !important;
+  color: #111827 !important;
+  display: block !important;
+}
+.qa-float-call:hover,
+.fixed.bottom-5.right-5 a[aria-label="Call Us"]:hover,
+a.qa-float-call:hover {
+  background-color: #f59e0b !important;
+  color: #000000 !important;
+}
+.qa-float-call:hover svg,
+.fixed.bottom-5.right-5 a[aria-label="Call Us"]:hover svg,
+a.qa-float-call:hover svg {
+  stroke: #000000 !important;
+  color: #000000 !important;
+}
+

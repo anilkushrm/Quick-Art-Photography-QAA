@@ -19,6 +19,10 @@ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{line-height
 .qa-master-hero .mc-ai-heading svg{width:1em;height:1em;flex-shrink:0;color:currentColor;filter:none}
 .qa-master-hero h1+p{line-height:1.65;font-weight:400;color:#d1d3d6}
 .qa-float-stack svg{display:block;width:23px;height:23px}
+.qa-float-call{background-color:#fff!important;color:#111827!important}
+.qa-float-call svg{stroke:#111827!important;color:#111827!important}
+.qa-float-call:hover{background-color:#f59e0b!important;color:#000!important}
+.qa-float-call:hover svg{stroke:#000!important;color:#000!important}
 @media(max-width:1023px){
  .qa-float-stack,
  .fixed.bottom-5.right-5{right:16px!important;bottom:calc(84px + env(safe-area-inset-bottom))!important;gap:10px!important;z-index:50!important}

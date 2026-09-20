@@ -814,14 +814,46 @@
               <p class="muted" style="font-size:12px;margin-top:0">Direct JSON editor for batch pasting or complex schema editing. Automatically syncs with the Visual Studio Builder:</p>
               <textarea id="courseModulesJson" rows="18" style="font-family:monospace;font-size:12px;line-height:1.5;background:#090d16;color:#a5f3fc;border:1px solid rgba(255,255,255,0.1)"></textarea>
             </div>
+          </div>
 
-            <!-- Bottom Studio Action Footer -->
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;gap:12px">
-              <button type="button" onclick="closeCourseStudio()" class="btn btn-outline">← Cancel &amp; Back to Catalog</button>
-              <div style="display:flex;gap:10px">
-                <button type="button" onclick="loadStarterCurriculumTemplate()" class="btn btn-outline" style="color:var(--gold);border-color:rgba(216,161,83,0.4)">⚡ Load 5-Module Starter</button>
-                <button type="button" onclick="saveCourseFromStudio()" class="btn btn-gold" style="padding:12px 28px;font-size:14px;font-weight:700">💾 Save Course &amp; Publish ✓</button>
+          <!-- 3. Course Practice Files & Test Assets Card -->
+          <div class="card" style="padding:24px;border:1px solid rgba(255,255,255,0.08);background:#0f172a">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:14px;flex-wrap:wrap;gap:10px">
+              <div>
+                <h3 style="margin:0;font-size:16px;font-family:'Outfit',sans-serif;color:#34d399">📁 3. Course Practice Files, Project Files &amp; Test Assets (प्रैक्टिस फाइल्स)</h3>
+                <p class="muted" style="margin:3px 0 0;font-size:12px">Attach downloadable project files, 4K RAW wedding footage, presets, LUTs, and test assignments for students.</p>
               </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button type="button" onclick="addSampleCourseResource()" class="btn-sm btn-outline" style="font-size:11.5px;color:#34d399;border-color:rgba(52,211,153,0.35)">⚡ Add Sample Practice Pack</button>
+                <button type="button" onclick="addStudioResource()" class="btn-sm btn-gold" style="font-size:11.5px">+ Add Practice File</button>
+              </div>
+            </div>
+
+            <div id="studioResourcesList" style="display:flex;flex-direction:column;gap:12px"></div>
+          </div>
+
+          <!-- 4. Quiz & Test Builder Card -->
+          <div class="card" style="padding:24px;border:1px solid rgba(255,255,255,0.08);background:#0f172a">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:14px;flex-wrap:wrap;gap:10px">
+              <div>
+                <h3 style="margin:0;font-size:16px;font-family:'Outfit',sans-serif;color:var(--gold)">📝 4. Knowledge Check &amp; Certification Quiz / Test Builder (क्विज और टेस्ट)</h3>
+                <p class="muted" style="margin:3px 0 0;font-size:12px">Create multiple choice questions (MCQ Test) to evaluate students before certificate issuance.</p>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button type="button" onclick="addSampleQuizQuestions()" class="btn-sm btn-outline" style="font-size:11.5px;color:var(--gold);border-color:rgba(216,161,83,0.4)">⚡ Add Sample Test (3 MCQs)</button>
+                <button type="button" onclick="addStudioQuizQuestion()" class="btn-sm btn-gold" style="font-size:11.5px">+ Add Question</button>
+              </div>
+            </div>
+
+            <div id="studioQuizContainer" style="display:flex;flex-direction:column;gap:16px"></div>
+          </div>
+
+          <!-- Bottom Studio Action Footer -->
+          <div class="card" style="padding:18px 24px;background:#131d33;border:1px solid rgba(216,161,83,0.3);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+            <button type="button" onclick="closeCourseStudio()" class="btn btn-outline">← Cancel &amp; Back to Catalog</button>
+            <div style="display:flex;gap:10px;align-items:center">
+              <button type="button" onclick="loadStarterCurriculumTemplate()" class="btn btn-outline" style="color:var(--gold);border-color:rgba(216,161,83,0.4)">⚡ Load 5-Module Starter</button>
+              <button type="button" onclick="saveCourseFromStudio()" class="btn btn-gold" style="padding:12px 30px;font-size:14px;font-weight:700;box-shadow:0 4px 20px rgba(216,161,83,0.4)">💾 Save Course &amp; Publish ✓</button>
             </div>
           </div>
         </div>
@@ -2601,6 +2633,8 @@ function openCourseStudio(courseId) {
     document.getElementById('courseDescInput').value = course.description || course.subtitle || '';
     document.getElementById('courseModulesJson').value = JSON.stringify(course.modules || [], null, 2);
     currentEditingModules = JSON.parse(JSON.stringify(course.modules || []));
+    currentEditingQuiz = JSON.parse(JSON.stringify(course.quiz || []));
+    currentEditingResources = JSON.parse(JSON.stringify(course.resources || course.practiceFiles || []));
   } else {
     document.getElementById('studioHeaderTitle').textContent = 'Studio: Create New Course';
     document.getElementById('editCourseId').value = '';
@@ -2613,11 +2647,15 @@ function openCourseStudio(courseId) {
     document.getElementById('courseOrigPriceInput').value = 9999;
     document.getElementById('courseThumbInput').value = 'assets/premiere-pro-hero-640.webp';
     document.getElementById('courseDescInput').value = 'Professional comprehensive masterclass with real studio footage, sound design, and client-ready workflows.';
+    currentEditingQuiz = [];
+    currentEditingResources = [];
     loadStarterCurriculumTemplate(false);
   }
 
   updateThumbPreview();
   switchCurriculumTab('visual');
+  renderStudioResources();
+  renderStudioQuiz();
   catView.style.display = 'none';
   stuView.style.display = 'block';
   stuView.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2730,6 +2768,8 @@ function loadStarterCurriculumTemplate(notify = true) {
 
 let currentCurriculumMode = 'visual';
 let currentEditingModules = [];
+let currentEditingQuiz = [];
+let currentEditingResources = [];
 
 function switchCurriculumTab(mode) {
   currentCurriculumMode = mode;
@@ -2780,7 +2820,9 @@ function renderVisualCurriculum(modules) {
         </div>
         <div style="padding:16px 18px">
           <div style="display:flex;flex-direction:column;gap:10px" id="module-lessons-${mIdx}">
-            ${lessons.map((l, lIdx) => `
+            ${lessons.map((l, lIdx) => {
+              const resList = l.resources || [];
+              return `
               <div style="padding:12px 14px;background:#0f172a;border:1px solid rgba(255,255,255,0.06);border-radius:12px">
                 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
                   <span style="font-weight:800;font-size:12px;color:var(--gold);min-width:32px;background:rgba(255,255,255,0.04);padding:4px 8px;border-radius:6px;text-align:center;font-family:'Outfit',sans-serif">#${mIdx + 1}.${lIdx + 1}</span>
@@ -2793,11 +2835,39 @@ function renderVisualCurriculum(modules) {
                   </div>
                   <button type="button" onclick="removeVisualLesson(${mIdx}, ${lIdx})" class="icon-btn danger" style="font-size:12px" title="Remove lesson">✕</button>
                 </div>
-                <div style="margin-top:8px">
-                  <input type="text" value="${escapeHtml(l.summary || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'summary', this.value)" placeholder="Lesson Summary / Learning outcomes" style="width:100%;padding:6px 10px;font-size:11.5px;color:var(--muted);background:transparent;border:1px solid rgba(255,255,255,0.05)" />
+                <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+                  <input type="text" value="${escapeHtml(l.summary || '')}" onchange="updateVisualLesson(${mIdx}, ${lIdx}, 'summary', this.value)" placeholder="Lesson Summary / Learning outcomes" style="flex:1;padding:6px 10px;font-size:11.5px;color:var(--muted);background:transparent;border:1px solid rgba(255,255,255,0.05)" />
+                  <button type="button" onclick="toggleLessonResources(${mIdx}, ${lIdx})" class="btn-sm btn-outline" style="font-size:11px;padding:5px 12px;white-space:nowrap;color:${resList.length ? '#34d399' : '#94a3b8'};border-color:${resList.length ? 'rgba(52,211,153,0.35)' : 'rgba(255,255,255,0.1)'};background:${resList.length ? 'rgba(52,211,153,0.08)' : 'transparent'}">
+                    📁 Practice Files ${resList.length ? `(${resList.length})` : '+ Add'}
+                  </button>
+                </div>
+
+                <!-- Lesson Practice Files Sub-Container -->
+                <div id="lesson-res-box-${mIdx}-${lIdx}" style="display:none;margin-top:10px;padding:12px;background:#090d16;border:1px dashed rgba(52,211,153,0.3);border-radius:10px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                    <span style="font-size:11.5px;font-weight:700;color:#34d399">📁 Lesson Practice &amp; Project Files</span>
+                    <div style="display:flex;gap:6px">
+                      <label class="btn-sm btn-outline" style="font-size:10.5px;padding:4px 8px;cursor:pointer;color:#38bdf8;border-color:rgba(56,189,248,0.3)">
+                        ⬆ Upload File
+                        <input type="file" onchange="uploadLessonResourceFile(this, ${mIdx}, ${lIdx})" style="display:none" />
+                      </label>
+                      <button type="button" onclick="addLessonResourceItem(${mIdx}, ${lIdx})" class="btn-sm btn-gold" style="font-size:10.5px;padding:4px 8px">+ Add File Link</button>
+                    </div>
+                  </div>
+                  <div id="lesson-res-list-${mIdx}-${lIdx}" style="display:flex;flex-direction:column;gap:6px">
+                    ${resList.length ? resList.map((r, rIdx) => `
+                      <div style="display:flex;gap:6px;align-items:center;background:#0f172a;padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.06)">
+                        <input type="text" value="${escapeHtml(r.name || r.title || '')}" onchange="updateLessonResourceItem(${mIdx}, ${lIdx}, ${rIdx}, 'name', this.value)" placeholder="File Name (e.g. Wedding Raw Clip 01.mp4)" style="flex:2;padding:5px 8px;font-size:11.5px" />
+                        <input type="text" value="${escapeHtml(r.url || '')}" onchange="updateLessonResourceItem(${mIdx}, ${lIdx}, ${rIdx}, 'url', this.value)" placeholder="Download Link (Google Drive / Direct URL)" style="flex:3;padding:5px 8px;font-size:11px;font-family:monospace" />
+                        <input type="text" value="${escapeHtml(r.size || '')}" onchange="updateLessonResourceItem(${mIdx}, ${lIdx}, ${rIdx}, 'size', this.value)" placeholder="Size (150 MB)" style="width:75px;padding:5px 8px;font-size:11px" />
+                        ${r.url ? `<a href="${escapeHtml(r.url)}" target="_blank" class="btn-sm btn-outline" style="padding:4px 6px;font-size:10px" title="Test Download">⬇</a>` : ''}
+                        <button type="button" onclick="removeLessonResourceItem(${mIdx}, ${lIdx}, ${rIdx})" class="icon-btn danger" style="font-size:11px" title="Remove File">✕</button>
+                      </div>
+                    `).join('') : '<div class="muted" style="font-size:11px;padding:4px 0">No practice files attached to this lesson yet. Click "+ Add File Link" or "⬆ Upload File".</div>'}
+                  </div>
                 </div>
               </div>
-            `).join('')}
+            `;}).join('')}
           </div>
           <button type="button" onclick="addVisualLesson(${mIdx})" class="btn btn-outline" style="margin-top:14px;font-size:12px;padding:8px 16px;border-color:rgba(255,255,255,0.1)">
             + Add Lesson to Module ${mIdx + 1}
@@ -2806,6 +2876,282 @@ function renderVisualCurriculum(modules) {
       </div>
     `;
   }).join('');
+}
+
+// Lesson Resource Helpers
+function toggleLessonResources(mIdx, lIdx) {
+  const box = document.getElementById(`lesson-res-box-${mIdx}-${lIdx}`);
+  if (box) box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+
+function addLessonResourceItem(mIdx, lIdx) {
+  if (!currentEditingModules[mIdx] || !currentEditingModules[mIdx].lessons[lIdx]) return;
+  if (!currentEditingModules[mIdx].lessons[lIdx].resources) {
+    currentEditingModules[mIdx].lessons[lIdx].resources = [];
+  }
+  currentEditingModules[mIdx].lessons[lIdx].resources.push({
+    name: 'Practice File ' + (currentEditingModules[mIdx].lessons[lIdx].resources.length + 1),
+    url: '',
+    size: ''
+  });
+  renderVisualCurriculum(currentEditingModules);
+  setTimeout(() => {
+    const box = document.getElementById(`lesson-res-box-${mIdx}-${lIdx}`);
+    if (box) box.style.display = 'block';
+  }, 40);
+}
+
+function updateLessonResourceItem(mIdx, lIdx, rIdx, field, val) {
+  if (currentEditingModules[mIdx] && currentEditingModules[mIdx].lessons[lIdx] && currentEditingModules[mIdx].lessons[lIdx].resources) {
+    currentEditingModules[mIdx].lessons[lIdx].resources[rIdx][field] = val;
+  }
+}
+
+function removeLessonResourceItem(mIdx, lIdx, rIdx) {
+  if (currentEditingModules[mIdx] && currentEditingModules[mIdx].lessons[lIdx] && currentEditingModules[mIdx].lessons[lIdx].resources) {
+    currentEditingModules[mIdx].lessons[lIdx].resources.splice(rIdx, 1);
+    renderVisualCurriculum(currentEditingModules);
+    setTimeout(() => {
+      const box = document.getElementById(`lesson-res-box-${mIdx}-${lIdx}`);
+      if (box) box.style.display = 'block';
+    }, 40);
+  }
+}
+
+async function uploadLessonResourceFile(inputEl, mIdx, lIdx) {
+  if (!inputEl.files || !inputEl.files[0]) return;
+  const file = inputEl.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
+  toast('Uploading practice file: ' + file.name + '…');
+  try {
+    const res = await fetch(`${API_HOST}api/lms-admin.php?action=upload-resource`, {
+      method: 'POST',
+      headers: {
+        'X-Admin-Token': token || '',
+        'X-Admin-Pass': token || ''
+      },
+      body: formData
+    });
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.error || 'Upload failed');
+    if (!currentEditingModules[mIdx].lessons[lIdx].resources) {
+      currentEditingModules[mIdx].lessons[lIdx].resources = [];
+    }
+    currentEditingModules[mIdx].lessons[lIdx].resources.push({
+      name: data.name || file.name,
+      url: data.url,
+      size: data.size || ''
+    });
+    renderVisualCurriculum(currentEditingModules);
+    setTimeout(() => {
+      const box = document.getElementById(`lesson-res-box-${mIdx}-${lIdx}`);
+      if (box) box.style.display = 'block';
+    }, 40);
+    toast('✅ Practice file uploaded and attached!');
+  } catch(e) {
+    toast('Upload notice: ' + e.message + '. You can paste an external Google Drive / Dropbox link.', false);
+  }
+  inputEl.value = '';
+}
+
+// Course-Level Practice Files & Test Assets Helpers
+function renderStudioResources() {
+  const list = document.getElementById('studioResourcesList');
+  if (!list) return;
+  if (!currentEditingResources.length) {
+    list.innerHTML = `
+      <div style="padding:22px;text-align:center;color:var(--muted);background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.1);border-radius:12px;font-size:13px">
+        No course practice files attached yet. Attach your full project template, RAW footage zip, or test assignment assets so students can download them in their portal!
+        <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
+          <button type="button" onclick="addStudioResource()" class="btn btn-gold" style="font-size:12px">+ Add Practice File</button>
+          <button type="button" onclick="addSampleCourseResource()" class="btn btn-outline" style="font-size:12px;color:#34d399">⚡ Add Sample Practice Pack</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = currentEditingResources.map((r, rIdx) => `
+    <div style="background:#090d16;padding:12px 16px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <span style="font-size:16px">📁</span>
+      <div style="flex:3;min-width:200px">
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">File / Project Title</label>
+        <input type="text" value="${escapeHtml(r.name || r.title || '')}" onchange="currentEditingResources[${rIdx}].name = this.value" placeholder="e.g. Wedding Teaser Full 4K Project Files + LUTs Pack.zip" style="width:100%;font-size:13px;font-weight:600;padding:7px 10px" />
+      </div>
+      <div style="flex:4;min-width:220px">
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">Download Link (Google Drive / Dropbox / Direct URL)</label>
+        <input type="text" value="${escapeHtml(r.url || '')}" onchange="currentEditingResources[${rIdx}].url = this.value" placeholder="https://drive.google.com/... or https://..." style="width:100%;font-size:12px;font-family:monospace;padding:7px 10px;color:#a5f3fc" />
+      </div>
+      <div style="width:110px">
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px">Size</label>
+        <input type="text" value="${escapeHtml(r.size || '')}" onchange="currentEditingResources[${rIdx}].size = this.value" placeholder="e.g. 1.2 GB" style="width:100%;font-size:12px;padding:7px 10px" />
+      </div>
+      <div style="display:flex;gap:6px;align-items:flex-end;margin-top:16px">
+        ${r.url ? `<a href="${escapeHtml(r.url)}" target="_blank" class="btn btn-outline" style="padding:6px 12px;font-size:11.5px" title="Test Download">⬇ Test</a>` : ''}
+        <label class="btn btn-outline" style="padding:6px 10px;font-size:11.5px;cursor:pointer;color:#38bdf8" title="Upload local file to replace link">
+          ⬆ Upload
+          <input type="file" onchange="uploadStudioCourseResourceFile(this, ${rIdx})" style="display:none" />
+        </label>
+        <button type="button" onclick="removeStudioResource(${rIdx})" class="icon-btn danger" style="font-size:13px" title="Delete Practice File">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addStudioResource() {
+  currentEditingResources.push({
+    name: 'Course Practice Project Asset ' + (currentEditingResources.length + 1),
+    url: '',
+    size: '250 MB'
+  });
+  renderStudioResources();
+}
+
+function removeStudioResource(rIdx) {
+  currentEditingResources.splice(rIdx, 1);
+  renderStudioResources();
+}
+
+function addSampleCourseResource() {
+  currentEditingResources.push(
+    { name: '4K Cinematic Wedding RAW Practice Footage Pack', url: 'https://drive.google.com/drive/folders/quickart-demo', size: '1.8 GB' },
+    { name: 'Quick Art Studio Wedding LUTs & Color Presets Pack (.cube)', url: 'https://drive.google.com/file/d/quickart-luts', size: '45 MB' },
+    { name: 'Final Practical Exam Brief & Raw Asset Submission Guidelines', url: 'https://drive.google.com/file/d/quickart-exam', size: '5 MB' }
+  );
+  renderStudioResources();
+  toast('⚡ Sample practice assets loaded!');
+}
+
+async function uploadStudioCourseResourceFile(inputEl, rIdx) {
+  if (!inputEl.files || !inputEl.files[0]) return;
+  const file = inputEl.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
+  toast('Uploading: ' + file.name + '…');
+  try {
+    const res = await fetch(`${API_HOST}api/lms-admin.php?action=upload-resource`, {
+      method: 'POST',
+      headers: {
+        'X-Admin-Token': token || '',
+        'X-Admin-Pass': token || ''
+      },
+      body: formData
+    });
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.error || 'Upload failed');
+    currentEditingResources[rIdx].url = data.url;
+    currentEditingResources[rIdx].name = data.name || file.name;
+    currentEditingResources[rIdx].size = data.size || '';
+    renderStudioResources();
+    toast('✅ Practice file uploaded successfully!');
+  } catch(e) {
+    toast('Upload notice: ' + e.message + '. You can paste an external Google Drive link.', false);
+  }
+  inputEl.value = '';
+}
+
+// Course Quiz & Test Builder Helpers
+function renderStudioQuiz() {
+  const container = document.getElementById('studioQuizContainer');
+  if (!container) return;
+  if (!currentEditingQuiz.length) {
+    container.innerHTML = `
+      <div style="padding:22px;text-align:center;color:var(--muted);background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.1);border-radius:12px;font-size:13px">
+        No quiz or test questions created for this course yet. Add MCQs so students can test their knowledge and earn course certification!
+        <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
+          <button type="button" onclick="addStudioQuizQuestion()" class="btn btn-gold" style="font-size:12px">+ Add First Question</button>
+          <button type="button" onclick="addSampleQuizQuestions()" class="btn btn-outline" style="font-size:12px;color:var(--gold)">⚡ Load 3 Sample Questions</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = currentEditingQuiz.map((q, qIdx) => {
+    const options = q.options || ['Option A', 'Option B', 'Option C', 'Option D'];
+    const correctIdx = typeof q.answer === 'number' ? q.answer : (typeof q.correct === 'number' ? q.correct : 0);
+    return `
+      <div style="background:#090d16;padding:16px 18px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.25)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:12px;font-weight:800;color:var(--gold);background:rgba(216,161,83,0.15);padding:4px 10px;border-radius:6px;font-family:'Outfit',sans-serif">QUESTION ${qIdx + 1}</span>
+            <span style="font-size:11.5px;color:var(--muted)">Select the radio button for the correct answer</span>
+          </div>
+          <button type="button" onclick="removeStudioQuizQuestion(${qIdx})" class="icon-btn danger" style="font-size:13px" title="Delete Question">🗑</button>
+        </div>
+
+        <div style="margin-bottom:12px">
+          <input type="text" value="${escapeHtml(q.question || '')}" onchange="currentEditingQuiz[${qIdx}].question = this.value" placeholder="Enter question here (e.g. Which tool is used for Razor/Cut in Premiere Pro?)" style="width:100%;font-size:14px;font-weight:600;padding:9px 12px;background:#0b111e;border-color:rgba(255,255,255,0.12)" />
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:10px">
+          ${options.map((opt, oIdx) => `
+            <div style="display:flex;align-items:center;gap:8px;background:#0f172a;padding:8px 12px;border-radius:8px;border:1px solid ${correctIdx === oIdx ? 'rgba(52,211,153,0.5)' : 'rgba(255,255,255,0.06)'};background:${correctIdx === oIdx ? 'rgba(52,211,153,0.08)' : '#0f172a'}">
+              <input type="radio" name="quiz_correct_${qIdx}" value="${oIdx}" ${correctIdx === oIdx ? 'checked' : ''} onchange="setStudioQuizCorrect(${qIdx}, ${oIdx})" title="Mark as correct answer" style="cursor:pointer;accent-color:#34d399;width:16px;height:16px" />
+              <span style="font-size:12px;font-weight:700;color:${correctIdx === oIdx ? '#34d399' : 'var(--muted)'}">${String.fromCharCode(65 + oIdx)}.</span>
+              <input type="text" value="${escapeHtml(opt)}" onchange="updateStudioQuizOption(${qIdx}, ${oIdx}, this.value)" placeholder="Option ${String.fromCharCode(65 + oIdx)}" style="flex:1;padding:6px 8px;font-size:12.5px;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,0.1);color:#fff" />
+              ${correctIdx === oIdx ? '<span style="font-size:11px;color:#34d399;font-weight:700">✓ Correct</span>' : ''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function addStudioQuizQuestion() {
+  currentEditingQuiz.push({
+    question: '',
+    options: ['Option A', 'Option B', 'Option C', 'Option D'],
+    answer: 0,
+    correct: 0
+  });
+  renderStudioQuiz();
+}
+
+function removeStudioQuizQuestion(qIdx) {
+  currentEditingQuiz.splice(qIdx, 1);
+  renderStudioQuiz();
+}
+
+function updateStudioQuizOption(qIdx, optIdx, val) {
+  if (currentEditingQuiz[qIdx] && currentEditingQuiz[qIdx].options) {
+    currentEditingQuiz[qIdx].options[optIdx] = val;
+  }
+}
+
+function setStudioQuizCorrect(qIdx, optIdx) {
+  if (currentEditingQuiz[qIdx]) {
+    currentEditingQuiz[qIdx].answer = optIdx;
+    currentEditingQuiz[qIdx].correct = optIdx;
+    renderStudioQuiz();
+  }
+}
+
+function addSampleQuizQuestions() {
+  currentEditingQuiz = [
+    {
+      question: "Premiere Pro me Razor (Cut) tool ka default keyboard shortcut kya hai?",
+      options: ["C", "V", "B", "R"],
+      answer: 0,
+      correct: 0
+    },
+    {
+      question: "Cinematic 24fps video export karne ke liye shutter speed kitni honi chahiye (180-degree shutter rule)?",
+      options: ["1/24 sec", "1/50 sec", "1/100 sec", "1/200 sec"],
+      answer: 1,
+      correct: 1
+    },
+    {
+      question: "DaVinci Resolve me Color Grading ke liye kis color science ka use industry-standard mana jata hai?",
+      options: ["sRGB", "Rec.709", "DaVinci YRGB Color Managed (RCM)", "Adobe RGB"],
+      answer: 2,
+      correct: 2
+    }
+  ];
+  renderStudioQuiz();
+  toast('⚡ Sample quiz questions loaded!');
 }
 
 function updateVisualLesson(mIdx, lIdx, key, val) {
@@ -2951,7 +3297,9 @@ async function saveCourseFromStudio() {
     thumbnail: document.getElementById('courseThumbInput').value.trim() || 'assets/premiere-pro-hero-640.webp',
     description: document.getElementById('courseDescInput').value.trim(),
     subtitle: document.getElementById('courseDescInput').value.trim(),
-    modules
+    modules,
+    resources: currentEditingResources,
+    quiz: currentEditingQuiz
   };
 
   // Always sync to browser localStorage so changes reflect immediately on landing pages

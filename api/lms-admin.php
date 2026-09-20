@@ -772,6 +772,42 @@ if ($action === 'delete-coupon' && $method === 'POST') {
     json_ok(['deleted' => true, 'code' => $code]);
 }
 
+// 18. Upload Practice File / Resource Attachment
+if ($action === 'upload-resource' && $method === 'POST') {
+    if (empty($_FILES['file'])) {
+        json_err('No file uploaded', 400);
+    }
+    $file = $_FILES['file'];
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        json_err('Upload error code: ' . $file['error'], 400);
+    }
+
+    $uploadDir = __DIR__ . '/../uploads/practice-files';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    $origName = basename($file['name']);
+    $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+    $safeName = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', pathinfo($origName, PATHINFO_FILENAME));
+    $finalName = $safeName . '_' . substr(md5(uniqid()), 0, 6) . ($ext ? '.' . $ext : '');
+    $dest = $uploadDir . '/' . $finalName;
+
+    if (!move_uploaded_file($file['tmp_name'], $dest)) {
+        json_err('Failed to save uploaded file to disk', 500);
+    }
+
+    $bytes = filesize($dest);
+    $sizeFormatted = $bytes > 1048576 ? round($bytes / 1048576, 1) . ' MB' : round($bytes / 1024, 1) . ' KB';
+
+    json_ok([
+        'url'  => '/uploads/practice-files/' . $finalName,
+        'name' => $origName,
+        'size' => $sizeFormatted,
+        'type' => $ext
+    ]);
+}
+
 json_err('Unknown action', 404);
 
 

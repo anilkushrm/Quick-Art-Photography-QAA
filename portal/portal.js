@@ -924,13 +924,26 @@ async function loadLesson(courseId, lessonId) {
       ? `<p>${escapeHtml(currentLesson.summary)}</p>`
       : '<p class="muted">No specific notes for this video. Follow along with your editor timeline.</p>';
 
-    // Resources
+    // Resources (Lesson files + Course project/test files)
     const resList = document.getElementById('lesson-resources-list');
-    if (currentLesson.resources && currentLesson.resources.length > 0) {
-      resList.innerHTML = currentLesson.resources.map(r => `
-        <div class="resource-item">
-          <span>📁 <b>${escapeHtml(r.name)}</b></span>
-          <a href="${escapeHtml(r.url)}" download class="btn-sm btn-outline">Download File ⬇</a>
+    const lessonRes = currentLesson.resources || [];
+    const courseRes = currentCourse.resources || currentCourse.practiceFiles || [];
+    const allRes = [
+      ...lessonRes.map(r => ({ ...r, badge: 'Lesson File' })),
+      ...courseRes.map(r => ({ ...r, badge: 'Course Project / Test Asset' }))
+    ];
+
+    if (allRes.length > 0) {
+      resList.innerHTML = allRes.map(r => `
+        <div class="resource-item" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;margin-bottom:8px">
+          <div>
+            <div style="font-weight:600;font-size:13.5px;color:#fff">📁 ${escapeHtml(r.name || r.title || 'Practice File')}</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">
+              <span class="badge" style="font-size:10px;padding:2px 6px;margin-right:6px">${escapeHtml(r.badge)}</span>
+              ${r.size ? `<span>Size: ${escapeHtml(r.size)}</span>` : ''}
+            </div>
+          </div>
+          <a href="${escapeHtml(r.url)}" target="_blank" download class="btn-sm btn-outline" style="color:#34d399;border-color:rgba(52,211,153,0.4)">Download File ⬇</a>
         </div>
       `).join('');
     } else {
@@ -1683,9 +1696,10 @@ function submitQuiz() {
 
   quiz.forEach((q, qIdx) => {
     const selected = document.querySelector(`input[name="quiz_q_${qIdx}"]:checked`);
+    const expectedAnswer = typeof q.answer === 'number' ? q.answer : (typeof q.correct === 'number' ? q.correct : 0);
     if (!selected) {
       allAnswered = false;
-    } else if (parseInt(selected.value, 10) === q.answer) {
+    } else if (parseInt(selected.value, 10) === expectedAnswer) {
       correctCount++;
     }
   });

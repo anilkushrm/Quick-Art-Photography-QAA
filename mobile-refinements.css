@@ -211,7 +211,7 @@ html, body {
    ============================================================ */
 @media (max-width: 480px) {
   /* Section padding (excludes hero to preserve header clearance) */
-  section:not(.qa-home-hero):not(.hero) { padding-top: 48px !important; padding-bottom: 48px !important; }
+  section:not(.qa-home-hero):not(.hero):not(.qa-master-hero):not(.qa-texture-hero):not(.qa-topics-hero) { padding-top: 48px !important; padding-bottom: 48px !important; }
 
   /* Typography scale */
   h1 { font-size: clamp(24px, 7vw, 36px) !important; }
@@ -441,7 +441,7 @@ html, body {
   }
   
   /* Reduce section padding (excludes hero to preserve header clearance) */
-  section:not(.qa-home-hero):not(.hero) {
+  section:not(.qa-home-hero):not(.hero):not(.qa-master-hero):not(.qa-texture-hero):not(.qa-topics-hero) {
     padding-top: 40px !important;
     padding-bottom: 40px !important;
   }

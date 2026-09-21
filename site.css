@@ -5439,7 +5439,7 @@ main>section.qa-master-hero .qa-countdown-grid strong {
 
 @media (max-width: 760px) {
   main>section.qa-master-hero .qa-master-hero-grid>div:first-child h1 {
-    font-size: 48px !important;
+    font-size: clamp(26px, 7.5vw, 34px) !important;
   }
 }
 

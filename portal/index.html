@@ -756,9 +756,9 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
             <!-- Video Container -->
             <div class="video-wrapper">
               <div class="video-container" id="video-box">
-                <!-- Watermark Layer (Anti-Piracy) -->
-                <div id="watermark-overlay" class="watermark-overlay">
-                  <span id="watermark-text" class="watermark-tag">+91 ••••••••••</span>
+                <!-- Watermark Layer (Disabled for Clean Video Playback) -->
+                <div id="watermark-overlay" class="watermark-overlay" style="display: none !important;" aria-hidden="true">
+                  <span id="watermark-text" class="watermark-tag" style="display: none !important;"></span>
                 </div>
 
                 <!-- Video Element or Iframe will be injected here -->
@@ -921,10 +921,17 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
         <button type="button" class="modal-close" onclick="closeCertificateModal()" aria-label="Close">×</button>
         
         <!-- Live Status Bar -->
-        <div class="cert-status-banner">
-          <span class="cert-status-dot"></span>
-          <span>OFFICIAL VERIFIED CREDENTIAL • QUICK ART PHOTOGRAPHY ACADEMY</span>
-          <span class="cert-iso-badge">ISO 9001:2015</span>
+        <div class="cert-status-banner" id="cert-status-banner">
+          <div class="cert-status-left">
+            <span class="cert-status-dot"></span>
+            <span class="cert-status-title">OFFICIAL VERIFIED CREDENTIAL</span>
+            <span class="cert-status-sep">•</span>
+            <span class="cert-status-academy">QUICK ART PHOTOGRAPHY ACADEMY</span>
+          </div>
+          <div class="cert-status-badges">
+            <span class="cert-iso-badge">ISO 9001:2015</span>
+            <span class="cert-iso-badge cert-msme-badge">MSME: UDYAM-BR-35-0027860</span>
+          </div>
         </div>
 
         <div id="certificate-print-area" class="certificate-frame">
@@ -975,7 +982,7 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
 
           <!-- Microprint Security Border -->
           <div class="cert-microprint-border" aria-hidden="true">
-            <span>★ QUICK ART PHOTOGRAPHY ACADEMY ★ AN ISO 9001:2015 CERTIFIED INSTITUTION ★ GOVT. OF INDIA MSME REGD. ★ CENTRE: PAT/QAA-800001 ★ VERIFIED CREDENTIAL ★ OFFICIAL RECORD ★ TAMPER-PROOF ACADEMIC REGISTER ★</span>
+            <span>★ QUICK ART PHOTOGRAPHY ACADEMY ★ AN ISO 9001:2015 CERTIFIED INSTITUTION ★ GOVT. OF INDIA MSME (UDYAM-BR-35-0027860) ★ CENTRE: PAT/QAA-800001 ★ VERIFIED CREDENTIAL ★ OFFICIAL RECORD ★ TAMPER-PROOF ACADEMIC REGISTER ★</span>
           </div>
 
           <div class="cert-inner">
@@ -991,37 +998,34 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
               </defs>
             </svg>
 
-            <!-- Certificate Header with Crest -->
+            <!-- Certificate Header with Official Academy Crest & Logo -->
             <div class="cert-top">
-              <div class="cert-crest-wrap">
-                <!-- Royal Academy Golden Crest -->
-                <svg viewBox="0 0 160 80" width="130" height="65" class="cert-crest-svg">
-                  <!-- Laurels Left -->
-                  <path d="M60,65 C45,55 35,40 38,20 C42,28 50,38 65,45 Z" fill="url(#goldGrad)"/>
-                  <path d="M52,50 C40,42 32,30 36,12 C39,20 48,28 58,35 Z" fill="url(#goldGrad)"/>
-                  <path d="M68,72 C55,68 45,58 48,45 C52,52 60,58 72,62 Z" fill="url(#goldGrad)"/>
-                  <!-- Laurels Right -->
-                  <path d="M100,65 C115,55 125,40 122,20 C118,28 110,38 95,45 Z" fill="url(#goldGrad)"/>
-                  <path d="M108,50 C120,42 128,30 124,12 C121,20 112,28 102,35 Z" fill="url(#goldGrad)"/>
-                  <path d="M92,72 C105,68 115,58 112,45 C108,52 100,58 88,62 Z" fill="url(#goldGrad)"/>
-                  <!-- Center Shield & Camera Icon -->
-                  <path d="M80,15 L98,24 C98,48 80,60 80,60 C80,60 62,48 62,24 Z" fill="#18181f" stroke="url(#goldGrad)" stroke-width="2"/>
-                  <!-- Star Crown -->
-                  <polygon points="80,4 82,10 88,10 83,14 85,20 80,16 75,20 77,14 72,10 78,10" fill="url(#goldGrad)"/>
-                  <!-- Mini Camera inside Shield -->
-                  <rect x="73" y="32" width="14" height="10" rx="2" fill="url(#goldGrad)"/>
-                  <circle cx="80" cy="37" r="3.2" fill="#18181f"/>
-                  <circle cx="80" cy="37" r="1.6" fill="url(#goldGrad)"/>
-                  <!-- Ribbon Estd -->
-                  <path d="M55,68 L80,74 L105,68 L98,63 L80,68 L62,63 Z" fill="url(#goldGrad)"/>
-                  <text x="80" y="72" text-anchor="middle" font-size="5.5" font-family="'Cinzel', serif" font-weight="bold" fill="#1a1505" letter-spacing="1.2">ESTD. 2014</text>
-                </svg>
+              <div class="cert-crest-unified">
+                <div class="cert-crest-stars" aria-hidden="true">★ ★ ★</div>
+                <div class="cert-crest-logo-wrapper">
+                  <!-- Integrated Royal Laurel Wreath & ESTD Banner SVG -->
+                  <svg class="cert-crest-wreath-svg" viewBox="0 0 160 90" width="130" height="74" aria-hidden="true">
+                    <!-- Left Laurel Branch -->
+                    <path d="M48,72 C32,60 22,42 26,20 C30,28 38,38 52,45 Z" fill="url(#goldGrad)" opacity="0.9"/>
+                    <path d="M40,56 C28,46 20,32 25,12 C28,20 37,28 48,35 Z" fill="url(#goldGrad)" opacity="0.8"/>
+                    <path d="M56,80 C42,76 30,64 34,50 C38,58 48,64 60,68 Z" fill="url(#goldGrad)" opacity="0.95"/>
+                    <!-- Right Laurel Branch -->
+                    <path d="M112,72 C128,60 138,42 134,20 C130,28 122,38 108,45 Z" fill="url(#goldGrad)" opacity="0.9"/>
+                    <path d="M120,56 C132,46 140,32 135,12 C132,20 123,28 112,35 Z" fill="url(#goldGrad)" opacity="0.8"/>
+                    <path d="M104,80 C118,76 130,64 126,50 C122,58 112,64 100,68 Z" fill="url(#goldGrad)" opacity="0.95"/>
+                    <!-- Bottom Ribbon ESTD -->
+                    <path d="M58,74 L80,79 L102,74 L96,69 L80,74 L64,69 Z" fill="url(#goldGrad)"/>
+                    <text x="80" y="77.5" text-anchor="middle" font-size="5" font-family="'Cinzel', serif" font-weight="900" fill="#201503" letter-spacing="1">ESTD. 2014</text>
+                  </svg>
+                  <!-- Seamless Transparent Official Academy Logo -->
+                  <img id="cert-logo-img" src="../assets/quick-art-logo.png" alt="Quick Art Photography Academy Official Logo" class="cert-academy-logo" width="54" height="54" />
+                </div>
               </div>
 
               <div class="cert-academy-title">QUICK ART PHOTOGRAPHY ACADEMY</div>
               <div class="cert-subtitle">ACADEMY OF CINEMATIC FILMMAKING, PHOTOGRAPHY &amp; DIGITAL ARTS</div>
               <div class="cert-accreditation-line">
-                AN ISO 9001:2015 CERTIFIED INSTITUTION • GOVT. OF INDIA MSME REGD. • CENTRE CODE: PAT/QAA-800001
+                AN ISO 9001:2015 CERTIFIED INSTITUTION • GOVT. OF INDIA MSME REGD. (UDYAM-BR-35-0027860) • CENTRE CODE: PAT/QAA-800001
               </div>
             </div>
 
@@ -1050,11 +1054,11 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
 
             <h3 id="cert-course-name" class="cert-course">Adobe Premiere Pro Masterclass</h3>
 
-            <!-- Course Meta Badges (Hours, Grade, Portfolio) -->
+            <!-- Course Meta Badges (Grade, Portfolio, Skill Mastery - Duration Removed) -->
             <div class="cert-meta-row">
-              <span class="cert-meta-pill" id="cert-meta-duration">⏱ 18 Credit Hours</span>
               <span class="cert-meta-pill cert-meta-pill-gold">★ Grade: Distinction (Grade A+)</span>
               <span class="cert-meta-pill">✓ Practical Portfolio Approved</span>
+              <span class="cert-meta-pill">🛡️ Industry Standard Certified</span>
             </div>
 
             <!-- Triad Footer: Left (QR & Barcode) - Center (3D Seal) - Right (Signature & Stamp) -->
@@ -1105,20 +1109,45 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
                   <!-- Ribbon Tails -->
                   <div class="cert-seal-ribbon cert-ribbon-left"></div>
                   <div class="cert-seal-ribbon cert-ribbon-right"></div>
-                  <!-- Embossed Medallion -->
+                  <!-- Embossed Medallion SVG -->
                   <div class="cert-seal-embossed">
-                    <div class="cert-seal-outer-teeth"></div>
-                    <div class="cert-seal-inner-ring">
-                      <div class="cert-seal-curved-text-top">EXCELLENCE</div>
-                      <div class="cert-seal-center-star">★ ★ ★</div>
-                      <div class="cert-seal-core-symbol">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                          <circle cx="12" cy="12" r="4"/>
-                          <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
-                        </svg>
-                      </div>
-                      <div class="cert-seal-curved-text-bot">SEAL &bull; QAA</div>
-                    </div>
+                    <svg viewBox="0 0 100 100" width="76" height="76" class="cert-seal-svg">
+                      <defs>
+                        <radialGradient id="sealGoldGrad" cx="35%" cy="30%" r="65%">
+                          <stop offset="0%" stop-color="#fff8d6"/>
+                          <stop offset="30%" stop-color="#f4c96b"/>
+                          <stop offset="65%" stop-color="#bf8528"/>
+                          <stop offset="100%" stop-color="#6e4608"/>
+                        </radialGradient>
+                        <path id="sealPathTop" d="M 17,50 A 33,33 0 1,1 83,50" fill="none"/>
+                        <path id="sealPathBottom" d="M 83,50 A 33,33 0 0,1 17,50" fill="none"/>
+                      </defs>
+                      
+                      <!-- Serrated Outer Edge -->
+                      <circle cx="50" cy="50" r="47" fill="url(#sealGoldGrad)" stroke="#eed18d" stroke-width="1.5" stroke-dasharray="3,1.5"/>
+                      
+                      <!-- Inner Ring Border -->
+                      <circle cx="50" cy="50" r="39" fill="none" stroke="rgba(255,245,210,0.85)" stroke-width="1.2"/>
+                      <circle cx="50" cy="50" r="25" fill="#3a2202" fill-opacity="0.12" stroke="rgba(255,245,210,0.6)" stroke-width="1"/>
+                      
+                      <!-- Top Curved Text: QUICK ART ACADEMY -->
+                      <text font-family="'Cinzel', serif" font-size="6.2" font-weight="900" fill="#321c02" letter-spacing="0.8">
+                        <textPath href="#sealPathTop" startOffset="50%" text-anchor="middle">★ QUICK ART ACADEMY ★</textPath>
+                      </text>
+                      
+                      <!-- Bottom Curved Text: OFFICIAL SEAL -->
+                      <text font-family="'Cinzel', serif" font-size="5.5" font-weight="900" fill="#321c02" letter-spacing="1">
+                        <textPath href="#sealPathBottom" startOffset="50%" text-anchor="middle">OFFICIAL SEAL • EXCELLENCE</textPath>
+                      </text>
+                      
+                      <!-- Center Star Crown & Camera Emblem (Completely clear, no overlapping text) -->
+                      <g transform="translate(50, 50)">
+                        <polygon points="0,-16 2.5,-9 9,-9 3.5,-5 6,2 0,-2 -6,2 -3.5,-5 -9,-9 -2.5,-9" fill="#fff5d0"/>
+                        <path d="M-6,-1 L-3,-4 L3,-4 L6,-1 L8,-1 C8.6,-1 9,-0.6 9,0 L9,8 C9,8.6 8.6,9 8,9 L-8,9 C-8.6,9 -9,8.6 -9,8 L-9,0 C-9,-0.6 -8.6,-1 -8,-1 Z" fill="#321c02"/>
+                        <circle cx="0" cy="4" r="3" fill="#fff5d0"/>
+                        <circle cx="0" cy="4" r="1.4" fill="#321c02"/>
+                      </g>
+                    </svg>
                   </div>
                 </div>
               </div>
@@ -1130,23 +1159,27 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
                   <div class="cert-sig-role">Date of Issue</div>
                 </div>
 
-                <div class="cert-sig-signature-area">
-                  <!-- Official Red / Violet Academy Director Stamp -->
-                  <div class="cert-official-stamp" aria-hidden="true">
+                <div class="cert-sig-signature-row">
+                  <!-- Official Red / Crimson Academy Director Stamp (Cleanly side-by-side, no text overlap) -->
+                  <div class="cert-official-stamp" aria-label="Official Verification Stamp">
                     <div class="cert-stamp-inner">
-                      <span>QUICK ART ACADEMY</span>
-                      <b>DIRECTOR</b>
-                      <small>VERIFIED</small>
+                      <div class="cert-stamp-circle">
+                        <div class="cert-stamp-org">QUICK ART</div>
+                        <div class="cert-stamp-title">DIRECTOR</div>
+                        <div class="cert-stamp-stars">★ ★ ★</div>
+                        <div class="cert-stamp-status">VERIFIED</div>
+                      </div>
                     </div>
                   </div>
 
-                  <!-- Digital Pen Signature (Alex Brush) -->
-                  <div class="cert-sig-line">Anil Sharma</div>
+                  <!-- Signature Column -->
+                  <div class="cert-sig-col">
+                    <div class="cert-sig-line">Anil Sharma</div>
+                    <div class="cert-sig-name">Anil Sharma</div>
+                    <div class="cert-sig-role">Founder &amp; Master Director</div>
+                    <div class="cert-sig-org">Quick Art Photography Academy</div>
+                  </div>
                 </div>
-
-                <div class="cert-sig-name">Anil Sharma</div>
-                <div class="cert-sig-role">Founder &amp; Master Director</div>
-                <div class="cert-sig-org">Quick Art Photography Academy</div>
               </div>
             </div>
 
@@ -1214,7 +1247,7 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
             </div>
             <div class="ledger-item">
               <span class="ledger-lbl">Accreditation Record</span>
-              <span class="ledger-val">ISO 9001:2015 &bull; Govt. of India MSME (PAT/QAA-800001)</span>
+              <span class="ledger-val">ISO 9001:2015 &bull; Govt. of India MSME (UDYAM-BR-35-0027860)</span>
             </div>
           </div>
         </div>

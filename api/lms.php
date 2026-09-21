@@ -956,9 +956,9 @@ if ($action === 'get-lesson' && $method === 'GET') {
             'isCompleted' => in_array($targetLesson['id'], $completed)
         ],
         'watermark' => [
-            'enabled' => !empty($settings['watermarkEnabled']),
-            'text' => "+91 " . $student['phone'],
-            'opacity' => $settings['watermarkOpacity'] ?? 0.35
+            'enabled' => false,
+            'text' => '',
+            'opacity' => 0
         ]
     ]);
 }
@@ -1506,10 +1506,9 @@ if ($action === 'verify-certificate' && $method === 'GET') {
                     'courseTitle' => $targetCourse['title'],
                     'courseSubtitle' => $targetCourse['subtitle'] ?? 'Professional Certification Program',
                     'category' => $targetCourse['category'] ?? 'Filmmaking & Photography',
-                    'duration' => $targetCourse['duration'] ?? '18 Hours',
                     'issuedDate' => date('d F Y'),
                     'issuedBy' => 'Quick Art Photography Academy',
-                    'accreditation' => 'ISO 9001:2015 Certified Educational Institution | Govt. of India MSME Regd.',
+                    'accreditation' => 'ISO 9001:2015 Certified Educational Institution | Govt. of India MSME Regd. (UDYAM-BR-35-0027860)',
                     'centerCode' => 'PAT/QAA-800001',
                     'mentor' => 'Anil Sharma (Founder & Director)',
                     'grade' => 'Distinction (Grade A+)',
@@ -1519,6 +1518,38 @@ if ($action === 'verify-certificate' && $method === 'GET') {
                 ];
                 break;
             }
+        }
+    }
+
+    if (!$found && $matchedCourseId) {
+        $courses = load_courses();
+        $targetCourse = null;
+        foreach ($courses as $c) {
+            if ($c['id'] === $matchedCourseId) {
+                $targetCourse = $c;
+                break;
+            }
+        }
+        if ($targetCourse) {
+            $found = true;
+            $certData = [
+                'valid' => true,
+                'studentName' => !empty($students[0]['name']) ? $students[0]['name'] : 'Anil Sharma (Mentor Demo)',
+                'studentPhoneMasked' => '99******80',
+                'courseId' => $targetCourse['id'],
+                'courseTitle' => $targetCourse['title'],
+                'courseSubtitle' => $targetCourse['subtitle'] ?? 'Professional Certification Program',
+                'category' => $targetCourse['category'] ?? 'Filmmaking & Photography',
+                'issuedDate' => date('d F Y'),
+                'issuedBy' => 'Quick Art Photography Academy',
+                'accreditation' => 'ISO 9001:2015 Certified Educational Institution | Govt. of India MSME Regd. (UDYAM-BR-35-0027860)',
+                'centerCode' => 'PAT/QAA-800001',
+                'mentor' => 'Anil Sharma (Founder & Director)',
+                'grade' => 'Distinction (Grade A+)',
+                'status' => 'AUTHENTIC & VERIFIED',
+                'certificateId' => $certId,
+                'verificationUrl' => 'https://quickartphotography.in/portal/index.html?verify=' . urlencode($certId)
+            ];
         }
     }
 

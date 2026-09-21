@@ -860,35 +860,14 @@ a {
   background: #000;
 }
 
-/* Anti-Piracy Watermark Overlay */
-.watermark-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 10;
-  overflow: hidden;
-}
-
+/* Watermark Overlay (Permanently Disabled for Clean, Professional Playback) */
+.watermark-overlay,
 .watermark-tag {
-  position: absolute;
-  color: rgba(255, 255, 255, 0.32);
-  font-family: monospace;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 4px 10px;
-  background: rgba(0, 0, 0, 0.35);
-  border-radius: 6px;
-  user-select: none;
-  backdrop-filter: blur(4px);
-  animation: floatWatermark 25s infinite alternate ease-in-out;
-}
-
-@keyframes floatWatermark {
-  0%   { top: 10%; left: 10%; }
-  25%  { top: 75%; left: 20%; }
-  50%  { top: 20%; left: 70%; }
-  75%  { top: 60%; left: 55%; }
-  100% { top: 15%; left: 40%; }
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  animation: none !important;
 }
 
 /* Lesson Control Bar */
@@ -1289,42 +1268,79 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  color: #10b981;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(5, 150, 105, 0.08) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  color: #065f46;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 8px 16px;
-  border-radius: 6px;
+  letter-spacing: 0.06em;
+  padding: 10px 18px;
+  border-radius: 8px;
   margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.12);
+}
+
+.cert-status-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cert-status-title {
+  color: #047857;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.cert-status-sep {
+  color: rgba(16, 185, 129, 0.4);
+}
+
+.cert-status-academy {
+  color: #1f2937;
+  font-weight: 700;
+}
+
+.cert-status-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .cert-status-dot {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: #10b981;
-  box-shadow: 0 0 8px #10b981;
+  box-shadow: 0 0 10px #10b981;
   display: inline-block;
   animation: pulseDot 1.8s infinite;
 }
 
 @keyframes pulseDot {
   0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.3); opacity: 0.6; }
+  50% { transform: scale(1.35); opacity: 0.6; }
 }
 
 .cert-iso-badge {
-  background: rgba(201, 151, 56, 0.2);
-  color: #e5b869;
+  background: rgba(201, 151, 56, 0.18);
+  color: #926417;
   border: 1px solid rgba(201, 151, 56, 0.45);
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 3px 10px;
+  border-radius: 5px;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.05em;
+}
+
+.cert-msme-badge {
+  background: rgba(16, 185, 129, 0.16);
+  color: #065f46;
+  border-color: rgba(16, 185, 129, 0.4);
 }
 
 /* ================= Royal Academic Diploma Frame ================= */
@@ -1398,14 +1414,51 @@ a {
   margin-bottom: 8px;
 }
 
-.cert-crest-wrap {
-  margin-bottom: 2px;
+.cert-crest-unified {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.cert-crest-stars {
+  font-size: 8px;
+  letter-spacing: 4px;
+  color: #c99738;
+  margin-bottom: 2px;
+  opacity: 0.92;
+  text-shadow: 0 1px 2px rgba(184, 132, 59, 0.25);
+}
+
+.cert-crest-logo-wrapper {
+  position: relative;
+  width: 130px;
+  height: 74px;
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
 
-.cert-crest-svg {
-  filter: drop-shadow(0 2px 4px rgba(184, 132, 59, 0.3));
+.cert-crest-wreath-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 130px;
+  height: 74px;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 2px rgba(184, 132, 59, 0.25));
+}
+
+.cert-academy-logo {
+  position: relative;
+  z-index: 2;
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  display: block;
+  background: transparent;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.1));
 }
 
 .cert-academy-title {
@@ -1648,61 +1701,16 @@ a {
   height: 76px;
   margin: 0 auto;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff0a8 0%, #e0ab4a 40%, #a36f1c 80%, #613e09 100%);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3), inset 0 2px 3px rgba(255, 255, 255, 0.7), inset 0 -3px 5px rgba(0, 0, 0, 0.4);
-  border: 2px solid #ecd189;
   display: flex;
   align-items: center;
   justify-content: center;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.28));
 }
 
-.cert-seal-outer-teeth {
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  border: 2px dotted rgba(255, 235, 150, 0.85);
-}
-
-.cert-seal-inner-ring {
-  border: 1px solid rgba(255, 245, 200, 0.7);
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #3a2202;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
-}
-
-.cert-seal-curved-text-top {
-  font-family: 'Cinzel', serif;
-  font-size: 5.5px;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  line-height: 1;
-}
-
-.cert-seal-center-star {
-  font-size: 6.5px;
-  color: #fff8d6;
-  margin: 1px 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.cert-seal-core-symbol {
-  color: #3a2202;
-  line-height: 1;
-  margin: 1px 0;
-}
-
-.cert-seal-curved-text-bot {
-  font-family: 'Cinzel', serif;
-  font-size: 5px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  line-height: 1;
+.cert-seal-svg {
+  display: block;
+  width: 76px;
+  height: 76px;
 }
 
 /* Right: Issue Date, Signature & Official Director Stamp */
@@ -1729,50 +1737,95 @@ a {
   color: #847761;
 }
 
-.cert-sig-signature-area {
-  position: relative;
-  height: 44px;
+.cert-sig-signature-row {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-end;
-  margin-bottom: 2px;
+  gap: 14px;
+  margin-top: 4px;
 }
 
 .cert-official-stamp {
-  position: absolute;
-  right: 16px;
-  top: -10px;
-  width: 64px;
-  height: 64px;
+  width: 62px;
+  height: 62px;
   border-radius: 50%;
-  border: 2px dashed rgba(179, 38, 54, 0.6);
+  border: 2px dashed rgba(179, 38, 54, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
   transform: rotate(-10deg);
   pointer-events: none;
-  opacity: 0.8;
-  z-index: 1;
+  opacity: 0.92;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(179, 38, 54, 0.12);
+  background: rgba(255, 245, 245, 0.35);
 }
 
 .cert-stamp-inner {
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(179, 38, 54, 0.7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  color: rgba(179, 38, 54, 0.85);
+}
+
+.cert-stamp-circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #a72332;
   font-family: 'Cinzel', serif;
-  font-size: 6px;
+  line-height: 1.05;
+}
+
+.cert-stamp-org {
+  font-size: 5.2px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.cert-stamp-title {
+  font-size: 6.5px;
   font-weight: 900;
-  line-height: 1.1;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
+  margin: 1px 0;
+  color: #881724;
+}
+
+.cert-stamp-stars {
+  font-size: 5px;
+  letter-spacing: 1px;
+  color: #a72332;
+}
+
+.cert-stamp-status {
+  font-size: 4.5px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  border-top: 1px solid rgba(179, 38, 54, 0.5);
+  padding-top: 1px;
+  margin-top: 1px;
+}
+
+.cert-sig-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
 }
 
 .cert-sig-line {
-  position: relative;
-  z-index: 2;
   font-family: 'Alex Brush', cursive;
-  font-size: 36px;
+  font-size: 34px;
   color: #13151e;
   line-height: 1;
-  transform: rotate(-3deg);
+  transform: rotate(-2deg);
+  margin-bottom: -4px;
+  padding-right: 6px;
 }
 
 .cert-sig-name {
@@ -2036,9 +2089,21 @@ a {
   .cert-microprint-border {
     display: none;
   }
-  .cert-crest-wrap svg {
-    width: 74px;
-    height: 38px;
+  .cert-crest-logo-wrapper {
+    width: 96px;
+    height: 54px;
+  }
+  .cert-crest-wreath-svg {
+    width: 96px;
+    height: 54px;
+  }
+  .cert-academy-logo {
+    width: 40px;
+    height: 40px;
+  }
+  .cert-crest-stars {
+    font-size: 6px;
+    letter-spacing: 2px;
   }
   .cert-academy-title {
     font-size: clamp(12px, 3.6vw, 15px);
@@ -2160,30 +2225,13 @@ a {
     right: 10px;
   }
   .cert-seal-embossed {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
   }
-  .cert-seal-inner-ring {
-    width: 36px;
-    height: 36px;
-  }
-  .cert-seal-curved-text-top {
-    font-size: 4.5px;
-    letter-spacing: 0.08em;
-    top: 2px;
-  }
-  .cert-seal-center-star {
-    font-size: 5.5px;
-  }
-  .cert-seal-core-symbol svg {
-    width: 11px;
-    height: 11px;
-  }
-  .cert-seal-curved-text-bot {
-    font-size: 4.5px;
-    letter-spacing: 0.06em;
-    bottom: 2px;
+  .cert-seal-svg {
+    width: 48px;
+    height: 48px;
   }
 
   /* Right Director Signature & Stamp */
@@ -2198,34 +2246,47 @@ a {
   .cert-date-val {
     font-size: 8px;
   }
-  .cert-sig-role {
-    font-size: 6.5px;
+  .cert-sig-signature-row {
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .cert-official-stamp {
+    width: 36px;
+    height: 36px;
+  }
+  .cert-stamp-inner {
+    width: 30px;
+    height: 30px;
+  }
+  .cert-stamp-org {
+    font-size: 3.5px;
+  }
+  .cert-stamp-title {
+    font-size: 4px;
+  }
+  .cert-stamp-stars {
+    font-size: 3.5px;
+  }
+  .cert-stamp-status {
+    font-size: 3px;
+  }
+  .cert-sig-col {
+    align-items: flex-end;
   }
   .cert-sig-line {
-    font-size: 22px;
+    font-size: 20px;
     line-height: 1;
+    margin-bottom: -2px;
   }
   .cert-sig-name {
-    font-size: 9px;
+    font-size: 8px;
+    min-width: 80px;
+  }
+  .cert-sig-role {
+    font-size: 6px;
   }
   .cert-sig-org {
     display: none;
-  }
-  .cert-official-stamp {
-    width: 42px;
-    height: 42px;
-    right: -2px;
-    top: -10px;
-  }
-  .cert-stamp-inner {
-    font-size: 5px;
-    border-width: 1px;
-  }
-  .cert-stamp-inner b {
-    font-size: 5.5px;
-  }
-  .cert-stamp-inner small {
-    font-size: 4px;
   }
   .cert-bottom-tamper {
     font-size: 5.5px;
@@ -4363,91 +4424,21 @@ video::-webkit-media-controls-download-button {
   border-radius: inherit;
 }
 
-/* Top Shield: Covers YouTube video title, channel badge, and Share buttons */
-.yt-shield-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 52px;
-  z-index: 15;
-  background: linear-gradient(180deg, rgba(8, 10, 15, 0.95) 0%, rgba(8, 10, 15, 0.7) 60%, transparent 100%);
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  pointer-events: none;
-  border-top-left-radius: inherit;
-  border-top-right-radius: inherit;
-}
-
-.yt-shield-content {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  pointer-events: none;
-}
-
-.yt-shield-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #34d399;
-  box-shadow: 0 0 8px rgba(52, 211, 153, 0.8);
-  animation: pulseDot 2s infinite ease-in-out;
-}
-
-@keyframes pulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.85); }
-}
-
-.yt-shield-badge {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: #f4f4f6;
-  background: rgba(0, 0, 0, 0.45);
-  padding: 3px 8px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-
-/* Top-right blocker: intercepts click on YouTube Share / Watch Later icons */
-.yt-shield-share-blocker {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 140px;
-  height: 52px;
-  z-index: 16;
-  pointer-events: auto;
-  cursor: default;
-  background: transparent;
-}
-
-/* Bottom-right blocker: intercepts click on "Watch on YouTube" icon */
-.yt-shield-corner {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 75px;
-  height: 46px;
-  z-index: 16;
-  pointer-events: auto;
-  cursor: default;
-  background: transparent;
-}
-
-/* Watermark always stays above video player and shields */
-.watermark-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 20;
-  overflow: hidden;
+/* Unobstructed Clean Video Player (No Disturbing Overlays, Badges, or Watermarks) */
+.yt-shield-top,
+.yt-shield-content,
+.yt-shield-badge,
+.yt-shield-dot,
+.yt-shield-share-blocker,
+.yt-shield-corner,
+.watermark-overlay,
+.watermark-tag {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 

@@ -102,7 +102,7 @@ function load_lms_settings() {
         'bunnyApiKey' => '',
         'bunnyTokenAuthKey' => '',
         'bunnyHostname' => 'iframe.mediadelivery.net',
-        'watermarkEnabled' => true,
+        'watermarkEnabled' => false,
         'watermarkOpacity' => 0.35,
         'otpDemoMode' => false,
         'defaultOtp' => '123456',

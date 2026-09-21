@@ -9,7 +9,7 @@
     "razorpayKeySecret": "",
     "razorpayWebhookSecret": "",
     "razorpayMode": "live",
-    "watermarkEnabled": true,
+    "watermarkEnabled": false,
     "watermarkOpacity": 0.35,
     "otpDemoMode": false,
     "defaultOtp": "123456",

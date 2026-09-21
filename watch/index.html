@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Watch Private Video Preview • Quick Art Photography Academy</title>
+  <meta name="robots" content="noindex, nofollow" />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #07090e;
+      --card-bg: rgba(18, 22, 33, 0.7);
+      --border: rgba(255, 255, 255, 0.08);
+      --gold: #d8a153;
+      --gold-glow: rgba(216, 161, 83, 0.25);
+      --text: #f4f4f6;
+      --text-muted: #9499ad;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(ellipse 70% 50% at 50% -10%, rgba(216, 161, 83, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 85% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+
+    /* Top Navigation Header */
+    .watch-header {
+      width: 100%;
+      max-width: 1080px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      background: rgba(14, 18, 28, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand-logo {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-text-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .secure-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(216, 161, 83, 0.1);
+      border: 1px solid rgba(216, 161, 83, 0.3);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #f7d488;
+      letter-spacing: 0.03em;
+    }
+
+    .secure-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    /* Main Video Cinema Container */
+    .cinema-wrap {
+      width: 100%;
+      max-width: 1080px;
+      background: #000;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 40px rgba(216, 161, 83, 0.06);
+      position: relative;
+    }
+
+    .player-aspect-box {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio */
+      background: #000;
+    }
+
+    .player-aspect-box iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000;
+    }
+
+    /* Details Card below video */
+    .video-info-card {
+      width: 100%;
+      max-width: 1080px;
+      margin-top: 20px;
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 26px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .video-titles {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .video-pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .video-heading {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .video-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .contact-btn-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-wa {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #25d366;
+      color: #0b2b14;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .btn-wa:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    .btn-portal {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: #fff;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-portal:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Error / Placeholder state */
+    .empty-state {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      color: var(--text-muted);
+    }
+
+    .empty-icon {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    /* Footer */
+    .watch-footer {
+      margin-top: auto;
+      padding-top: 32px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.35);
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 10px;
+      }
+      .watch-header {
+        padding: 10px 14px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+      }
+      .brand-title {
+        font-size: 13px;
+      }
+      .secure-badge {
+        font-size: 10px;
+        padding: 4px 10px;
+      }
+      .cinema-wrap {
+        border-radius: 12px;
+      }
+      .video-info-card {
+        padding: 16px;
+        border-radius: 14px;
+      }
+      .video-heading {
+        font-size: 17px;
+      }
+      .contact-btn-row {
+        width: 100%;
+        flex-direction: column;
+      }
+      .btn-wa, .btn-portal {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+
+  <!-- Header -->
+  <header class="watch-header">
+    <a href="../index.html" class="brand-link">
+      <img src="../assets/quick-art-logo.png" alt="Quick Art Logo" class="brand-logo" />
+      <div class="brand-text-block">
+        <span class="brand-title">Quick Art Photography</span>
+        <span class="brand-sub">Private Cinema Player</span>
+      </div>
+    </a>
+    <div class="secure-badge">
+      <span class="secure-dot"></span>
+      <span>Anti-Download Protected</span>
+    </div>
+  </header>
+
+  <!-- Cinema Player Box -->
+  <main class="cinema-wrap">
+    <div class="player-aspect-box" id="player-box">
+      <!-- Iframe or Empty State will be rendered by JS -->
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">🎬</div>
+        <h3 style="color:#fff; margin-bottom: 6px;">Loading Video...</h3>
+        <p>Connecting to secure Bunny.net video stream.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Video Details Card -->
+  <section class="video-info-card">
+    <div class="video-titles">
+      <span class="video-pill" id="video-tag">Private Video Preview</span>
+      <h1 class="video-heading" id="video-title">Official Video Showcase</h1>
+      <p class="video-meta" id="video-meta">Quick Art Photography Academy • Powered by Bunny Stream (Encrypted)</p>
+    </div>
+    <div class="contact-btn-row">
+      <a href="https://wa.me/919939800780?text=Hi%20Anil%20Sir%2C%20I%20am%20watching%20the%20video%20preview." target="_blank" rel="noopener noreferrer" class="btn-wa">
+        💬 WhatsApp Feedback
+      </a>
+      <a href="../portal/index.html" class="btn-portal">
+        🎓 Student LMS Portal
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer Notice -->
+  <footer class="watch-footer">
+    © 2026 Quick Art Photography Academy. All rights reserved. Video playback is encrypted and protected against recording/downloads.
+  </footer>
+
+  <script>
+    // Anti-Piracy Event Blockers
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      // Block Ctrl+S, Cmd+S, Ctrl+U, F12
+      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'u' || e.key === 'p')) {
+        e.preventDefault();
+      }
+      if (e.key === 'F12') e.preventDefault();
+    });
+
+    (function initPrivatePlayer() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const videoId = urlParams.get('v') || urlParams.get('id');
+      const libId = urlParams.get('lib') || '755385';
+      const customTitle = urlParams.get('title');
+      const customSubtitle = urlParams.get('sub');
+
+      const titleEl = document.getElementById('video-title');
+      const metaEl = document.getElementById('video-meta');
+      const playerBox = document.getElementById('player-box');
+
+      if (customTitle && titleEl) {
+        titleEl.textContent = customTitle;
+        document.title = `${customTitle} • Quick Art Photography`;
+      }
+      if (customSubtitle && metaEl) {
+        metaEl.textContent = customSubtitle;
+      }
+
+      if (!videoId) {
+        playerBox.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">⚠️</div>
+            <h3 style="color:#fff; margin-bottom: 6px;">No Video ID Specified</h3>
+            <p>Please provide a valid Bunny.net video ID in the link.</p>
+            <p style="font-size:12px; margin-top: 10px; color:#d8a153;">Example: ?v=YOUR_BUNNY_VIDEO_ID&title=Wedding+Teaser</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Construct Protected Bunny Embed URL
+      // Since it runs inside quickartphotography.in, Allowed Domains accepts the request
+      const embedUrl = `https://iframe.mediadelivery.net/embed/${encodeURIComponent(libId)}/${encodeURIComponent(videoId)}?autoplay=true&preload=true`;
+
+      playerBox.innerHTML = `
+        <iframe 
+          src="${embedUrl}" 
+          loading="lazy" 
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen" 
+          allowfullscreen="true">
+        </iframe>
+      `;
+    })();
+  </script>
+</body>
+</html>

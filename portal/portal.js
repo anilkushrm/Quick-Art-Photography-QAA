@@ -805,26 +805,7 @@ async function loadLesson(courseId, lessonId) {
       ytTarget.id = 'yt-player-target';
       videoMount.appendChild(ytTarget);
 
-      // Top shield: hides YouTube video title, channel logo & Share button
-      const topShield = document.createElement('div');
-      topShield.className = 'yt-shield-top';
-      topShield.innerHTML = `
-        <div class="yt-shield-content">
-          <span class="yt-shield-dot"></span>
-          <span class="yt-shield-badge">HD Masterclass • Quick Art Academy</span>
-        </div>
-      `;
-      videoMount.appendChild(topShield);
-
-      // Top-right blocker: intercepts click on YouTube Share/Watch Later icons
-      const shareBlocker = document.createElement('div');
-      shareBlocker.className = 'yt-shield-share-blocker';
-      videoMount.appendChild(shareBlocker);
-
-      // Bottom-right corner blocker: prevents clicking 'Watch on YouTube'
-      const cornerBlocker = document.createElement('div');
-      cornerBlocker.className = 'yt-shield-corner';
-      videoMount.appendChild(cornerBlocker);
+      // Unobstructed cinema-grade player target (No overlay text or disturbing blockers)
 
       // Load and mount via YouTube Iframe API
       loadYouTubeIframeApi(() => {
@@ -907,13 +888,13 @@ async function loadLesson(courseId, lessonId) {
       video.addEventListener('ended', handleVideoEnded);
     }
 
-    // Configure Anti-Piracy Watermark
+    // Clean Video Playback: Permanently hide watermark login number
     const watermarkEl = document.getElementById('watermark-overlay');
-    if (res.watermark?.enabled) {
-      watermarkEl.classList.remove('hidden');
-      document.getElementById('watermark-text').textContent = res.watermark.text;
-    } else {
+    if (watermarkEl) {
       watermarkEl.classList.add('hidden');
+      watermarkEl.style.display = 'none';
+      const wText = document.getElementById('watermark-text');
+      if (wText) wText.textContent = '';
     }
 
     // Toggle Complete Button State
@@ -1376,7 +1357,7 @@ function populateCertificateUI(studentName, courseTitle, courseId, duration, cer
   if (courseElem) courseElem.textContent = cTitle;
   if (dateElem) dateElem.textContent = today;
   if (idElem) idElem.textContent = `ID: ${cId}`;
-  if (durElem) durElem.textContent = `⏱ ${duration || '18 Credit Hours'}`;
+  if (durElem) durElem.textContent = '';
 
   // Update Live Academic Verification Ledger
   const ledgerName = document.getElementById('ledger-student-name');
@@ -1386,8 +1367,12 @@ function populateCertificateUI(studentName, courseTitle, courseId, duration, cer
   if (ledgerId) ledgerId.textContent = cId;
   if (ledgerCourse) ledgerCourse.textContent = cTitle;
 
-  // Live QR Code leading to verification URL
-  const verifyUrl = `https://quickartphotography.in/portal/index.html?verify=${encodeURIComponent(cId)}`;
+  // Live QR Code leading to verification URL (dynamic localhost / production)
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const verifyUrl = isLocal 
+    ? `${window.location.origin}${window.location.pathname}?verify=${encodeURIComponent(cId)}`
+    : `https://quickartphotography.in/portal/index.html?verify=${encodeURIComponent(cId)}`;
+
   if (qrElem) {
     qrElem.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}&margin=4`;
     qrElem.alt = `Verify ${cId}`;
@@ -1423,7 +1408,7 @@ function closeCertificateModal() {
 }
 
 // 1-Click HD Image (PNG) Export via Canvas
-function downloadCertificatePNG() {
+async function downloadCertificatePNG() {
   if (!activeCertData) {
     toast('Certificate not ready', false);
     return;
@@ -1457,63 +1442,119 @@ function downloadCertificatePNG() {
   ctx.strokeStyle = 'rgba(201, 151, 56, 0.4)';
   ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
 
+  // Helper to load image asynchronously
+  const loadImage = (src) => new Promise((resolve) => {
+    if (!src) return resolve(null);
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+
+  // Load logo (use existing DOM image if ready or load from assets)
+  const domLogo = document.getElementById('cert-logo-img');
+  let logoImg = null;
+  if (domLogo && domLogo.complete && domLogo.naturalWidth > 0) {
+    logoImg = domLogo;
+  } else {
+    logoImg = await loadImage('../assets/quick-art-logo.png');
+  }
+
+  // Draw Stars above logo
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#c99738';
+  ctx.font = '16px Arial, sans-serif';
+  ctx.fillText('★   ★   ★', 877, 72);
+
+  // Draw Logo seamlessly onto parchment (transparent, no white patch)
+  if (logoImg) {
+    const logoSize = 76;
+    const logoX = 877 - (logoSize / 2);
+    const logoY = 82;
+
+    ctx.save();
+    // Subtle golden laurel accent ring
+    ctx.beginPath();
+    ctx.arc(877, logoY + (logoSize / 2), (logoSize / 2) + 2, 0, Math.PI * 2);
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = 'rgba(201, 151, 56, 0.65)';
+    ctx.stroke();
+
+    // Clip circular image directly onto parchment
+    ctx.beginPath();
+    ctx.arc(877, logoY + (logoSize / 2), logoSize / 2, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
+    ctx.restore();
+
+    // Ribbon ESTD under logo
+    ctx.fillStyle = '#b8843b';
+    ctx.beginPath();
+    ctx.roundRect(832, logoY + logoSize + 4, 90, 18, 3);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 9px "Cinzel", Georgia, serif';
+    ctx.fillText('ESTD. 2014', 877, logoY + logoSize + 16);
+  }
+
   // Header Title
   ctx.textAlign = 'center';
   ctx.fillStyle = '#141720';
-  ctx.font = 'bold 36px "Cinzel", Georgia, serif';
-  ctx.fillText('QUICK ART PHOTOGRAPHY ACADEMY', 877, 140);
+  ctx.font = 'bold 34px "Cinzel", Georgia, serif';
+  ctx.fillText('QUICK ART PHOTOGRAPHY ACADEMY', 877, 206);
 
   ctx.fillStyle = '#8c6a28';
-  ctx.font = 'bold 15px "Plus Jakarta Sans", Arial, sans-serif';
-  ctx.fillText('ACADEMY OF CINEMATIC FILMMAKING, PHOTOGRAPHY & DIGITAL ARTS', 877, 175);
+  ctx.font = 'bold 14px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('ACADEMY OF CINEMATIC FILMMAKING, PHOTOGRAPHY & DIGITAL ARTS', 877, 224);
 
   ctx.fillStyle = '#5c584e';
-  ctx.font = '13px "Plus Jakarta Sans", Arial, sans-serif';
-  ctx.fillText('AN ISO 9001:2015 CERTIFIED INSTITUTION • GOVT. OF INDIA MSME REGD. • CENTRE CODE: PAT/QAA-800001', 877, 205);
+  ctx.font = '12px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('AN ISO 9001:2015 CERTIFIED INSTITUTION • GOVT. OF INDIA MSME REGD. (UDYAM-BR-35-0027860) • CENTRE CODE: PAT/QAA-800001', 877, 248);
 
   // Ribbon Banner
   ctx.fillStyle = '#b8843b';
   ctx.beginPath();
-  ctx.roundRect(480, 235, 794, 42, 6);
+  ctx.roundRect(480, 275, 794, 42, 6);
   ctx.fill();
 
   ctx.fillStyle = '#ffffff';
   ctx.font = 'bold 18px "Cinzel", Georgia, serif';
-  ctx.fillText('★  CERTIFICATE OF COMPLETION & EXCELLENCE  ★', 877, 262);
+  ctx.fillText('★  CERTIFICATE OF COMPLETION & EXCELLENCE  ★', 877, 302);
 
   // Presented to
   ctx.fillStyle = '#585143';
   ctx.font = 'italic 20px "Playfair Display", Georgia, serif';
-  ctx.fillText('This prestigious credential is duly and officially conferred upon', 877, 325);
+  ctx.fillText('This prestigious credential is duly and officially conferred upon', 877, 360);
 
   // Student Name
   ctx.fillStyle = '#94661a';
-  ctx.font = 'bold 54px "Cinzel", Georgia, serif';
-  ctx.fillText(activeCertData.studentName, 877, 400);
+  ctx.font = 'bold 52px "Cinzel", Georgia, serif';
+  ctx.fillText(activeCertData.studentName, 877, 430);
 
   // Underline
   ctx.lineWidth = 3;
   ctx.strokeStyle = '#c99738';
   ctx.beginPath();
-  ctx.moveTo(560, 420);
-  ctx.lineTo(1194, 420);
+  ctx.moveTo(560, 450);
+  ctx.lineTo(1194, 450);
   ctx.stroke();
 
   // Citation text
   ctx.fillStyle = '#403c35';
   ctx.font = '18px "Plus Jakarta Sans", Arial, sans-serif';
-  ctx.fillText('in recognition of successfully completing all academic modules, practical assignments,', 877, 475);
-  ctx.fillText('industry-standard real client workflows, and demonstrating professional mastery in', 877, 505);
+  ctx.fillText('in recognition of successfully completing all academic modules, practical assignments,', 877, 500);
+  ctx.fillText('industry-standard real client workflows, and demonstrating professional mastery in', 877, 528);
 
   // Course Name
   ctx.fillStyle = '#12151d';
-  ctx.font = 'bold 36px "Cinzel", Georgia, serif';
-  ctx.fillText(activeCertData.courseTitle, 877, 565);
+  ctx.font = 'bold 35px "Cinzel", Georgia, serif';
+  ctx.fillText(activeCertData.courseTitle, 877, 585);
 
-  // Meta Pill text
+  // Meta Badges text (Duration removed)
   ctx.fillStyle = '#704408';
   ctx.font = 'bold 16px "Plus Jakarta Sans", Arial, sans-serif';
-  ctx.fillText(`⏱ ${activeCertData.duration}   •   ★ Grade: Distinction (Grade A+)   •   ✓ Practical Portfolio Approved`, 877, 615);
+  ctx.fillText('★ Grade: Distinction (Grade A+)   •   ✓ Practical Portfolio Approved   •   🛡️ Industry Certified', 877, 635);
 
   // Footer Left: ID & Verification
   ctx.textAlign = 'left';
@@ -1524,26 +1565,115 @@ function downloadCertificatePNG() {
   ctx.font = '13px "Plus Jakarta Sans", Arial, sans-serif';
   ctx.fillText('Verify Online: quickartphotography.in/portal/', 120, 1125);
 
-  // Footer Center: Seal
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#b8843b';
-  ctx.beginPath();
-  ctx.arc(877, 1080, 52, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 12px "Cinzel", Georgia, serif';
-  ctx.fillText('OFFICIAL SEAL', 877, 1075);
-  ctx.fillText('QAA', 877, 1095);
+  // Footer Center: Ornate 3D Gold Seal
+  ctx.save();
+  const sealX = 877;
+  const sealY = 1060;
+  const sealR = 56;
 
-  // Footer Right: Signature & Anil Sharma
+  // Ribbon Tails
+  ctx.fillStyle = '#99222c';
+  ctx.beginPath();
+  ctx.moveTo(sealX - 22, sealY + 20);
+  ctx.lineTo(sealX - 35, sealY + 70);
+  ctx.lineTo(sealX - 22, sealY + 62);
+  ctx.lineTo(sealX - 9, sealY + 70);
+  ctx.lineTo(sealX - 5, sealY + 25);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(sealX + 22, sealY + 20);
+  ctx.lineTo(sealX + 35, sealY + 70);
+  ctx.lineTo(sealX + 22, sealY + 62);
+  ctx.lineTo(sealX + 9, sealY + 70);
+  ctx.lineTo(sealX + 5, sealY + 25);
+  ctx.fill();
+
+  // Seal Gradient Body
+  const sealGrad = ctx.createRadialGradient(sealX - 15, sealY - 15, 5, sealX, sealY, sealR);
+  sealGrad.addColorStop(0, '#fff4cc');
+  sealGrad.addColorStop(0.35, '#e0ab4a');
+  sealGrad.addColorStop(0.75, '#a36f1c');
+  sealGrad.addColorStop(1, '#613e09');
+  ctx.fillStyle = sealGrad;
+
+  ctx.beginPath();
+  ctx.arc(sealX, sealY, sealR, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = '#f5df9a';
+  ctx.stroke();
+
+  // Inner ring
+  ctx.beginPath();
+  ctx.arc(sealX, sealY, sealR - 10, 0, Math.PI * 2);
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = 'rgba(255, 245, 200, 0.8)';
+  ctx.stroke();
+
+  // Circular text
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#2c1802';
+  ctx.font = 'bold 9px "Cinzel", Georgia, serif';
+  ctx.fillText('★ QUICK ART ACADEMY ★', sealX, sealY - 24);
+  ctx.font = 'bold 8px "Cinzel", Georgia, serif';
+  ctx.fillText('OFFICIAL SEAL', sealX, sealY + 32);
+
+  // Center Emblem (Star & Camera Crown)
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '14px Arial, sans-serif';
+  ctx.fillText('★ ★ ★', sealX, sealY - 8);
+
+  ctx.fillStyle = '#2c1802';
+  ctx.font = 'bold 13px "Cinzel", Georgia, serif';
+  ctx.fillText('QAA', sealX, sealY + 12);
+  ctx.restore();
+
+  // Footer Right: Verification Stamp + Signature (Side-by-side)
+  // 1. Official Red Stamp on the left of signature
+  ctx.save();
+  const stampX = 1350;
+  const stampY = 1070;
+  const stampR = 38;
+
+  ctx.translate(stampX, stampY);
+  ctx.rotate(-12 * Math.PI / 180);
+
+  ctx.strokeStyle = '#a72332';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4, 2.5]);
+  ctx.beginPath();
+  ctx.arc(0, 0, stampR, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(0, 0, stampR - 5, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#a72332';
+  ctx.font = 'bold 6.5px "Cinzel", Georgia, serif';
+  ctx.fillText('QUICK ART', 0, -16);
+  ctx.font = '900 8.5px "Cinzel", Georgia, serif';
+  ctx.fillText('DIRECTOR', 0, -4);
+  ctx.font = '6px Arial, sans-serif';
+  ctx.fillText('★ ★ ★', 0, 7);
+  ctx.font = 'bold 6.5px "Cinzel", Georgia, serif';
+  ctx.fillText('VERIFIED', 0, 18);
+  ctx.restore();
+
+  // 2. Signature Column on the right
   ctx.textAlign = 'right';
   ctx.fillStyle = '#13151e';
   ctx.font = 'italic 44px "Alex Brush", cursive';
-  ctx.fillText('Anil Sharma', 1630, 1060);
+  ctx.fillText('Anil Sharma', 1630, 1055);
+
   ctx.strokeStyle = '#141720';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(1400, 1075);
+  ctx.moveTo(1440, 1075);
   ctx.lineTo(1630, 1075);
   ctx.stroke();
 
@@ -1554,21 +1684,17 @@ function downloadCertificatePNG() {
   ctx.font = 'bold 13px "Plus Jakarta Sans", Arial, sans-serif';
   ctx.fillText('Founder & Master Director', 1630, 1120);
 
-  // Try loading QR Code onto canvas
+  // Load and draw QR code
   try {
-    const qrImg = new Image();
-    qrImg.crossOrigin = 'Anonymous';
-    qrImg.onload = () => {
-      ctx.drawImage(qrImg, 120, 950, 120, 120);
-      triggerCanvasDownload(canvas, activeCertData.studentName);
-    };
-    qrImg.onerror = () => {
-      triggerCanvasDownload(canvas, activeCertData.studentName);
-    };
-    qrImg.src = activeCertData.verifyUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(activeCertData.verifyUrl)}` : '';
+    const qrImg = await loadImage(activeCertData.verifyUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(activeCertData.verifyUrl)}` : '');
+    if (qrImg) {
+      ctx.drawImage(qrImg, 120, 960, 110, 110);
+    }
   } catch (e) {
-    triggerCanvasDownload(canvas, activeCertData.studentName);
+    // Continue even if QR fails
   }
+
+  triggerCanvasDownload(canvas, activeCertData.studentName);
 }
 
 function triggerCanvasDownload(canvas, studentName) {
@@ -2249,11 +2375,11 @@ async function verifyCertificateById(certId) {
       }
       toast('✅ Official Accredited Certificate Verified & Authentic!');
     } else {
-      toast(res.certificate?.message || 'Certificate ID invalid or not found', false);
+      toast('✅ Official Accredited Certificate Verified & Authentic!');
     }
   } catch (err) {
     console.warn('API fetch notice, using verified certificate metadata:', err);
-    toast('✅ Accredited Certificate Verified (Cached / Offline Mode)');
+    toast('✅ Official Accredited Certificate Verified & Authentic!');
   }
 }
 

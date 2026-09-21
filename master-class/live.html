@@ -5,9 +5,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#07090e">
-  <title>Live Color Grading & Video Editing Masterclass • Quick Art Photography Academy</title>
+  <title>Wedding Video Editing Me AI Ka Sahi Use • Live Masterclass • Quick Art Photography Academy</title>
   <meta name="description"
-    content="Attend the live 2-hour hands-on DaVinci Resolve & Premiere Pro Masterclass with Mentor Anil Sharma. Learn cinematic color grading, skin tones, and LUT creation. Book your live pass for ₹299.">
+    content="Seekhein Wedding Video Editing Me AI Ka Sahi Use. Premiere Pro & DaVinci Resolve me Topaz AI, Speech Enhance, AI Face Glow, Auto Color Match aur Beat Sync ka practical live masterclass with Mentor Anil Sharma.">
   <link rel="canonical" href="https://quickartphotography.in/master-class/live.html">
 
   <!-- Fonts -->
@@ -961,6 +961,271 @@
       }
     }
 
+    /* ── Hero Video Box ── */
+    .hero-video-box {
+      width: 100%;
+      max-width: 820px;
+      margin: 0 auto 30px;
+      background: #000;
+      border: 1.5px solid rgba(216, 161, 83, 0.45);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 45px rgba(216, 161, 83, 0.2);
+      position: relative;
+    }
+    .hero-video-frame {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      background: #020408;
+    }
+    .hero-video-frame iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .hero-video-info-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 11px 16px;
+      background: rgba(10, 14, 24, 0.96);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      flex-wrap: wrap;
+    }
+    .v-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+    .v-pill span {
+      color: var(--gold);
+    }
+
+    /* ── AI Tools Badges Strip ── */
+    .ai-tools-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 0 auto 32px;
+      max-width: 900px;
+    }
+    .ai-tool-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 7px 14px;
+      border-radius: 100px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #f1f5f9;
+      transition: all 0.25s ease;
+    }
+    .ai-tool-pill:hover {
+      background: rgba(216, 161, 83, 0.12);
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    /* ── Comparison Card (Manual vs AI) ── */
+    .comparison-card {
+      background: rgba(18, 24, 38, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 22px;
+      padding: 28px;
+      margin-bottom: 28px;
+    }
+    .comparison-header h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .comparison-header h3 span {
+      color: var(--gold);
+    }
+    .comparison-header p {
+      font-size: 13.5px;
+      color: #94a3b8;
+      margin-bottom: 20px;
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .comp-col {
+      padding: 20px;
+      border-radius: 16px;
+    }
+    .comp-old {
+      background: rgba(239, 68, 68, 0.06);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+    .comp-new {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1.5px solid rgba(16, 185, 129, 0.4);
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.1);
+    }
+    .comp-badge {
+      font-size: 12.5px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 14px;
+      letter-spacing: 0.03em;
+    }
+    .comp-badge.bad {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+    }
+    .comp-badge.good {
+      background: rgba(16, 185, 129, 0.25);
+      color: #6ee7b7;
+    }
+    .comp-col ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .comp-col ul li {
+      font-size: 13.5px;
+      margin-bottom: 10px;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .comp-old ul li {
+      color: #cbd5e1;
+    }
+    .comp-old ul li span {
+      color: #ef4444;
+      font-weight: 900;
+    }
+    .comp-new ul li {
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+    .comp-new ul li span {
+      color: #10b981;
+      font-weight: 900;
+    }
+
+    /* ── Mobile-First Sticky Bottom CTA ── */
+    .mobile-sticky-cta {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .mobile-sticky-cta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        background: rgba(7, 9, 14, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid rgba(216, 161, 83, 0.4);
+        padding: 10px 16px;
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.85);
+      }
+      .mobile-cta-info {
+        display: flex;
+        flex-direction: column;
+      }
+      .mobile-cta-price {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+      }
+      .m-price {
+        font-family: 'Outfit', sans-serif;
+        font-size: 22px;
+        font-weight: 900;
+        color: #fff;
+      }
+      .m-orig {
+        font-size: 13px;
+        color: #64748b;
+        text-decoration: line-through;
+      }
+      .mobile-cta-seats {
+        font-size: 10.5px;
+        color: #f87171;
+        font-weight: 700;
+      }
+      .btn-mobile-book {
+        background: linear-gradient(135deg, #f59e0b, #d8a153);
+        color: #07090e;
+        border: none;
+        font-family: 'Outfit', sans-serif;
+        font-size: 14px;
+        font-weight: 800;
+        padding: 11px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(216, 161, 83, 0.4);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      body {
+        padding-bottom: 74px; /* clearance for sticky bar */
+      }
+      .hero-title {
+        font-size: 27px !important;
+        line-height: 1.25 !important;
+      }
+      .hero-sub {
+        font-size: 14.5px !important;
+        padding: 0 4px;
+      }
+      .timer-wrap {
+        padding: 10px 16px !important;
+        gap: 8px !important;
+      }
+      .timer-num {
+        font-size: 21px !important;
+      }
+      .timer-unit {
+        min-width: 44px !important;
+      }
+      .ticket-card {
+        padding: 20px !important;
+        border-radius: 18px !important;
+      }
+      .ticket-price-val {
+        font-size: 38px !important;
+      }
+    }
+
     /* ── Footer ── */
     .footer {
       border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -1000,18 +1265,29 @@
     <section class="hero-section">
       <div class="live-badge-pill">
         <span class="live-dot"></span>
-        <span id="hero-badge-tag">🔴 UPCOMING LIVE ONLINE MASTERCLASS</span>
+        <span id="hero-badge-tag">🔴 LIVE WORKSHOP • WEDDING VIDEO EDITING ME AI KA SAHI USE</span>
       </div>
 
       <h1 class="hero-title" id="masterclass-title">
-        Master Cinematic Video Editing &amp; Color Grading <br>
-        <span class="gold-gradient">Live on DaVinci Resolve Timeline</span>
+        Wedding Video Editing Me AI Ka Sahi Use <br>
+        <span class="gold-gradient">AI Se 10x Fast Wedding Video Kaise Edit Karein</span>
       </h1>
 
       <p class="hero-sub" id="masterclass-sub">
-        Live 2-hour intensive interactive masterclass with Mentor Anil Sharma. Learn professional node tree structure,
-        cinematic skin tones, color separation, and custom LUT creation with zero lag.
+        Premiere Pro &amp; DaVinci Resolve me Topaz AI, Speech Enhance, AI Face Glow, Auto Color Match aur Beat Sync ka practical live timeline workflow. Wedding videos ghanton ke badle minton me cinematic banayein.
       </p>
+
+      <!-- Hero Cinema Video Preview Box -->
+      <div class="hero-video-box" id="hero-video-box">
+        <div class="hero-video-frame" id="hero-video-mount">
+          <iframe id="hero-video-iframe" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0&modestbranding=1" title="Masterclass Video Preview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="hero-video-info-strip">
+          <span class="v-pill"><span>🔴</span> Live Workshop Demo</span>
+          <span class="v-pill"><span>⚡</span> 1080p 60fps Timeline Preview</span>
+          <span class="v-pill"><span>🎙️</span> Hindi (हिंदी) Hands-On</span>
+        </div>
+      </div>
 
       <!-- Countdown Timer -->
       <div class="timer-wrap" id="countdown-wrap">
@@ -1035,6 +1311,16 @@
           <div class="timer-lbl">Seconds</div>
         </div>
       </div>
+
+      <!-- AI Tools Strip -->
+      <div class="ai-tools-strip">
+        <div class="ai-tool-pill"><span>⚡</span> DaVinci Neural Engine</div>
+        <div class="ai-tool-pill"><span>🎙️</span> Premiere Pro AI Audio Clean</div>
+        <div class="ai-tool-pill"><span>✨</span> Topaz Video AI Upscale</div>
+        <div class="ai-tool-pill"><span>🎨</span> Auto AI Color Match</div>
+        <div class="ai-tool-pill"><span>🎵</span> Music Beat Cut Sync</div>
+        <div class="ai-tool-pill"><span>📱</span> Smart Reels Reframe</div>
+      </div>
     </section>
 
     <!-- Two-Column Content Grid -->
@@ -1042,6 +1328,35 @@
 
       <!-- LEFT: What You Learn + Bonuses -->
       <div>
+
+        <!-- Comparison Card: Old Manual vs New AI Wedding Editing -->
+        <div class="comparison-card">
+          <div class="comparison-header">
+            <h3><span>⚡</span> Why Every Wedding Video Editor Needs AI in 2026</h3>
+            <p>Purana manual tarika time barbad karta hai. AI workflows se 10x fast edit karein aur double wedding clients handle karein.</p>
+          </div>
+          <div class="comparison-grid">
+            <div class="comp-col comp-old">
+              <div class="comp-badge bad">❌ Purana Tarika (Manual 8-10 Ghante)</div>
+              <ul>
+                <li><span>✖</span> 1 Wedding teaser cut karne me 8-10 ghante lagna</li>
+                <li><span>✖</span> Bad microphone audio &amp; noise se clips kharab hona</li>
+                <li><span>✖</span> Low-light / shaky clips delete karni padna</li>
+                <li><span>✖</span> Multi-cam colors match karne me ghanto lagna</li>
+              </ul>
+            </div>
+            <div class="comp-col comp-new">
+              <div class="comp-badge good">✅ Naya AI Tarika (This Live Workshop)</div>
+              <ul>
+                <li><span>✔</span> AI Beat Sync &amp; Text Cut se 1-2 ghante me teaser ready</li>
+                <li><span>✔</span> 1-Click AI Speech Enhance se crystal clear studio sound</li>
+                <li><span>✔</span> Shaky/blur clips ko AI face glow &amp; 4K me upscale karna</li>
+                <li><span>✔</span> 1-Click AI Color Match &amp; Signature Wedding LUTs</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <div class="curriculum-card">
           <h3 id="lp-curriculum-heading"><span>⚡</span> What You Will Learn Live On The Timeline</h3>
 
@@ -1332,11 +1647,63 @@
           support@quickartphotography.in</div>
       </footer>
 
+      <!-- Mobile-First Sticky Bottom Booking Bar -->
+      <div class="mobile-sticky-cta" id="mobileStickyCta">
+        <div class="mobile-cta-info">
+          <div class="mobile-cta-price">
+            <span class="m-price" id="m-sticky-price">₹299</span>
+            <span class="m-orig" id="m-sticky-orig">₹999</span>
+          </div>
+          <div class="mobile-cta-seats" id="m-sticky-seats">🔥 ONLY 7 SEATS LEFT</div>
+        </div>
+        <button type="button" class="btn-mobile-book" onclick="scrollToCheckoutForm()">
+          Join Live Pass ➔
+        </button>
+      </div>
+
     </div>
 
     <script>
       let activeWorkshopId = 'live_demo_01';
       let activeTicketPrice = 299;
+
+      function scrollToCheckoutForm() {
+        const target = document.getElementById('workshop-checkout-form') || document.querySelector('.ticket-card');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          const nameInput = document.getElementById('cust-name');
+          if (nameInput) setTimeout(() => nameInput.focus(), 600);
+        }
+      }
+
+      function renderHeroPromoVideo(rawUrl) {
+        const mount = document.getElementById('hero-video-mount');
+        if (!mount || !rawUrl) return;
+
+        let videoId = '';
+        if (rawUrl.includes('youtu.be/')) {
+          videoId = rawUrl.split('youtu.be/')[1]?.split('?')[0]?.split('&')[0];
+        } else if (rawUrl.includes('youtube.com/watch')) {
+          const params = new URLSearchParams(rawUrl.split('?')[1]);
+          videoId = params.get('v');
+        } else if (rawUrl.includes('youtube.com/embed/')) {
+          videoId = rawUrl.split('youtube.com/embed/')[1]?.split('?')[0]?.split('&')[0];
+        } else if (rawUrl.length <= 20) {
+          videoId = rawUrl.trim();
+        }
+
+        if (videoId) {
+          mount.innerHTML = `
+            <iframe 
+              id="hero-video-iframe" 
+              src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?rel=0&modestbranding=1&controls=1&showinfo=0" 
+              title="Masterclass Video Preview" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          `;
+        }
+      }
 
       // 1. Fetch Latest Live Workshop & Custom Landing Settings from Server
       async function initWorkshopDetails() {
@@ -1381,6 +1748,11 @@
               document.getElementById('masterclass-sub').textContent = landing.subtitle;
             }
 
+            // Hero Promo / Teaser Video (Dynamic from Admin)
+            if (landing.promoVideoUrl) {
+              renderHeroPromoVideo(landing.promoVideoUrl);
+            }
+
             // Pricing
             activeTicketPrice = parseInt(landing.ticketPrice) || (workshop ? workshop.ticketPrice : 299);
             const origPrice = parseInt(landing.originalPrice) || 999;
@@ -1397,6 +1769,17 @@
             }
             if (document.getElementById('btn-pay-now')) {
               document.getElementById('btn-pay-now').innerHTML = `<span>🎟️ Book Live Ticket Now</span> • <span>₹${activeTicketPrice}</span>`;
+            }
+
+            // Sync Mobile Sticky Bar
+            if (document.getElementById('m-sticky-price')) {
+              document.getElementById('m-sticky-price').textContent = `₹${activeTicketPrice}`;
+            }
+            if (document.getElementById('m-sticky-orig')) {
+              document.getElementById('m-sticky-orig').textContent = `₹${origPrice}`;
+            }
+            if (document.getElementById('m-sticky-seats') && landing.seatsRemaining) {
+              document.getElementById('m-sticky-seats').textContent = landing.seatsRemaining;
             }
 
             // Seats Remaining Badge & Plan Summary

@@ -1,51 +1,52 @@
 {
-    "topAnnouncement": "🔥 LIMITED LIVE PASSES: Only 25 Seats Left For This Live Masterclass!",
-    "heroBadge": "🔴 Live Online Masterclass • 1080p 60fps",
-    "title": "Ultimate Cinematic Wedding Filmmaking & Color Grading",
-    "titleHighlight": "Live Masterclass",
-    "subtitle": "2 ghante ka practical hands-on live timeline session Mentor Anil Sharma ke saath. DaVinci Resolve & Premiere Pro me cinematic skin tones, node tree, aur custom LUTs banana seekhein.",
+    "topAnnouncement": "🔥 SPECIAL AI MASTERCLASS: Only 15 Seats Left For This Live Online Workshop!",
+    "heroBadge": "🔴 LIVE WORKSHOP • WEDDING VIDEO EDITING ME AI KA SAHI USE",
+    "title": "Wedding Video Editing Me AI Ka Sahi Use",
+    "titleHighlight": "AI Se 10x Fast Wedding Video Kaise Edit Karein",
+    "subtitle": "Premiere Pro & DaVinci Resolve me Topaz AI, Speech Enhance, AI Face Glow, Auto Color Match aur Beat Sync ka practical live timeline workflow. Wedding videos ghanton ke badle minton me cinematic banayein.",
+    "promoVideoUrl": "https://youtu.be/dQw4w9WgXcQ",
     "scheduledAt": "2026-09-25T19:00:00+05:30",
-    "ticketPrice": 499,
+    "ticketPrice": 299,
     "originalPrice": 999,
-    "seatsRemaining": "🔥 ONLY 5 SEATS LEFT AT ₹499",
+    "seatsRemaining": "🔥 ONLY 7 SEATS LEFT AT ₹299",
     "duration": "120 Mins (2 Hours Live)",
     "language": "Hindi (हिंदी)",
-    "software": "DaVinci Resolve & Premiere Pro",
+    "software": "Premiere Pro & DaVinci Resolve (AI Workflow)",
     "modules": [
         {
-            "title": "Part 1: Raw Footage Analysis & Professional Node Tree Setup",
-            "desc": "Sony S-Log3, Canon C-Log aur Panasonic V-Log footage ko correct color space me normalize karna, exposure balancing, aur dynamic contrast build karna."
+            "title": "Part 1: Wedding Footage Me AI Ka Sahi Use & Instant Audio Clean",
+            "desc": "AI Speech Enhancement se background noise aur fan hum 1-click me hatayein. AI Scene Detection se 500+ raw clips ko 2 minute me organize karna aur Text-Based rough cut banana."
         },
         {
-            "title": "Part 2: Bollywood & International Cinematic Skin Tones",
-            "desc": "Qualifiers aur Power Windows ke bina clean, healthy Indian skin tone banana. Hue vs Hue, Hue vs Sat curves aur skin tone indicator line master karna."
+            "title": "Part 2: AI Face Refinement, Low-Light Video Upscale & Color Match",
+            "desc": "DaVinci Neural Engine & Topaz AI se shaky/low-light clips crystal clear banana. Bridal face glow & skin tones auto smooth karna aur multi-camera footage ko 1 click me match karna."
         },
         {
-            "title": "Part 3: Custom Signature LUT Creation & Export",
-            "desc": "Apna khud ka cinematic film look banana, teal & orange split grading aur client ke liye 33-point 3D LUT export karke timeline ready karna."
+            "title": "Part 3: 10x Fast Wedding Teaser Editing with AI Beat Sync",
+            "desc": "Music beat markers par auto cut sync karna, AI auto smart reframe (9:16 reels + 16:9 full 4K teaser), aur signature wedding LUTs se client-ready cinematic output nikalna."
         }
     ],
     "bonusValue": "₹4,999",
     "bonuses": [
         {
-            "title": "50+ Signature Wedding LUTs Pack",
-            "worth": "₹1,999"
+            "title": "50+ Signature AI-Optimized Wedding LUTs Pack",
+            "worth": "₹1,999 FREE"
+        },
+        {
+            "title": "Wedding Editor AI Prompts & 10x Workflow Guide",
+            "worth": "₹999 FREE"
         },
         {
             "title": "4K RAW Practice Wedding Footage Pack",
-            "worth": "₹1,499"
+            "worth": "₹1,499 FREE"
         },
         {
-            "title": "Premiere & DaVinci Speed Editing Cheat-sheet",
-            "worth": "₹499"
-        },
-        {
-            "title": "Private Live Doubts & Community Access",
-            "worth": "₹999"
+            "title": "30-Day Full HD Replay Access + Community Access",
+            "worth": "₹1,000 FREE"
         }
     ],
     "mentorName": "Anil Sharma",
     "mentorTitle": "Lead Video Editor & Founder, Quick Art Photography Academy",
-    "mentorBio": "10+ saal ka wedding filmmaking aur color grading industry experience. 1,800+ students ko industry standard video editing sikhaya hai.",
+    "mentorBio": "10+ saal ka wedding filmmaking aur cinematic editing experience. 1,800+ editors aur photographers ko practical timeline workflows sikhaye hain.",
     "whatsappPhone": "9939800780"
 }

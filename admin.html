@@ -2224,9 +2224,17 @@ fbq('track', 'PageView');
           <input type="text" id="lpEdit_title" placeholder="e.g. Master Cinematic Video Editing &amp; Color Grading" required />
         </div>
 
-        <div>
+        <div style="margin-bottom:10px">
           <label style="font-size:12px">Sub-headline / Pitch Description</label>
           <textarea id="lpEdit_subtitle" rows="2" placeholder="2 ghante ka practical hands-on live timeline session Mentor Anil Sharma ke saath..."></textarea>
+        </div>
+
+        <div style="margin-top:10px">
+          <label style="font-size:12px;color:var(--gold);font-weight:700">🎥 Hero Promo / Teaser Video URL or YouTube ID (Top Video)</label>
+          <input type="text" id="lpEdit_promoVideoUrl" placeholder="e.g. https://youtu.be/dQw4w9WgXcQ or YouTube Video ID" />
+          <div style="font-size:11px;color:#94a3b8;margin-top:4px">
+            💡 Masterclass landing page ke hero section me ye trailer/promo video show hogi. YouTube link ya ID daal sakte hain.
+          </div>
         </div>
       </div>
 
@@ -5534,6 +5542,7 @@ async function loadLandingPageSettingsAdmin() {
     if (document.getElementById('lpEdit_title')) document.getElementById('lpEdit_title').value = d.title || '';
     if (document.getElementById('lpEdit_titleHighlight')) document.getElementById('lpEdit_titleHighlight').value = d.titleHighlight || '';
     if (document.getElementById('lpEdit_subtitle')) document.getElementById('lpEdit_subtitle').value = d.subtitle || '';
+    if (document.getElementById('lpEdit_promoVideoUrl')) document.getElementById('lpEdit_promoVideoUrl').value = d.promoVideoUrl || '';
     
     if (d.scheduledAt && document.getElementById('lpEdit_scheduledAt')) {
       const dt = new Date(d.scheduledAt);
@@ -5592,6 +5601,7 @@ async function saveLandingPageSettings(e) {
       title: document.getElementById('lpEdit_title').value.trim(),
       titleHighlight: document.getElementById('lpEdit_titleHighlight').value.trim(),
       subtitle: document.getElementById('lpEdit_subtitle').value.trim(),
+      promoVideoUrl: (document.getElementById('lpEdit_promoVideoUrl')?.value || '').trim(),
       scheduledAt: isoDate,
       duration: document.getElementById('lpEdit_duration').value.trim(),
       ticketPrice: parseInt(document.getElementById('lpEdit_ticketPrice').value) || 299,

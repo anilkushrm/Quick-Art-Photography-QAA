@@ -516,45 +516,76 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
   /* Drawer Actions at Bottom */
   .ref-drawer-actions{
     display:grid;
-    grid-template-columns:1fr 1.3fr;
-    gap:8px;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
     padding:10px 14px calc(12px + env(safe-area-inset-bottom));
     background:#0a0c10;
     border-top:1px solid rgba(216,161,83,0.2);
     flex-shrink:0;
   }
-  .ref-drawer-actions a{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    min-height:40px;
-    padding:6px 10px;
-    margin:0;
-    border-radius:999px;
-    font-size:12.5px;
-    font-weight:600;
-    text-decoration:none;
-    transition:all .2s ease;
-    letter-spacing:0.2px;
+  .ref-drawer-actions a,
+  .ref-drawer-actions button,
+  .ref-drawer-actions .ref-drawer-login,
+  .ref-drawer-actions .ref-drawer-logout{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    text-align:center !important;
+    min-height:42px !important;
+    height:42px !important;
+    padding:6px 12px !important;
+    margin:0 !important;
+    border-radius:999px !important;
+    font-size:13px !important;
+    font-weight:700 !important;
+    text-decoration:none !important;
+    transition:all .2s ease !important;
+    letter-spacing:0.2px !important;
+    box-sizing:border-box !important;
+    cursor:pointer !important;
   }
-  .ref-drawer-actions .ref-drawer-login{
-    border:1px solid #d8a153;
-    color:#f5c879;
-    background:transparent;
+  .ref-drawer-actions .ref-drawer-login:not(.ref-drawer-mycourse){
+    border:1px solid #d8a153 !important;
+    color:#f5c879 !important;
+    background:transparent !important;
   }
-  .ref-drawer-actions .ref-drawer-login:hover{
-    background:rgba(216,161,83,0.15);
+  .ref-drawer-actions .ref-drawer-login:not(.ref-drawer-mycourse):hover{
+    background:rgba(216,161,83,0.15) !important;
+  }
+  .ref-drawer-actions .ref-drawer-mycourse{
+    background:linear-gradient(110deg,#f3d695,#d8a447) !important;
+    color:#17120b !important;
+    border:none !important;
+    border-radius:999px !important;
+    box-shadow:0 3px 12px rgba(216,161,83,0.28) !important;
+  }
+  .ref-drawer-actions .ref-drawer-mycourse:hover{
+    filter:brightness(1.08) !important;
+    transform:translateY(-1px) !important;
+  }
+  .ref-drawer-actions .ref-drawer-logout{
+    background:rgba(244,63,94,0.12) !important;
+    border:1px solid rgba(244,63,94,0.45) !important;
+    color:#fda4af !important;
+    border-radius:999px !important;
+  }
+  .ref-drawer-actions .ref-drawer-logout:hover{
+    background:rgba(244,63,94,0.25) !important;
+    border-color:#ef4444 !important;
+    color:#ffffff !important;
+    box-shadow:0 0 12px rgba(239,68,68,0.3) !important;
+    transform:translateY(-1px) !important;
   }
   .ref-drawer-actions .ref-demo-cta{
-    background:linear-gradient(135deg,#f5c879,#d8a153);
-    color:#0c0e12;
-    border:0;
-    box-shadow:0 3px 10px rgba(216,161,83,0.3);
+    background:linear-gradient(135deg,#f5c879,#d8a153) !important;
+    color:#0c0e12 !important;
+    border:0 !important;
+    border-radius:999px !important;
+    box-shadow:0 3px 10px rgba(216,161,83,0.3) !important;
   }
   .ref-drawer-actions .ref-demo-cta:hover{
-    transform:translateY(-1px);
-    box-shadow:0 5px 14px rgba(216,161,83,0.4);
+    transform:translateY(-1px) !important;
+    box-shadow:0 5px 14px rgba(216,161,83,0.4) !important;
   }
 
   /* Mobile Top Bar: Logged-in "My Course" Button */
@@ -600,31 +631,30 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
 
   /* Drawer Top: Logged-in Student Account Card */
   .ref-drawer-student-card {
-    margin: 12px 14px 6px !important;
-    padding: 12px 14px !important;
+    margin: 10px 14px 4px !important;
+    padding: 8px 14px !important;
     background: linear-gradient(145deg, rgba(26, 32, 48, 0.95), rgba(16, 20, 30, 0.98)) !important;
     border: 1px solid rgba(216, 161, 83, 0.35) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+    border-radius: 9px !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
     display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
     flex-shrink: 0 !important;
   }
   .ref-drawer-student-top {
     display: flex !important;
     align-items: center !important;
-    justify-content: space-between !important;
-    gap: 8px !important;
+    width: 100% !important;
   }
   .ref-drawer-student-badge {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 6px !important;
-    font-size: 11px !important;
+    gap: 7px !important;
+    font-size: 11.5px !important;
     font-weight: 700 !important;
-    color: #94a3b8 !important;
-    letter-spacing: 0.04em !important;
+    color: #cbd5e1 !important;
+    letter-spacing: 0.05em !important;
     text-transform: uppercase !important;
   }
   .ref-student-online-dot {
@@ -633,58 +663,6 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
     border-radius: 50% !important;
     background: #10b981 !important;
     box-shadow: 0 0 8px #10b981 !important;
-  }
-  .ref-drawer-logout-mini {
-    background: rgba(244, 63, 94, 0.12) !important;
-    border: 1px solid rgba(244, 63, 94, 0.35) !important;
-    color: #fda4af !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    padding: 3px 9px !important;
-    border-radius: 6px !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-  }
-  .ref-drawer-logout-mini:hover,
-  .ref-drawer-logout-mini:active {
-    background: rgba(244, 63, 94, 0.25) !important;
-    color: #ffffff !important;
-  }
-  .ref-drawer-mycourse-main {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    width: 100% !important;
-    height: 42px !important;
-    padding: 0 14px !important;
-    background: linear-gradient(110deg, #f3d695, #d8a447) !important;
-    color: #17120b !important;
-    font-size: 13.5px !important;
-    font-weight: 800 !important;
-    border-radius: 9px !important;
-    text-decoration: none !important;
-    box-shadow: 0 4px 14px rgba(216, 161, 83, 0.35) !important;
-    box-sizing: border-box !important;
-    transition: all 0.2s ease !important;
-  }
-  .ref-drawer-mycourse-main svg {
-    stroke: #17120b !important;
-    flex-shrink: 0 !important;
-  }
-  .ref-drawer-mycourse-main:hover,
-  .ref-drawer-mycourse-main:active {
-    background: #ffffff !important;
-    color: #111827 !important;
-    transform: translateY(-1px) !important;
-  }
-  .ref-drawer-mycourse-main .ref-drawer-arr {
-    font-size: 15px !important;
-    font-weight: 900 !important;
-    transition: transform 0.2s ease !important;
-  }
-  .ref-drawer-mycourse-main:hover .ref-drawer-arr {
-    transform: translateX(3px) !important;
   }
 }
 

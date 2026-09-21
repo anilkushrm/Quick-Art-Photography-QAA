@@ -413,16 +413,8 @@
               <span class="ref-student-online-dot"></span>
               Enrolled Student
             </span>
-            <button type="button" class="ref-drawer-logout-mini" aria-label="Logout">Logout</button>
           </div>
-          <a href="${loginHref}" class="ref-drawer-mycourse-main">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-            <span>Go to My Course</span>
-            <span class="ref-drawer-arr" aria-hidden="true">→</span>
-          </a>
         `;
-        const miniLogout = studentCard.querySelector('.ref-drawer-logout-mini');
-        if (miniLogout) miniLogout.onclick = handleQaaLogout;
       }
 
       const drawerBody = document.createElement('div');
@@ -434,16 +426,16 @@
       const demo = menu.querySelector('.ref-demo-cta');
       if (isStudentLoggedIn) {
         const mClassroom = document.createElement('a');
-        mClassroom.className = 'ref-login ref-drawer-login';
+        mClassroom.className = 'ref-login ref-drawer-login ref-drawer-mycourse';
         mClassroom.href = loginHref;
         mClassroom.textContent = 'My Course →';
-        mClassroom.style.cssText = 'background:linear-gradient(110deg,#f3d695,#d8a447);color:#17120b;font-weight:700;';
+        mClassroom.style.cssText = 'background:linear-gradient(110deg,#f3d695,#d8a447);color:#17120b;font-weight:700;border:none;border-radius:999px;';
         
         const mLogout = document.createElement('button');
         mLogout.type = 'button';
         mLogout.className = 'ref-login ref-drawer-logout';
         mLogout.textContent = 'Logout';
-        mLogout.style.cssText = 'border-color:rgba(244,63,94,0.5);color:#fda4af;background:rgba(244,63,94,0.1);width:100%;cursor:pointer;';
+        mLogout.style.cssText = 'border:1px solid rgba(244,63,94,0.45);color:#fda4af;background:rgba(244,63,94,0.12);width:100%;cursor:pointer;border-radius:999px;font-weight:700;';
         mLogout.onclick = handleQaaLogout;
 
         drawerActions.append(mClassroom, mLogout);

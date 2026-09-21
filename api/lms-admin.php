@@ -6,11 +6,34 @@
 require_once __DIR__ . '/_helpers.php';
 send_cors();
 
-const LMS_COURSES_FILE  = DATA_DIR . '/courses.json';
-const LMS_STUDENTS_FILE = DATA_DIR . '/students.json';
-const LMS_SETTINGS_FILE = DATA_DIR . '/lms-settings.json';
-const LMS_COUPONS_FILE  = DATA_DIR . '/coupons.json';
-const LMS_TRANSACTIONS_FILE = DATA_DIR . '/transactions.json';
+if (!defined('LMS_COURSES_FILE'))  define('LMS_COURSES_FILE', DATA_DIR . '/courses.json');
+if (!defined('LMS_STUDENTS_FILE')) define('LMS_STUDENTS_FILE', DATA_DIR . '/students.json');
+if (!defined('LMS_SETTINGS_FILE')) define('LMS_SETTINGS_FILE', DATA_DIR . '/lms-settings.json');
+if (!defined('LMS_COUPONS_FILE'))  define('LMS_COUPONS_FILE', DATA_DIR . '/coupons.json');
+if (!defined('LMS_TRANSACTIONS_FILE')) define('LMS_TRANSACTIONS_FILE', DATA_DIR . '/transactions.json');
+if (!defined('LMS_LIVE_CLASSES_FILE')) define('LMS_LIVE_CLASSES_FILE', DATA_DIR . '/live-classes.json');
+if (!defined('LMS_LIVE_CHAT_FILE'))    define('LMS_LIVE_CHAT_FILE', DATA_DIR . '/live-chat.json');
+
+// Helper functions for Live Classes & Chat
+function get_all_live_classes() {
+    if (!file_exists(LMS_LIVE_CLASSES_FILE)) return [];
+    return json_decode(file_get_contents(LMS_LIVE_CLASSES_FILE), true) ?: [];
+}
+
+function save_all_live_classes($classes) {
+    if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+    file_put_contents(LMS_LIVE_CLASSES_FILE, json_encode($classes, JSON_PRETTY_PRINT), LOCK_EX);
+}
+
+function get_all_live_chats() {
+    if (!file_exists(LMS_LIVE_CHAT_FILE)) return [];
+    return json_decode(file_get_contents(LMS_LIVE_CHAT_FILE), true) ?: [];
+}
+
+function save_all_live_chats($chats) {
+    if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+    file_put_contents(LMS_LIVE_CHAT_FILE, json_encode($chats, JSON_PRETTY_PRINT), LOCK_EX);
+}
 
 // Ensure admin is logged in
 $settings = require_admin();
@@ -838,6 +861,219 @@ if ($action === 'upload-thumbnail' && $method === 'POST') {
         'url'  => 'uploads/thumbnails/' . $finalName,
         'name' => $origName
     ]);
+}
+
+// =======================================================
+// 20. Live Classes & Masterclasses Management (Admin)
+// =======================================================
+
+// 20.1 Get All Live Classes
+if ($action === 'get-live-classes' && $method === 'GET') {
+    $classes = get_all_live_classes();
+    // Sort so 'live' sessions are on top, then 'scheduled', then 'completed'
+    usort($classes, function($a, $b) {
+        $priority = ['live' => 0, 'scheduled' => 1, 'completed' => 2];
+        $pA = $priority[$a['status'] ?? 'scheduled'] ?? 1;
+        $pB = $priority[$b['status'] ?? 'scheduled'] ?? 1;
+        if ($pA !== $pB) return $pA - $pB;
+        return strcmp($b['scheduledAt'] ?? '', $a['scheduledAt'] ?? '');
+    });
+    json_ok(['liveClasses' => $classes]);
+}
+
+// 20.2 Save Live Class (Create / Update)
+if ($action === 'save-live-class' && $method === 'POST') {
+    $body = read_json_body();
+    $item = $body['liveClass'] ?? null;
+    if (!is_array($item) || empty($item['title'])) {
+        json_err('Title is required for live class', 400);
+    }
+
+    $classes = get_all_live_classes();
+    $id = !empty($item['id']) ? trim($item['id']) : ('live_' . substr(md5(uniqid($item['title'], true)), 0, 8));
+    
+    // Extract stream ID if user pasted a full YouTube link
+    $rawStream = trim($item['streamId'] ?? '');
+    if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i', $rawStream, $matches)) {
+        $rawStream = $matches[1];
+    }
+
+    $record = [
+        'id'            => $id,
+        'title'         => trim($item['title']),
+        'description'   => trim($item['description'] ?? ''),
+        'type'          => in_array($item['type'] ?? '', ['course', 'workshop']) ? $item['type'] : 'workshop',
+        'courseId'      => trim($item['courseId'] ?? ''),
+        'ticketPrice'   => (int)($item['ticketPrice'] ?? 0),
+        'originalPrice' => (int)($item['originalPrice'] ?? 0),
+        'scheduledAt'   => trim($item['scheduledAt'] ?? date('c')),
+        'duration'      => trim($item['duration'] ?? '90 Mins'),
+        'status'        => in_array($item['status'] ?? '', ['scheduled', 'live', 'completed']) ? $item['status'] : 'scheduled',
+        'streamId'      => $rawStream,
+        'replayUrl'     => trim($item['replayUrl'] ?? ''),
+        'chatEnabled'   => !empty($item['chatEnabled']),
+        'resources'     => is_array($item['resources'] ?? null) ? $item['resources'] : [],
+        'updatedAt'     => date('c')
+    ];
+
+    $found = false;
+    foreach ($classes as $idx => $c) {
+        if ($c['id'] === $id) {
+            $record['createdAt'] = $c['createdAt'] ?? date('c');
+            $classes[$idx] = $record;
+            $found = true;
+            break;
+        }
+    }
+    if (!$found) {
+        $record['createdAt'] = date('c');
+        array_unshift($classes, $record);
+    }
+
+    save_all_live_classes($classes);
+    json_ok(['saved' => true, 'liveClass' => $record]);
+}
+
+// 20.3 Delete Live Class
+if ($action === 'delete-live-class' && $method === 'POST') {
+    $body = read_json_body();
+    $id = trim($body['id'] ?? '');
+    if (!$id) json_err('Class ID required', 400);
+
+    $classes = get_all_live_classes();
+    $filtered = array_values(array_filter($classes, function($c) use ($id) {
+        return $c['id'] !== $id;
+    }));
+    save_all_live_classes($filtered);
+    json_ok(['deleted' => true]);
+}
+
+// 20.4 Toggle Live Status (Quick Action: Scheduled <-> Live Now <-> Completed)
+if ($action === 'update-live-status' && $method === 'POST') {
+    $body = read_json_body();
+    $id = trim($body['id'] ?? '');
+    $status = trim($body['status'] ?? '');
+    if (!$id || !in_array($status, ['scheduled', 'live', 'completed'])) {
+        json_err('Valid ID and Status (scheduled, live, completed) required', 400);
+    }
+
+    $classes = get_all_live_classes();
+    $updatedClass = null;
+    foreach ($classes as &$c) {
+        if ($c['id'] === $id) {
+            $c['status'] = $status;
+            $c['updatedAt'] = date('c');
+            $updatedClass = $c;
+            break;
+        }
+    }
+    unset($c);
+
+    if (!$updatedClass) json_err('Live class not found', 404);
+    save_all_live_classes($classes);
+    json_ok(['updated' => true, 'liveClass' => $updatedClass]);
+}
+
+// 20.5 Get Live Chat / Doubts for Admin
+if ($action === 'get-admin-live-chat' && ($method === 'GET' || $method === 'POST')) {
+    $liveId = trim($_GET['liveId'] ?? ($_POST['liveId'] ?? ''));
+    if (!$liveId) json_err('liveId required', 400);
+
+    $chats = get_all_live_chats();
+    $messages = $chats[$liveId] ?? [];
+    json_ok(['messages' => $messages]);
+}
+
+// 20.6 Reply to Doubt as Mentor / Send Admin Announcement
+if ($action === 'reply-live-doubt' && $method === 'POST') {
+    $body = read_json_body() ?: [];
+    $liveId = trim($body['liveId'] ?? ($_POST['liveId'] ?? ''));
+    $msg = trim($body['message'] ?? ($_POST['message'] ?? ($_POST['reply'] ?? '')));
+    if (!$liveId || !$msg) json_err('Live ID and message required', 400);
+
+    $chats = get_all_live_chats();
+    if (!isset($chats[$liveId])) $chats[$liveId] = [];
+
+    $newMsg = [
+        'id'          => 'msg_' . substr(md5(uniqid(microtime(), true)), 0, 8),
+        'studentId'   => 'admin_mentor',
+        'studentName' => $settings['mentorName'] ?? 'Anil Sharma (Lead Mentor)',
+        'message'     => $msg,
+        'isMentor'    => true,
+        'timestamp'   => date('c')
+    ];
+
+    $chats[$liveId][] = $newMsg;
+    // Keep max 200 messages in chat per live session
+    if (count($chats[$liveId]) > 200) {
+        $chats[$liveId] = array_slice($chats[$liveId], -200);
+    }
+    save_all_live_chats($chats);
+    json_ok(['sent' => true, 'message' => $newMsg]);
+}
+
+// 20.7 Clear Live Chat (Admin only)
+if ($action === 'clear-live-chat' && $method === 'POST') {
+    $body = read_json_body();
+    $liveId = trim($body['liveId'] ?? '');
+    if (!$liveId) json_err('Live ID required', 400);
+
+    $chats = get_all_live_chats();
+    $chats[$liveId] = [];
+    save_all_live_chats($chats);
+    json_ok(['cleared' => true]);
+}
+
+// 20.8 Get Masterclass Landing Page Settings (Admin)
+if ($action === 'get-masterclass-landing' && ($method === 'GET' || $method === 'POST')) {
+    $landingFile = DATA_DIR . '/masterclass-landing.json';
+    $data = file_exists($landingFile) ? json_decode(file_get_contents($landingFile), true) : [];
+    json_ok(['landing' => $data]);
+}
+
+// 20.9 Save Masterclass Landing Page Settings (Admin)
+if ($action === 'save-masterclass-landing' && $method === 'POST') {
+    $body = read_json_body() ?: [];
+    if (empty($body) && !empty($_POST)) {
+        $body = $_POST;
+    }
+
+    $landingFile = DATA_DIR . '/masterclass-landing.json';
+    $current = file_exists($landingFile) ? json_decode(file_get_contents($landingFile), true) : [];
+    if (!is_array($current)) $current = [];
+
+    // Merge incoming changes
+    foreach ($body as $k => $v) {
+        if ($k !== 'action') {
+            $current[$k] = $v;
+        }
+    }
+
+    file_put_contents($landingFile, json_encode($current, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+    // Keep active workshop in live-classes.json in sync with price and title
+    if (!empty($current['title']) || !empty($current['ticketPrice'])) {
+        $classes = get_all_live_classes();
+        $changed = false;
+        foreach ($classes as &$c) {
+            if (($c['type'] ?? '') === 'workshop') {
+                if (!empty($current['title'])) $c['title'] = $current['title'];
+                if (!empty($current['subtitle'])) $c['description'] = $current['subtitle'];
+                if (!empty($current['ticketPrice'])) $c['ticketPrice'] = (int)$current['ticketPrice'];
+                if (!empty($current['originalPrice'])) $c['originalPrice'] = (int)$current['originalPrice'];
+                if (!empty($current['scheduledAt'])) $c['scheduledAt'] = $current['scheduledAt'];
+                if (!empty($current['duration'])) $c['duration'] = $current['duration'];
+                $changed = true;
+                break;
+            }
+        }
+        unset($c);
+        if ($changed) {
+            save_all_live_classes($classes);
+        }
+    }
+
+    json_ok(['saved' => true, 'landing' => $current]);
 }
 
 json_err('Unknown action', 404);

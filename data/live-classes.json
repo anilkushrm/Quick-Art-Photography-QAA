@@ -1,0 +1,28 @@
+[
+    {
+        "id": "live_demo_01",
+        "title": "Ultimate Cinematic Wedding Filmmaking & Color Grading",
+        "description": "2 ghante ka practical hands-on live timeline session Mentor Anil Sharma ke saath. DaVinci Resolve & Premiere Pro me cinematic skin tones, node tree, aur custom LUTs banana seekhein.",
+        "type": "workshop",
+        "courseId": "course-davinci-resolve",
+        "ticketPrice": 499,
+        "originalPrice": 999,
+        "scheduledAt": "2026-09-25T19:00:00+05:30",
+        "duration": "120 Mins (2 Hours Live)",
+        "status": "scheduled",
+        "streamId": "dQw4w9WgXcQ",
+        "replayUrl": "",
+        "chatEnabled": true,
+        "resources": [
+            {
+                "title": "Practice RAW Video Footage (4K)",
+                "url": "https:\/\/quickartphotography.in\/downloads\/sample-raw-footage.zip"
+            },
+            {
+                "title": "Quick Art Cinematic LUTs Pack v2",
+                "url": "https:\/\/quickartphotography.in\/downloads\/cinematic-luts.zip"
+            }
+        ],
+        "createdAt": "2026-09-21T14:45:00+05:30"
+    }
+]

@@ -62,5 +62,17 @@
         ],
         "completedLessons": [],
         "lastActive": "2026-09-17T04:44:25+00:00"
+    },
+    {
+        "id": "stu_b52400",
+        "phone": "9876501234",
+        "name": "Rohan Kumar",
+        "email": "rohan@example.com",
+        "city": "",
+        "enrolledAt": "2026-09-21T09:34:33+00:00",
+        "enrolledCourses": [
+            "live_demo_01"
+        ],
+        "completedLessons": []
     }
 ]

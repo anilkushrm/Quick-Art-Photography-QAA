@@ -610,6 +610,10 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
         <div class="stat-value" id="kpiLmsCoupons" style="color:#f472b6">0</div>
         <div class="stat-label">🎟️ Active Promo Coupons</div>
       </div>
+      <div class="card stat" style="border-top:3px solid #ef4444">
+        <div class="stat-value" id="kpiLmsLive" style="color:#f87171">0</div>
+        <div class="stat-label">🔴 Live / Upcoming Sessions</div>
+      </div>
     </div>
 
     <div class="tabs" style="flex-wrap:wrap;gap:4px;margin-bottom:18px">
@@ -618,6 +622,7 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
       <button class="tab" data-tab="lms-students">🎓 Students (LMS)</button>
       <button class="tab" data-tab="lms-coupons">🎟️ Coupons &amp; Offers</button>
       <button class="tab" data-tab="lms-transactions">💰 Orders / Revenue</button>
+      <button class="tab" data-tab="lms-live" style="border:1px solid rgba(239,68,68,0.55);color:#fca5a5;font-weight:700">🔴 Live Studio &amp; Masterclasses</button>
       <button class="tab" data-tab="lms-razorpay">💳 Razorpay Gateway</button>
       <button class="tab" data-tab="lms-fast2sms" style="border:1px solid rgba(216,161,83,0.45);color:#ffe09c;font-weight:700">📱 Mobile OTP (Fast2SMS)</button>
       <button class="tab" data-tab="lms-email" style="border:1px solid rgba(59,130,246,0.45);color:#93c5fd;font-weight:700">✉️ Email OTP (Supabase)</button>
@@ -986,6 +991,66 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
           </thead>
           <tbody id="lmsTransactionsTbody">
             <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px">Loading transactions…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LMS LIVE STUDIO & MASTERCLASSES TAB -->
+    <div id="tab-lms-live" class="tab-content hidden" style="margin-top:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+        <div>
+          <h2 style="margin:0;font-size:20px;display:flex;align-items:center;gap:8px">
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ef4444;box-shadow:0 0 10px #ef4444"></span>
+            Live Studio &amp; Masterclasses Manager
+          </h2>
+          <p class="muted" style="margin:4px 0 0">Broadcast 1080p 60fps HD timeline classes, manage paid masterclasses, and interact with students live.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="openLandingPageEditorModal()" class="btn btn-outline" style="border-color:rgba(216,161,83,0.7);color:#f59e0b;font-weight:700">🎨 Edit Landing Page Content</button>
+          <a href="/master-class/live.html" target="_blank" class="btn btn-outline" style="border-color:rgba(255,255,255,0.2);color:#cbd5e1">👁️ View Page</a>
+          <button onclick="openObsGuideModal()" class="btn btn-outline" style="border-color:rgba(129,140,248,0.4);color:#a5b4fc">🎥 OBS 60FPS Guide</button>
+          <button onclick="openScheduleLiveModal()" class="btn btn-gold" style="background:linear-gradient(135deg,#d8a153,#f59e0b);color:#080d18;font-weight:700">+ Schedule New Live Session</button>
+          <button onclick="loadLiveClassesAdmin()" class="btn btn-outline">🔄 Refresh</button>
+        </div>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="grid" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;margin-bottom:18px">
+        <div class="card" style="padding:16px;border-left:4px solid #ef4444;background:rgba(239,68,68,0.06)">
+          <div class="muted" style="font-size:12px">Active Live Now</div>
+          <div id="metricLiveNow" style="font-size:24px;font-weight:800;color:#f87171;margin-top:4px">0</div>
+        </div>
+        <div class="card" style="padding:16px;border-left:4px solid #f59e0b;background:rgba(245,158,11,0.06)">
+          <div class="muted" style="font-size:12px">Upcoming Scheduled</div>
+          <div id="metricLiveScheduled" style="font-size:24px;font-weight:800;color:#fbbf24;margin-top:4px">0</div>
+        </div>
+        <div class="card" style="padding:16px;border-left:4px solid #10b981;background:rgba(16,185,129,0.06)">
+          <div class="muted" style="font-size:12px">Completed Sessions</div>
+          <div id="metricLiveCompleted" style="font-size:24px;font-weight:800;color:#34d399;margin-top:4px">0</div>
+        </div>
+        <div class="card" style="padding:16px;border-left:4px solid #6366f1;background:rgba(99,102,241,0.06)">
+          <div class="muted" style="font-size:12px">Total Sessions Created</div>
+          <div id="metricLiveTotal" style="font-size:24px;font-weight:800;color:#818cf8;margin-top:4px">0</div>
+        </div>
+      </div>
+
+      <!-- Live Classes Table -->
+      <div class="card" style="padding:0;overflow-x:auto;border:1px solid rgba(255,255,255,0.08)">
+        <table>
+          <thead>
+            <tr>
+              <th style="min-width:240px">Session Title &amp; Target</th>
+              <th>Date &amp; Time</th>
+              <th>Duration</th>
+              <th>Status</th>
+              <th>Access / Ticket Price</th>
+              <th>Stream ID / Replay</th>
+              <th style="text-align:right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="lmsLiveClassesTbody">
+            <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px">Loading live sessions…</td></tr>
           </tbody>
         </table>
       </div>
@@ -1959,6 +2024,356 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
   </div>
 </div>
 
+<!-- 1. SCHEDULE / EDIT LIVE CLASS MODAL -->
+<div id="scheduleLiveModal" class="modal" onclick="if(event.target.id==='scheduleLiveModal')closeScheduleLiveModal()">
+  <div class="modal-inner" style="max-width:680px;background:#0d1322;border:1px solid rgba(255,255,255,0.12);color:#f1f5f9;border-radius:18px">
+    <div class="modal-hdr" style="border-bottom:1px solid rgba(255,255,255,0.08);padding:18px 22px">
+      <div>
+        <h2 id="liveModalTitle" style="margin:0;font-size:19px;color:#fff;display:flex;align-items:center;gap:8px">
+          <span style="color:#ef4444">🔴</span> Schedule Live Session / Masterclass
+        </h2>
+        <div class="muted" style="font-size:12px;margin-top:4px">1080p 60fps HD broadcast with Anti-Leak Shield &amp; Student Watermark</div>
+      </div>
+      <button onclick="closeScheduleLiveModal()" class="icon-btn" style="color:#94a3b8">✕</button>
+    </div>
+    <div class="modal-body" style="padding:22px">
+      <input type="hidden" id="liveSessionId" />
+      
+      <div style="margin-bottom:16px">
+        <label style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:6px;display:block">Session Title *</label>
+        <input type="text" id="liveTitle" placeholder="e.g. DaVinci Resolve Cinematic Color Grading Live Masterclass" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:10px;font-size:14px;box-sizing:border-box" />
+      </div>
+
+      <div style="margin-bottom:16px">
+        <label style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:6px;display:block">Description &amp; Key Topics</label>
+        <textarea id="liveDesc" rows="3" placeholder="Briefly describe what students will learn on the timeline..." style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box;resize:vertical"></textarea>
+      </div>
+
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+        <div>
+          <label style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:6px;display:block">Session Target Type *</label>
+          <select id="liveType" onchange="onLiveTypeChange()" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box">
+            <option value="workshop">🎟️ Standalone Paid Masterclass (Ticket Booking)</option>
+            <option value="course">🎓 Course Specific Batch (Enrolled Students Free)</option>
+          </select>
+        </div>
+        <div id="liveCourseSelectBox" style="display:none">
+          <label style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:6px;display:block">Select Linked Course</label>
+          <select id="liveCourseId" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box"></select>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px" id="livePricingRow">
+        <div>
+          <label style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:6px;display:block">Ticket Price (₹) *</label>
+          <input type="number" id="liveTicketPrice" value="299" min="0" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box" />
+        </div>
+        <div>
+          <label style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:6px;display:block">Original / Strike-through Price (₹)</label>
+          <input type="number" id="liveOriginalPrice" value="999" min="0" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box" />
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+        <div>
+          <label style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:6px;display:block">Scheduled Date &amp; Time *</label>
+          <input type="datetime-local" id="liveScheduledAt" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box" />
+        </div>
+        <div>
+          <label style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:6px;display:block">Expected Duration</label>
+          <input type="text" id="liveDuration" value="90 Mins" placeholder="e.g. 90 Mins or 2 Hours" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box" />
+        </div>
+      </div>
+
+      <div style="background:rgba(216,161,83,0.08);border:1px solid rgba(216,161,83,0.3);border-radius:12px;padding:14px;margin-bottom:16px">
+        <label style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:6px;display:flex;align-items:center;gap:6px">
+          🎥 YouTube Unlisted Live Stream ID / URL *
+        </label>
+        <input type="text" id="liveStreamId" placeholder="Paste YouTube Live URL (e.g. https://youtu.be/xyz or Stream Video ID)" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box" />
+        <div style="font-size:11.5px;color:#94a3b8;margin-top:6px;line-height:1.4">
+          💡 YouTube Studio me "Create Live Stream" karke <strong>Unlisted</strong> select karein, fir uska link yahan daalein. Website ke andar humara <strong>Anti-Leak Shield</strong> YouTube ka link aur controls student se hide rakhega.
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <label style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:6px;display:block">Replay Video URL / Bunny GUID (Optional for Completed class)</label>
+        <input type="text" id="liveReplayUrl" placeholder="Leave blank to auto-use stream recording, or enter custom Bunny GUID" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box" />
+      </div>
+
+      <div style="margin-bottom:18px">
+        <label style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:6px;display:block">Practice Resources / Downloads (One per line: Title | URL)</label>
+        <textarea id="liveResources" rows="2" placeholder="Practice Footage 4K | https://quickartphotography.in/downloads/raw.zip" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:10px;font-size:12.5px;box-sizing:border-box"></textarea>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <input type="checkbox" id="liveChatEnabled" checked style="width:18px;height:18px;accent-color:#10b981" />
+        <label for="liveChatEnabled" style="font-size:13px;color:#f1f5f9;cursor:pointer">Enable Real-Time Student Doubts &amp; Live Chat Box</label>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px">
+        <button type="button" onclick="closeScheduleLiveModal()" class="btn btn-outline">Cancel</button>
+        <button type="button" onclick="saveLiveClassAdmin()" class="btn btn-gold" id="btnSaveLiveClass" style="background:linear-gradient(135deg,#d8a153,#f59e0b);color:#080d18;font-weight:700">💾 Save Live Class</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. LIVE DOUBTS / INTERACTION MODAL -->
+<div id="liveDoubtsModal" class="modal" onclick="if(event.target.id==='liveDoubtsModal')closeLiveDoubtsModal()">
+  <div class="modal-inner" style="max-width:720px;background:#080d18;border:1px solid rgba(255,255,255,0.14);color:#fff;border-radius:18px;display:flex;flex-direction:column;height:80vh">
+    <div class="modal-hdr" style="border-bottom:1px solid rgba(255,255,255,0.08);padding:16px 20px">
+      <div>
+        <h2 id="doubtsModalTitle" style="margin:0;font-size:17px;color:#fff;display:flex;align-items:center;gap:8px">
+          <span>💬</span> Live Doubts &amp; Student Interaction
+        </h2>
+        <div id="doubtsModalSub" class="muted" style="font-size:12px;margin-top:2px">—</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button onclick="pollLiveDoubtsAdmin()" class="icon-btn" title="Refresh Messages">🔄</button>
+        <button onclick="clearLiveChatAdmin()" class="icon-btn" title="Clear Chat" style="color:#ef4444">🗑️</button>
+        <button onclick="closeLiveDoubtsModal()" class="icon-btn">✕</button>
+      </div>
+    </div>
+    <div id="doubtsListContainer" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#050811">
+      <div style="text-align:center;color:#64748b;padding:30px">Loading live doubts…</div>
+    </div>
+    <div style="padding:14px 18px;border-top:1px solid rgba(255,255,255,0.08);background:#090e1b;display:flex;gap:10px;align-items:center">
+      <input type="text" id="mentorReplyInput" placeholder="Type answer or announcement as Mentor Anil Sharma..." onkeydown="if(event.key==='Enter')sendMentorDoubtReply()" style="flex:1;padding:11px 14px;background:#040711;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:10px;font-size:13.5px;box-sizing:border-box" />
+      <button onclick="sendMentorDoubtReply()" class="btn btn-gold" style="font-weight:700">Send 🚀</button>
+    </div>
+  </div>
+</div>
+
+<!-- 3. OBS 1080P 60FPS SETUP MODAL -->
+<div id="obsGuideModal" class="modal" onclick="if(event.target.id==='obsGuideModal')closeObsGuideModal()">
+  <div class="modal-inner" style="max-width:620px;background:#0d1322;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:18px">
+    <div class="modal-hdr" style="border-bottom:1px solid rgba(255,255,255,0.08);padding:18px 22px">
+      <h2 style="margin:0;font-size:18px;color:#fff">🎥 OBS Studio 1080p 60fps Setup Cheat-Sheet</h2>
+      <button onclick="closeObsGuideModal()" class="icon-btn">✕</button>
+    </div>
+    <div class="modal-body" style="padding:20px;font-size:13.5px;line-height:1.6;color:#cbd5e1">
+      <p style="margin-top:0">Premiere Pro aur DaVinci Resolve timeline ko <strong>100% Original Crystal Clear HD</strong> me dikhane ke liye OBS me ye settings rakhein:</p>
+      
+      <div style="background:#060a14;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;margin:14px 0">
+        <div style="color:var(--gold);font-weight:700;margin-bottom:6px">1. Video Settings (Settings ➔ Video):</div>
+        <div>• Base (Canvas) Resolution: <strong>1920x1080</strong></div>
+        <div>• Output (Scaled) Resolution: <strong>1920x1080</strong></div>
+        <div>• Downscale Filter: <strong>Lanczos (Sharpened scaling, 36 samples)</strong></div>
+        <div>• Common FPS Values: <strong>60 FPS</strong> (Editing timeline smooth chalegi)</div>
+      </div>
+
+      <div style="background:#060a14;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;margin:14px 0">
+        <div style="color:var(--gold);font-weight:700;margin-bottom:6px">2. Output Streaming (Settings ➔ Output ➔ Streaming):</div>
+        <div>• Output Mode: <strong>Advanced</strong></div>
+        <div>• Encoder: <strong>NVIDIA NVENC H.264</strong> (ya Apple Silicon Hardware Encoder)</div>
+        <div>• Rate Control: <strong>CBR</strong></div>
+        <div>• Bitrate: <strong>6000 Kbps</strong> (High Definition for Color Grading)</div>
+        <div>• Keyframe Interval: <strong>2s</strong></div>
+      </div>
+
+      <div style="text-align:right;margin-top:16px">
+        <button onclick="closeObsGuideModal()" class="btn btn-gold">Theek Hai, Samajh Gaya ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LANDING PAGE EDITOR MODAL -->
+<div id="landingPageEditorModal" class="modal" onclick="if(event.target.id==='landingPageEditorModal')closeLandingPageEditorModal()">
+  <div class="modal-content" style="max-width:850px;max-height:90vh;overflow-y:auto;background:#0b1120;border:1px solid rgba(216,161,83,0.3);box-shadow:0 25px 60px rgba(0,0,0,0.85);border-radius:18px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:12px">
+      <div>
+        <h3 style="margin:0;font-size:19px;color:#fff;display:flex;align-items:center;gap:8px">
+          <span>🎨</span> Masterclass Landing Page Editor
+        </h3>
+        <p class="muted" style="margin:4px 0 0;font-size:12.5px">
+          Yahan se aap <code>master-class/live.html</code> ka title, offers, dates, pricing, aur syllabus bina kisi code ke change kar sakte hain.
+        </p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <a href="/master-class/live.html" target="_blank" class="btn btn-outline" style="font-size:11.5px;padding:5px 10px">👁️ View Page</a>
+        <button onclick="closeLandingPageEditorModal()" class="icon-btn" style="color:#94a3b8">✕</button>
+      </div>
+    </div>
+
+    <form id="landingPageEditorForm" onsubmit="saveLandingPageSettings(event)">
+      
+      <!-- Section 1: Hero Headlines & Announcement -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:16px;margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.04em">
+          📢 1. Announcement Bar &amp; Hero Headlines
+        </div>
+
+        <div style="margin-bottom:10px">
+          <label style="font-size:12px">Top Announcement Bar Text</label>
+          <input type="text" id="lpEdit_topAnnouncement" placeholder="e.g. 🔥 LIMITED SEATS: Live Masterclass this Sunday!" />
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px">
+          <div>
+            <label style="font-size:12px">Hero Badge Pill</label>
+            <input type="text" id="lpEdit_heroBadge" placeholder="e.g. 🔴 UPCOMING LIVE ONLINE MASTERCLASS" />
+          </div>
+          <div>
+            <label style="font-size:12px">Title Highlight Word (Golden Color)</label>
+            <input type="text" id="lpEdit_titleHighlight" placeholder="e.g. Live Masterclass" />
+          </div>
+        </div>
+
+        <div style="margin-bottom:10px">
+          <label style="font-size:12px">Main Headline (Course Name)</label>
+          <input type="text" id="lpEdit_title" placeholder="e.g. Master Cinematic Video Editing &amp; Color Grading" required />
+        </div>
+
+        <div>
+          <label style="font-size:12px">Sub-headline / Pitch Description</label>
+          <textarea id="lpEdit_subtitle" rows="2" placeholder="2 ghante ka practical hands-on live timeline session Mentor Anil Sharma ke saath..."></textarea>
+        </div>
+      </div>
+
+      <!-- Section 2: Pricing, Date & Urgency -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:16px;margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.04em">
+          💰 2. Schedule, Pricing &amp; Seats Urgency
+        </div>
+
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px">
+          <div>
+            <label style="font-size:12px">Masterclass Date &amp; Time (Countdown Timer Target)</label>
+            <input type="datetime-local" id="lpEdit_scheduledAt" required />
+          </div>
+          <div>
+            <label style="font-size:12px">Duration Text</label>
+            <input type="text" id="lpEdit_duration" placeholder="e.g. 120 Mins (2 Hours Live)" />
+          </div>
+        </div>
+
+        <div class="grid" style="grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div>
+            <label style="font-size:12px">Ticket Price (₹)</label>
+            <input type="number" id="lpEdit_ticketPrice" min="0" placeholder="299" required />
+          </div>
+          <div>
+            <label style="font-size:12px">Cut-Off / Original Price (₹)</label>
+            <input type="number" id="lpEdit_originalPrice" min="0" placeholder="999" required />
+          </div>
+          <div>
+            <label style="font-size:12px">Urgency Badge</label>
+            <input type="text" id="lpEdit_seatsRemaining" placeholder="e.g. 🔥 ONLY 7 SEATS LEFT" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: 3-Day/Part Curriculum Topics -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:16px;margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.04em">
+          🎬 3. What Students Learn (Timeline Curriculum)
+        </div>
+
+        <!-- Part 1 -->
+        <div style="background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:10px;margin-bottom:10px">
+          <label style="font-size:11.5px;color:var(--gold)">Part 1 Title</label>
+          <input type="text" id="lpEdit_mod1_title" placeholder="Part 1: Raw Footage Analysis & Node Tree Setup" style="margin-bottom:6px" />
+          <label style="font-size:11.5px">Part 1 Description</label>
+          <textarea id="lpEdit_mod1_desc" rows="2" placeholder="Sony S-Log3, Canon C-Log normalize karna..."></textarea>
+        </div>
+
+        <!-- Part 2 -->
+        <div style="background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:10px;margin-bottom:10px">
+          <label style="font-size:11.5px;color:var(--gold)">Part 2 Title</label>
+          <input type="text" id="lpEdit_mod2_title" placeholder="Part 2: Bollywood & International Skin Tones" style="margin-bottom:6px" />
+          <label style="font-size:11.5px">Part 2 Description</label>
+          <textarea id="lpEdit_mod2_desc" rows="2" placeholder="Creamy natural skin tone balance, Hue curves..."></textarea>
+        </div>
+
+        <!-- Part 3 -->
+        <div style="background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:10px">
+          <label style="font-size:11.5px;color:var(--gold)">Part 3 Title</label>
+          <input type="text" id="lpEdit_mod3_title" placeholder="Part 3: Custom Signature LUT Creation & Export" style="margin-bottom:6px" />
+          <label style="font-size:11.5px">Part 3 Description</label>
+          <textarea id="lpEdit_mod3_desc" rows="2" placeholder="Apna signature film look banana aur 3D LUT export..."></textarea>
+        </div>
+      </div>
+
+      <!-- Section 4: Free Bonuses Included -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:16px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-size:13px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.04em">
+            🎁 4. Free Bonuses Included With Ticket
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-size:12px" class="muted">Total Value:</span>
+            <input type="text" id="lpEdit_bonusValue" placeholder="₹4,999" style="width:100px;padding:4px 8px;font-size:12px" />
+          </div>
+        </div>
+
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
+          <div>
+            <input type="text" id="lpEdit_bonus1_title" placeholder="Bonus 1 Title (e.g. 50+ Wedding LUTs Pack)" />
+          </div>
+          <div>
+            <input type="text" id="lpEdit_bonus1_worth" placeholder="Worth (e.g. ₹1,999 FREE)" />
+          </div>
+        </div>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
+          <div>
+            <input type="text" id="lpEdit_bonus2_title" placeholder="Bonus 2 Title (e.g. 4K Practice RAW Footage Pack)" />
+          </div>
+          <div>
+            <input type="text" id="lpEdit_bonus2_worth" placeholder="Worth (e.g. ₹1,499 FREE)" />
+          </div>
+        </div>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
+          <div>
+            <input type="text" id="lpEdit_bonus3_title" placeholder="Bonus 3 Title (e.g. Keyboard Shortcuts Cheat-sheet)" />
+          </div>
+          <div>
+            <input type="text" id="lpEdit_bonus3_worth" placeholder="Worth (e.g. ₹500 FREE)" />
+          </div>
+        </div>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <input type="text" id="lpEdit_bonus4_title" placeholder="Bonus 4 Title (e.g. 30-Day HD Replay Access)" />
+          </div>
+          <div>
+            <input type="text" id="lpEdit_bonus4_worth" placeholder="Worth (e.g. ₹1,000 FREE)" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5: Mentor & WhatsApp Helpline -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:16px;margin-bottom:16px">
+        <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.04em">
+          👤 5. Mentor Bio &amp; Student Helpline
+        </div>
+
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px">
+          <div>
+            <label style="font-size:12px">Mentor Name</label>
+            <input type="text" id="lpEdit_mentorName" placeholder="Anil Sharma" />
+          </div>
+          <div>
+            <label style="font-size:12px">Helpline / WhatsApp Number</label>
+            <input type="tel" id="lpEdit_whatsappPhone" placeholder="9939800780" maxlength="10" />
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:12px">Mentor Bio Text</label>
+          <textarea id="lpEdit_mentorBio" rows="2" placeholder="Founder of Quick Art Photography Academy. Over 10+ years of professional video editing..."></textarea>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;border-top:1px solid rgba(255,255,255,0.08);padding-top:14px">
+        <button type="button" onclick="closeLandingPageEditorModal()" class="btn btn-outline">Cancel</button>
+        <button type="submit" class="btn btn-gold" id="btnSaveLandingPage" style="background:linear-gradient(135deg,#d8a153,#f59e0b);color:#080d18;font-weight:700">
+          💾 Save Landing Page Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
 const TOKEN_KEY = 'qa_admin_token';
 let token = localStorage.getItem(TOKEN_KEY) || null;
@@ -2277,7 +2692,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) =
   const targetTab = document.getElementById('tab-' + tabName);
   if (targetTab) targetTab.classList.remove('hidden');
 
-  const isLmsTab = ['lms-courses', 'lms-students', 'lms-coupons', 'lms-transactions', 'lms-razorpay', 'lms-fast2sms', 'lms-email', 'lms-settings'].includes(tabName);
+  const isLmsTab = ['lms-courses', 'lms-students', 'lms-coupons', 'lms-transactions', 'lms-live', 'lms-razorpay', 'lms-fast2sms', 'lms-email', 'lms-settings'].includes(tabName);
   const lmsKpiRow = document.getElementById('lmsKpiRow');
   if (lmsKpiRow) {
     if (isLmsTab) {
@@ -2292,6 +2707,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) =
   if (tabName === 'lms-students') loadLmsStudents();
   if (tabName === 'lms-coupons') loadLmsCoupons();
   if (tabName === 'lms-transactions') loadLmsTransactions();
+  if (tabName === 'lms-live') loadLiveClassesAdmin();
   if (tabName === 'lms-razorpay') loadRazorpaySettings();
   if (tabName === 'lms-fast2sms') loadFast2SmsSettings();
   if (tabName === 'lms-email') loadSupabaseSettings();
@@ -2562,11 +2978,12 @@ async function lmsAdmin(action, opts = {}) {
 // Update LMS KPI Counters
 async function updateLmsKpis() {
   try {
-    const [cRes, sRes, cpRes, txRes] = await Promise.all([
+    const [cRes, sRes, cpRes, txRes, lvRes] = await Promise.all([
       allLmsCourses.length ? { courses: allLmsCourses } : lmsAdmin('get-courses').catch(() => ({ courses: [] })),
       allLmsStudents.length ? { students: allLmsStudents } : lmsAdmin('get-students').catch(() => ({ students: [] })),
       allLmsCoupons.length ? { coupons: allLmsCoupons } : lmsAdmin('get-coupons').catch(() => ({ coupons: [] })),
-      lmsAdmin('get-transactions').catch(() => ({ totalRevenue: 0 }))
+      lmsAdmin('get-transactions').catch(() => ({ totalRevenue: 0 })),
+      lmsAdmin('get-live-classes').catch(() => ({ liveClasses: [] }))
     ]);
 
     if (cRes.courses) allLmsCourses = cRes.courses;
@@ -2577,11 +2994,16 @@ async function updateLmsKpis() {
     const elRev = document.getElementById('kpiLmsRevenue');
     const elCrs = document.getElementById('kpiLmsCourses');
     const elCpn = document.getElementById('kpiLmsCoupons');
+    const elLiv = document.getElementById('kpiLmsLive');
 
     if (elStu) elStu.textContent = allLmsStudents.length;
     if (elRev) elRev.textContent = '₹' + (txRes.totalRevenue || 0).toLocaleString();
     if (elCrs) elCrs.textContent = allLmsCourses.length;
     if (elCpn) elCpn.textContent = allLmsCoupons.filter(c => c.active !== false).length;
+    if (elLiv) {
+      const activeOrUpcoming = (lvRes.liveClasses || []).filter(c => c.status !== 'completed').length;
+      elLiv.textContent = activeOrUpcoming;
+    }
   } catch(e){}
 }
 
@@ -4706,6 +5128,531 @@ async function sendTest(){
     </div>`;
     toast(ok?'Test webhook sent':'Webhook failed', ok);
   } catch(e){ toast(e.message,false); box.innerHTML=''; }
+}
+
+// =======================================================
+// LIVE CLASSES & MASTERCLASSES MANAGEMENT MODULE
+// =======================================================
+let allLmsLiveClasses = [];
+let activeDoubtsLiveId = null;
+let doubtsPollTimer = null;
+
+async function loadLiveClassesAdmin() {
+  const tbody = document.getElementById('lmsLiveClassesTbody');
+  if (tbody) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:28px">Loading live sessions…</td></tr>';
+  }
+  try {
+    const res = await lmsAdmin('get-live-classes');
+    allLmsLiveClasses = res.liveClasses || [];
+    renderLiveClassesAdmin();
+    updateLiveMetrics();
+  } catch (err) {
+    if (tbody) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--red);padding:24px">Failed to load live sessions: ${escapeHtml(err.message)}</td></tr>`;
+    }
+  }
+}
+
+function updateLiveMetrics() {
+  let liveNow = 0, scheduled = 0, completed = 0;
+  allLmsLiveClasses.forEach(c => {
+    if (c.status === 'live') liveNow++;
+    else if (c.status === 'completed') completed++;
+    else scheduled++;
+  });
+  const elNow = document.getElementById('metricLiveNow');
+  const elSch = document.getElementById('metricLiveScheduled');
+  const elCom = document.getElementById('metricLiveCompleted');
+  const elTot = document.getElementById('metricLiveTotal');
+
+  if (elNow) elNow.textContent = liveNow;
+  if (elSch) elSch.textContent = scheduled;
+  if (elCom) elCom.textContent = completed;
+  if (elTot) elTot.textContent = allLmsLiveClasses.length;
+}
+
+function renderLiveClassesAdmin() {
+  const tbody = document.getElementById('lmsLiveClassesTbody');
+  if (!tbody) return;
+
+  if (!allLmsLiveClasses.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:36px">No live sessions scheduled yet. Click "+ Schedule New Live Session" above to create one.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = allLmsLiveClasses.map(c => {
+    let statusBadge = '';
+    if (c.status === 'live') {
+      statusBadge = '<span class="badge" style="background:#ef4444;color:#fff;display:inline-flex;align-items:center;gap:5px;box-shadow:0 0 10px rgba(239,68,68,0.5)"><span style="width:6px;height:6px;border-radius:50%;background:#fff"></span> LIVE NOW</span>';
+    } else if (c.status === 'completed') {
+      statusBadge = '<span class="badge" style="background:#10b981;color:#fff">✓ Completed</span>';
+    } else {
+      statusBadge = '<span class="badge" style="background:#f59e0b;color:#1e1b4b">⏳ Scheduled</span>';
+    }
+
+    const typeBadge = c.type === 'workshop'
+      ? '<span class="badge" style="background:rgba(216,161,83,0.2);color:var(--gold);border:1px solid rgba(216,161,83,0.4)">🎟️ Paid Workshop</span>'
+      : '<span class="badge" style="background:rgba(99,102,241,0.2);color:#a5b4fc;border:1px solid rgba(99,102,241,0.4)">🎓 Course Batch</span>';
+
+    const formattedDate = c.scheduledAt ? new Date(c.scheduledAt).toLocaleString('en-IN', {
+      day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    }) : '—';
+
+    const priceText = c.type === 'workshop' 
+      ? `<strong style="color:var(--gold)">₹${Number(c.ticketPrice || 0).toLocaleString()}</strong>` 
+      : '<span style="color:#94a3b8">Included in Course</span>';
+
+    const streamDisplay = c.streamId 
+      ? `<code style="font-size:11px;background:rgba(0,0,0,0.4);padding:3px 6px;border-radius:4px;color:#93c5fd">${escapeHtml(c.streamId)}</code>` 
+      : '<span style="color:#64748b;font-size:11px">No stream ID set</span>';
+
+    return `
+      <tr style="${c.status==='live'?'background:rgba(239,68,68,0.04)':''}">
+        <td>
+          <div style="font-weight:700;color:#fff;font-size:14px">${escapeHtml(c.title)}</div>
+          <div style="margin-top:5px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            ${typeBadge}
+            ${c.courseId ? `<span class="muted" style="font-size:11.5px">Course: ${escapeHtml(c.courseId)}</span>` : ''}
+          </div>
+        </td>
+        <td style="font-size:13px;color:#e2e8f0;white-space:nowrap">${formattedDate}</td>
+        <td style="font-size:13px;color:#cbd5e1">${escapeHtml(c.duration || '90 Mins')}</td>
+        <td>
+          <select onchange="updateLiveStatusAdmin('${c.id}', this.value)" style="padding:4px 8px;font-size:12px;background:#0f172a;color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:6px">
+            <option value="scheduled" ${c.status==='scheduled'?'selected':''}>⏳ Scheduled</option>
+            <option value="live" ${c.status==='live'?'selected':''}>🔴 Live Now</option>
+            <option value="completed" ${c.status==='completed'?'selected':''}>✓ Completed</option>
+          </select>
+          <div style="margin-top:4px">${statusBadge}</div>
+        </td>
+        <td style="font-size:13px">${priceText}</td>
+        <td>${streamDisplay}</td>
+        <td style="text-align:right;white-space:nowrap">
+          <button onclick="openLiveDoubtsModal('${c.id}', '${escapeHtml(c.title)}')" class="btn btn-outline" style="padding:5px 9px;font-size:11.5px;margin-right:4px" title="Live Doubts & Chat">💬 Doubts</button>
+          <button onclick="editLiveClassAdmin('${c.id}')" class="btn btn-outline" style="padding:5px 9px;font-size:11.5px;margin-right:4px">✏️ Edit</button>
+          <button onclick="deleteLiveClassAdmin('${c.id}')" class="btn btn-outline" style="padding:5px 9px;font-size:11.5px;color:#ef4444" title="Delete Session">🗑️</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function onLiveTypeChange() {
+  const type = document.getElementById('liveType').value;
+  const courseBox = document.getElementById('liveCourseSelectBox');
+  const pricingRow = document.getElementById('livePricingRow');
+  if (type === 'course') {
+    if (courseBox) courseBox.style.display = 'block';
+    if (pricingRow) pricingRow.style.display = 'none';
+  } else {
+    if (courseBox) courseBox.style.display = 'none';
+    if (pricingRow) pricingRow.style.display = 'grid';
+  }
+}
+
+function populateLiveCourseDropdown(selectedCourseId = '') {
+  const select = document.getElementById('liveCourseId');
+  if (!select) return;
+  select.innerHTML = '<option value="">-- Select Linked Course --</option>' + (allLmsCourses || []).map(c => `
+    <option value="${escapeHtml(c.id)}" ${c.id === selectedCourseId ? 'selected' : ''}>${escapeHtml(c.title)}</option>
+  `).join('');
+}
+
+function openScheduleLiveModal() {
+  document.getElementById('liveModalTitle').innerHTML = '<span style="color:#ef4444">🔴</span> Schedule Live Session / Masterclass';
+  document.getElementById('liveSessionId').value = '';
+  document.getElementById('liveTitle').value = '';
+  document.getElementById('liveDesc').value = '';
+  document.getElementById('liveType').value = 'workshop';
+  document.getElementById('liveTicketPrice').value = '299';
+  document.getElementById('liveOriginalPrice').value = '999';
+  document.getElementById('liveDuration').value = '90 Mins';
+  document.getElementById('liveStreamId').value = '';
+  document.getElementById('liveReplayUrl').value = '';
+  document.getElementById('liveResources').value = '';
+  document.getElementById('liveChatEnabled').checked = true;
+
+  // Set default datetime to tomorrow 7:00 PM
+  const tmrw = new Date();
+  tmrw.setDate(tmrw.getDate() + 1);
+  tmrw.setHours(19, 0, 0, 0);
+  const isoDate = tmrw.toISOString().slice(0, 16);
+  document.getElementById('liveScheduledAt').value = isoDate;
+
+  populateLiveCourseDropdown();
+  onLiveTypeChange();
+  document.getElementById('scheduleLiveModal').classList.add('show');
+}
+
+function closeScheduleLiveModal() {
+  document.getElementById('scheduleLiveModal').classList.remove('show');
+}
+
+function editLiveClassAdmin(id) {
+  const c = allLmsLiveClasses.find(x => x.id === id);
+  if (!c) return;
+
+  document.getElementById('liveModalTitle').innerHTML = '<span style="color:#ef4444">✏️</span> Edit Live Session / Masterclass';
+  document.getElementById('liveSessionId').value = c.id;
+  document.getElementById('liveTitle').value = c.title || '';
+  document.getElementById('liveDesc').value = c.description || '';
+  document.getElementById('liveType').value = c.type || 'workshop';
+  document.getElementById('liveTicketPrice').value = c.ticketPrice || 0;
+  document.getElementById('liveOriginalPrice').value = c.originalPrice || 0;
+  document.getElementById('liveDuration').value = c.duration || '90 Mins';
+  document.getElementById('liveStreamId').value = c.streamId || '';
+  document.getElementById('liveReplayUrl').value = c.replayUrl || '';
+  document.getElementById('liveChatEnabled').checked = c.chatEnabled !== false;
+
+  if (c.scheduledAt) {
+    try {
+      const dt = new Date(c.scheduledAt);
+      const localIso = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+      document.getElementById('liveScheduledAt').value = localIso;
+    } catch(e) {
+      document.getElementById('liveScheduledAt').value = '';
+    }
+  }
+
+  // Format resources
+  if (Array.isArray(c.resources) && c.resources.length) {
+    document.getElementById('liveResources').value = c.resources.map(r => `${r.title || 'File'} | ${r.url || ''}`).join('\n');
+  } else {
+    document.getElementById('liveResources').value = '';
+  }
+
+  populateLiveCourseDropdown(c.courseId || '');
+  onLiveTypeChange();
+  document.getElementById('scheduleLiveModal').classList.add('show');
+}
+
+async function saveLiveClassAdmin() {
+  const title = document.getElementById('liveTitle').value.trim();
+  if (!title) {
+    alert('Session title is required!');
+    return;
+  }
+
+  const rawResources = document.getElementById('liveResources').value.trim();
+  const resources = [];
+  if (rawResources) {
+    rawResources.split('\n').forEach(line => {
+      const parts = line.split('|');
+      if (parts.length >= 2) {
+        resources.push({
+          title: parts[0].trim(),
+          url: parts.slice(1).join('|').trim()
+        });
+      }
+    });
+  }
+
+  const liveClass = {
+    id: document.getElementById('liveSessionId').value.trim(),
+    title,
+    description: document.getElementById('liveDesc').value.trim(),
+    type: document.getElementById('liveType').value,
+    courseId: document.getElementById('liveCourseId').value,
+    ticketPrice: parseInt(document.getElementById('liveTicketPrice').value, 10) || 0,
+    originalPrice: parseInt(document.getElementById('liveOriginalPrice').value, 10) || 0,
+    scheduledAt: document.getElementById('liveScheduledAt').value ? new Date(document.getElementById('liveScheduledAt').value).toISOString() : new Date().toISOString(),
+    duration: document.getElementById('liveDuration').value.trim() || '90 Mins',
+    streamId: document.getElementById('liveStreamId').value.trim(),
+    replayUrl: document.getElementById('liveReplayUrl').value.trim(),
+    chatEnabled: document.getElementById('liveChatEnabled').checked,
+    resources
+  };
+
+  const btn = document.getElementById('btnSaveLiveClass');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+  try {
+    await lmsAdmin('save-live-class', { method: 'POST', body: { liveClass } });
+    toast('✅ Live session saved successfully!');
+    closeScheduleLiveModal();
+    loadLiveClassesAdmin();
+  } catch (err) {
+    alert('Failed to save: ' + err.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '💾 Save Live Class'; }
+  }
+}
+
+async function updateLiveStatusAdmin(id, newStatus) {
+  try {
+    await lmsAdmin('update-live-status', {
+      method: 'POST',
+      body: { id, status: newStatus }
+    });
+    toast(`✅ Status changed to ${newStatus.toUpperCase()}`);
+    loadLiveClassesAdmin();
+  } catch (err) {
+    alert('Status update failed: ' + err.message);
+    loadLiveClassesAdmin();
+  }
+}
+
+async function deleteLiveClassAdmin(id) {
+  if (!confirm('Are you sure you want to delete this live session? Students will lose access to its live room.')) return;
+  try {
+    await lmsAdmin('delete-live-class', { method: 'POST', body: { id } });
+    toast('🗑️ Live session deleted');
+    loadLiveClassesAdmin();
+  } catch (err) {
+    alert('Delete failed: ' + err.message);
+  }
+}
+
+// Live Doubts & Chat Moderation
+function openLiveDoubtsModal(id, title) {
+  activeDoubtsLiveId = id;
+  const modal = document.getElementById('liveDoubtsModal');
+  const titleEl = document.getElementById('doubtsModalTitle');
+  const subEl = document.getElementById('doubtsModalSub');
+  if (titleEl) titleEl.innerHTML = `<span>💬</span> Live Doubts: ${escapeHtml(title)}`;
+  if (subEl) subEl.textContent = `Live Session ID: ${id} • Real-time Q&A stream`;
+  if (modal) modal.classList.add('show');
+
+  pollLiveDoubtsAdmin();
+  if (doubtsPollTimer) clearInterval(doubtsPollTimer);
+  doubtsPollTimer = setInterval(pollLiveDoubtsAdmin, 4000);
+}
+
+function closeLiveDoubtsModal() {
+  activeDoubtsLiveId = null;
+  if (doubtsPollTimer) {
+    clearInterval(doubtsPollTimer);
+    doubtsPollTimer = null;
+  }
+  const modal = document.getElementById('liveDoubtsModal');
+  if (modal) modal.classList.remove('show');
+}
+
+async function pollLiveDoubtsAdmin() {
+  if (!activeDoubtsLiveId) return;
+  const container = document.getElementById('doubtsListContainer');
+  try {
+    const res = await lmsAdmin(`get-admin-live-chat&liveId=${encodeURIComponent(activeDoubtsLiveId)}`);
+    const messages = res.messages || [];
+    if (!messages.length) {
+      container.innerHTML = '<div style="text-align:center;color:#64748b;padding:36px;font-size:13px">No student questions or chat messages yet. When students ask questions in the Live Classroom, they will appear here in real-time.</div>';
+      return;
+    }
+
+    container.innerHTML = messages.map(m => {
+      const timeStr = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
+      if (m.isMentor) {
+        return `
+          <div style="align-self:flex-end;max-width:82%;background:linear-gradient(135deg,rgba(216,161,83,0.25),rgba(216,161,83,0.12));border:1px solid rgba(216,161,83,0.4);border-radius:12px;padding:10px 14px">
+            <div style="font-size:11px;font-weight:700;color:var(--gold);display:flex;justify-content:space-between;gap:8px">
+              <span>⭐ ${escapeHtml(m.studentName || 'Mentor Anil Sharma')}</span>
+              <span style="opacity:0.7">${timeStr}</span>
+            </div>
+            <div style="font-size:13.5px;color:#fff;margin-top:4px;line-height:1.4">${escapeHtml(m.message)}</div>
+          </div>
+        `;
+      }
+      return `
+        <div style="align-self:flex-start;max-width:82%;background:#111827;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px">
+          <div style="font-size:11px;font-weight:700;color:#93c5fd;display:flex;justify-content:space-between;gap:8px">
+            <span>🎓 ${escapeHtml(m.studentName || 'Student')}</span>
+            <span style="opacity:0.7">${timeStr}</span>
+          </div>
+          <div style="font-size:13.5px;color:#f1f5f9;margin-top:4px;line-height:1.4">${escapeHtml(m.message)}</div>
+        </div>
+      `;
+    }).join('');
+
+    // Scroll to bottom
+    container.scrollTop = container.scrollHeight;
+  } catch(e){}
+}
+
+async function sendMentorDoubtReply() {
+  if (!activeDoubtsLiveId) return;
+  const input = document.getElementById('mentorReplyInput');
+  const msg = input ? input.value.trim() : '';
+  if (!msg) return;
+
+  input.value = '';
+  try {
+    await lmsAdmin('reply-live-doubt', {
+      method: 'POST',
+      body: { liveId: activeDoubtsLiveId, message: msg }
+    });
+    pollLiveDoubtsAdmin();
+  } catch(err) {
+    alert('Reply failed: ' + err.message);
+  }
+}
+
+async function clearLiveChatAdmin() {
+  if (!activeDoubtsLiveId) return;
+  if (!confirm('Clear all chat messages for this live session?')) return;
+  try {
+    await lmsAdmin('clear-live-chat', {
+      method: 'POST',
+      body: { liveId: activeDoubtsLiveId }
+    });
+    pollLiveDoubtsAdmin();
+  } catch(err) {
+    alert('Clear chat failed: ' + err.message);
+  }
+}
+
+function openObsGuideModal() {
+  const modal = document.getElementById('obsGuideModal');
+  if (modal) modal.classList.add('show');
+}
+
+function closeObsGuideModal() {
+  const modal = document.getElementById('obsGuideModal');
+  if (modal) modal.classList.remove('show');
+}
+
+// ── Masterclass Landing Page Editor JS ──
+async function openLandingPageEditorModal() {
+  const modal = document.getElementById('landingPageEditorModal');
+  if (!modal) return;
+  modal.classList.add('show');
+  await loadLandingPageSettingsAdmin();
+}
+
+function closeLandingPageEditorModal() {
+  const modal = document.getElementById('landingPageEditorModal');
+  if (modal) modal.classList.remove('show');
+}
+
+async function loadLandingPageSettingsAdmin() {
+  try {
+    const res = await lmsAdmin('get-masterclass-landing');
+    if (!res.ok || !res.landing) return;
+    const d = res.landing;
+
+    if (document.getElementById('lpEdit_topAnnouncement')) document.getElementById('lpEdit_topAnnouncement').value = d.topAnnouncement || '';
+    if (document.getElementById('lpEdit_heroBadge')) document.getElementById('lpEdit_heroBadge').value = d.heroBadge || '';
+    if (document.getElementById('lpEdit_title')) document.getElementById('lpEdit_title').value = d.title || '';
+    if (document.getElementById('lpEdit_titleHighlight')) document.getElementById('lpEdit_titleHighlight').value = d.titleHighlight || '';
+    if (document.getElementById('lpEdit_subtitle')) document.getElementById('lpEdit_subtitle').value = d.subtitle || '';
+    
+    if (d.scheduledAt && document.getElementById('lpEdit_scheduledAt')) {
+      const dt = new Date(d.scheduledAt);
+      if (!isNaN(dt.getTime())) {
+        const pad = n => String(n).padStart(2, '0');
+        document.getElementById('lpEdit_scheduledAt').value = `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+      }
+    }
+    if (document.getElementById('lpEdit_duration')) document.getElementById('lpEdit_duration').value = d.duration || '';
+    if (document.getElementById('lpEdit_ticketPrice')) document.getElementById('lpEdit_ticketPrice').value = d.ticketPrice || 299;
+    if (document.getElementById('lpEdit_originalPrice')) document.getElementById('lpEdit_originalPrice').value = d.originalPrice || 999;
+    if (document.getElementById('lpEdit_seatsRemaining')) document.getElementById('lpEdit_seatsRemaining').value = d.seatsRemaining || '';
+
+    // Modules
+    const mods = d.modules || [];
+    if (document.getElementById('lpEdit_mod1_title')) document.getElementById('lpEdit_mod1_title').value = mods[0]?.title || '';
+    if (document.getElementById('lpEdit_mod1_desc')) document.getElementById('lpEdit_mod1_desc').value = mods[0]?.desc || '';
+    if (document.getElementById('lpEdit_mod2_title')) document.getElementById('lpEdit_mod2_title').value = mods[1]?.title || '';
+    if (document.getElementById('lpEdit_mod2_desc')) document.getElementById('lpEdit_mod2_desc').value = mods[1]?.desc || '';
+    if (document.getElementById('lpEdit_mod3_title')) document.getElementById('lpEdit_mod3_title').value = mods[2]?.title || '';
+    if (document.getElementById('lpEdit_mod3_desc')) document.getElementById('lpEdit_mod3_desc').value = mods[2]?.desc || '';
+
+    // Bonuses
+    if (document.getElementById('lpEdit_bonusValue')) document.getElementById('lpEdit_bonusValue').value = d.bonusValue || '₹4,999';
+    const bon = d.bonuses || [];
+    if (document.getElementById('lpEdit_bonus1_title')) document.getElementById('lpEdit_bonus1_title').value = bon[0]?.title || '';
+    if (document.getElementById('lpEdit_bonus1_worth')) document.getElementById('lpEdit_bonus1_worth').value = bon[0]?.worth || '';
+    if (document.getElementById('lpEdit_bonus2_title')) document.getElementById('lpEdit_bonus2_title').value = bon[1]?.title || '';
+    if (document.getElementById('lpEdit_bonus2_worth')) document.getElementById('lpEdit_bonus2_worth').value = bon[1]?.worth || '';
+    if (document.getElementById('lpEdit_bonus3_title')) document.getElementById('lpEdit_bonus3_title').value = bon[2]?.title || '';
+    if (document.getElementById('lpEdit_bonus3_worth')) document.getElementById('lpEdit_bonus3_worth').value = bon[2]?.worth || '';
+    if (document.getElementById('lpEdit_bonus4_title')) document.getElementById('lpEdit_bonus4_title').value = bon[3]?.title || '';
+    if (document.getElementById('lpEdit_bonus4_worth')) document.getElementById('lpEdit_bonus4_worth').value = bon[3]?.worth || '';
+
+    // Mentor
+    if (document.getElementById('lpEdit_mentorName')) document.getElementById('lpEdit_mentorName').value = d.mentorName || '';
+    if (document.getElementById('lpEdit_mentorBio')) document.getElementById('lpEdit_mentorBio').value = d.mentorBio || '';
+    if (document.getElementById('lpEdit_whatsappPhone')) document.getElementById('lpEdit_whatsappPhone').value = d.whatsappPhone || '';
+  } catch(e) {
+    console.warn('Failed to load landing settings:', e);
+  }
+}
+
+async function saveLandingPageSettings(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btnSaveLandingPage');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving Changes…'; }
+
+  try {
+    const rawDt = document.getElementById('lpEdit_scheduledAt').value;
+    const isoDate = rawDt ? new Date(rawDt).toISOString() : new Date().toISOString();
+
+    const payload = {
+      topAnnouncement: document.getElementById('lpEdit_topAnnouncement').value.trim(),
+      heroBadge: document.getElementById('lpEdit_heroBadge').value.trim(),
+      title: document.getElementById('lpEdit_title').value.trim(),
+      titleHighlight: document.getElementById('lpEdit_titleHighlight').value.trim(),
+      subtitle: document.getElementById('lpEdit_subtitle').value.trim(),
+      scheduledAt: isoDate,
+      duration: document.getElementById('lpEdit_duration').value.trim(),
+      ticketPrice: parseInt(document.getElementById('lpEdit_ticketPrice').value) || 299,
+      originalPrice: parseInt(document.getElementById('lpEdit_originalPrice').value) || 999,
+      seatsRemaining: document.getElementById('lpEdit_seatsRemaining').value.trim(),
+      modules: [
+        {
+          title: document.getElementById('lpEdit_mod1_title').value.trim(),
+          desc: document.getElementById('lpEdit_mod1_desc').value.trim()
+        },
+        {
+          title: document.getElementById('lpEdit_mod2_title').value.trim(),
+          desc: document.getElementById('lpEdit_mod2_desc').value.trim()
+        },
+        {
+          title: document.getElementById('lpEdit_mod3_title').value.trim(),
+          desc: document.getElementById('lpEdit_mod3_desc').value.trim()
+        }
+      ],
+      bonusValue: document.getElementById('lpEdit_bonusValue').value.trim() || '₹4,999',
+      bonuses: [
+        {
+          title: document.getElementById('lpEdit_bonus1_title').value.trim(),
+          worth: document.getElementById('lpEdit_bonus1_worth').value.trim()
+        },
+        {
+          title: document.getElementById('lpEdit_bonus2_title').value.trim(),
+          worth: document.getElementById('lpEdit_bonus2_worth').value.trim()
+        },
+        {
+          title: document.getElementById('lpEdit_bonus3_title').value.trim(),
+          worth: document.getElementById('lpEdit_bonus3_worth').value.trim()
+        },
+        {
+          title: document.getElementById('lpEdit_bonus4_title').value.trim(),
+          worth: document.getElementById('lpEdit_bonus4_worth').value.trim()
+        }
+      ],
+      mentorName: document.getElementById('lpEdit_mentorName').value.trim(),
+      mentorBio: document.getElementById('lpEdit_mentorBio').value.trim(),
+      whatsappPhone: document.getElementById('lpEdit_whatsappPhone').value.trim()
+    };
+
+    const res = await lmsAdmin('save-masterclass-landing', {
+      method: 'POST',
+      body: payload
+    });
+
+    if (res.ok) {
+      toast('🎉 Masterclass Landing Page updated successfully!');
+      closeLandingPageEditorModal();
+      loadLiveClassesAdmin(); // Refresh live classes table as price/title sync
+    } else {
+      throw new Error(res.error || 'Failed to save settings');
+    }
+  } catch(err) {
+    alert('Save failed: ' + err.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '💾 Save Landing Page Changes'; }
+  }
 }
 
 // ---------- BOOTSTRAP ----------

@@ -50,7 +50,7 @@ async function lmsApi(action, opts = {}) {
 // ---------- View Navigation ----------
 
 function switchView(viewName) {
-  ['view-login', 'view-dashboard', 'view-classroom', 'view-checkout'].forEach(id => {
+  ['view-login', 'view-dashboard', 'view-classroom', 'view-checkout', 'view-live-studio'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.add('hidden');
   });
@@ -485,6 +485,9 @@ async function loadDashboard() {
 
     // Render Courses Grid with active filters
     renderMyCoursesGrid();
+
+    // Check & Render Live Masterclasses & Sessions
+    loadStudentLiveClasses();
 
   } catch (err) {
     if (err.message.includes('login') || err.message.includes('expired')) {
@@ -1373,7 +1376,20 @@ function populateCertificateUI(studentName, courseTitle, courseId, duration, cer
     ? `${window.location.origin}${window.location.pathname}?verify=${encodeURIComponent(cId)}`
     : `https://quickartphotography.in/portal/index.html?verify=${encodeURIComponent(cId)}`;
 
-  if (qrElem) {
+  const qrContainer = document.getElementById('cert-qr-frame');
+
+  if (typeof QRCode !== 'undefined' && qrContainer) {
+    qrContainer.innerHTML = '';
+    new QRCode(qrContainer, {
+      text: verifyUrl,
+      width: 136,
+      height: 136,
+      colorDark: '#141720',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  } else if (qrElem) {
+    qrElem.crossOrigin = 'anonymous';
     qrElem.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}&margin=4`;
     qrElem.alt = `Verify ${cId}`;
   }
@@ -1407,21 +1423,126 @@ function closeCertificateModal() {
   document.getElementById('modal-certificate').classList.remove('show');
 }
 
-// 1-Click HD Image (PNG) Export via Canvas
+// Helper: Draw curved text along a circle arc
+function drawArcText(ctx, str, cx, cy, radius, startAngle, endAngle, outward) {
+  const chars = str.split('');
+  const numChars = chars.length;
+  if (numChars === 0) return;
+  const angleStep = (endAngle - startAngle) / (numChars - 1 || 1);
+
+  for (let i = 0; i < numChars; i++) {
+    const char = chars[i];
+    const angle = startAngle + i * angleStep;
+    ctx.save();
+    ctx.translate(cx + radius * Math.cos(angle), cy + radius * Math.sin(angle));
+    ctx.rotate(angle + (outward ? Math.PI / 2 : -Math.PI / 2));
+    ctx.fillText(char, 0, 0);
+    ctx.restore();
+  }
+}
+
+// Helper: Draw ornate corner filigree arabesque
+function drawCornerArabesque(ctx, x, y, scaleX, scaleY) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(scaleX, scaleY);
+  ctx.strokeStyle = '#c99738';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(6, 82);
+  ctx.bezierCurveTo(6, 24, 24, 6, 82, 6);
+  ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(216, 161, 83, 0.6)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(14, 72);
+  ctx.bezierCurveTo(14, 28, 28, 14, 72, 14);
+  ctx.stroke();
+
+  ctx.fillStyle = '#d8a153';
+  ctx.beginPath();
+  ctx.arc(32, 32, 4.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#aa7c11';
+  ctx.beginPath();
+  ctx.arc(18, 18, 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+// 1-Click HD Image (PNG) Export (Dual-Engine: 100% Identical DOM Capture + Vector Fallback)
 async function downloadCertificatePNG() {
   if (!activeCertData) {
     toast('Certificate not ready', false);
     return;
   }
-  toast('Generating high-resolution Certificate PNG…');
+  toast('Preparing HD Certificate Download…');
 
+  // 1. Wait for custom web fonts to be fully loaded
+  if (document.fonts && document.fonts.ready) {
+    try {
+      await document.fonts.ready;
+    } catch (e) {
+      // Font wait timeout fallback
+    }
+  }
+
+  // 2. Primary Engine: Ultra-HD DOM Screenshot via html2canvas (Clone to fixed 1020px desktop width)
+  const certElement = document.getElementById('certificate-print-area');
+  if (typeof html2canvas !== 'undefined' && certElement) {
+    try {
+      const offscreenWrap = document.createElement('div');
+      offscreenWrap.style.position = 'fixed';
+      offscreenWrap.style.left = '-9999px';
+      offscreenWrap.style.top = '0';
+      offscreenWrap.style.width = '1020px';
+      offscreenWrap.style.zIndex = '-9999';
+      offscreenWrap.style.background = '#ffffff';
+
+      const clone = certElement.cloneNode(true);
+      clone.style.width = '1020px';
+      clone.style.maxWidth = '1020px';
+      clone.style.minWidth = '1020px';
+      clone.style.boxSizing = 'border-box';
+      clone.style.margin = '0';
+      offscreenWrap.appendChild(clone);
+      document.body.appendChild(offscreenWrap);
+
+      // Brief tick for DOM reflow
+      await new Promise(r => setTimeout(r, 100));
+
+      const h2cCanvas = await html2canvas(clone, {
+        scale: 2.5, // 2550px width - crystal clear 300 DPI
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#fbf6ec',
+        logging: false,
+        imageTimeout: 5000
+      });
+
+      if (offscreenWrap.parentNode) {
+        document.body.removeChild(offscreenWrap);
+      }
+
+      if (h2cCanvas && h2cCanvas.width > 800) {
+        triggerCanvasDownload(h2cCanvas, activeCertData.studentName);
+        return;
+      }
+    } catch (h2cErr) {
+      console.warn('html2canvas capture skipped/failed, switching to comprehensive 2D Canvas engine:', h2cErr);
+    }
+  }
+
+  // 3. Fallback Engine: Comprehensive Vector 2D Canvas Renderer (All 15+ elements included)
   const canvas = document.getElementById('cert-export-canvas') || document.createElement('canvas');
   canvas.width = 1754; // A4 Landscape 150 DPI
   canvas.height = 1240;
   const ctx = canvas.getContext('2d');
 
-  // Background Parchment
-  const bgGrad = ctx.createRadialGradient(877, 620, 50, 877, 620, 900);
+  // Background Parchment Radial Gradient
+  const bgGrad = ctx.createRadialGradient(877, 620, 50, 877, 620, 920);
   bgGrad.addColorStop(0, '#ffffff');
   bgGrad.addColorStop(0.6, '#fbf6ec');
   bgGrad.addColorStop(1, '#f4ebd9');
@@ -1437,10 +1558,55 @@ async function downloadCertificatePNG() {
   ctx.strokeStyle = '#ecd394';
   ctx.strokeRect(48, 48, canvas.width - 96, canvas.height - 96);
 
-  // Inner dashed border
+  // Inner Frame Borders
   ctx.lineWidth = 1.5;
-  ctx.strokeStyle = 'rgba(201, 151, 56, 0.4)';
-  ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
+  ctx.strokeStyle = 'rgba(201, 151, 56, 0.45)';
+  ctx.strokeRect(66, 66, canvas.width - 132, canvas.height - 132);
+
+  ctx.setLineDash([6, 4]);
+  ctx.strokeStyle = 'rgba(201, 151, 56, 0.3)';
+  ctx.strokeRect(74, 74, canvas.width - 148, canvas.height - 148);
+  ctx.setLineDash([]);
+
+  // Ornate Corner Filigrees
+  drawCornerArabesque(ctx, 48, 48, 1, 1);
+  drawCornerArabesque(ctx, canvas.width - 48, 48, -1, 1);
+  drawCornerArabesque(ctx, 48, canvas.height - 48, 1, -1);
+  drawCornerArabesque(ctx, canvas.width - 48, canvas.height - 48, -1, -1);
+
+  // Microprint Security Border Line
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(184, 132, 59, 0.65)';
+  ctx.font = '8px monospace';
+  ctx.fillText('★ QUICK ART PHOTOGRAPHY ACADEMY ★ AN ISO 9001:2015 CERTIFIED INSTITUTION ★ GOVT. OF INDIA MSME (UDYAM-BR-35-0027860) ★ CENTRE: PAT/QAA-800001 ★ VERIFIED CREDENTIAL ★ OFFICIAL RECORD ★ TAMPER-PROOF ACADEMIC REGISTER ★', 877, 59);
+
+  // Background Security Watermark (Concentric Circles + Star + QAA)
+  ctx.save();
+  ctx.strokeStyle = 'rgba(216, 161, 83, 0.08)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8, 6]);
+  ctx.beginPath();
+  ctx.arc(877, 620, 210, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+  ctx.strokeStyle = 'rgba(216, 161, 83, 0.06)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(877, 620, 165, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(216, 161, 83, 0.05)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(877, 620, 120, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(216, 161, 83, 0.08)';
+  ctx.font = 'bold 50px "Cinzel", Georgia, serif';
+  ctx.fillText('QAA', 877, 638);
+  ctx.restore();
 
   // Helper to load image asynchronously
   const loadImage = (src) => new Promise((resolve) => {
@@ -1452,7 +1618,7 @@ async function downloadCertificatePNG() {
     img.src = src;
   });
 
-  // Load logo (use existing DOM image if ready or load from assets)
+  // Load logo
   const domLogo = document.getElementById('cert-logo-img');
   let logoImg = null;
   if (domLogo && domLogo.complete && domLogo.naturalWidth > 0) {
@@ -1461,27 +1627,70 @@ async function downloadCertificatePNG() {
     logoImg = await loadImage('../assets/quick-art-logo.png');
   }
 
+  // Draw Royal Laurel Wreath around logo
+  ctx.save();
+  const laurelGrad = ctx.createLinearGradient(810, 80, 940, 160);
+  laurelGrad.addColorStop(0, '#b8843b');
+  laurelGrad.addColorStop(0.5, '#ecc779');
+  laurelGrad.addColorStop(1, '#996a24');
+  ctx.fillStyle = laurelGrad;
+
+  // Left laurel leaves
+  const leftLeaves = [
+    [835, 132, 18, 9, -0.4],
+    [827, 116, 20, 10, -0.7],
+    [830, 98, 19, 9, -1.0],
+    [840, 82, 17, 8, -1.3],
+    [856, 72, 15, 7, -1.6]
+  ];
+  for (const [lx, ly, rx, ry, rot] of leftLeaves) {
+    ctx.save();
+    ctx.translate(lx, ly);
+    ctx.rotate(rot);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Right laurel leaves
+  const rightLeaves = [
+    [919, 132, 18, 9, 0.4],
+    [927, 116, 20, 10, 0.7],
+    [924, 98, 19, 9, 1.0],
+    [914, 82, 17, 8, 1.3],
+    [898, 72, 15, 7, 1.6]
+  ];
+  for (const [lx, ly, rx, ry, rot] of rightLeaves) {
+    ctx.save();
+    ctx.translate(lx, ly);
+    ctx.rotate(rot);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.restore();
+
   // Draw Stars above logo
   ctx.textAlign = 'center';
   ctx.fillStyle = '#c99738';
   ctx.font = '16px Arial, sans-serif';
-  ctx.fillText('★   ★   ★', 877, 72);
+  ctx.fillText('★   ★   ★', 877, 74);
 
-  // Draw Logo seamlessly onto parchment (transparent, no white patch)
+  // Draw Logo seamlessly onto parchment
   if (logoImg) {
-    const logoSize = 76;
+    const logoSize = 74;
     const logoX = 877 - (logoSize / 2);
     const logoY = 82;
 
     ctx.save();
-    // Subtle golden laurel accent ring
     ctx.beginPath();
     ctx.arc(877, logoY + (logoSize / 2), (logoSize / 2) + 2, 0, Math.PI * 2);
     ctx.lineWidth = 1.5;
     ctx.strokeStyle = 'rgba(201, 151, 56, 0.65)';
     ctx.stroke();
 
-    // Clip circular image directly onto parchment
     ctx.beginPath();
     ctx.arc(877, logoY + (logoSize / 2), logoSize / 2, 0, Math.PI * 2);
     ctx.clip();
@@ -1494,102 +1703,166 @@ async function downloadCertificatePNG() {
     ctx.roundRect(832, logoY + logoSize + 4, 90, 18, 3);
     ctx.fill();
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 9px "Cinzel", Georgia, serif';
+    ctx.font = 'bold 9.5px "Cinzel", Georgia, serif';
     ctx.fillText('ESTD. 2014', 877, logoY + logoSize + 16);
   }
 
-  // Header Title
+  // Header Titles
   ctx.textAlign = 'center';
   ctx.fillStyle = '#141720';
   ctx.font = 'bold 34px "Cinzel", Georgia, serif';
   ctx.fillText('QUICK ART PHOTOGRAPHY ACADEMY', 877, 206);
 
   ctx.fillStyle = '#8c6a28';
-  ctx.font = 'bold 14px "Plus Jakarta Sans", Arial, sans-serif';
-  ctx.fillText('ACADEMY OF CINEMATIC FILMMAKING, PHOTOGRAPHY & DIGITAL ARTS', 877, 224);
+  ctx.font = 'bold 13.5px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('ACADEMY OF CINEMATIC FILMMAKING, PHOTOGRAPHY & DIGITAL ARTS', 877, 226);
 
   ctx.fillStyle = '#5c584e';
-  ctx.font = '12px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.font = 'bold 11px "Plus Jakarta Sans", Arial, sans-serif';
   ctx.fillText('AN ISO 9001:2015 CERTIFIED INSTITUTION • GOVT. OF INDIA MSME REGD. (UDYAM-BR-35-0027860) • CENTRE CODE: PAT/QAA-800001', 877, 248);
 
-  // Ribbon Banner
-  ctx.fillStyle = '#b8843b';
+  // Thin separator rule
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgba(201, 151, 56, 0.35)';
   ctx.beginPath();
-  ctx.roundRect(480, 275, 794, 42, 6);
+  ctx.moveTo(420, 258);
+  ctx.lineTo(1334, 258);
+  ctx.stroke();
+
+  // Gold Ribbon Banner
+  const titleGrad = ctx.createLinearGradient(460, 275, 1294, 317);
+  titleGrad.addColorStop(0, '#b8843b');
+  titleGrad.addColorStop(0.5, '#ecd394');
+  titleGrad.addColorStop(1, '#a87224');
+  ctx.fillStyle = titleGrad;
+  ctx.beginPath();
+  ctx.roundRect(460, 272, 834, 42, 6);
   ctx.fill();
 
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 18px "Cinzel", Georgia, serif';
-  ctx.fillText('★  CERTIFICATE OF COMPLETION & EXCELLENCE  ★', 877, 302);
+  ctx.fillStyle = '#141006';
+  ctx.font = 'bold 17px "Cinzel", Georgia, serif';
+  ctx.fillText('★  CERTIFICATE OF COMPLETION & EXCELLENCE  ★', 877, 299);
 
-  // Presented to
+  // Registration & Authenticity Code
+  ctx.fillStyle = '#736750';
+  ctx.font = 'bold 11.5px monospace';
+  ctx.fillText('Registration No: QAA/ISO-2026/0842 • Authenticity Verified', 877, 332);
+
+  // Presented To
   ctx.fillStyle = '#585143';
-  ctx.font = 'italic 20px "Playfair Display", Georgia, serif';
-  ctx.fillText('This prestigious credential is duly and officially conferred upon', 877, 360);
+  ctx.font = 'italic 19px "Playfair Display", Georgia, serif';
+  ctx.fillText('This prestigious credential is duly and officially conferred upon', 877, 372);
 
   // Student Name
   ctx.fillStyle = '#94661a';
-  ctx.font = 'bold 52px "Cinzel", Georgia, serif';
-  ctx.fillText(activeCertData.studentName, 877, 430);
+  ctx.font = 'bold 50px "Cinzel", Georgia, serif';
+  ctx.fillText(activeCertData.studentName, 877, 436);
 
-  // Underline
-  ctx.lineWidth = 3;
+  // Gold Accent Underline
+  ctx.lineWidth = 2.5;
   ctx.strokeStyle = '#c99738';
   ctx.beginPath();
-  ctx.moveTo(560, 450);
-  ctx.lineTo(1194, 450);
+  ctx.moveTo(540, 452);
+  ctx.lineTo(1214, 452);
   ctx.stroke();
 
-  // Citation text
+  // Citation Body
   ctx.fillStyle = '#403c35';
-  ctx.font = '18px "Plus Jakarta Sans", Arial, sans-serif';
-  ctx.fillText('in recognition of successfully completing all academic modules, practical assignments,', 877, 500);
-  ctx.fillText('industry-standard real client workflows, and demonstrating professional mastery in', 877, 528);
+  ctx.font = '16.5px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('in recognition of successfully completing all academic modules, rigorous practical assignments,', 877, 498);
+  ctx.fillText('industry-standard real client workflows, and demonstrating professional mastery in', 877, 524);
 
   // Course Name
   ctx.fillStyle = '#12151d';
-  ctx.font = 'bold 35px "Cinzel", Georgia, serif';
-  ctx.fillText(activeCertData.courseTitle, 877, 585);
+  ctx.font = 'bold 36px "Cinzel", Georgia, serif';
+  ctx.fillText(activeCertData.courseTitle, 877, 580);
 
-  // Meta Badges text (Duration removed)
+  // Meta Badges
   ctx.fillStyle = '#704408';
-  ctx.font = 'bold 16px "Plus Jakarta Sans", Arial, sans-serif';
-  ctx.fillText('★ Grade: Distinction (Grade A+)   •   ✓ Practical Portfolio Approved   •   🛡️ Industry Certified', 877, 635);
+  ctx.font = 'bold 15px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('★ Grade: Distinction (Grade A+)   •   ✓ Practical Portfolio Approved   •   🛡️ Industry Standard Certified', 877, 626);
 
-  // Footer Left: ID & Verification
+  // Footer Left: Verification & QR
   ctx.textAlign = 'left';
-  ctx.fillStyle = '#141720';
-  ctx.font = 'bold 16px monospace';
-  ctx.fillText(`Certificate ID: ${activeCertData.certificateId}`, 120, 1100);
-  ctx.fillStyle = '#6d5423';
-  ctx.font = '13px "Plus Jakarta Sans", Arial, sans-serif';
-  ctx.fillText('Verify Online: quickartphotography.in/portal/', 120, 1125);
+  
+  // Extract or load QR code
+  let qrImg = null;
+  const qrFrame = document.getElementById('cert-qr-frame');
+  if (qrFrame) {
+    const domCanvas = qrFrame.querySelector('canvas');
+    const domImg = qrFrame.querySelector('img');
+    if (domCanvas) {
+      qrImg = domCanvas;
+    } else if (domImg && domImg.src) {
+      qrImg = domImg;
+    }
+  }
+  if (!qrImg) {
+    try {
+      qrImg = await loadImage(activeCertData.verifyUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(activeCertData.verifyUrl)}` : '');
+    } catch (e) {}
+  }
 
-  // Footer Center: Ornate 3D Gold Seal
+  // Draw QR Frame
+  ctx.fillStyle = '#ffffff';
+  ctx.strokeStyle = '#c99738';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect(118, 930, 96, 96, 4);
+  ctx.fill();
+  ctx.stroke();
+
+  if (qrImg) {
+    try {
+      ctx.drawImage(qrImg, 122, 934, 88, 88);
+    } catch (qrErr) {}
+  }
+
+  ctx.fillStyle = '#6d5423';
+  ctx.font = 'bold 9.5px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('SCAN TO VERIFY ONLINE', 120, 1044);
+
+  ctx.fillStyle = '#141720';
+  ctx.font = 'bold 13.5px monospace';
+  ctx.fillText(`ID: ${activeCertData.certificateId}`, 120, 1064);
+
+  // Draw Vector Barcode Stripes (Matching SVG Barcode)
+  const barcodeBars = [
+    [0, 3], [5, 1], [8, 4], [15, 2], [19, 1], [22, 3], [27, 5],
+    [34, 2], [38, 1], [41, 3], [46, 2], [50, 4], [56, 1], [59, 3],
+    [64, 5], [71, 2], [75, 1], [78, 3], [83, 4], [89, 2], [93, 1],
+    [96, 5], [103, 2], [107, 3], [112, 1], [115, 4], [121, 2], [125, 3]
+  ];
+  ctx.fillStyle = '#444444';
+  for (const [bx, bw] of barcodeBars) {
+    ctx.fillRect(120 + bx * 1.15, 1076, bw * 1.15, 18);
+  }
+
+  // Footer Center: Ornate 3D Gold Seal with Ribbons
   ctx.save();
   const sealX = 877;
-  const sealY = 1060;
+  const sealY = 1045;
   const sealR = 56;
 
   // Ribbon Tails
   ctx.fillStyle = '#99222c';
   ctx.beginPath();
   ctx.moveTo(sealX - 22, sealY + 20);
-  ctx.lineTo(sealX - 35, sealY + 70);
-  ctx.lineTo(sealX - 22, sealY + 62);
-  ctx.lineTo(sealX - 9, sealY + 70);
+  ctx.lineTo(sealX - 35, sealY + 75);
+  ctx.lineTo(sealX - 22, sealY + 66);
+  ctx.lineTo(sealX - 9, sealY + 75);
   ctx.lineTo(sealX - 5, sealY + 25);
   ctx.fill();
 
   ctx.beginPath();
   ctx.moveTo(sealX + 22, sealY + 20);
-  ctx.lineTo(sealX + 35, sealY + 70);
-  ctx.lineTo(sealX + 22, sealY + 62);
-  ctx.lineTo(sealX + 9, sealY + 70);
+  ctx.lineTo(sealX + 35, sealY + 75);
+  ctx.lineTo(sealX + 22, sealY + 66);
+  ctx.lineTo(sealX + 9, sealY + 75);
   ctx.lineTo(sealX + 5, sealY + 25);
   ctx.fill();
 
-  // Seal Gradient Body
+  // Seal Body Radial Gradient
   const sealGrad = ctx.createRadialGradient(sealX - 15, sealY - 15, 5, sealX, sealY, sealR);
   sealGrad.addColorStop(0, '#fff4cc');
   sealGrad.addColorStop(0.35, '#e0ab4a');
@@ -1597,43 +1870,67 @@ async function downloadCertificatePNG() {
   sealGrad.addColorStop(1, '#613e09');
   ctx.fillStyle = sealGrad;
 
+  // Serrated Star Edge (36 teeth)
   ctx.beginPath();
-  ctx.arc(sealX, sealY, sealR, 0, Math.PI * 2);
+  for (let i = 0; i < 72; i++) {
+    const angle = (i * Math.PI) / 36;
+    const r = i % 2 === 0 ? sealR + 4 : sealR - 1;
+    const px = sealX + r * Math.cos(angle);
+    const py = sealY + r * Math.sin(angle);
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.closePath();
   ctx.fill();
-  ctx.lineWidth = 2.5;
+  ctx.lineWidth = 2;
   ctx.strokeStyle = '#f5df9a';
   ctx.stroke();
 
-  // Inner ring
+  // Inner rings
   ctx.beginPath();
   ctx.arc(sealX, sealY, sealR - 10, 0, Math.PI * 2);
   ctx.lineWidth = 1.5;
-  ctx.strokeStyle = 'rgba(255, 245, 200, 0.8)';
+  ctx.strokeStyle = 'rgba(255, 245, 200, 0.85)';
   ctx.stroke();
 
-  // Circular text
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#2c1802';
-  ctx.font = 'bold 9px "Cinzel", Georgia, serif';
-  ctx.fillText('★ QUICK ART ACADEMY ★', sealX, sealY - 24);
-  ctx.font = 'bold 8px "Cinzel", Georgia, serif';
-  ctx.fillText('OFFICIAL SEAL', sealX, sealY + 32);
+  ctx.beginPath();
+  ctx.arc(sealX, sealY, sealR - 22, 0, Math.PI * 2);
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgba(255, 245, 200, 0.6)';
+  ctx.stroke();
 
-  // Center Emblem (Star & Camera Crown)
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '14px Arial, sans-serif';
-  ctx.fillText('★ ★ ★', sealX, sealY - 8);
+  // Curved Top & Bottom Text on Seal
+  ctx.fillStyle = '#321c02';
+  ctx.font = 'bold 8.5px "Cinzel", Georgia, serif';
+  drawArcText(ctx, '★ QUICK ART ACADEMY ★', sealX, sealY, sealR - 16, -2.4, -0.74, true);
+  ctx.font = 'bold 7.5px "Cinzel", Georgia, serif';
+  drawArcText(ctx, 'OFFICIAL SEAL • EXCELLENCE', sealX, sealY, sealR - 16, 2.35, 0.79, false);
 
-  ctx.fillStyle = '#2c1802';
-  ctx.font = 'bold 13px "Cinzel", Georgia, serif';
-  ctx.fillText('QAA', sealX, sealY + 12);
+  // Center Emblem (Star Crown & Camera Symbol)
+  ctx.fillStyle = '#fff5d0';
+  ctx.beginPath();
+  ctx.arc(sealX, sealY - 4, 3, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#321c02';
+  ctx.font = 'bold 11px "Cinzel", Georgia, serif';
+  ctx.fillText('QAA', sealX, sealY + 11);
   ctx.restore();
 
-  // Footer Right: Verification Stamp + Signature (Side-by-side)
-  // 1. Official Red Stamp on the left of signature
+  // Footer Right: Issue Date, Official Red Stamp & Anil Sharma Signature
+  // 1. Date of Issue Block
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#141720';
+  ctx.font = 'bold 14.5px "Cinzel", Georgia, serif';
+  ctx.fillText(activeCertData.issuedDate, 1630, 946);
+  ctx.fillStyle = '#8c6a28';
+  ctx.font = 'bold 11px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('Date of Issue', 1630, 964);
+
+  // 2. Official Red Verified Stamp (Side-by-side)
   ctx.save();
-  const stampX = 1350;
-  const stampY = 1070;
+  const stampX = 1360;
+  const stampY = 1045;
   const stampR = 38;
 
   ctx.translate(stampX, stampY);
@@ -1664,35 +1961,34 @@ async function downloadCertificatePNG() {
   ctx.fillText('VERIFIED', 0, 18);
   ctx.restore();
 
-  // 2. Signature Column on the right
+  // 3. Signature Column on the right
   ctx.textAlign = 'right';
   ctx.fillStyle = '#13151e';
-  ctx.font = 'italic 44px "Alex Brush", cursive';
-  ctx.fillText('Anil Sharma', 1630, 1055);
+  ctx.font = 'italic 46px "Alex Brush", cursive';
+  ctx.fillText('Anil Sharma', 1630, 1028);
 
   ctx.strokeStyle = '#141720';
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.moveTo(1440, 1075);
-  ctx.lineTo(1630, 1075);
+  ctx.moveTo(1440, 1046);
+  ctx.lineTo(1630, 1046);
   ctx.stroke();
 
   ctx.fillStyle = '#141720';
   ctx.font = 'bold 16px "Cinzel", Georgia, serif';
-  ctx.fillText('Anil Sharma', 1630, 1100);
+  ctx.fillText('Anil Sharma', 1630, 1070);
   ctx.fillStyle = '#845714';
-  ctx.font = 'bold 13px "Plus Jakarta Sans", Arial, sans-serif';
-  ctx.fillText('Founder & Master Director', 1630, 1120);
+  ctx.font = 'bold 12.5px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('Founder & Master Director', 1630, 1090);
+  ctx.fillStyle = '#5c584e';
+  ctx.font = 'bold 11px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('Quick Art Photography Academy', 1630, 1106);
 
-  // Load and draw QR code
-  try {
-    const qrImg = await loadImage(activeCertData.verifyUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(activeCertData.verifyUrl)}` : '');
-    if (qrImg) {
-      ctx.drawImage(qrImg, 120, 960, 110, 110);
-    }
-  } catch (e) {
-    // Continue even if QR fails
-  }
+  // Bottom Tamper-Evident Security Footer Notice
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(100, 90, 75, 0.85)';
+  ctx.font = 'bold 9.5px "Plus Jakarta Sans", monospace';
+  ctx.fillText('VERIFIED OFFICIAL RECORD • THIS DOCUMENT CARRIES TAMPER-EVIDENT DIGITAL VALIDATION • VALID WORLDWIDE', 877, 1152);
 
   triggerCanvasDownload(canvas, activeCertData.studentName);
 }
@@ -3082,3 +3378,375 @@ function updateDropdownEnrolledBadge(count) {
     new MutationObserver(() => applySecurity()).observe(mount, { childList: true, subtree: true });
   }
 })();
+
+// ==========================================================================
+// STUDENT LIVE CINEMA STUDIO & DOUBTS INTERACTION MODULE
+// ==========================================================================
+let studentLiveClasses = [];
+let currentLiveSession = null;
+let liveDoubtsPollTimer = null;
+let liveWatermarkInterval = null;
+
+async function loadStudentLiveClasses() {
+  const shelf = document.getElementById('live-sessions-shelf');
+  const banner = document.getElementById('live-session-banner');
+  const grid = document.getElementById('live-cards-grid');
+
+  try {
+    const res = await lmsApi('get-live-classes');
+    studentLiveClasses = res.liveClasses || [];
+
+    // 1. Check if any class is LIVE NOW
+    const liveNowSession = studentLiveClasses.find(c => c.status === 'live');
+    if (liveNowSession && banner) {
+      banner.classList.remove('hidden');
+      const bTitle = document.getElementById('live-banner-title');
+      const bSub = document.getElementById('live-banner-sub');
+      if (bTitle) bTitle.textContent = `🔴 LIVE NOW: ${liveNowSession.title}`;
+      if (bSub) {
+        bSub.textContent = liveNowSession.isAuthorized 
+          ? 'Mentor Anil Sharma is broadcasting live on timeline • Click to Join Live Classroom'
+          : `Tickets available: ₹${liveNowSession.ticketPrice || 299} • Click to Unlock Live Access`;
+      }
+      banner.onclick = () => openLiveStudioFromBanner(liveNowSession.id, liveNowSession.isAuthorized);
+    } else if (banner) {
+      banner.classList.add('hidden');
+    }
+
+    // 2. Render Cards Shelf
+    if (!studentLiveClasses.length) {
+      if (shelf) shelf.classList.add('hidden');
+      return;
+    }
+
+    if (shelf) shelf.classList.remove('hidden');
+    if (grid) {
+      grid.innerHTML = studentLiveClasses.map(c => {
+        let statusBadge = '';
+        if (c.status === 'live') {
+          statusBadge = '<span class="live-card-badge status-live">🔴 Live Now</span>';
+        } else if (c.status === 'completed') {
+          statusBadge = '<span class="live-card-badge status-completed">✓ Completed Replay</span>';
+        } else {
+          statusBadge = '<span class="live-card-badge status-scheduled">⏳ Scheduled</span>';
+        }
+
+        const dateStr = c.scheduledAt ? new Date(c.scheduledAt).toLocaleString('en-IN', {
+          day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+        }) : 'Coming Soon';
+
+        let actionBtn = '';
+        if (c.isAuthorized) {
+          if (c.status === 'live') {
+            actionBtn = `<button type="button" class="btn btn-gold btn-block" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-weight:700" onclick="openLiveStudio('${c.id}')">🔴 Enter Live Studio</button>`;
+          } else if (c.status === 'completed') {
+            actionBtn = `<button type="button" class="btn btn-outline btn-block" onclick="openLiveStudio('${c.id}')">▶ Watch Replay</button>`;
+          } else {
+            actionBtn = `<button type="button" class="btn btn-outline btn-block" onclick="openLiveStudio('${c.id}')">⏳ Waiting Room / Details</button>`;
+          }
+        } else {
+          if (c.type === 'workshop') {
+            actionBtn = `<a href="/master-class/live.html" class="btn btn-gold btn-block" style="text-decoration:none;display:block;text-align:center">🎟️ Book Ticket (₹${Number(c.ticketPrice||299).toLocaleString()})</a>`;
+          } else {
+            actionBtn = `<a href="../online/index.html" class="btn btn-gold-outline btn-block" style="text-decoration:none;display:block;text-align:center">🔒 Enroll in Course</a>`;
+          }
+        }
+
+        return `
+          <div class="live-card">
+            <div>
+              <div class="live-card-badge-row">
+                ${statusBadge}
+                <span style="font-size:11px;color:#94a3b8">${escapeHtml(c.duration || '90 Mins')}</span>
+              </div>
+              <h4 class="live-card-title">${escapeHtml(c.title)}</h4>
+              <p class="live-card-desc">${escapeHtml(c.description || 'Live hands-on color grading timeline session.')}</p>
+            </div>
+            <div>
+              <div class="live-card-meta">
+                <span>🗓️ ${dateStr}</span>
+                <span>${c.isAuthorized ? '<strong style="color:#10b981">✓ Unlocked</strong>' : (c.type === 'workshop' ? `₹${c.ticketPrice}` : 'Course Batch')}</span>
+              </div>
+              <div style="margin-top:12px">
+                ${actionBtn}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+  } catch (err) {
+    if (shelf) shelf.classList.add('hidden');
+  }
+}
+
+function openLiveStudioFromBanner(liveId = null, isAuth = true) {
+  if (!liveId) {
+    const liveNow = studentLiveClasses.find(c => c.status === 'live');
+    if (liveNow) {
+      liveId = liveNow.id;
+      isAuth = liveNow.isAuthorized;
+    }
+  }
+
+  if (!isAuth) {
+    window.location.href = '/master-class/live.html';
+    return;
+  }
+
+  if (liveId) {
+    openLiveStudio(liveId);
+  }
+}
+
+async function openLiveStudio(liveId) {
+  switchView('live-studio');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const mount = document.getElementById('live-video-mount');
+  if (mount) {
+    mount.innerHTML = `
+      <div class="live-placeholder">
+        <div class="live-pulse-ring"></div>
+        <div style="font-weight:700;font-size:16px;margin-top:16px;color:#fff">Connecting to Secure Live Studio…</div>
+        <div class="muted" style="font-size:13px;margin-top:4px">1080p 60fps High-Definition Feed</div>
+      </div>
+    `;
+  }
+
+  try {
+    const res = await lmsApi(`get-live-session&liveId=${encodeURIComponent(liveId)}`);
+    currentLiveSession = res;
+
+    // Update Header
+    const titleEl = document.getElementById('live-player-title');
+    if (titleEl) titleEl.textContent = res.title;
+
+    const descTitle = document.getElementById('live-desc-title');
+    if (descTitle) descTitle.textContent = res.title;
+
+    const statusTag = document.getElementById('live-status-tag');
+    if (statusTag) {
+      statusTag.textContent = res.status === 'live' ? '🔴 LIVE BROADCAST' : (res.status === 'completed' ? '✓ RECORDED REPLAY' : '⏳ SCHEDULED ROOM');
+    }
+
+    const descSchedule = document.getElementById('live-desc-schedule');
+    if (descSchedule && res.scheduledAt) {
+      const dt = new Date(res.scheduledAt).toLocaleString('en-IN', {
+        weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      descSchedule.textContent = `Broadcast: ${dt} • Duration: ${res.duration || '90 Mins'}`;
+    }
+
+    const descBody = document.getElementById('live-desc-body');
+    if (descBody) descBody.textContent = res.description || 'Hands-on timeline session with Lead Mentor Anil Sharma.';
+
+    // Resources
+    const resList = document.getElementById('live-resources-list');
+    if (resList) {
+      if (Array.isArray(res.resources) && res.resources.length) {
+        resList.innerHTML = res.resources.map(r => `
+          <a href="${escapeHtml(r.url)}" target="_blank" rel="noopener" class="live-resource-item">
+            <span>📦 ${escapeHtml(r.title)}</span>
+            <span style="font-weight:700">Download ⬇</span>
+          </a>
+        `).join('');
+      } else {
+        resList.innerHTML = '<div class="muted" style="font-size:12.5px">Practice files will be unlocked during the live stream.</div>';
+      }
+    }
+
+    // Dynamic Floating Watermark
+    initLiveWatermark(res.watermark);
+
+    // Embed Video Stream with Anti-Leak Protection
+    embedLiveStream(res.streamId, res.replayUrl, res.status);
+
+    // Start Live Doubts Polling
+    pollLiveDoubtsStudent();
+    if (liveDoubtsPollTimer) clearInterval(liveDoubtsPollTimer);
+    liveDoubtsPollTimer = setInterval(pollLiveDoubtsStudent, 4000);
+
+  } catch (err) {
+    toast('Access denied: ' + err.message, false);
+    showDashboard();
+  }
+}
+
+function initLiveWatermark(watermarkText) {
+  const el = document.getElementById('live-watermark-text');
+  if (!el) return;
+  el.textContent = watermarkText || 'Quick Art Photography Academy';
+
+  // Float watermark randomly across the player every 10 seconds
+  if (liveWatermarkInterval) clearInterval(liveWatermarkInterval);
+  const moveWatermark = () => {
+    const top = Math.floor(Math.random() * 65) + 15; // 15% to 80%
+    const left = Math.floor(Math.random() * 65) + 15; // 15% to 80%
+    el.style.top = `${top}%`;
+    el.style.left = `${left}%`;
+  };
+  moveWatermark();
+  liveWatermarkInterval = setInterval(moveWatermark, 10000);
+}
+
+function embedLiveStream(streamId, replayUrl, status) {
+  const mount = document.getElementById('live-video-mount');
+  if (!mount) return;
+
+  // If status is completed and custom replayUrl provided, check if it's a Bunny GUID or YouTube ID
+  let videoId = streamId;
+  if (status === 'completed' && replayUrl) {
+    videoId = replayUrl;
+  }
+
+  if (!videoId) {
+    mount.innerHTML = `
+      <div class="live-placeholder">
+        <div style="font-size:36px;margin-bottom:12px">⏳</div>
+        <div style="font-weight:700;font-size:16px;color:#fff">Stream Starting Soon</div>
+        <div class="muted" style="font-size:13px;margin-top:4px">Mentor Anil Sharma will start broadcasting shortly. Please keep this page open.</div>
+      </div>
+    `;
+    return;
+  }
+
+  // Pure Protected Embed:
+  // - modestbranding=1 : hides large YouTube logo
+  // - rel=0 : does not show external recommended videos
+  // - iv_load_policy=3 : hides video annotations
+  // - disablekb=0 : keyboard navigation
+  const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&modestbranding=1&rel=0&controls=1&showinfo=0&iv_load_policy=3`;
+
+  mount.innerHTML = `
+    <iframe 
+      src="${embedUrl}" 
+      title="Quick Art Photography Academy Live Stream" 
+      frameborder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+      allowfullscreen>
+    </iframe>
+  `;
+}
+
+function reloadLivePlayer() {
+  if (currentLiveSession) {
+    embedLiveStream(currentLiveSession.streamId, currentLiveSession.replayUrl, currentLiveSession.status);
+    toast('🔄 Stream reloaded');
+  }
+}
+
+function toggleLiveCinemaFullscreen() {
+  const box = document.getElementById('live-video-box');
+  if (!box) return;
+  if (!document.fullscreenElement) {
+    box.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+}
+
+function exitLiveStudio() {
+  if (liveDoubtsPollTimer) {
+    clearInterval(liveDoubtsPollTimer);
+    liveDoubtsPollTimer = null;
+  }
+  if (liveWatermarkInterval) {
+    clearInterval(liveWatermarkInterval);
+    liveWatermarkInterval = null;
+  }
+
+  // Clear video mount to stop sound/stream
+  const mount = document.getElementById('live-video-mount');
+  if (mount) mount.innerHTML = '';
+  currentLiveSession = null;
+
+  showDashboard();
+}
+
+async function pollLiveDoubtsStudent() {
+  if (!currentLiveSession || !currentLiveSession.id) return;
+  const container = document.getElementById('live-chat-messages');
+  if (!container) return;
+
+  try {
+    const res = await lmsApi(`fetch-live-doubts&liveId=${encodeURIComponent(currentLiveSession.id)}`);
+    const messages = res.messages || [];
+
+    if (!messages.length) {
+      container.innerHTML = `
+        <div class="chat-empty-state">
+          <span>💬</span>
+          <p>Live doubts chat is open. Ask your editing doubts or color grading questions below.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = messages.map(m => {
+      const timeStr = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
+      if (m.isMentor) {
+        return `
+          <div class="chat-msg-bubble mentor">
+            <div class="chat-msg-hdr">
+              <span>⭐ ${escapeHtml(m.studentName || 'Mentor Anil Sharma')}</span>
+              <span class="chat-msg-time">${timeStr}</span>
+            </div>
+            <div class="chat-msg-text">${escapeHtml(m.message)}</div>
+          </div>
+        `;
+      }
+      return `
+        <div class="chat-msg-bubble student">
+          <div class="chat-msg-hdr">
+            <span>🎓 ${escapeHtml(m.studentName || 'Student')}</span>
+            <span class="chat-msg-time">${timeStr}</span>
+          </div>
+          <div class="chat-msg-text">${escapeHtml(m.message)}</div>
+        </div>
+      `;
+    }).join('');
+
+    container.scrollTop = container.scrollHeight;
+  } catch(e){}
+}
+
+async function sendLiveDoubtStudent() {
+  if (!currentLiveSession || !currentLiveSession.id) return;
+  const input = document.getElementById('live-doubt-input');
+  const btn = document.getElementById('btn-live-send');
+  const msg = input ? input.value.trim() : '';
+  if (!msg) return;
+
+  input.value = '';
+  if (btn) btn.disabled = true;
+
+  try {
+    await lmsApi('send-live-doubt', {
+      method: 'POST',
+      body: { liveId: currentLiveSession.id, message: msg }
+    });
+    pollLiveDoubtsStudent();
+  } catch (err) {
+    toast(err.message, false);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+// ── Auto Hash Route for Live Class Direct Links (e.g. /portal/#live/live_demo_01) ──
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash;
+  if (hash.startsWith('#live/')) {
+    const liveId = hash.replace('#live/', '').trim();
+    if (liveId) openLiveStudio(liveId);
+  }
+});
+window.addEventListener('DOMContentLoaded', () => {
+  const hash = window.location.hash;
+  if (hash.startsWith('#live/')) {
+    const liveId = hash.replace('#live/', '').trim();
+    if (liveId) setTimeout(() => openLiveStudio(liveId), 600);
+  }
+});

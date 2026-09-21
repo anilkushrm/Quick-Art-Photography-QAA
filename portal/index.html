@@ -673,6 +673,33 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
           </div>
         </div>
 
+        <!-- Real-Time Live Session Alert Banner (Glowing indicator when session is live) -->
+        <div id="live-session-banner" class="live-banner hidden" onclick="openLiveStudioFromBanner()">
+          <div class="live-banner-pulse">
+            <span class="pulse-dot"></span>
+            <span class="live-tag">🔴 LIVE NOW</span>
+          </div>
+          <div class="live-banner-content">
+            <div id="live-banner-title" class="live-banner-title">Live Masterclass in Session</div>
+            <div id="live-banner-sub" class="live-banner-sub">Mentor Anil Sharma is broadcasting live on timeline • Click to Join Live Classroom</div>
+          </div>
+          <button type="button" class="live-banner-btn">Join Live Studio ➔</button>
+        </div>
+
+        <!-- Live Masterclasses & Sessions Shelf -->
+        <div id="live-sessions-shelf" class="live-shelf-container hidden">
+          <div class="live-shelf-hdr">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="live-indicator-dot"></span>
+              <h3 class="live-shelf-title">Live Classes &amp; Masterclasses</h3>
+            </div>
+            <span class="live-shelf-sub">1080p 60fps HD Broadcasts with Mentor Anil Sharma</span>
+          </div>
+          <div id="live-cards-grid" class="live-cards-grid">
+            <!-- Dynamic Live Cards injected by portal.js -->
+          </div>
+        </div>
+
         <!-- Spotlight Continue Watching Card (dynamic) -->
         <div id="resume-spotlight-box" class="resume-spotlight-box hidden"></div>
 
@@ -911,8 +938,136 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
 
       </section>
 
-    </div>
-  </main>
+      <!-- ================= 4. LIVE CINEMA CLASSROOM STUDIO ================= -->
+      <section id="view-live-studio" class="portal-view hidden">
+        
+        <!-- Live Studio Navigation Bar -->
+        <div class="live-studio-topbar">
+          <button type="button" class="btn-sm btn-outline" onclick="exitLiveStudio()">
+            <span aria-hidden="true">←</span> Leave Studio / Dashboard
+          </button>
+          <div class="live-topbar-center">
+            <div class="live-pulse-badge">
+              <span class="live-pulse-dot"></span>
+              <span id="live-status-tag">🔴 LIVE BROADCAST</span>
+            </div>
+            <h2 class="live-studio-title" id="live-player-title">Live Masterclass Studio</h2>
+          </div>
+          <div class="live-topbar-meta">
+            <span class="live-attendees-pill">
+              <span class="viewer-dot"></span> <span id="live-viewer-count">18</span> Active Students
+            </span>
+            <span class="live-mentor-tag">Mentor: Anil Sharma</span>
+          </div>
+        </div>
+
+        <!-- Cinema Layout Grid -->
+        <div class="live-studio-layout">
+          
+          <!-- LEFT: HD Video Stream & Lesson Info -->
+          <div class="live-player-column">
+            <div class="live-player-wrapper">
+              <div class="live-video-box" id="live-video-box">
+                
+                <!-- Dynamic Anti-Piracy Floating Watermark -->
+                <div id="live-watermark-layer" class="live-watermark-layer" aria-hidden="true">
+                  <span id="live-watermark-text" class="live-watermark-chip">Quick Art Academy Protected</span>
+                </div>
+
+                <!-- Invisible Anti-Leak Click Shield (Intercepts clicks to prevent YouTube popup) -->
+                <div id="live-click-shield" class="live-click-shield" oncontextmenu="return false;" title="Quick Art Academy Cinema Player"></div>
+
+                <!-- Live Stream Video Mount -->
+                <div id="live-video-mount" class="live-video-mount">
+                  <div class="live-placeholder">
+                    <div class="live-pulse-ring"></div>
+                    <div style="font-weight:700;font-size:16px;margin-top:16px;color:#fff">Connecting to Live Studio…</div>
+                    <div class="muted" style="font-size:13px;margin-top:4px">1080p 60fps High-Definition Feed</div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Stream Control Bar -->
+              <div class="live-stream-bar">
+                <div class="live-stream-status">
+                  <span class="stream-quality-badge">1080p 60FPS HD</span>
+                  <span class="stream-audio-badge">Dolby Stereo 48kHz</span>
+                  <span id="live-time-indicator" class="stream-time-badge">🔴 STREAM ACTIVE</span>
+                </div>
+                <div class="live-stream-actions">
+                  <button type="button" class="btn-sm btn-outline live-reload-btn" onclick="reloadLivePlayer()" title="Reload Stream Feed">
+                    🔄 Refresh Stream
+                  </button>
+                  <button type="button" class="btn-sm btn-outline live-fs-btn" onclick="toggleLiveCinemaFullscreen()" title="Cinema Fullscreen">
+                    ⛶ Cinema Fullscreen
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Session Details & Practice Downloads -->
+            <div class="live-details-card">
+              <div class="live-details-header">
+                <div>
+                  <h3 id="live-desc-title" class="live-details-h3">Session Title</h3>
+                  <div id="live-desc-schedule" class="live-details-meta">Scheduled: — • Duration: —</div>
+                </div>
+                <div id="live-access-status" class="live-access-badge">✓ Verified Access Pass</div>
+              </div>
+
+              <div id="live-desc-body" class="live-desc-body">
+                Description of this live session…
+              </div>
+
+              <!-- Downloadable Practice Footage / LUTs Section -->
+              <div id="live-resources-section" class="live-resources-section">
+                <h4 class="live-section-subtitle">📁 Practice Footage &amp; Project Assets</h4>
+                <div id="live-resources-list" class="live-resources-list">
+                  <div class="muted" style="font-size:12.5px">No download files attached to this live session.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Live Doubts & Interaction Deck -->
+          <aside class="live-chat-column">
+            <div class="live-chat-card">
+              <div class="live-chat-header">
+                <div class="live-chat-title-row">
+                  <span class="chat-icon-dot"></span>
+                  <h4>Live Doubts &amp; Q&amp;A</h4>
+                </div>
+                <div class="live-chat-actions">
+                  <button type="button" class="chat-refresh-btn" onclick="pollLiveDoubtsStudent()" title="Refresh Doubts">🔄</button>
+                </div>
+              </div>
+              <div class="live-chat-sub">Ask doubts live. Mentor Anil Sharma reviews questions during the session.</div>
+
+              <!-- Messages Stream -->
+              <div id="live-chat-messages" class="live-chat-messages">
+                <div class="chat-empty-state">
+                  <span>💬</span>
+                  <p>Live classroom chat is open. Ask your editing doubts or color grading questions below.</p>
+                </div>
+              </div>
+
+              <!-- Doubt Input Box -->
+              <div class="live-chat-input-box">
+                <input type="text" id="live-doubt-input" placeholder="Ask doubt to Mentor Anil Sharma..." maxlength="300" onkeydown="if(event.key==='Enter')sendLiveDoubtStudent()" />
+                <button type="button" class="btn-live-send" onclick="sendLiveDoubtStudent()" id="btn-live-send" title="Send Question">
+                  ➔
+                </button>
+              </div>
+              <div class="live-chat-footer-note">
+                🔒 Protected by Student Watermark • Zero Leak Policy
+              </div>
+            </div>
+          </aside>
+
+        </div>
+
+      </section>
 
   <!-- ================= 4. CERTIFICATE MODAL ================= -->
   <div id="modal-certificate" class="modal" role="dialog" aria-modal="true">
@@ -1065,8 +1220,8 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
             <div class="cert-footer">
               <!-- Left: Verification & QR Code -->
               <div class="cert-verify-block">
-                <div class="cert-qr-frame">
-                  <img id="cert-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fquickartphotography.in%2Fportal%2F" alt="Verification QR Code" width="80" height="80" class="cert-qr-img" />
+                <div class="cert-qr-frame" id="cert-qr-frame">
+                  <img id="cert-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fquickartphotography.in%2Fportal%2F" alt="Verification QR Code" width="80" height="80" class="cert-qr-img" crossorigin="anonymous" />
                 </div>
                 <div class="cert-qr-text">SCAN TO VERIFY ONLINE</div>
                 <div class="cert-sig-id" id="cert-id-val">ID: QAA-2026-PR-0780</div>
@@ -1378,7 +1533,9 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
   </div>
 
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <script src="portal.js?v=20260918_03"></script>
+  <script src="qrcode.min.js"></script>
+  <script src="html2canvas.min.js"></script>
+  <script src="portal.js?v=20260921_04"></script>
 <script defer src="/meta-events.js"></script>
 </body>
 </html>

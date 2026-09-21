@@ -1,0 +1,51 @@
+{
+    "topAnnouncement": "🔥 LIMITED LIVE PASSES: Only 25 Seats Left For This Live Masterclass!",
+    "heroBadge": "🔴 Live Online Masterclass • 1080p 60fps",
+    "title": "Ultimate Cinematic Wedding Filmmaking & Color Grading",
+    "titleHighlight": "Live Masterclass",
+    "subtitle": "2 ghante ka practical hands-on live timeline session Mentor Anil Sharma ke saath. DaVinci Resolve & Premiere Pro me cinematic skin tones, node tree, aur custom LUTs banana seekhein.",
+    "scheduledAt": "2026-09-25T19:00:00+05:30",
+    "ticketPrice": 499,
+    "originalPrice": 999,
+    "seatsRemaining": "🔥 ONLY 5 SEATS LEFT AT ₹499",
+    "duration": "120 Mins (2 Hours Live)",
+    "language": "Hindi (हिंदी)",
+    "software": "DaVinci Resolve & Premiere Pro",
+    "modules": [
+        {
+            "title": "Part 1: Raw Footage Analysis & Professional Node Tree Setup",
+            "desc": "Sony S-Log3, Canon C-Log aur Panasonic V-Log footage ko correct color space me normalize karna, exposure balancing, aur dynamic contrast build karna."
+        },
+        {
+            "title": "Part 2: Bollywood & International Cinematic Skin Tones",
+            "desc": "Qualifiers aur Power Windows ke bina clean, healthy Indian skin tone banana. Hue vs Hue, Hue vs Sat curves aur skin tone indicator line master karna."
+        },
+        {
+            "title": "Part 3: Custom Signature LUT Creation & Export",
+            "desc": "Apna khud ka cinematic film look banana, teal & orange split grading aur client ke liye 33-point 3D LUT export karke timeline ready karna."
+        }
+    ],
+    "bonusValue": "₹4,999",
+    "bonuses": [
+        {
+            "title": "50+ Signature Wedding LUTs Pack",
+            "worth": "₹1,999"
+        },
+        {
+            "title": "4K RAW Practice Wedding Footage Pack",
+            "worth": "₹1,499"
+        },
+        {
+            "title": "Premiere & DaVinci Speed Editing Cheat-sheet",
+            "worth": "₹499"
+        },
+        {
+            "title": "Private Live Doubts & Community Access",
+            "worth": "₹999"
+        }
+    ],
+    "mentorName": "Anil Sharma",
+    "mentorTitle": "Lead Video Editor & Founder, Quick Art Photography Academy",
+    "mentorBio": "10+ saal ka wedding filmmaking aur color grading industry experience. 1,800+ students ko industry standard video editing sikhaya hai.",
+    "whatsappPhone": "9939800780"
+}

@@ -1631,10 +1631,12 @@ a {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-.cert-qr-img {
+.cert-qr-img,
+.cert-qr-frame canvas,
+.cert-qr-frame img {
   display: block;
-  width: 68px;
-  height: 68px;
+  width: 68px !important;
+  height: 68px !important;
   object-fit: contain;
 }
 
@@ -6548,6 +6550,667 @@ video::-webkit-media-controls-download-button {
     padding: 6px 10px;
     font-size: 12px;
   }
+}
+
+/* ==========================================================================
+   LIVE CINEMA STUDIO & REAL-TIME DOUBTS SYSTEM (QUICK ART ACADEMY)
+   ========================================================================== */
+
+/* ── Live Banner on Dashboard ── */
+.live-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(220, 38, 38, 0.08) 50%, rgba(15, 23, 42, 0.6) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  animation: liveGlow 3s infinite alternate;
+}
+.live-banner:hover {
+  transform: translateY(-2px);
+  border-color: rgba(239, 68, 68, 0.8);
+  box-shadow: 0 8px 36px rgba(239, 68, 68, 0.3);
+}
+@keyframes liveGlow {
+  0% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.15); }
+  100% { box-shadow: 0 0 36px rgba(239, 68, 68, 0.35); }
+}
+.live-banner-pulse {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(239, 68, 68, 0.25);
+  border: 1px solid #ef4444;
+  padding: 6px 12px;
+  border-radius: 100px;
+  flex-shrink: 0;
+}
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 10px #ef4444;
+  animation: livePulse 1.2s infinite;
+}
+@keyframes livePulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { transform: scale(1.15); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+.live-tag {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-transform: uppercase;
+}
+.live-banner-content {
+  flex: 1;
+}
+.live-banner-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+.live-banner-sub {
+  font-size: 12.5px;
+  color: #cbd5e1;
+  margin-top: 3px;
+}
+.live-banner-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  border: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.live-banner-btn:hover {
+  opacity: 0.92;
+}
+
+/* ── Live Sessions Shelf on Dashboard ── */
+.live-shelf-container {
+  margin-bottom: 32px;
+  padding: 22px;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+}
+.live-shelf-hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.live-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+}
+.live-shelf-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+.live-shelf-sub {
+  font-size: 12.5px;
+  color: #94a3b8;
+}
+.live-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 16px;
+}
+.live-card {
+  background: rgba(18, 24, 38, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.live-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(216, 161, 83, 0.45);
+}
+.live-card-badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.live-card-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.live-card-badge.status-live {
+  background: #ef4444;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+.live-card-badge.status-scheduled {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+.live-card-badge.status-completed {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+.live-card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+.live-card-desc {
+  font-size: 12.5px;
+  color: #94a3b8;
+  line-height: 1.45;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.live-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+/* ── Live Cinema Studio Section Layout ── */
+#view-live-studio {
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 8px 40px;
+}
+.live-studio-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  flex-wrap: wrap;
+}
+.live-topbar-center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.live-pulse-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid #ef4444;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.05em;
+}
+.live-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+  animation: livePulse 1.2s infinite;
+}
+.live-studio-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+.live-topbar-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.live-attendees-pill {
+  font-size: 12px;
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  padding: 5px 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.viewer-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+}
+.live-mentor-tag {
+  font-size: 12px;
+  color: var(--gold, #d8a153);
+  font-weight: 600;
+}
+
+/* ── Live Studio Main Grid ── */
+.live-studio-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 1080px) {
+  .live-studio-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Player Column & Cinema Container ── */
+.live-player-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.live-player-wrapper {
+  background: #020408;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), 0 0 40px rgba(216, 161, 83, 0.08);
+}
+.live-video-box {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 Cinema Ratio */
+  background: #000;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.live-video-box iframe,
+.live-video-box video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+}
+
+/* ── Invisible Anti-Leak Click Shield ── */
+.live-click-shield {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px; /* Shields top bar and YouTube branding from clicks */
+  z-index: 10;
+  background: transparent;
+  cursor: default;
+}
+
+/* ── Dynamic Anti-Piracy Watermark ── */
+.live-watermark-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+  overflow: hidden;
+}
+.live-watermark-chip {
+  position: absolute;
+  top: 25%;
+  left: 30%;
+  padding: 5px 12px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  border-radius: 6px;
+  font-family: 'Plus Jakarta Sans', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.04em;
+  transition: top 3s ease-in-out, left 3s ease-in-out;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+/* ── Stream Status Bar ── */
+.live-stream-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #070b14;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+}
+.live-stream-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.stream-quality-badge {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.stream-audio-badge {
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #a5b4fc;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.stream-time-badge {
+  font-weight: 700;
+  color: #f87171;
+}
+.live-stream-actions {
+  display: flex;
+  gap: 8px;
+}
+.live-reload-btn, .live-fs-btn {
+  font-size: 11.5px;
+  padding: 4px 10px;
+}
+
+/* ── Live Details Card & Downloads ── */
+.live-details-card {
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 22px;
+}
+.live-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.live-details-h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+.live-details-meta {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+.live-access-badge {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 8px;
+}
+.live-desc-body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #cbd5e1;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.live-resources-section {
+  margin-top: 18px;
+}
+.live-section-subtitle {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gold, #d8a153);
+  margin: 0 0 10px;
+}
+.live-resources-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.live-resource-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(8, 13, 24, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  text-decoration: none;
+  color: #f1f5f9;
+  font-size: 13px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.live-resource-item:hover {
+  border-color: rgba(216, 161, 83, 0.4);
+  background: rgba(216, 161, 83, 0.06);
+  color: var(--gold);
+}
+
+/* ── Live Doubts & Chat Column ── */
+.live-chat-column {
+  position: sticky;
+  top: 20px;
+}
+.live-chat-card {
+  background: #080d18;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+  overflow: hidden;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+}
+.live-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.live-chat-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.chat-icon-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+.live-chat-header h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+.chat-refresh-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #94a3b8;
+  transition: transform 0.2s, color 0.2s;
+}
+.chat-refresh-btn:hover {
+  color: #fff;
+  transform: rotate(90deg);
+}
+.live-chat-sub {
+  font-size: 11px;
+  color: #64748b;
+  padding: 0 18px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.live-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #050811;
+}
+.chat-empty-state {
+  margin: auto;
+  text-align: center;
+  color: #64748b;
+  font-size: 12.5px;
+  padding: 20px;
+}
+.chat-empty-state span {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 8px;
+}
+.chat-msg-bubble {
+  border-radius: 12px;
+  padding: 9px 13px;
+  line-height: 1.4;
+  font-size: 13px;
+  animation: fadeInMsg 0.2s ease-out;
+}
+@keyframes fadeInMsg {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.chat-msg-bubble.student {
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  align-self: flex-start;
+  max-width: 90%;
+}
+.chat-msg-bubble.mentor {
+  background: linear-gradient(135deg, rgba(216, 161, 83, 0.22), rgba(216, 161, 83, 0.1));
+  border: 1px solid rgba(216, 161, 83, 0.4);
+  align-self: flex-end;
+  max-width: 92%;
+}
+.chat-msg-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10.5px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+.chat-msg-bubble.student .chat-msg-hdr {
+  color: #93c5fd;
+}
+.chat-msg-bubble.mentor .chat-msg-hdr {
+  color: var(--gold, #d8a153);
+}
+.chat-msg-time {
+  opacity: 0.65;
+  font-weight: normal;
+}
+.chat-msg-text {
+  color: #f1f5f9;
+  word-break: break-word;
+}
+.live-chat-input-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #090e1b;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.live-chat-input-box input {
+  flex: 1;
+  padding: 10px 12px;
+  background: #040711;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+.live-chat-input-box input:focus {
+  border-color: var(--gold, #d8a153);
+}
+.btn-live-send {
+  background: linear-gradient(135deg, #d8a153, #b88235);
+  color: #080d18;
+  border: none;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-live-send:hover {
+  opacity: 0.9;
+}
+.live-chat-footer-note {
+  padding: 6px 14px 8px;
+  background: #040711;
+  text-align: center;
+  font-size: 10.5px;
+  color: #64748b;
 }
 
 

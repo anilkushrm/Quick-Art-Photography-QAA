@@ -60,21 +60,21 @@ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{line-height
  .mc-mentor-stats>div>div:last-child{font-size:12px;line-height:1.45;margin-top:5px}
  main>section:not(.qa-master-hero){padding-top:44px;padding-bottom:44px}
  main>section.qa-master-hero,
- section.qa-master-hero{padding-top:max(104px, calc(76px + env(safe-area-inset-top, 0px)))!important;padding-bottom:40px!important}
- main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{font-family:'Outfit','Plus Jakarta Sans',sans-serif!important;font-size:clamp(28px,7.8vw,36px)!important;font-weight:800!important;line-height:1.14!important;letter-spacing:-.02em!important;overflow-wrap:normal;text-wrap:balance;margin-top:14px}
+ section.qa-master-hero{padding-top:max(118px, calc(72px + env(safe-area-inset-top, 0px) + 26px))!important;padding-bottom:48px!important}
+ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child h1{font-family:'Outfit','Plus Jakarta Sans',sans-serif!important;font-size:clamp(26px,7.6vw,34px)!important;font-weight:850!important;line-height:1.15!important;letter-spacing:-.025em!important;overflow-wrap:normal;text-wrap:balance;margin-top:0!important;margin-bottom:14px!important}
  .qa-master-hero h1 .qa-heading-gradient{display:inline}
- .qa-master-hero h1+p{font-size:15px!important;line-height:1.6!important;margin-top:14px!important;max-width:100%!important;color:rgba(255,255,255,0.85)!important}
- .qa-master-hero .qa-price-row{gap:10px;flex-wrap:wrap;margin-top:18px}
- .qa-master-hero .qa-price-current{font-size:38px!important;line-height:1.15}
- .qa-master-hero .qa-price-original{font-size:16px}
+ .qa-master-hero h1+p{font-size:14.5px!important;line-height:1.62!important;margin-top:0!important;margin-bottom:16px!important;max-width:100%!important;color:rgba(255,255,255,0.85)!important}
+ .qa-master-hero .qa-price-row{gap:10px;flex-wrap:wrap;margin-top:14px}
+ .qa-master-hero .qa-price-current{font-size:clamp(34px,8.8vw,42px)!important;line-height:1.15}
+ .qa-master-hero .qa-price-original{font-size:17px}
  main>section.relative.bg-ink .qa-master-hero-grid{gap:24px!important}
- main>section.relative.bg-ink .qa-master-hero-grid>div:first-child>p{font-size:15px!important;line-height:1.6!important;margin-top:14px!important}
+ main>section.relative.bg-ink .qa-master-hero-grid>div:first-child>p{font-size:14.5px!important;line-height:1.62!important;margin-top:0!important;margin-bottom:16px!important}
  main>section.relative.bg-ink .qa-master-hero-grid>div:last-child>div{padding:20px!important;border-radius:20px!important}
  .qa-master-hero .qa-enquiry p{font-size:14px;line-height:1.6}
  .mc-price-row strong{font-weight:900}
 }
 @media(max-width:480px){
  main>section.qa-master-hero,
- section.qa-master-hero{padding-top:max(104px, calc(76px + env(safe-area-inset-top, 0px)))!important}
+ section.qa-master-hero{padding-top:max(118px, calc(68px + env(safe-area-inset-top, 0px) + 26px))!important}
 }
 

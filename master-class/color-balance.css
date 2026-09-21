@@ -90,11 +90,12 @@ section.qa-master-hero {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   main > section.qa-master-hero,
   section.qa-master-hero {
-    padding-top: max(104px, calc(76px + env(safe-area-inset-top, 0px))) !important;
-    padding-bottom: 40px !important;
+    padding-top: 118px !important;
+    padding-top: max(118px, calc(72px + env(safe-area-inset-top, 0px) + 26px)) !important;
+    padding-bottom: 48px !important;
   }
 }
 
@@ -372,40 +373,119 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
 @media (max-width: 640px) {
   .qa-hero-top-announcement {
     width: 100%;
+    margin-bottom: 14px !important;
   }
 
   .qa-hero-live-pill {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 7px 12px;
-    font-size: 11.5px;
-    justify-content: space-between;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 8px 12px !important;
+    border-radius: 9999px !important;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.16) 0%, rgba(26, 18, 22, 0.95) 100%) !important;
+    border: 1px solid rgba(239, 68, 68, 0.42) !important;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.15) !important;
+    text-decoration: none !important;
+  }
+
+  .qa-live-ping-box {
+    width: 8px !important;
+    height: 8px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .qa-live-dot, .qa-live-ping {
+    width: 6px !important;
+    height: 6px !important;
+  }
+
+  .qa-live-badge {
+    font-size: 10px !important;
+    letter-spacing: 0.05em !important;
+    padding: 2.5px 6px !important;
+    border-radius: 5px !important;
+    background: rgba(239, 68, 68, 0.22) !important;
+    border: 1px solid rgba(239, 68, 68, 0.38) !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+  }
+
+  .qa-live-sep {
+    display: none !important;
   }
 
   .qa-live-title {
-    font-size: 11.5px;
-    white-space: normal;
-    line-height: 1.3;
+    font-size: 11.5px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  .qa-live-cta {
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    color: #f5c879 !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    padding: 3px 9px !important;
+    border-radius: 9999px !important;
+    background: rgba(245, 200, 121, 0.14) !important;
+    border: 1px solid rgba(245, 200, 121, 0.3) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 3px !important;
   }
 
   .qa-hero-badges-wrap {
-    gap: 8px;
-    margin-bottom: 14px;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-bottom: 14px !important;
+    width: 100% !important;
+  }
+
+  .qa-hero-badges-wrap > div {
+    font-size: 11px !important;
+    padding: 5px 11px !important;
+    border-radius: 9999px !important;
+    line-height: 1.3 !important;
+  }
+
+  .qa-hero-ai-badge {
+    font-size: 11px !important;
+    padding: 5px 11px !important;
   }
 
   .qa-master-hero h1,
   .qa-mc-hero-h1,
   main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
-    font-size: clamp(28px, 8vw, 36px) !important;
-    line-height: 1.14 !important;
-    letter-spacing: -0.02em !important;
-    gap: 2px !important;
-    margin-bottom: 14px !important;
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+    font-size: clamp(26px, 7.6vw, 34px) !important;
+    font-weight: 850 !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.025em !important;
+    gap: 3px !important;
+    margin: 0 0 14px 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    text-wrap: balance !important;
   }
 
   .qa-mc-h1-white {
     font-size: inherit !important;
     line-height: inherit !important;
+    color: #ffffff !important;
   }
 
   .qa-mc-h1-gold {
@@ -413,22 +493,119 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
     line-height: inherit !important;
     display: block !important;
     white-space: normal !important;
+    background: linear-gradient(135deg, #FFF6D8 0%, #F5C869 35%, #D99026 70%, #F5CE7B 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
   }
 
-  .qa-master-hero .qa-price-current {
-    font-size: 38px !important;
+  .qa-mc-hero-lead,
+  .qa-master-hero-grid > div:first-child > p,
+  .qa-master-hero h1 + p {
+    font-size: 14.5px !important;
+    line-height: 1.62 !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    margin: 0 0 16px 0 !important;
+    max-width: 100% !important;
+  }
+
+  .qa-mc-price-block {
+    margin-top: 14px !important;
+    margin-bottom: 16px !important;
+    gap: 5px !important;
   }
 
   .qa-master-hero .qa-price-row {
+    display: flex !important;
+    align-items: baseline !important;
     gap: 10px !important;
+    flex-wrap: wrap !important;
+    margin: 0 !important;
+  }
+
+  .qa-master-hero .qa-price-original {
+    font-size: 17px !important;
+  }
+
+  .qa-master-hero .qa-price-current {
+    font-size: clamp(34px, 8.8vw, 42px) !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+  }
+
+  .qa-master-hero .qa-price-save {
+    font-size: 10.5px !important;
+    padding: 4px 8px !important;
+    transform: none !important;
+  }
+
+  .qa-mc-emi-row {
+    font-size: 12.5px !important;
+    margin-top: 3px !important;
   }
 
   .qa-campus-trust-strip {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 8px 12px !important;
-    padding: 10px 14px !important;
+    gap: 7px 10px !important;
+    padding: 10px 12px !important;
+    font-size: 11.5px !important;
+    margin: 14px 0 20px 0 !important;
+    border-radius: 12px !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(216, 161, 83, 0.22) !important;
+  }
+
+  /* 4 KPI Cards in 2x2 grid */
+  .qa-master-hero .grid-cols-2 {
+    gap: 8px !important;
+    margin-top: 18px !important;
+  }
+
+  .qa-master-hero .grid-cols-2 > .glass-dark {
+    padding: 9px 10px !important;
+    gap: 8px !important;
+    border-radius: 14px !important;
+    min-height: 56px !important;
+    box-sizing: border-box !important;
+  }
+
+  .qa-master-hero .grid-cols-2 > .glass-dark > div:first-child {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 9px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .qa-master-hero .grid-cols-2 > .glass-dark > div:first-child svg {
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  .qa-master-hero .grid-cols-2 > .glass-dark > div:last-child > div:first-child {
+    font-size: 9px !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  .qa-master-hero .grid-cols-2 > .glass-dark > div:last-child > div:last-child {
     font-size: 12px !important;
+    line-height: 1.25 !important;
+    font-weight: 600 !important;
+  }
+
+  /* Form Sidebar Card on Mobile */
+  main > section.qa-master-hero .qa-master-hero-grid .mc-hero-card,
+  .qa-master-hero .mc-hero-card {
+    margin-top: 24px !important;
+    padding: 20px 16px !important;
+    border-radius: 22px !important;
+  }
+
+  .qa-master-hero .mc-hero-card > .absolute.-top-4.-right-4 {
+    top: -11px !important;
+    right: 12px !important;
+    font-size: 9px !important;
+    padding: 3px 9px !important;
   }
 }
 
@@ -437,8 +614,18 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
     grid-template-columns: 1fr !important;
   }
   .qa-master-hero h1,
-  .qa-mc-hero-h1 {
-    font-size: 26px !important;
+  .qa-mc-hero-h1,
+  main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
+    font-size: 23px !important;
+  }
+  .qa-hero-live-pill {
+    padding: 7px 10px !important;
+  }
+  .qa-live-title {
+    font-size: 10.5px !important;
+  }
+  .qa-master-hero .qa-price-current {
+    font-size: 32px !important;
   }
 }
 

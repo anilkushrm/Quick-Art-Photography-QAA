@@ -779,20 +779,23 @@ body.landing-page-body {
   box-shadow: 0 25px 60px -15px rgba(216, 161, 83, 0.25);
   text-align: center;
   position: relative;
+  overflow: visible;
 }
 .lp-pricing-badge {
   position: absolute;
-  top: -14px;
+  top: -15px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--lp-gradient-gold);
   color: #000;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 800;
-  padding: 4px 16px;
+  padding: 6px 20px;
   border-radius: 999px;
   text-transform: uppercase;
   letter-spacing: 0.8px;
+  white-space: nowrap;
+  z-index: 10;
 }
 .lp-pricing-title {
   font-size: 22px;

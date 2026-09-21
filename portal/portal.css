@@ -170,13 +170,14 @@ a {
   position: sticky;
   top: 0;
   z-index: 100;
+  padding: 4px 0;
 }
 
 .header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 72px;
+  height: 74px;
 }
 
 .portal-brand,
@@ -5198,9 +5199,10 @@ video::-webkit-media-controls-download-button {
   .portal-header {
     position: sticky;
     top: 0;
+    padding: 3px 0;
   }
   .header-content {
-    height: 62px;
+    height: 66px;
   }
   .portal-brand,
   .portal-brand.ref-brand {

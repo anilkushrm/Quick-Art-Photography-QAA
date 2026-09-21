@@ -9,7 +9,7 @@
 .ref-ai-label{display:block;font:500 12px/1.5 Arial;color:#9a702e;letter-spacing:.02em;margin-top:3px}
 .ref-categories button .ref-category-label{font:500 14px/1.4 Arial;color:inherit}
 /* Obsolete mobile block removed */
-.ref-bar{position:relative;display:flex;align-items:center;gap:24px;max-width:1440px;margin:auto;padding:10px 28px;min-height:64px}
+.ref-bar{position:relative;display:flex;align-items:center;gap:24px;max-width:1440px;margin:auto;padding:14px 28px;min-height:70px}
 .ref-header a{text-decoration:none}
 .ref-brand{display:inline-flex;align-items:center;gap:9px;color:white;flex-shrink:0;font-size:17px;font-weight:700;line-height:1}
 .ref-brand img{width:40px;height:40px;object-fit:contain;display:block}
@@ -110,19 +110,19 @@
 }
 
 /* ── Homepage & Masterclass Hero Top Breathing Room (No touching fixed header) ── */
-.ref-header ~ main .qa-home-hero{padding-top:116px !important}
-.ref-header ~ main .qa-master-hero{padding-top:124px !important}
+.ref-header ~ main .qa-home-hero{padding-top:122px !important}
+.ref-header ~ main .qa-master-hero{padding-top:130px !important}
 @media(max-width:1023px){
-  .ref-header ~ main .qa-master-hero{padding-top:104px !important}
+  .ref-header ~ main .qa-master-hero{padding-top:110px !important}
 }
-@media(max-width:950px){.ref-header ~ main .qa-home-hero{padding-top:104px !important}}
+@media(max-width:950px){.ref-header ~ main .qa-home-hero{padding-top:110px !important}}
 @media(max-width:760px){
-  .ref-header ~ main .qa-master-hero{padding-top:86px !important}
+  .ref-header ~ main .qa-master-hero{padding-top:92px !important}
 }
-@media(max-width:600px){.ref-header ~ main .qa-home-hero{padding-top:98px !important}}
+@media(max-width:600px){.ref-header ~ main .qa-home-hero{padding-top:104px !important}}
 @media(max-width:480px){
-  .ref-header ~ main .qa-home-hero{padding-top:94px !important}
-  .ref-header ~ main .qa-master-hero{padding-top:82px !important}
+  .ref-header ~ main .qa-home-hero{padding-top:100px !important}
+  .ref-header ~ main .qa-master-hero{padding-top:88px !important}
 }
 
 /* ── Mobile Navigation Drawer Backdrop ── */
@@ -157,8 +157,8 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
     justify-content: space-between !important;
     gap: 10px !important;
     width: 100% !important;
-    padding: 8px 14px !important;
-    min-height: 56px !important;
+    padding: 12px 14px !important;
+    min-height: 62px !important;
     background: transparent !important;
     border-bottom: none !important;
     box-sizing: border-box !important;
@@ -621,8 +621,8 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
 /* Mobile Scrolled Controls (< 1150px) */
 @media(max-width: 1150px) {
   .ref-header.ref-scrolled .ref-bar {
-    padding: 6px 14px !important;
-    min-height: 52px !important;
+    padding: 9px 14px !important;
+    min-height: 56px !important;
   }
 
   /* "Programs ▾" button: refined gold-bordered pill on dark glass */
@@ -678,8 +678,8 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
 /* Desktop Scrolled Controls (>= 1151px) */
 @media(min-width: 1151px) {
   .ref-header.ref-scrolled .ref-bar {
-    padding: 8px 28px !important;
-    min-height: 58px !important;
+    padding: 10px 28px !important;
+    min-height: 64px !important;
   }
   .ref-header.ref-scrolled .ref-nav > a,
   .ref-header.ref-scrolled .ref-toggle {

@@ -3749,6 +3749,9 @@ let studentLiveClasses = [];
 let currentLiveSession = null;
 let liveDoubtsPollTimer = null;
 let liveWatermarkInterval = null;
+let liveAttendeesTimer = null;
+let currentLiveAttendeesCount = 0;
+let isLiveTheaterMode = false;
 
 async function loadStudentLiveClasses() {
   const shelf = document.getElementById('live-sessions-shelf');
@@ -3866,6 +3869,9 @@ function openLiveStudioFromBanner(liveId = null, isAuth = true) {
 async function openLiveStudio(liveId) {
   switchView('live-studio');
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Initialize and run dynamic realistic live attendee counter (300-800)
+  startLiveAttendeesCounter();
 
   const mount = document.getElementById('live-video-mount');
   if (mount) {
@@ -4003,14 +4009,201 @@ function reloadLivePlayer() {
 function toggleLiveCinemaFullscreen() {
   const box = document.getElementById('live-video-box');
   if (!box) return;
-  if (!document.fullscreenElement) {
-    box.requestFullscreen().catch(() => {});
+
+  const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+
+  if (!isFullscreen) {
+    if (box.requestFullscreen) {
+      box.requestFullscreen().catch(err => console.warn('Fullscreen request failed:', err));
+    } else if (box.webkitRequestFullscreen) {
+      box.webkitRequestFullscreen();
+    } else if (box.mozRequestFullScreen) {
+      box.mozRequestFullScreen();
+    } else if (box.msRequestFullscreen) {
+      box.msRequestFullscreen();
+    }
   } else {
-    document.exitFullscreen().catch(() => {});
+    if (document.exitFullscreen) {
+      document.exitFullscreen().catch(err => console.warn('Exit fullscreen failed:', err));
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
   }
 }
 
+function updateLiveFullscreenUI() {
+  const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+  const btns = document.querySelectorAll('.live-fs-btn');
+  btns.forEach(btn => {
+    if (btn.classList.contains('live-video-overlay-fs')) {
+      btn.innerHTML = isFs ? '✕' : '⛶';
+      btn.title = isFs ? 'Exit Fullscreen (Esc / Press F)' : 'Fullscreen Mode (Press F)';
+    } else {
+      btn.innerHTML = isFs ? '<span>⤶</span> Exit Fullscreen' : '<span>⛶</span> Fullscreen';
+      if (isFs) btn.classList.add('active-fs');
+      else btn.classList.remove('active-fs');
+    }
+  });
+}
+
+['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
+  document.addEventListener(evt, updateLiveFullscreenUI);
+});
+
+function toggleLiveTheaterMode() {
+  const layout = document.getElementById('live-studio-layout');
+  const btn = document.getElementById('btn-theater-mode');
+  const btnText = document.getElementById('theater-btn-text');
+  if (!layout) return;
+
+  isLiveTheaterMode = !isLiveTheaterMode;
+  if (isLiveTheaterMode) {
+    layout.classList.add('theater-mode');
+    if (btnText) btnText.textContent = 'Standard View';
+    if (btn) btn.classList.add('active-theater');
+    toast('🎬 Cinema View Active — Simple, distraction-free screen');
+  } else {
+    layout.classList.remove('theater-mode');
+    if (btnText) btnText.textContent = 'Cinema View';
+    if (btn) btn.classList.remove('active-theater');
+    toast('📱 Standard View restored');
+  }
+}
+
+// ── Realistic Dynamic Live Attendee Counter (Range: 300 to 800) ──
+function startLiveAttendeesCounter() {
+  stopLiveAttendeesCounter();
+
+  // Natural initial count between 380 and 530, preserving session memory if valid
+  try {
+    const saved = parseInt(sessionStorage.getItem('qa_live_attendees'), 10);
+    if (saved && saved >= 300 && saved <= 800) {
+      currentLiveAttendeesCount = saved;
+    } else {
+      currentLiveAttendeesCount = Math.floor(Math.random() * (530 - 380 + 1)) + 380;
+    }
+  } catch (e) {
+    currentLiveAttendeesCount = Math.floor(Math.random() * (530 - 380 + 1)) + 380;
+  }
+
+  updateLiveAttendeesDisplay(currentLiveAttendeesCount, false);
+  scheduleNextAttendeeFluctuation();
+}
+
+function scheduleNextAttendeeFluctuation() {
+  if (liveAttendeesTimer) clearTimeout(liveAttendeesTimer);
+
+  // Organic variable delay between 4.0s and 7.8s (never fixed/robotic)
+  const nextDelayMs = Math.floor(Math.random() * 3800) + 4000;
+
+  liveAttendeesTimer = setTimeout(() => {
+    fluctuateLiveAttendees();
+    scheduleNextAttendeeFluctuation();
+  }, nextDelayMs);
+}
+
+function fluctuateLiveAttendees() {
+  let delta = 0;
+  const rand = Math.random();
+
+  // Boundary-aware organic fluctuation strictly between 300 and 800
+  if (currentLiveAttendeesCount < 330) {
+    // Near bottom bound: strongly bias positive
+    delta = Math.floor(Math.random() * 4) + 2; // +2 to +5
+  } else if (currentLiveAttendeesCount > 770) {
+    // Near top bound: strongly bias negative
+    delta = -(Math.floor(Math.random() * 4) + 2); // -2 to -5
+  } else {
+    // Natural live stream traffic fluctuations
+    if (rand < 0.46) {
+      // 46% chance: +1 to +3 (new attendees joining)
+      delta = Math.floor(Math.random() * 3) + 1;
+    } else if (rand < 0.84) {
+      // 38% chance: -1 to -3 (temporary reconnects/drops)
+      delta = -(Math.floor(Math.random() * 3) + 1);
+    } else if (rand < 0.94) {
+      // 10% chance: +3 to +6 (small joining rush)
+      delta = Math.floor(Math.random() * 4) + 3;
+    } else {
+      // 6% chance: 0 (stable viewer count)
+      delta = 0;
+    }
+  }
+
+  currentLiveAttendeesCount += delta;
+
+  // Strict safety clamping: never falls below 300, never exceeds 800
+  if (currentLiveAttendeesCount < 308) currentLiveAttendeesCount = 308 + Math.floor(Math.random() * 12);
+  if (currentLiveAttendeesCount > 794) currentLiveAttendeesCount = 794 - Math.floor(Math.random() * 12);
+
+  try {
+    sessionStorage.setItem('qa_live_attendees', currentLiveAttendeesCount.toString());
+  } catch (e) {}
+
+  updateLiveAttendeesDisplay(currentLiveAttendeesCount, delta !== 0);
+}
+
+function updateLiveAttendeesDisplay(count, animated = true) {
+  const formatted = count.toLocaleString('en-IN');
+  const countEls = [
+    document.getElementById('live-viewer-count'),
+    document.getElementById('live-viewer-count-mini')
+  ];
+
+  countEls.forEach(el => {
+    if (el) {
+      el.textContent = formatted;
+      if (animated) {
+        el.classList.remove('count-bump');
+        void el.offsetWidth; // Force DOM reflow to restart CSS keyframe
+        el.classList.add('count-bump');
+      }
+    }
+  });
+
+  const badgeEls = [
+    document.getElementById('live-attendees-pill'),
+    document.getElementById('live-attendees-pill-mini')
+  ];
+
+  badgeEls.forEach(pill => {
+    if (pill && animated) {
+      pill.classList.remove('pulse-pill');
+      void pill.offsetWidth;
+      pill.classList.add('pulse-pill');
+    }
+  });
+}
+
+function stopLiveAttendeesCounter() {
+  if (liveAttendeesTimer) {
+    clearTimeout(liveAttendeesTimer);
+    liveAttendeesTimer = null;
+  }
+}
+
+// Global hotkeys inside Live Studio (F = Fullscreen, T = Cinema Mode)
+document.addEventListener('keydown', (e) => {
+  const liveStudio = document.getElementById('view-live-studio');
+  if (!liveStudio || liveStudio.classList.contains('hidden')) return;
+  if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+  if (e.key === 'f' || e.key === 'F') {
+    e.preventDefault();
+    toggleLiveCinemaFullscreen();
+  } else if (e.key === 't' || e.key === 'T') {
+    e.preventDefault();
+    toggleLiveTheaterMode();
+  }
+});
+
 function exitLiveStudio() {
+  stopLiveAttendeesCounter();
+
   if (liveDoubtsPollTimer) {
     clearInterval(liveDoubtsPollTimer);
     liveDoubtsPollTimer = null;
@@ -4024,6 +4217,11 @@ function exitLiveStudio() {
   const mount = document.getElementById('live-video-mount');
   if (mount) mount.innerHTML = '';
   currentLiveSession = null;
+
+  // Reset theater mode if active
+  if (isLiveTheaterMode) {
+    toggleLiveTheaterMode();
+  }
 
   showDashboard();
 }

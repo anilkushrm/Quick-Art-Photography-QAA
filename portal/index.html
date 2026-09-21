@@ -825,8 +825,8 @@ fbq('track', 'PageView');
         
         <!-- Live Studio Navigation Bar -->
         <div class="live-studio-topbar">
-          <button type="button" class="btn-sm btn-outline" onclick="exitLiveStudio()">
-            <span aria-hidden="true">←</span> Leave Studio / Dashboard
+          <button type="button" class="btn-sm btn-outline live-leave-btn" onclick="exitLiveStudio()">
+            <span aria-hidden="true">←</span> Leave Studio
           </button>
           <div class="live-topbar-center">
             <div class="live-pulse-badge">
@@ -836,15 +836,21 @@ fbq('track', 'PageView');
             <h2 class="live-studio-title" id="live-player-title">Live Masterclass Studio</h2>
           </div>
           <div class="live-topbar-meta">
-            <span class="live-attendees-pill">
-              <span class="viewer-dot"></span> <span id="live-viewer-count">18</span> Active Students
+            <span class="live-attendees-pill" id="live-attendees-pill" title="Live Attendees in session">
+              <span class="viewer-dot"></span> <span id="live-viewer-count" class="attendees-num">485</span> <span class="attendees-lbl">Active Students</span>
             </span>
             <span class="live-mentor-tag">Mentor: Anil Sharma</span>
+            <button type="button" class="btn-sm btn-outline btn-fs-topbar live-fs-btn" onclick="toggleLiveCinemaFullscreen()" title="Toggle Fullscreen (Press F)">
+              <span>⛶</span> Fullscreen
+            </button>
+            <button type="button" class="btn-sm btn-outline btn-theater-mode" onclick="toggleLiveTheaterMode()" id="btn-theater-mode" title="Toggle Cinema / Simple Mode (Press T)">
+              <span>🎬</span> <span id="theater-btn-text">Cinema View</span>
+            </button>
           </div>
         </div>
 
         <!-- Cinema Layout Grid -->
-        <div class="live-studio-layout">
+        <div class="live-studio-layout" id="live-studio-layout">
           
           <!-- LEFT: HD Video Stream & Lesson Info -->
           <div class="live-player-column">
@@ -858,6 +864,11 @@ fbq('track', 'PageView');
 
                 <!-- Invisible Anti-Leak Click Shield (Intercepts clicks to prevent YouTube popup) -->
                 <div id="live-click-shield" class="live-click-shield" oncontextmenu="return false;" title="Quick Art Academy Cinema Player"></div>
+
+                <!-- Floating Video Overlay Fullscreen Button -->
+                <button type="button" class="live-video-overlay-fs live-fs-btn" onclick="toggleLiveCinemaFullscreen()" title="Fullscreen Mode (Press F)">
+                  ⛶
+                </button>
 
                 <!-- Live Stream Video Mount -->
                 <div id="live-video-mount" class="live-video-mount">
@@ -873,16 +884,22 @@ fbq('track', 'PageView');
               <!-- Stream Control Bar -->
               <div class="live-stream-bar">
                 <div class="live-stream-status">
+                  <span class="stream-live-chip">
+                    <span class="live-pulse-dot"></span>
+                    <span id="live-time-indicator">LIVE NOW</span>
+                  </span>
                   <span class="stream-quality-badge">1080p 60FPS HD</span>
                   <span class="stream-audio-badge">Dolby Stereo 48kHz</span>
-                  <span id="live-time-indicator" class="stream-time-badge">🔴 STREAM ACTIVE</span>
+                  <span class="live-attendees-chip-bar" id="live-attendees-pill-mini">
+                    👥 <span id="live-viewer-count-mini" class="attendees-num">485</span> Watching
+                  </span>
                 </div>
                 <div class="live-stream-actions">
                   <button type="button" class="btn-sm btn-outline live-reload-btn" onclick="reloadLivePlayer()" title="Reload Stream Feed">
-                    🔄 Refresh Stream
+                    🔄 Refresh
                   </button>
-                  <button type="button" class="btn-sm btn-outline live-fs-btn" onclick="toggleLiveCinemaFullscreen()" title="Cinema Fullscreen">
-                    ⛶ Cinema Fullscreen
+                  <button type="button" class="btn-sm btn-gold live-fs-btn" onclick="toggleLiveCinemaFullscreen()" title="Cinema Fullscreen (Press F)">
+                    ⛶ Fullscreen
                   </button>
                 </div>
               </div>

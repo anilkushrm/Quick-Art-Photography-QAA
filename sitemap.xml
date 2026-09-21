@@ -1,159 +1,355 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
-  <!-- Core Pages -->
   <url>
     <loc>https://quickartphotography.in/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/editing-timeline.jpg</image:loc>
+      <image:title>Video Editing Course in Siwan Bihar - Practical Timeline Training</image:title>
+      <image:caption>Hands-on video editing studio training at Quick Art Photography Academy in Siwan, Bihar</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://quickartphotography.in/home-assets/ec55a6be3747a9.webp</image:loc>
+      <image:title>Quick Art Photography Academy Official Logo</image:title>
+      <image:caption>Quick Art Photography Academy Siwan</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/master-class/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/sample-certificate-demo.png</image:loc>
+      <image:title>Master Class Certificate of Completion &amp; Excellence</image:title>
+      <image:caption>Official ISO 9001:2015 accredited video editing certification</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/anil-sharma.webp</image:loc>
+      <image:title>Anil Sharma - Founder &amp; Lead Instructor</image:title>
+      <image:caption>Anil Sharma mentor at Quick Art Photography Academy</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/about-us/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/edius-classroom.webp</image:loc>
+      <image:title>Quick Art Academy Classroom &amp; Studio Training in Siwan</image:title>
+      <image:caption>Live studio classroom training at Siwan studio, Bihar</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/anil-sharma.webp</image:loc>
+      <image:title>Anil Sharma - Founder of Quick Art Photography Academy</image:title>
+      <image:caption>Anil Sharma mentor portrait</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/contact-us/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/home-assets/ec55a6be3747a9.webp</image:loc>
+      <image:title>Quick Art Photography Academy Campus Location</image:title>
+      <image:caption>Campus in Ayodhya Puri, Near Lalit Bus Stand, Siwan, Bihar</image:caption>
+    </image:image>
   </url>
-
-  <!-- Online LMS Course Landing Pages -->
   <url>
     <loc>https://quickartphotography.in/online/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/course-premiere-pro-hindi.webp</image:loc>
+      <image:title>Adobe Premiere Pro Course in Hindi</image:title>
+      <image:caption>Complete online video editing masterclass in Hindi</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/course-davinci-resolve-hindi.webp</image:loc>
+      <image:title>DaVinci Resolve Course in Hindi</image:title>
+      <image:caption>DaVinci Resolve Color Grading &amp; Editing course in Hindi</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/online/premiere-pro-course/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://quickartphotography.in/online/album-design-course/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://quickartphotography.in/online/edius-course/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/course-premiere-pro-hindi.webp</image:loc>
+      <image:title>Adobe Premiere Pro Video Editing Masterclass in Hindi</image:title>
+      <image:caption>Master Premiere Pro workflows, cuts, transitions and color correction</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/online/davinci-resolve-course/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/course-davinci-resolve-hindi.webp</image:loc>
+      <image:title>DaVinci Resolve Color Grading &amp; Video Editing Course</image:title>
+      <image:caption>Professional color grading, HDR nodes and Fairlight audio in Hindi</image:caption>
+    </image:image>
   </url>
   <url>
-    <loc>https://quickartphotography.in/online/cinematic-editing-course/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <loc>https://quickartphotography.in/online/edius-course/</loc>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/course-edius-pro-hindi.webp</image:loc>
+      <image:title>EDIUS Pro Fast Wedding Video Editing Course in Hindi</image:title>
+      <image:caption>Fast wedding video cutting, song projects and quick turnaround editing</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/online/album-design-course/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/course-photoshop-album.webp</image:loc>
+      <image:title>Photoshop Wedding Album Design &amp; Retouching Course</image:title>
+      <image:caption>Master modern wedding album layout design and portrait retouching</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/online/pre-wedding-shoot-course/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/editing-timeline.jpg</image:loc>
+      <image:title>Pre-Wedding Shoot &amp; Direction Masterclass</image:title>
+      <image:caption>Creative camera angles, couple poses and cinematic lighting masterclass</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/online/cinematic-editing-course/</loc>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://quickartphotography.in/online/website-design-course/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://quickartphotography.in/online/digital-marketing-course/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/editing-example-landscape.webp</image:loc>
+      <image:title>Cinematic Wedding Filmmaking &amp; Teaser Editing Course</image:title>
+      <image:caption>Storytelling, sound design and high-end cinematic wedding teaser cuts</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/online/automation-course/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/course-studio-automation.webp</image:loc>
+      <image:title>Studio Automation &amp; AI CRM Course for Photographers</image:title>
+      <image:caption>Automated client followups, contracts and studio management</image:caption>
+    </image:image>
   </url>
-
-  <!-- On Campus Offline Courses -->
+  <url>
+    <loc>https://quickartphotography.in/online/website-design-course/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/course-website-design-hindi.webp</image:loc>
+      <image:title>Website Design Course for Photography Studios</image:title>
+      <image:caption>Build fast, modern portfolio websites to book premium wedding clients</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/online/digital-marketing-course/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/course-digital-marketing-hindi.webp</image:loc>
+      <image:title>Digital Marketing &amp; Ads Course for Photographers</image:title>
+      <image:caption>Generate consistent wedding booking leads through targeted ads</image:caption>
+    </image:image>
+  </url>
   <url>
     <loc>https://quickartphotography.in/courses/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/editing-timeline.jpg</image:loc>
+      <image:title>Offline Filmmaking &amp; Video Editing Courses in Siwan</image:title>
+      <image:caption>Classroom courses with workstation and hostel facility in Siwan</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/courses/video-editing/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/editing-timeline.jpg</image:loc>
+      <image:title>Offline Video Editing Course in Siwan Bihar</image:title>
+      <image:caption>14-week practical video editing training in Siwan studio</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/courses/album-design/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/course-photoshop-album.webp</image:loc>
+      <image:title>Offline Wedding Album Design Course in Siwan</image:title>
+      <image:caption>Practical Photoshop album design and retouching in classroom</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/courses/ai-wedding-filmmaking/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/course-studio-automation.webp</image:loc>
+      <image:title>AI Wedding Filmmaking Course in Siwan Bihar</image:title>
+      <image:caption>AI-powered editing, color workflows and automated delivery</image:caption>
+    </image:image>
   </url>
-
-  <!-- Blog & Industry Insights -->
   <url>
     <loc>https://quickartphotography.in/blog/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/editing-timeline.jpg</image:loc>
+      <image:title>Quick Art Photography Academy Blog</image:title>
+      <image:caption>Video editing guides, tutorials and photography industry insights</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/blog/best-video-editing-software-in-2026/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/course-premiere-pro-hindi.webp</image:loc>
+      <image:title>Best Video Editing Software in 2026: Premiere Pro vs DaVinci Resolve vs EDIUS</image:title>
+      <image:caption>Comparison of top video editing software for wedding videographers</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/blog/freelance-video-editor-earn-in-bihar/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/editing-timeline.jpg</image:loc>
+      <image:title>How to Earn ₹30,000 to ₹1,00,000 as a Freelance Video Editor in Bihar</image:title>
+      <image:caption>Practical guide to monetizing video editing skills in Bihar</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/blog/how-ai-is-changing-wedding-filmmaking-2026/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/course-studio-automation.webp</image:loc>
+      <image:title>How AI is Changing Wedding Filmmaking in 2026</image:title>
+      <image:caption>AI tools for faster wedding film edits and automated color matching</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/blog/top-10-photography-studios-in-chapra/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/editing-example-landscape.webp</image:loc>
+      <image:title>Top 10 Photography Studios in Chapra (Saran)</image:title>
+      <image:caption>Comprehensive guide to wedding photography studios in Chapra</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/blog/top-5-editing-course-academies-in-patna/</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/edius-classroom.webp</image:loc>
+      <image:title>Top 5 Video Editing Course Academies in Patna (2026 Ranking)</image:title>
+      <image:caption>Best institutes for video editing training in Patna and Bihar</image:caption>
+    </image:image>
   </url>
-
+  <url>
+    <loc>https://quickartphotography.in/blog/video-editing-course-in-gaya/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/editing-timeline.jpg</image:loc>
+      <image:title>Video Editing Course in Gaya: Fees, Syllabus &amp; Career Opportunities</image:title>
+      <image:caption>Practical video editing guide for students in Gaya, Bihar</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/privacy-policy/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/home-assets/ec55a6be3747a9.webp</image:loc>
+      <image:title>Quick Art Photography Academy Privacy Policy</image:title>
+      <image:caption>Privacy policy document</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/refund-policy/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/home-assets/ec55a6be3747a9.webp</image:loc>
+      <image:title>Quick Art Photography Academy Refund Policy</image:title>
+      <image:caption>Refund and cancellation policy</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/shipping-policy/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/home-assets/ec55a6be3747a9.webp</image:loc>
+      <image:title>Quick Art Photography Academy Shipping &amp; Delivery Policy</image:title>
+      <image:caption>Digital course delivery policy</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/terms-and-conditions/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/home-assets/ec55a6be3747a9.webp</image:loc>
+      <image:title>Quick Art Photography Academy Terms and Conditions</image:title>
+      <image:caption>Terms of service</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/sitemap.html</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/home-assets/ec55a6be3747a9.webp</image:loc>
+      <image:title>Quick Art Photography Academy HTML Sitemap</image:title>
+      <image:caption>HTML sitemap of all courses and academy pages</image:caption>
+    </image:image>
+  </url>
 </urlset>

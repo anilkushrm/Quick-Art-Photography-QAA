@@ -1,0 +1,18 @@
+{
+  "name": "Quick Art Photography Academy",
+  "short_name": "Quick Art",
+  "description": "Premier Video Editing, Wedding Filmmaking & Album Design Academy in Siwan, Bihar",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#111111",
+  "icons": [
+    {
+      "src": "/home-assets/ec55a6be3747a9.webp",
+      "sizes": "798x795",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -6250,6 +6250,52 @@ video::-webkit-media-controls-download-button {
   color: var(--gold-light, #f0c78a);
 }
 
+/* Razorpay Unified Gateway Badge */
+.rzp-checkout-gateway-badge {
+  background: rgba(216, 161, 83, 0.08);
+  border: 1px solid rgba(216, 161, 83, 0.35);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 14px 0;
+  display: flex;
+  align-items: center;
+}
+.rzp-badge-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+.rzp-badge-icon {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+  background: rgba(216, 161, 83, 0.15);
+  border: 1px solid rgba(216, 161, 83, 0.4);
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rzp-badge-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+.rzp-badge-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fce09b;
+  letter-spacing: 0.01em;
+}
+.rzp-badge-sub {
+  font-size: 11.5px;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+
 /* Payment Method Selector */
 .payment-methods-field label {
   font-size: 12.5px;

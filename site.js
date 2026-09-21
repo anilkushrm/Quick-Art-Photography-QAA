@@ -208,6 +208,25 @@
                 if (heroConsent) heroConsent.removeAttribute('required');
             }
         }
+        // Auto pre-fill & real-time sync to localStorage for frictionless 1-step checkout
+        if (form.elements.name) {
+            const sn = localStorage.getItem('qa_user_name');
+            if (sn && !form.elements.name.value) form.elements.name.value = sn;
+            form.elements.name.addEventListener('input', e => {
+                try { if (e.target.value.trim()) localStorage.setItem('qa_user_name', e.target.value.trim()); } catch (_) {}
+            });
+        }
+        if (form.elements.phone) {
+            const sp = localStorage.getItem('qa_user_phone');
+            if (sp && !form.elements.phone.value) form.elements.phone.value = sp;
+            form.elements.phone.addEventListener('input', e => {
+                try {
+                    const cleanPhone = e.target.value.replace(/\D/g, '').slice(-10);
+                    if (cleanPhone) localStorage.setItem('qa_user_phone', cleanPhone);
+                } catch (_) {}
+            });
+        }
+
         form.addEventListener('submit', async event => {
             event.preventDefault();
             if (!form.reportValidity()) return;
@@ -230,7 +249,11 @@
                 });
                 const result = await response.json();
                 if (!response.ok || !result.ok || !result.id) throw new Error('server');
-                try { sessionStorage.setItem('qa-enquiry-received', 'true'); } catch (_) { }
+                try { 
+                    sessionStorage.setItem('qa-enquiry-received', 'true'); 
+                    if (data.name) localStorage.setItem('qa_user_name', data.name.trim());
+                    if (phone) localStorage.setItem('qa_user_phone', phone.replace(/\D/g, '').slice(-10));
+                } catch (_) { }
                 location.assign(new URL('thank-you/index.html', siteRoot));
             } catch (error) {
                 status.replaceChildren();
@@ -368,11 +391,30 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
         const previousFocus = document.activeElement;
         overlay.querySelectorAll('input').forEach(input => input.setAttribute('aria-label', input.placeholder));
+        const popupNameInp = overlay.querySelector('input[name="name"]');
+        const popupPhoneInp = overlay.querySelector('input[name="phone"]');
+        if (popupNameInp) {
+            const sn = localStorage.getItem('qa_user_name');
+            if (sn && !popupNameInp.value) popupNameInp.value = sn;
+            popupNameInp.addEventListener('input', e => {
+                try { if (e.target.value.trim()) localStorage.setItem('qa_user_name', e.target.value.trim()); } catch (_) {}
+            });
+        }
+        if (popupPhoneInp) {
+            const sp = localStorage.getItem('qa_user_phone');
+            if (sp && !popupPhoneInp.value) popupPhoneInp.value = sp;
+            popupPhoneInp.addEventListener('input', e => {
+                try {
+                    const cleanPhone = e.target.value.replace(/\D/g, '').slice(-10);
+                    if (cleanPhone) localStorage.setItem('qa_user_phone', cleanPhone);
+                } catch (_) {}
+            });
+        }
         if (initialCourse) {
             const courseField = overlay.querySelector('input[name="course"]');
             if (courseField && !courseField.value) courseField.value = initialCourse;
         }
-        overlay.querySelector('input').focus();
+        (popupPhoneInp && popupNameInp && popupNameInp.value ? popupPhoneInp : (popupNameInp || overlay.querySelector('input'))).focus();
         overlay.addEventListener('keydown', e => {
             if (e.key === 'Escape') { close(); previousFocus?.focus(); }
             if (e.key === 'Tab') {
@@ -396,6 +438,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     sessionStorage.setItem('qa-enquiry-received', 'true');
                     localStorage.setItem(AUTO_POPUP_KEY, 'true');
+                    if (data.name) localStorage.setItem('qa_user_name', data.name.trim());
+                    if (data.phone) localStorage.setItem('qa_user_phone', data.phone.replace(/\D/g, '').slice(-10));
                 } catch (_) { }
                 location.assign(new URL('thank-you/index.html', popupRoot));
             } catch (_) { status.textContent = 'Unable to save your enquiry. Please try again or call +91 9939800780.'; button.disabled = false; }

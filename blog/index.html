@@ -37,6 +37,7 @@
     <meta name="twitter:image" content="https://quickartphotography.in/assets/editing-timeline.jpg">
 
     <!-- Favicon -->
+        <link rel="manifest" href="../site.webmanifest">
     <link rel="icon" href="../home-assets/ec55a6be3747a9.webp" type="image/webp">
 
     <!-- Core & Shared Stylesheets -->
@@ -72,8 +73,7 @@
         fbq('init', '28399880462937454');
         fbq('track', 'PageView');
     </script>
-    <noscript><img height="1" width="1" style="display:none"
-            src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1" /></noscript>
+    <noscript><img height=\"1\" width=\"1\" style=\"display:none\" alt=\"\" aria-hidden=\"true\" src=\"https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1\" /></noscript>
     <!-- End Meta Pixel Code -->
 
     <!-- Schema.org Structured Data -->
@@ -96,14 +96,21 @@
       "name": "Quick Art Photography Academy",
       "alternateName": [
         "Quick Art Photography",
-        "Quick Art Academy"
+        "Quick Art Academy",
+        "QAA"
       ],
       "url": "https://quickartphotography.in/",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp"
+        "@id": "https://quickartphotography.in/#logo",
+        "url": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
+        "width": 798,
+        "height": 795
       },
-      "image": "https://quickartphotography.in/assets/editing-timeline.jpg",
+      "image": [
+        "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
+        "https://quickartphotography.in/assets/editing-timeline.jpg"
+      ],
       "description": "Quick Art Photography Academy in Siwan, Bihar offers offline and online video editing, wedding filmmaking, album design, website design and digital marketing courses in Hindi.",
       "telephone": "+919939800780",
       "email": "support@quickartphotography.in",
@@ -118,10 +125,10 @@
       },
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": "REPLACE_EXACT_LAT_FROM_GOOGLE_MAPS",
-        "longitude": "REPLACE_EXACT_LNG_FROM_GOOGLE_MAPS"
+        "latitude": 26.2289734,
+        "longitude": 84.3347944
       },
-      "hasMap": "https://maps.app.goo.gl/eRkAc7kia1D1s1zQ7",
+      "hasMap": "https://maps.app.goo.gl/xqTVepVohTsi1mAs6",
       "openingHoursSpecification": [
         {
           "@type": "OpeningHoursSpecification",
@@ -133,8 +140,21 @@
             "Friday",
             "Saturday"
           ],
-          "opens": "09:00",
+          "opens": "10:00",
           "closes": "19:00"
+        }
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+919939800780",
+          "contactType": "admissions",
+          "email": "support@quickartphotography.in",
+          "areaServed": "IN",
+          "availableLanguage": [
+            "Hindi",
+            "English"
+          ]
         }
       ],
       "areaServed": [
@@ -163,28 +183,55 @@
           "name": "India"
         }
       ],
+      "knowsLanguage": [
+        "hi",
+        "en"
+      ],
+      "knowsAbout": [
+        "Video editing",
+        "Wedding filmmaking",
+        "Wedding album design",
+        "Adobe Premiere Pro",
+        "DaVinci Resolve",
+        "EDIUS",
+        "Photoshop",
+        "Digital marketing for photographers"
+      ],
       "founder": {
-        "@type": "Person",
-        "@id": "https://quickartphotography.in/#anil-sharma",
-        "name": "Anil Sharma",
-        "jobTitle": "Founder & Lead Mentor",
-        "url": "https://quickartphotography.in/about-us/"
+        "@id": "https://quickartphotography.in/#anil-sharma"
       },
       "sameAs": [
-        "https://maps.app.goo.gl/eRkAc7kia1D1s1zQ7",
+        "https://maps.app.goo.gl/xqTVepVohTsi1mAs6",
         "https://www.youtube.com/@QuickartPhotographyAcademy",
+        "https://www.youtube.com/channel/UC0vO4XSniOSkqobyGDc5kfA",
         "https://www.instagram.com/quick.art.photography.academy/",
         "https://www.facebook.com/Quick.art.Photography.Academy",
         "https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://quickartphotography.in/#anil-sharma",
+      "name": "Anil Sharma",
+      "jobTitle": "Founder & Lead Mentor",
+      "url": "https://quickartphotography.in/about-us/",
+      "image": "https://quickartphotography.in/assets/anil-sharma.webp",
+      "worksFor": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "knowsAbout": [
+        "Video editing",
+        "Wedding filmmaking",
+        "Wedding album design",
+        "DaVinci Resolve",
+        "Adobe Premiere Pro"
       ],
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "ratingCount": "1800",
-        "reviewCount": "1800",
-        "bestRating": "5",
-        "worstRating": "1"
-      }
+      "sameAs": [
+        "https://maps.app.goo.gl/xqTVepVohTsi1mAs6",
+        "https://www.youtube.com/@QuickartPhotographyAcademy",
+        "https://www.instagram.com/quick.art.photography.academy/",
+        "https://www.facebook.com/Quick.art.Photography.Academy"
+      ]
     },
     {
       "@type": "WebSite",
@@ -202,13 +249,28 @@
       "@id": "https://quickartphotography.in/blog/#webpage",
       "url": "https://quickartphotography.in/blog/",
       "name": "Video Editing & Filmmaking Guides | Quick Art Blog",
-      "description": "Read practical guides to video editing workflows, AI-assisted wedding production and freelance portfolio development from Quick Art Photography Academy.",
       "isPartOf": {
         "@id": "https://quickartphotography.in/#website"
+      },
+      "about": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "inLanguage": "en-IN",
+      "description": "Read practical guides to video editing workflows, AI-assisted wedding production and freelance portfolio development from Quick Art Photography Academy.",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://quickartphotography.in/assets/editing-timeline.jpg"
+      },
+      "breadcrumb": {
+        "@id": "https://quickartphotography.in/blog/#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://quickartphotography.in/blog/#blog"
       }
     },
     {
       "@type": "BreadcrumbList",
+      "@id": "https://quickartphotography.in/blog/#breadcrumb",
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -221,6 +283,60 @@
           "position": 2,
           "name": "Blog",
           "item": "https://quickartphotography.in/blog/"
+        }
+      ]
+    },
+    {
+      "@type": "Blog",
+      "@id": "https://quickartphotography.in/blog/#blog",
+      "url": "https://quickartphotography.in/blog/",
+      "name": "Quick Art Blog",
+      "inLanguage": "en-IN",
+      "publisher": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "blogPost": [
+        {
+          "@type": "BlogPosting",
+          "@id": "https://quickartphotography.in/blog/best-video-editing-software-in-2026/#article",
+          "headline": "Best Video Editing Software in 2026",
+          "url": "https://quickartphotography.in/blog/best-video-editing-software-in-2026/",
+          "datePublished": "2026-04-30"
+        },
+        {
+          "@type": "BlogPosting",
+          "@id": "https://quickartphotography.in/blog/freelance-video-editor-earn-in-bihar/#article",
+          "headline": "Building a High-Paying Freelance Video Editing Career in Bihar",
+          "url": "https://quickartphotography.in/blog/freelance-video-editor-earn-in-bihar/",
+          "datePublished": "2026-05-25"
+        },
+        {
+          "@type": "BlogPosting",
+          "@id": "https://quickartphotography.in/blog/how-ai-is-changing-wedding-filmmaking-2026/#article",
+          "headline": "AI in Wedding Filmmaking: A Practical Production Guide",
+          "url": "https://quickartphotography.in/blog/how-ai-is-changing-wedding-filmmaking-2026/",
+          "datePublished": "2026-05-12"
+        },
+        {
+          "@type": "BlogPosting",
+          "@id": "https://quickartphotography.in/blog/top-10-photography-studios-in-chapra/#article",
+          "headline": "Top 10 Photography Studios in Chapra – Best Wedding Photographer 2025",
+          "url": "https://quickartphotography.in/blog/top-10-photography-studios-in-chapra/",
+          "datePublished": "2026-09-20"
+        },
+        {
+          "@type": "BlogPosting",
+          "@id": "https://quickartphotography.in/blog/top-5-editing-course-academies-in-patna/#article",
+          "headline": "Top 5 Editing Course Academies in Patna – Best Institutes for Video Editing Career",
+          "url": "https://quickartphotography.in/blog/top-5-editing-course-academies-in-patna/",
+          "datePublished": "2026-09-20"
+        },
+        {
+          "@type": "BlogPosting",
+          "@id": "https://quickartphotography.in/blog/video-editing-course-in-gaya/#article",
+          "headline": "Video Editing Course in Gaya: Complete Guide to Fees, Syllabus & Academy Options",
+          "url": "https://quickartphotography.in/blog/video-editing-course-in-gaya/",
+          "datePublished": "2026-09-20"
         }
       ]
     }

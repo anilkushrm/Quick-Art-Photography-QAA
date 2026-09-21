@@ -319,9 +319,7 @@ if ($action === 'verify-otp' && $method === 'POST') {
     unset($stu);
 
     if (!$found) {
-        // Auto-create new student profile & enroll in flagship course for immediate access
-        $allCourses = load_courses();
-        $initialCourses = array_column($allCourses, 'id');
+        // Auto-create new student profile with zero enrolled courses (must be purchased or assigned)
         $newStudent = [
             'id' => 'stu_' . substr(md5(uniqid($phone, true)), 0, 8),
             'phone' => $phone,
@@ -329,7 +327,7 @@ if ($action === 'verify-otp' && $method === 'POST') {
             'email' => '',
             'city' => '',
             'enrolledAt' => date('c'),
-            'enrolledCourses' => $initialCourses,
+            'enrolledCourses' => [],
             'completedLessons' => [],
             'lastActive' => date('c')
         ];
@@ -1146,6 +1144,11 @@ if ($action === 'checkout-enroll' && $method === 'POST') {
         }
     }
 
+    // Disallow unverified direct enrollment for paid courses (payment must go through Razorpay)
+    if ($finalAmount > 0) {
+        json_err('Direct checkout is disabled for paid courses. Online payment via Razorpay is required.', 403);
+    }
+
     // Save/Update student account
     $students = load_students();
     $targetStudent = null;
@@ -1217,7 +1220,7 @@ if ($action === 'checkout-enroll' && $method === 'POST') {
 
 // 10.1 Get Public Payment Gateway Configuration
 if ($action === 'get-payment-config' && $method === 'GET') {
-    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $settings = load_lms_settings();
     $enabled = !empty($settings['razorpayEnabled']) && !empty($settings['razorpayKeyId']) && !empty($settings['razorpayKeySecret']);
     json_ok([
         'razorpayEnabled' => $enabled,
@@ -1241,7 +1244,7 @@ if ($action === 'create-razorpay-order' && $method === 'POST') {
     if (strlen($phone) < 10) json_err('Valid 10-digit mobile number required', 400);
     if (!$courseId) json_err('Course selection is required', 400);
 
-    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $settings = load_lms_settings();
     $keyId = trim($settings['razorpayKeyId'] ?? '');
     $keySecret = trim($settings['razorpayKeySecret'] ?? '');
     $razorpayEnabled = !empty($settings['razorpayEnabled']) && !empty($keyId) && !empty($keySecret);
@@ -1341,7 +1344,7 @@ if ($action === 'verify-razorpay-payment' && $method === 'POST') {
     if (strlen($phone) < 10) json_err('Valid 10-digit mobile number required', 400);
     if (!$courseId) json_err('Course ID required', 400);
 
-    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $settings = load_lms_settings();
     $keySecret = trim($settings['razorpayKeySecret'] ?? '');
     if (!$keySecret) json_err('Razorpay Key Secret not configured on server', 500);
 

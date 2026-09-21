@@ -301,14 +301,14 @@ if ($action === 'set-student-password' && $method === 'POST') {
 
 // 7. Get LMS Settings
 if ($action === 'get-lms-settings' && $method === 'GET') {
-    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $settings = load_lms_settings();
     json_ok(['settings' => $settings]);
 }
 
 // 8. Save LMS Settings
 if ($action === 'save-lms-settings' && $method === 'POST') {
     $body = read_json_body();
-    $currSettings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $currSettings = load_lms_settings();
     if (!is_array($currSettings)) $currSettings = [];
 
     $newSettings = [

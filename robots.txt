@@ -3,5 +3,8 @@ Allow: /
 Disallow: /api/
 Disallow: /data/
 Disallow: /admin.html
+Disallow: /portal/
+Disallow: /watch/
+Disallow: /thank-you/
 
 Sitemap: https://quickartphotography.in/sitemap.xml

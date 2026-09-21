@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="../../reference-header.css?v=3.2">
     <link rel="stylesheet" href="../../design-system.css">
     <link rel="stylesheet" href="../blog.css">
+        <link rel="manifest" href="../../site.webmanifest">
     <link rel="icon" href="../../home-assets/ec55a6be3747a9.webp" type="image/webp">
     <script src="../../site.js" defer></script>
     <script defer src="../../header.js?v=3.2"></script>
@@ -54,8 +55,7 @@ document,'script','https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '28399880462937454');
 fbq('track', 'PageView');
 </script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/></noscript>
+<noscript><img height=\"1\" width=\"1\" style=\"display:none\" alt=\"\" aria-hidden=\"true\" src=\"https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1\" /></noscript>
 <!-- End Meta Pixel Code -->
 <script type="application/ld+json">
 {
@@ -70,14 +70,21 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
       "name": "Quick Art Photography Academy",
       "alternateName": [
         "Quick Art Photography",
-        "Quick Art Academy"
+        "Quick Art Academy",
+        "QAA"
       ],
       "url": "https://quickartphotography.in/",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp"
+        "@id": "https://quickartphotography.in/#logo",
+        "url": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
+        "width": 798,
+        "height": 795
       },
-      "image": "https://quickartphotography.in/assets/editing-timeline.jpg",
+      "image": [
+        "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
+        "https://quickartphotography.in/assets/editing-timeline.jpg"
+      ],
       "description": "Quick Art Photography Academy in Siwan, Bihar offers offline and online video editing, wedding filmmaking, album design, website design and digital marketing courses in Hindi.",
       "telephone": "+919939800780",
       "email": "support@quickartphotography.in",
@@ -92,10 +99,10 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
       },
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": "REPLACE_EXACT_LAT_FROM_GOOGLE_MAPS",
-        "longitude": "REPLACE_EXACT_LNG_FROM_GOOGLE_MAPS"
+        "latitude": 26.2289734,
+        "longitude": 84.3347944
       },
-      "hasMap": "https://maps.app.goo.gl/eRkAc7kia1D1s1zQ7",
+      "hasMap": "https://maps.app.goo.gl/xqTVepVohTsi1mAs6",
       "openingHoursSpecification": [
         {
           "@type": "OpeningHoursSpecification",
@@ -107,8 +114,21 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
             "Friday",
             "Saturday"
           ],
-          "opens": "09:00",
+          "opens": "10:00",
           "closes": "19:00"
+        }
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+919939800780",
+          "contactType": "admissions",
+          "email": "support@quickartphotography.in",
+          "areaServed": "IN",
+          "availableLanguage": [
+            "Hindi",
+            "English"
+          ]
         }
       ],
       "areaServed": [
@@ -137,28 +157,55 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
           "name": "India"
         }
       ],
+      "knowsLanguage": [
+        "hi",
+        "en"
+      ],
+      "knowsAbout": [
+        "Video editing",
+        "Wedding filmmaking",
+        "Wedding album design",
+        "Adobe Premiere Pro",
+        "DaVinci Resolve",
+        "EDIUS",
+        "Photoshop",
+        "Digital marketing for photographers"
+      ],
       "founder": {
-        "@type": "Person",
-        "@id": "https://quickartphotography.in/#anil-sharma",
-        "name": "Anil Sharma",
-        "jobTitle": "Founder & Lead Mentor",
-        "url": "https://quickartphotography.in/about-us/"
+        "@id": "https://quickartphotography.in/#anil-sharma"
       },
       "sameAs": [
-        "https://maps.app.goo.gl/eRkAc7kia1D1s1zQ7",
+        "https://maps.app.goo.gl/xqTVepVohTsi1mAs6",
         "https://www.youtube.com/@QuickartPhotographyAcademy",
+        "https://www.youtube.com/channel/UC0vO4XSniOSkqobyGDc5kfA",
         "https://www.instagram.com/quick.art.photography.academy/",
         "https://www.facebook.com/Quick.art.Photography.Academy",
         "https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://quickartphotography.in/#anil-sharma",
+      "name": "Anil Sharma",
+      "jobTitle": "Founder & Lead Mentor",
+      "url": "https://quickartphotography.in/about-us/",
+      "image": "https://quickartphotography.in/assets/anil-sharma.webp",
+      "worksFor": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "knowsAbout": [
+        "Video editing",
+        "Wedding filmmaking",
+        "Wedding album design",
+        "DaVinci Resolve",
+        "Adobe Premiere Pro"
       ],
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "ratingCount": "1800",
-        "reviewCount": "1800",
-        "bestRating": "5",
-        "worstRating": "1"
-      }
+      "sameAs": [
+        "https://maps.app.goo.gl/xqTVepVohTsi1mAs6",
+        "https://www.youtube.com/@QuickartPhotographyAcademy",
+        "https://www.instagram.com/quick.art.photography.academy/",
+        "https://www.facebook.com/Quick.art.Photography.Academy"
+      ]
     },
     {
       "@type": "WebSite",
@@ -172,22 +219,32 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
       }
     },
     {
-      "@type": "BlogPosting",
-      "headline": "Top 10 Photography Studios in Chapra &#8211; Best Wedding Photographer 2025",
-      "description": "Top 10 photography studios in Chapra for cinematic wedding films and event shoots. Explore professional photographers and video editing services.",
-      "image": "https://quickartphotography.in/assets/editing-timeline.jpg",
-      "datePublished": "2026-09-20",
-      "dateModified": "REPLACE_YYYY-MM-DD",
-      "author": {
-        "@id": "https://quickartphotography.in/#anil-sharma"
+      "@type": "WebPage",
+      "@id": "https://quickartphotography.in/blog/top-10-photography-studios-in-chapra/#webpage",
+      "url": "https://quickartphotography.in/blog/top-10-photography-studios-in-chapra/",
+      "name": "Top 10 Photography Studios in Chapra | Quick Art",
+      "isPartOf": {
+        "@id": "https://quickartphotography.in/#website"
       },
-      "publisher": {
+      "about": {
         "@id": "https://quickartphotography.in/#academy"
       },
-      "mainEntityOfPage": "https://quickartphotography.in/blog/top-10-photography-studios-in-chapra/"
+      "inLanguage": "en-IN",
+      "description": "Top 10 photography studios in Chapra for cinematic wedding films and event shoots. Explore professional photographers and video editing services.",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://quickartphotography.in/assets/blog-chapra-photography-studios-hero.jpg"
+      },
+      "breadcrumb": {
+        "@id": "https://quickartphotography.in/blog/top-10-photography-studios-in-chapra/#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://quickartphotography.in/blog/top-10-photography-studios-in-chapra/#article"
+      }
     },
     {
       "@type": "BreadcrumbList",
+      "@id": "https://quickartphotography.in/blog/top-10-photography-studios-in-chapra/#breadcrumb",
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -204,10 +261,40 @@ src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1"/><
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Top 10 Photography Studios in Chapra &#8211; Best Wedding Ph",
+          "name": "Top 10 Photography Studios in Chapra – Best Wedding Photographer 2025",
           "item": "https://quickartphotography.in/blog/top-10-photography-studios-in-chapra/"
         }
       ]
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://quickartphotography.in/blog/top-10-photography-studios-in-chapra/#article",
+      "headline": "Top 10 Photography Studios in Chapra – Best Wedding Photographer 2025",
+      "description": "Top 10 photography studios in Chapra for cinematic wedding films and event shoots. Explore professional photographers and video editing services.",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://quickartphotography.in/assets/blog-chapra-photography-studios-hero.jpg",
+        "width": 1200,
+        "height": 675
+      },
+      "datePublished": "2026-09-20",
+      "dateModified": "2026-09-20",
+      "author": {
+        "@id": "https://quickartphotography.in/#anil-sharma"
+      },
+      "publisher": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://quickartphotography.in/blog/top-10-photography-studios-in-chapra/#webpage"
+      },
+      "isPartOf": {
+        "@type": "Blog",
+        "@id": "https://quickartphotography.in/blog/#blog",
+        "name": "Quick Art Blog",
+        "url": "https://quickartphotography.in/blog/"
+      },
+      "inLanguage": "en-IN"
     }
   ]
 }

@@ -2378,13 +2378,20 @@ async function openCheckoutPage(courseId) {
     const cBd = document.getElementById('view-coupon-breakdown');
     if (cBd) cBd.classList.add('hidden');
 
-    // Auto-fill student info if already logged in
-    if (currentStudent) {
-      const nameInp = document.getElementById('view-name');
-      if (nameInp && currentStudent.name && !nameInp.value) nameInp.value = currentStudent.name;
-      const phoneInp = document.getElementById('view-phone');
-      if (phoneInp && currentStudent.phone && !phoneInp.value) phoneInp.value = currentStudent.phone;
-    }
+    // Auto-fill student info from logged-in session, localStorage (landing page lead), or URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const savedName = (currentStudent && currentStudent.name) || localStorage.getItem('qa_user_name') || urlParams.get('name') || '';
+    const savedPhone = (currentStudent && currentStudent.phone) || localStorage.getItem('qa_user_phone') || urlParams.get('phone') || '';
+
+    const nameInp = document.getElementById('view-name');
+    if (nameInp && savedName && !nameInp.value) nameInp.value = savedName;
+    const phoneInp = document.getElementById('view-phone');
+    if (phoneInp && savedPhone && !phoneInp.value) phoneInp.value = savedPhone.replace(/\D/g, '').slice(-10);
+
+    const modalNameInp = document.getElementById('checkout-name');
+    if (modalNameInp && savedName && !modalNameInp.value) modalNameInp.value = savedName;
+    const modalPhoneInp = document.getElementById('checkout-phone');
+    if (modalPhoneInp && savedPhone && !modalPhoneInp.value) modalPhoneInp.value = savedPhone.replace(/\D/g, '').slice(-10);
 
   } catch (err) {
     console.error("Error opening checkout view:", err);
@@ -2415,7 +2422,7 @@ async function handleCheckoutViewSubmit(e) {
   const name = (document.getElementById('view-name')?.value || '').trim();
   const phone = (document.getElementById('view-phone')?.value || '').replace(/\D/g, '');
   const couponCode = activeAppliedCoupon ? activeAppliedCoupon.code : '';
-  const paymentMethod = document.querySelector('input[name="view_payment_method"]:checked')?.value || 'UPI / QR Code';
+  const paymentMethod = 'Razorpay';
 
   if (!phone || phone.length < 10) {
     toast('Kripya valid 10-digit WhatsApp mobile number enter karein.', false);
@@ -2438,111 +2445,102 @@ async function handleCheckoutViewSubmit(e) {
     btn.disabled = true;
     btn.innerHTML = `
       <span class="btn-pay-text">⏳ Connecting Payment Gateway...</span>
-      <span class="btn-pay-sub">Classroom access generate ho raha hai...</span>
+      <span class="btn-pay-sub">Razorpay checkout load ho raha hai...</span>
     `;
   }
 
   try {
-    // Step 1: Check if Razorpay order can be created
+    // Step 1: Create Razorpay Order
     const orderRes = await fetch('../api/lms.php?action=create-razorpay-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ courseId, name, phone, email: '', couponCode })
     }).then(r => r.json());
 
-    if (orderRes.ok && orderRes.razorpayEnabled && orderRes.orderId) {
-      // Step 2: Open Razorpay Checkout Modal
-      const rzpOptions = {
-        key: orderRes.keyId,
-        amount: orderRes.amount,
-        currency: orderRes.currency || 'INR',
-        name: 'Quick Art Photography Academy',
-        description: orderRes.courseTitle || 'Instant Course Enrollment',
-        order_id: orderRes.orderId,
-        prefill: {
-          name: name,
-          contact: phone
-        },
-        theme: { color: '#c99738' },
-        modal: {
-          ondismiss: () => {
-            if (btn) {
-              btn.disabled = false;
-              btn.innerHTML = originalBtnHtml;
-            }
-            toast('Payment cancel hua. Dubara koshish kar sakte hain.', false);
-          }
-        },
-        handler: async (response) => {
+    if (!orderRes.ok) {
+      throw new Error(orderRes.error || 'Payment gateway order create karne me dikkat aayi.');
+    }
+    if (!orderRes.razorpayEnabled || !orderRes.orderId) {
+      throw new Error(orderRes.message || 'Payment gateway filhal active nahi hai. Kripya academy helpline (+91 9939800780) par sampark karein.');
+    }
+
+    // Step 2: Open Razorpay Checkout Modal
+    const rzpOptions = {
+      key: orderRes.keyId,
+      amount: orderRes.amount,
+      currency: orderRes.currency || 'INR',
+      name: 'Quick Art Photography Academy',
+      description: orderRes.courseTitle || 'Instant Course Enrollment',
+      order_id: orderRes.orderId,
+      prefill: {
+        name: name,
+        contact: phone,
+        email: `${phone}@quickartstudent.in`
+      },
+      readonly: {
+        contact: true,
+        name: true,
+        email: true
+      },
+      theme: { color: '#c99738' },
+      modal: {
+        ondismiss: () => {
           if (btn) {
-            btn.innerHTML = `
-              <span class="btn-pay-text">⚡ Verifying Payment &amp; Unlocking...</span>
-              <span class="btn-pay-sub">Classroom me redirect kiya ja raha hai...</span>
-            `;
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
           }
-          try {
-            const verifyRes = await fetch('../api/lms.php?action=verify-razorpay-payment', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                courseId,
-                name,
-                phone,
-                email: '',
-                couponCode
-              })
-            }).then(r => r.json());
+          toast('Payment cancel hua. Dubara koshish kar sakte hain.', false);
+        }
+      },
+      handler: async (response) => {
+        if (btn) {
+          btn.innerHTML = `
+            <span class="btn-pay-text">⚡ Verifying Payment &amp; Unlocking...</span>
+            <span class="btn-pay-sub">Classroom me redirect kiya ja raha hai...</span>
+          `;
+        }
+        try {
+          const verifyRes = await fetch('../api/lms.php?action=verify-razorpay-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              courseId,
+              name,
+              phone,
+              email: '',
+              couponCode
+            })
+          }).then(r => r.json());
 
-            if (!verifyRes.ok || !verifyRes.verified) {
-              throw new Error(verifyRes.error || 'Payment verification failed');
-            }
+          if (!verifyRes.ok || !verifyRes.verified) {
+            throw new Error(verifyRes.error || 'Payment verification failed');
+          }
 
-            // AUTO-ACCESS GRANTED!
-            studentToken = verifyRes.token;
-            localStorage.setItem(TOKEN_KEY, studentToken);
-            currentStudent = verifyRes.student;
-            window._currentStudent = currentStudent;
+          // AUTO-ACCESS GRANTED ON SUCCESSFUL VERIFIED PAYMENT!
+          studentToken = verifyRes.token;
+          localStorage.setItem(TOKEN_KEY, studentToken);
+          currentStudent = verifyRes.student;
+          window._currentStudent = currentStudent;
 
-            toast(`🎉 Badhai ho ${name}! Aapka course unlock ho gaya.`);
-            window.history.replaceState(null, '', `index.html?course=${encodeURIComponent(courseId)}`);
-            await openCourseClassroom(courseId);
+          toast(`🎉 Badhai ho ${name}! Aapka course unlock ho gaya.`);
+          window.history.replaceState(null, '', `index.html?course=${encodeURIComponent(courseId)}`);
+          await openCourseClassroom(courseId);
 
-          } catch (verifyErr) {
-            toast(`Verification Error: ${verifyErr.message}. Payment ID: ${response.razorpay_payment_id}`, false);
-            if (btn) {
-              btn.disabled = false;
-              btn.innerHTML = originalBtnHtml;
-            }
+        } catch (verifyErr) {
+          toast(`Verification Error: ${verifyErr.message}. Payment ID: ${response.razorpay_payment_id}`, false);
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
           }
         }
-      };
+      }
+    };
 
-      const rzp = new Razorpay(rzpOptions);
-      rzp.open();
-
-    } else {
-      // Step 2 Fallback: Direct instant enrollment
-      const res = await fetch('../api/lms.php?action=checkout-enroll', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courseId, name, phone, email: '', paymentMethod, couponCode })
-      }).then(r => r.json());
-
-      if (!res.ok) throw new Error(res.error || 'Enrollment process failed');
-
-      // AUTO-ACCESS GRANTED!
-      studentToken = res.token;
-      localStorage.setItem(TOKEN_KEY, studentToken);
-      currentStudent = res.student;
-      window._currentStudent = currentStudent;
-
-      toast(`🎉 Badhai ho ${name}! Aapka course unlock ho gaya.`);
-      window.history.replaceState(null, '', `index.html?course=${encodeURIComponent(courseId)}`);
-      await openCourseClassroom(courseId);
-    }
+    const rzp = new Razorpay(rzpOptions);
+    rzp.open();
 
   } catch (err) {
     console.error("Enrollment error:", err);
@@ -2560,7 +2558,27 @@ if (viewCheckoutForm) {
   viewCheckoutForm.addEventListener('submit', handleCheckoutViewSubmit);
 }
 
-// Backward compatibility listener for modal checkout form
+// Real-time sync of user inputs to localStorage for seamless single-input experience
+['view-name', 'checkout-name'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('input', e => {
+      const val = e.target.value.trim();
+      if (val) localStorage.setItem('qa_user_name', val);
+    });
+  }
+});
+['view-phone', 'checkout-phone'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('input', e => {
+      const val = e.target.value.replace(/\D/g, '').slice(-10);
+      if (val) localStorage.setItem('qa_user_phone', val);
+    });
+  }
+});
+
+// Modal checkout form - unified with Razorpay
 const modalCheckoutForm = document.getElementById('form-checkout');
 if (modalCheckoutForm) {
   modalCheckoutForm.addEventListener('submit', async (e) => {
@@ -2570,33 +2588,101 @@ if (modalCheckoutForm) {
     const phone = document.getElementById('checkout-phone')?.value?.replace(/\D/g, '');
     const email = document.getElementById('checkout-email')?.value?.trim();
     const couponCode = activeAppliedCoupon ? activeAppliedCoupon.code : '';
-    const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'UPI / QR Code';
 
-    if (phone.length < 10) {
+    if (!phone || phone.length < 10) {
       toast('Valid 10-digit mobile number required', false);
       return;
     }
+    if (!name) {
+      toast('Kripya apna poora naam darj karein.', false);
+      return;
+    }
+
+    const btn = document.getElementById('btn-complete-enroll');
+    const origHtml = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Connecting Payment Gateway...';
+    }
 
     try {
-      const res = await fetch('../api/lms.php?action=checkout-enroll', {
+      const orderRes = await fetch('../api/lms.php?action=create-razorpay-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courseId, name, phone, email, paymentMethod, couponCode })
+        body: JSON.stringify({ courseId, name, phone, email, couponCode })
       }).then(r => r.json());
 
-      if (!res.ok) throw new Error(res.error || 'Enrollment failed');
+      if (!orderRes.ok || !orderRes.razorpayEnabled || !orderRes.orderId) {
+        throw new Error(orderRes.error || orderRes.message || 'Payment gateway connect karne me dikkat aayi.');
+      }
 
-      studentToken = res.token;
-      localStorage.setItem(TOKEN_KEY, studentToken);
-      currentStudent = res.student;
-      window._currentStudent = currentStudent;
+      const rzpOptions = {
+        key: orderRes.keyId,
+        amount: orderRes.amount,
+        currency: orderRes.currency || 'INR',
+        name: 'Quick Art Photography Academy',
+        description: orderRes.courseTitle || 'Course Enrollment',
+        order_id: orderRes.orderId,
+        prefill: {
+          name: name,
+          contact: phone,
+          email: email || `${phone}@quickartstudent.in`
+        },
+        readonly: {
+          contact: true,
+          name: true,
+          email: true
+        },
+        theme: { color: '#c99738' },
+        modal: {
+          ondismiss: () => {
+            if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+            toast('Payment cancel hua. Dubara koshish kar sakte hain.', false);
+          }
+        },
+        handler: async (response) => {
+          try {
+            const verifyRes = await fetch('../api/lms.php?action=verify-razorpay-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                courseId,
+                name,
+                phone,
+                email,
+                couponCode
+              })
+            }).then(r => r.json());
 
-      closeCheckoutModal();
-      toast('🎉 Enrollment successful! Course unlocked.');
-      window.history.replaceState(null, '', `index.html?course=${encodeURIComponent(courseId)}`);
-      await openCourseClassroom(courseId);
+            if (!verifyRes.ok || !verifyRes.verified) {
+              throw new Error(verifyRes.error || 'Payment verification failed');
+            }
+
+            studentToken = verifyRes.token;
+            localStorage.setItem(TOKEN_KEY, studentToken);
+            currentStudent = verifyRes.student;
+            window._currentStudent = currentStudent;
+
+            closeCheckoutModal();
+            toast(`🎉 Badhai ho ${name}! Course unlock ho gaya.`);
+            window.history.replaceState(null, '', `index.html?course=${encodeURIComponent(courseId)}`);
+            await openCourseClassroom(courseId);
+          } catch (vErr) {
+            toast(`Verification Error: ${vErr.message}`, false);
+            if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+          }
+        }
+      };
+
+      const rzp = new Razorpay(rzpOptions);
+      rzp.open();
+
     } catch (err) {
       toast(`Error: ${err.message}`, false);
+      if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
     }
   });
 }

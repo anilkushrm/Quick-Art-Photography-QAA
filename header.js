@@ -277,18 +277,73 @@
     const originalLogin = header.querySelector('.ref-login');
     const loginHref = originalLogin ? (originalLogin.getAttribute('href') || 'portal/index.html') : 'portal/index.html';
 
+    // Check student logged in status from portal
+    const studentToken = localStorage.getItem('qaa_student_token') || '';
+    const isStudentLoggedIn = !!studentToken;
+
+    function handleQaaLogout(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (!confirm('Kya aap Quick Art Academy student portal se logout karna chahte hain?')) return;
+      try {
+        const token = localStorage.getItem('qaa_student_token');
+        if (token) {
+          fetch('/api/lms.php?action=logout', {
+            method: 'POST',
+            headers: { 'X-Student-Token': token }
+          }).catch(() => {});
+        }
+      } catch (err) {}
+      localStorage.removeItem('qaa_student_token');
+      localStorage.removeItem('qa_user_phone');
+      localStorage.removeItem('qa_user_name');
+      localStorage.removeItem('qaa_student_data');
+      window.location.reload();
+    }
+    window.qaaStudentLogout = handleQaaLogout;
+
+    // Desktop Login / Logout State
+    if (originalLogin) {
+      originalLogin.removeAttribute('target');
+      if (isStudentLoggedIn) {
+        const authContainer = document.createElement('div');
+        authContainer.className = 'ref-auth-container';
+        authContainer.style.cssText = 'display:inline-flex;align-items:center;gap:8px;flex-shrink:0;';
+
+        const classroomLink = document.createElement('a');
+        classroomLink.className = 'ref-login ref-btn-classroom';
+        classroomLink.href = loginHref;
+        classroomLink.textContent = 'Classroom →';
+        classroomLink.style.cssText = 'background:linear-gradient(110deg,#f3d695,#d8a447);color:#17120b;border-color:#d8a447;font-weight:700;padding:0 14px;';
+
+        const logoutBtn = document.createElement('button');
+        logoutBtn.type = 'button';
+        logoutBtn.className = 'ref-login ref-btn-logout';
+        logoutBtn.textContent = 'Logout';
+        logoutBtn.style.cssText = 'border-color:rgba(244,63,94,0.5);color:#fda4af;background:rgba(244,63,94,0.08);padding:0 14px;cursor:pointer;';
+        logoutBtn.title = 'Logout from Student Account';
+        logoutBtn.onclick = handleQaaLogout;
+
+        authContainer.append(classroomLink, logoutBtn);
+        originalLogin.replaceWith(authContainer);
+      }
+    }
+
     let mobileLogin = header.querySelector('.ref-mobile-login');
     const oldMenuBtn = header.querySelector('.ref-menu-button');
 
-    const loginIconHtml = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>';
+    const loginIconHtml = isStudentLoggedIn
+      ? '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>'
+      : '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>';
 
     if (!mobileLogin) {
       mobileLogin = document.createElement('a');
       mobileLogin.className = 'ref-mobile-login';
       mobileLogin.href = loginHref;
-      mobileLogin.target = '_blank';
-      mobileLogin.rel = 'noopener noreferrer';
-      mobileLogin.setAttribute('aria-label', 'Login');
+      mobileLogin.setAttribute('aria-label', isStudentLoggedIn ? 'Classroom' : 'Login');
+      if (isStudentLoggedIn) mobileLogin.title = 'Enter Classroom';
       mobileLogin.innerHTML = loginIconHtml;
       if (oldMenuBtn) {
         oldMenuBtn.replaceWith(mobileLogin);
@@ -297,6 +352,9 @@
       }
     } else {
       mobileLogin.href = loginHref;
+      mobileLogin.removeAttribute('target');
+      mobileLogin.setAttribute('aria-label', isStudentLoggedIn ? 'Classroom' : 'Login');
+      if (isStudentLoggedIn) mobileLogin.title = 'Enter Classroom';
       mobileLogin.innerHTML = loginIconHtml;
       if (oldMenuBtn) oldMenuBtn.remove();
     }
@@ -327,11 +385,29 @@
       drawerActions.className = 'ref-drawer-actions';
       
       const demo = menu.querySelector('.ref-demo-cta');
-      if (originalLogin) {
-        const login = originalLogin.cloneNode(true);
-        login.classList.add('ref-drawer-login');
-        login.textContent = 'Login';
-        drawerActions.append(login);
+      if (isStudentLoggedIn) {
+        const mClassroom = document.createElement('a');
+        mClassroom.className = 'ref-login ref-drawer-login';
+        mClassroom.href = loginHref;
+        mClassroom.textContent = 'Enter Classroom →';
+        mClassroom.style.cssText = 'background:linear-gradient(110deg,#f3d695,#d8a447);color:#17120b;font-weight:700;margin-bottom:8px;';
+        
+        const mLogout = document.createElement('button');
+        mLogout.type = 'button';
+        mLogout.className = 'ref-login ref-drawer-logout';
+        mLogout.textContent = 'Logout';
+        mLogout.style.cssText = 'border-color:rgba(244,63,94,0.5);color:#fda4af;background:rgba(244,63,94,0.1);width:100%;cursor:pointer;';
+        mLogout.onclick = handleQaaLogout;
+
+        drawerActions.append(mClassroom, mLogout);
+      } else {
+        if (originalLogin) {
+          const login = originalLogin.cloneNode(true);
+          login.classList.add('ref-drawer-login');
+          login.removeAttribute('target');
+          login.textContent = 'Login';
+          drawerActions.append(login);
+        }
       }
       if (demo) drawerActions.append(demo);
 

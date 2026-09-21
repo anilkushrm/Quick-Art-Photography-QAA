@@ -707,4 +707,24 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
   }
 }
 
+/* Logged-in Header Actions */
+.ref-btn-logout {
+  transition: all 0.2s ease !important;
+}
+.ref-btn-logout:hover,
+.ref-drawer-logout:hover {
+  background: rgba(239, 68, 68, 0.25) !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.3) !important;
+}
+.ref-btn-classroom {
+  transition: all 0.2s ease !important;
+}
+.ref-btn-classroom:hover,
+.ref-drawer-login:hover {
+  filter: brightness(1.08) !important;
+  transform: translateY(-1px) !important;
+}
+
 

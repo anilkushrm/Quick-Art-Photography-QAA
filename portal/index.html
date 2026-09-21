@@ -269,13 +269,33 @@ fbq('track', 'PageView');
                   <div class="checkout-field">
                     <div class="field-label-row">
                       <label for="view-phone">WhatsApp Mobile Number <span class="req">*</span></label>
-                      <span class="badge-subtle">Student ID</span>
+                      <span id="view-phone-status-badge" class="badge-subtle">Student ID</span>
                     </div>
                     <div class="checkout-phone-input-wrap">
                       <span class="phone-flag">🇮🇳 +91</span>
                       <input type="tel" id="view-phone" placeholder="98765 43210" maxlength="10" autocomplete="tel" required />
                     </div>
-                    <span class="field-hint">Used for instant OTP verification &amp; passwordless login.</span>
+                    <span id="view-phone-hint" class="field-hint">Used for instant OTP verification &amp; passwordless login.</span>
+                  </div>
+
+                  <!-- Inline OTP Verification Block (Auto-expands if student not logged in) -->
+                  <div id="view-checkout-otp-wrap" class="checkout-inline-otp hidden">
+                    <div class="inline-otp-card">
+                      <div class="inline-otp-header">
+                        <span class="inline-otp-title">📲 6-Digit OTP Verification</span>
+                        <button type="button" class="inline-otp-change-btn" onclick="cancelCheckoutOtp()">Change Number</button>
+                      </div>
+                      <p class="inline-otp-sub">We sent an SMS code to <b id="inline-otp-phone-display">+91 XXXXX XXXXX</b></p>
+                      <div class="inline-otp-input-row">
+                        <input type="text" id="view-checkout-otp" class="checkout-otp-input" placeholder="• • • • • •" maxlength="6" inputmode="numeric" autocomplete="one-time-code" />
+                        <button type="button" id="btn-verify-checkout-otp" class="btn-verify-inline-otp" onclick="handleCheckoutOtpVerifyBtn()">Verify OTP</button>
+                      </div>
+                      <div class="inline-otp-footer">
+                        <span id="inline-otp-timer">Resend OTP in <b id="inline-otp-countdown">30</b>s</span>
+                        <button type="button" id="btn-resend-checkout-otp" class="inline-otp-resend-btn hidden" onclick="resendCheckoutOtp()">Resend OTP Code</button>
+                      </div>
+                      <div id="inline-otp-feedback" class="inline-otp-feedback hidden"></div>
+                    </div>
                   </div>
 
                   <!-- Full Name -->
@@ -1376,7 +1396,7 @@ fbq('track', 'PageView');
             </div>
           </div>
 
-          <div class="rzp-checkout-gateway-badge" style="margin: 14px 0;">
+          <div class="rzp-checkout-gateway-badge">
             <div class="rzp-badge-header">
               <span class="rzp-badge-icon">🔒</span>
               <div class="rzp-badge-info">
@@ -1404,7 +1424,7 @@ fbq('track', 'PageView');
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="qrcode.min.js"></script>
   <script src="html2canvas.min.js"></script>
-  <script src="portal.js?v=20260921_04"></script>
+  <script src="portal.js?v=20260921_05"></script>
 <script defer src="/meta-events.js"></script>
 </body>
 </html>

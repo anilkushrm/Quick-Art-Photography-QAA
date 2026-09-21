@@ -2393,6 +2393,16 @@ async function openCheckoutPage(courseId) {
     const modalPhoneInp = document.getElementById('checkout-phone');
     if (modalPhoneInp && savedPhone && !modalPhoneInp.value) modalPhoneInp.value = savedPhone.replace(/\D/g, '').slice(-10);
 
+    // Track phone verification status
+    if (currentStudent && currentStudent.phone) {
+      checkoutVerifiedPhone = currentStudent.phone;
+      updatePhoneVerificationBadge(true);
+    } else {
+      checkoutVerifiedPhone = null;
+      updatePhoneVerificationBadge(false);
+    }
+    resetCheckoutOtpState();
+
   } catch (err) {
     console.error("Error opening checkout view:", err);
     toast(`Could not load checkout: ${err.message}`, false);
@@ -2414,7 +2424,222 @@ async function applyCheckoutCoupon() {
   await applyViewCoupon();
 }
 
-// Unified 1-Step Form Submission (Razorpay-first + Auto-Access)
+// --- Checkout OTP & Single-Input Verification Helpers ---
+let checkoutVerifiedPhone = null;
+let checkoutOtpCountdownTimer = null;
+
+function updatePhoneVerificationBadge(isVerified) {
+  const badge = document.getElementById('view-phone-status-badge');
+  if (!badge) return;
+  if (isVerified) {
+    badge.className = 'badge-subtle badge-verified';
+    badge.innerHTML = '✓ Verified Account';
+  } else {
+    badge.className = 'badge-subtle';
+    badge.textContent = 'Student ID';
+  }
+}
+
+function resetCheckoutOtpState() {
+  if (checkoutOtpCountdownTimer) {
+    clearInterval(checkoutOtpCountdownTimer);
+    checkoutOtpCountdownTimer = null;
+  }
+  const otpWrap = document.getElementById('view-checkout-otp-wrap');
+  if (otpWrap) otpWrap.classList.add('hidden');
+  const otpInp = document.getElementById('view-checkout-otp');
+  if (otpInp) otpInp.value = '';
+  const feedback = document.getElementById('inline-otp-feedback');
+  if (feedback) { feedback.className = 'inline-otp-feedback hidden'; feedback.textContent = ''; }
+  const resendBtn = document.getElementById('btn-resend-checkout-otp');
+  if (resendBtn) resendBtn.classList.add('hidden');
+  const timerSpan = document.getElementById('inline-otp-timer');
+  if (timerSpan) timerSpan.classList.remove('hidden');
+  restoreCheckoutPayBtn();
+}
+
+function restoreCheckoutPayBtn() {
+  const btn = document.getElementById('btn-submit-enroll');
+  if (!btn) return;
+  btn.disabled = false;
+  const payAmtEl = document.getElementById('view-btn-pay-amt');
+  const payAmt = payAmtEl ? payAmtEl.textContent : '₹4,999';
+  btn.innerHTML = `
+    <span class="btn-pay-text">Pay <b id="view-btn-pay-amt">${payAmt}</b> &amp; Start Learning Now →</span>
+    <span class="btn-pay-sub">⚡ Instant Automated Classroom Access</span>
+  `;
+}
+
+function showInlineOtpFeedback(msg, type = 'error') {
+  const feedback = document.getElementById('inline-otp-feedback');
+  if (!feedback) return;
+  feedback.textContent = msg;
+  feedback.className = `inline-otp-feedback ${type}`;
+  feedback.classList.remove('hidden');
+}
+
+function startCheckoutOtpCountdown(seconds = 30) {
+  if (checkoutOtpCountdownTimer) clearInterval(checkoutOtpCountdownTimer);
+  let timeLeft = seconds;
+  const countSpan = document.getElementById('inline-otp-countdown');
+  const timerSpan = document.getElementById('inline-otp-timer');
+  const resendBtn = document.getElementById('btn-resend-checkout-otp');
+
+  if (timerSpan) timerSpan.classList.remove('hidden');
+  if (resendBtn) resendBtn.classList.add('hidden');
+  if (countSpan) countSpan.textContent = timeLeft;
+
+  checkoutOtpCountdownTimer = setInterval(() => {
+    timeLeft--;
+    if (countSpan) countSpan.textContent = timeLeft;
+    if (timeLeft <= 0) {
+      clearInterval(checkoutOtpCountdownTimer);
+      checkoutOtpCountdownTimer = null;
+      if (timerSpan) timerSpan.classList.add('hidden');
+      if (resendBtn) resendBtn.classList.remove('hidden');
+    }
+  }, 1000);
+}
+
+async function sendCheckoutOtp(phone) {
+  const btn = document.getElementById('btn-submit-enroll');
+  const originalHtml = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `
+      <span class="btn-pay-text">⚡ Sending Verification OTP...</span>
+      <span class="btn-pay-sub">Fast2SMS OTP bheja ja raha hai...</span>
+    `;
+  }
+
+  try {
+    const res = await lmsApi('send-otp', { method: 'POST', body: { phone } });
+
+    const otpWrap = document.getElementById('view-checkout-otp-wrap');
+    if (otpWrap) otpWrap.classList.remove('hidden');
+
+    const disp = document.getElementById('inline-otp-phone-display');
+    if (disp) disp.textContent = `+91 ${phone}`;
+
+    const otpInp = document.getElementById('view-checkout-otp');
+    if (otpInp) {
+      if (res.devOtp) otpInp.value = res.devOtp;
+      otpInp.focus();
+    }
+
+    startCheckoutOtpCountdown(30);
+
+    if (btn) {
+      btn.disabled = false;
+      const payAmtEl = document.getElementById('view-btn-pay-amt');
+      const payAmt = payAmtEl ? payAmtEl.textContent : '₹4,999';
+      btn.innerHTML = `
+        <span class="btn-pay-text">Verify OTP &amp; Pay <b id="view-btn-pay-amt">${payAmt}</b> →</span>
+        <span class="btn-pay-sub">🔒 Secure Instant Classroom Access</span>
+      `;
+    }
+    toast('📱 6-digit OTP aapke WhatsApp number par bhej diya gaya hai!');
+  } catch (err) {
+    console.error("sendCheckoutOtp error:", err);
+    toast(err.message || 'OTP send failed', false);
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalHtml;
+    }
+  }
+}
+
+async function resendCheckoutOtp() {
+  const phone = (document.getElementById('view-phone')?.value || '').replace(/\D/g, '');
+  if (!phone || phone.length < 10) return;
+  const resendBtn = document.getElementById('btn-resend-checkout-otp');
+  if (resendBtn) resendBtn.textContent = 'Sending OTP...';
+  try {
+    const res = await lmsApi('send-otp', { method: 'POST', body: { phone } });
+    if (res.devOtp) {
+      const otpInp = document.getElementById('view-checkout-otp');
+      if (otpInp) otpInp.value = res.devOtp;
+    }
+    showInlineOtpFeedback('Naya OTP code bhej diya gaya hai.', 'success');
+    startCheckoutOtpCountdown(30);
+  } catch (err) {
+    showInlineOtpFeedback(err.message || 'Resend fail hua.', 'error');
+  } finally {
+    if (resendBtn) resendBtn.textContent = 'Resend OTP Code';
+  }
+}
+
+function cancelCheckoutOtp() {
+  resetCheckoutOtpState();
+  const phoneInp = document.getElementById('view-phone');
+  if (phoneInp) {
+    phoneInp.focus();
+    phoneInp.select();
+  }
+}
+
+async function handleCheckoutOtpVerifyBtn() {
+  const phone = (document.getElementById('view-phone')?.value || '').replace(/\D/g, '');
+  const name = (document.getElementById('view-name')?.value || '').trim();
+  const courseId = document.getElementById('view-course-id')?.value || activeCheckoutCourse?.id;
+  const couponCode = activeAppliedCoupon ? activeAppliedCoupon.code : '';
+  const otp = (document.getElementById('view-checkout-otp')?.value || '').trim();
+
+  if (otp.length < 6) {
+    showInlineOtpFeedback('Kripya 6-digit OTP code darj karein.', 'error');
+    document.getElementById('view-checkout-otp')?.focus();
+    return;
+  }
+  await verifyCheckoutOtpAndProceed(phone, name, courseId, couponCode, otp);
+}
+
+async function verifyCheckoutOtpAndProceed(phone, name, courseId, couponCode, otp) {
+  const vBtn = document.getElementById('btn-verify-checkout-otp');
+  const submitBtn = document.getElementById('btn-submit-enroll');
+  if (vBtn) { vBtn.disabled = true; vBtn.textContent = 'Verifying...'; }
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `
+      <span class="btn-pay-text">⚡ Verifying Number...</span>
+      <span class="btn-pay-sub">Payment gateway open ho raha hai...</span>
+    `;
+  }
+
+  try {
+    const res = await lmsApi('verify-otp', { method: 'POST', body: { phone, otp } });
+
+    // Save student session
+    studentToken = res.token;
+    localStorage.setItem(TOKEN_KEY, studentToken);
+    currentStudent = res.student;
+    window._currentStudent = currentStudent;
+    checkoutVerifiedPhone = phone;
+
+    updatePhoneVerificationBadge(true);
+    showInlineOtpFeedback('✓ Phone verified successfully!', 'success');
+
+    // Auto update student name if provided
+    if (name && currentStudent && (!currentStudent.name || currentStudent.name.startsWith('Student '))) {
+      currentStudent.name = name;
+      lmsApi('update-profile', { method: 'POST', body: { name } }).catch(() => {});
+    }
+
+    setTimeout(() => {
+      const otpWrap = document.getElementById('view-checkout-otp-wrap');
+      if (otpWrap) otpWrap.classList.add('hidden');
+    }, 500);
+
+    toast('✓ Mobile number verified! Razorpay checkout open ho raha hai...');
+    await launchRazorpayCheckout({ courseId, name, phone, couponCode });
+
+  } catch (err) {
+    showInlineOtpFeedback(err.message || 'Invalid or expired OTP. Please try again.', 'error');
+    if (vBtn) { vBtn.disabled = false; vBtn.textContent = 'Verify OTP'; }
+    restoreCheckoutPayBtn();
+  }
+}
+
+// Unified 1-Step Form Submission (Razorpay-first + Single-Input Phone OTP)
 async function handleCheckoutViewSubmit(e) {
   if (e) e.preventDefault();
 
@@ -2422,7 +2647,6 @@ async function handleCheckoutViewSubmit(e) {
   const name = (document.getElementById('view-name')?.value || '').trim();
   const phone = (document.getElementById('view-phone')?.value || '').replace(/\D/g, '');
   const couponCode = activeAppliedCoupon ? activeAppliedCoupon.code : '';
-  const paymentMethod = 'Razorpay';
 
   if (!phone || phone.length < 10) {
     toast('Kripya valid 10-digit WhatsApp mobile number enter karein.', false);
@@ -2439,6 +2663,34 @@ async function handleCheckoutViewSubmit(e) {
     return;
   }
 
+  // Check if phone number is verified
+  const isVerified = (checkoutVerifiedPhone === phone) || (currentStudent && currentStudent.phone === phone);
+
+  if (!isVerified) {
+    const otpWrap = document.getElementById('view-checkout-otp-wrap');
+    const isOtpVisible = otpWrap && !otpWrap.classList.contains('hidden');
+
+    if (isOtpVisible) {
+      const otpVal = (document.getElementById('view-checkout-otp')?.value || '').trim();
+      if (otpVal.length < 6) {
+        showInlineOtpFeedback('Kripya 6-digit OTP enter karein.', 'error');
+        document.getElementById('view-checkout-otp')?.focus();
+        return;
+      }
+      await verifyCheckoutOtpAndProceed(phone, name, courseId, couponCode, otpVal);
+      return;
+    } else {
+      await sendCheckoutOtp(phone);
+      return;
+    }
+  }
+
+  // Phone already verified! Directly launch Razorpay
+  await launchRazorpayCheckout({ courseId, name, phone, couponCode });
+}
+
+// Dedicated Razorpay Checkout Modal Launcher
+async function launchRazorpayCheckout({ courseId, name, phone, couponCode }) {
   const btn = document.getElementById('btn-submit-enroll');
   const originalBtnHtml = btn ? btn.innerHTML : '';
   if (btn) {
@@ -2556,6 +2808,31 @@ async function handleCheckoutViewSubmit(e) {
 const viewCheckoutForm = document.getElementById('form-checkout-view');
 if (viewCheckoutForm) {
   viewCheckoutForm.addEventListener('submit', handleCheckoutViewSubmit);
+}
+
+// Reset verified status if phone is modified
+const viewPhoneInput = document.getElementById('view-phone');
+if (viewPhoneInput) {
+  viewPhoneInput.addEventListener('input', (e) => {
+    const raw = e.target.value.replace(/\D/g, '').slice(0, 10);
+    if (checkoutVerifiedPhone && raw !== checkoutVerifiedPhone) {
+      checkoutVerifiedPhone = null;
+      updatePhoneVerificationBadge(false);
+      resetCheckoutOtpState();
+    }
+  });
+}
+
+// Auto-trigger verify on 6th digit entered into checkout OTP
+const checkoutOtpInput = document.getElementById('view-checkout-otp');
+if (checkoutOtpInput) {
+  checkoutOtpInput.addEventListener('input', (e) => {
+    const digits = e.target.value.replace(/\D/g, '').slice(0, 6);
+    e.target.value = digits;
+    if (digits.length === 6) {
+      handleCheckoutOtpVerifyBtn();
+    }
+  });
 }
 
 // Real-time sync of user inputs to localStorage for seamless single-input experience

@@ -315,8 +315,10 @@
         const classroomLink = document.createElement('a');
         classroomLink.className = 'ref-login ref-btn-classroom';
         classroomLink.href = loginHref;
-        classroomLink.textContent = 'Classroom →';
+        classroomLink.textContent = 'My Course →';
+        classroomLink.title = 'Access My Course';
         classroomLink.style.cssText = 'background:linear-gradient(110deg,#f3d695,#d8a447);color:#17120b;border-color:#d8a447;font-weight:700;padding:0 14px;';
+        classroomLink.removeAttribute('target');
 
         const logoutBtn = document.createElement('button');
         logoutBtn.type = 'button';
@@ -334,29 +336,52 @@
     let mobileLogin = header.querySelector('.ref-mobile-login');
     const oldMenuBtn = header.querySelector('.ref-menu-button');
 
-    const loginIconHtml = isStudentLoggedIn
-      ? '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>'
-      : '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>';
-
-    if (!mobileLogin) {
-      mobileLogin = document.createElement('a');
-      mobileLogin.className = 'ref-mobile-login';
-      mobileLogin.href = loginHref;
-      mobileLogin.setAttribute('aria-label', isStudentLoggedIn ? 'Classroom' : 'Login');
-      if (isStudentLoggedIn) mobileLogin.title = 'Enter Classroom';
-      mobileLogin.innerHTML = loginIconHtml;
-      if (oldMenuBtn) {
-        oldMenuBtn.replaceWith(mobileLogin);
+    if (isStudentLoggedIn) {
+      const myCourseHtml = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg><span>My Course</span>';
+      if (!mobileLogin) {
+        mobileLogin = document.createElement('a');
+        mobileLogin.className = 'ref-mobile-login ref-mobile-mycourse-btn';
+        mobileLogin.href = loginHref;
+        mobileLogin.setAttribute('aria-label', 'My Course');
+        mobileLogin.title = 'My Course';
+        mobileLogin.innerHTML = myCourseHtml;
+        if (oldMenuBtn) {
+          oldMenuBtn.replaceWith(mobileLogin);
+        } else {
+          header.querySelector('.ref-bar')?.append(mobileLogin);
+        }
       } else {
-        header.querySelector('.ref-bar')?.append(mobileLogin);
+        mobileLogin.className = 'ref-mobile-login ref-mobile-mycourse-btn';
+        mobileLogin.href = loginHref;
+        mobileLogin.removeAttribute('target');
+        mobileLogin.setAttribute('aria-label', 'My Course');
+        mobileLogin.title = 'My Course';
+        mobileLogin.innerHTML = myCourseHtml;
+        if (oldMenuBtn) oldMenuBtn.remove();
       }
     } else {
-      mobileLogin.href = loginHref;
-      mobileLogin.removeAttribute('target');
-      mobileLogin.setAttribute('aria-label', isStudentLoggedIn ? 'Classroom' : 'Login');
-      if (isStudentLoggedIn) mobileLogin.title = 'Enter Classroom';
-      mobileLogin.innerHTML = loginIconHtml;
-      if (oldMenuBtn) oldMenuBtn.remove();
+      const loginIconHtml = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>';
+      if (!mobileLogin) {
+        mobileLogin = document.createElement('a');
+        mobileLogin.className = 'ref-mobile-login';
+        mobileLogin.href = loginHref;
+        mobileLogin.setAttribute('aria-label', 'Login');
+        mobileLogin.title = 'Login';
+        mobileLogin.innerHTML = loginIconHtml;
+        if (oldMenuBtn) {
+          oldMenuBtn.replaceWith(mobileLogin);
+        } else {
+          header.querySelector('.ref-bar')?.append(mobileLogin);
+        }
+      } else {
+        mobileLogin.className = 'ref-mobile-login';
+        mobileLogin.href = loginHref;
+        mobileLogin.removeAttribute('target');
+        mobileLogin.setAttribute('aria-label', 'Login');
+        mobileLogin.title = 'Login';
+        mobileLogin.innerHTML = loginIconHtml;
+        if (oldMenuBtn) oldMenuBtn.remove();
+      }
     }
 
     let programsBtn = header.querySelector('.ref-mobile-programs');
@@ -378,6 +403,28 @@
       const imgSrc = brandImg ? brandImg.getAttribute('src') : 'home-assets/ec55a6be3747a9.webp';
       drawerHead.innerHTML = `<div class="ref-drawer-title"><img src="${imgSrc}" width="30" height="30" alt="Quick Art" style="object-fit:contain;border-radius:6px;"><span>Quick <b>Art</b> <small>ACADEMY</small></span></div><button type="button" class="ref-drawer-close" aria-label="Close navigation"><span aria-hidden="true">✕</span></button>`;
       
+      let studentCard = null;
+      if (isStudentLoggedIn) {
+        studentCard = document.createElement('div');
+        studentCard.className = 'ref-drawer-student-card';
+        studentCard.innerHTML = `
+          <div class="ref-drawer-student-top">
+            <span class="ref-drawer-student-badge">
+              <span class="ref-student-online-dot"></span>
+              Enrolled Student
+            </span>
+            <button type="button" class="ref-drawer-logout-mini" aria-label="Logout">Logout</button>
+          </div>
+          <a href="${loginHref}" class="ref-drawer-mycourse-main">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+            <span>Go to My Course</span>
+            <span class="ref-drawer-arr" aria-hidden="true">→</span>
+          </a>
+        `;
+        const miniLogout = studentCard.querySelector('.ref-drawer-logout-mini');
+        if (miniLogout) miniLogout.onclick = handleQaaLogout;
+      }
+
       const drawerBody = document.createElement('div');
       drawerBody.className = 'ref-drawer-body';
       
@@ -389,8 +436,8 @@
         const mClassroom = document.createElement('a');
         mClassroom.className = 'ref-login ref-drawer-login';
         mClassroom.href = loginHref;
-        mClassroom.textContent = 'Enter Classroom →';
-        mClassroom.style.cssText = 'background:linear-gradient(110deg,#f3d695,#d8a447);color:#17120b;font-weight:700;margin-bottom:8px;';
+        mClassroom.textContent = 'My Course →';
+        mClassroom.style.cssText = 'background:linear-gradient(110deg,#f3d695,#d8a447);color:#17120b;font-weight:700;';
         
         const mLogout = document.createElement('button');
         mLogout.type = 'button';
@@ -408,14 +455,19 @@
           login.textContent = 'Login';
           drawerActions.append(login);
         }
+        if (demo) drawerActions.append(demo);
       }
-      if (demo) drawerActions.append(demo);
 
       // Remove any legacy student portal button so all pages have the identical clean mobile drawer as homepage
       menu.querySelectorAll('.ref-mobile-lms').forEach(el => el.remove());
 
       while (menu.firstChild) drawerBody.append(menu.firstChild);
-      menu.append(drawerHead, drawerBody, drawerActions);
+      
+      if (studentCard) {
+        menu.append(drawerHead, studentCard, drawerBody, drawerActions);
+      } else {
+        menu.append(drawerHead, drawerBody, drawerActions);
+      }
     }
 
     let backdrop = document.querySelector('.ref-drawer-backdrop');

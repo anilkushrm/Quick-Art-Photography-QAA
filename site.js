@@ -135,10 +135,12 @@
             }
             const badge = hero.querySelector('.container.relative .lg\\:col-span-3 > .inline-flex span');
             if (badge) badge.textContent = 'Limited seats · New batch starting soon';
-            const countdown = hero.querySelector('.lg\\:col-span-3 .mt-9');
-            if (countdown && !countdown.children.length) {
-                countdown.className = 'qa-countdown';
-                countdown.innerHTML = '<p>⏳ Early-bird pricing ends in</p><div class="qa-countdown-grid" role="timer" aria-label="Time remaining for early-bird pricing"><div><strong data-countdown-days>02</strong><span>Days</span></div><div><strong data-countdown-hours>14</strong><span>Hours</span></div><div><strong data-countdown-minutes>35</strong><span>Min</span></div><div><strong data-countdown-seconds>48</strong><span>Sec</span></div></div>';
+            const countdown = hero.querySelector('.qa-countdown') || hero.querySelector('.mc-studio-timer-wrap .qa-countdown') || hero.querySelector('.lg\\:col-span-3 .mt-9');
+            if (countdown) {
+                if (!countdown.querySelector('.qa-countdown-grid')) {
+                    countdown.className = 'qa-countdown';
+                    countdown.innerHTML = '<p>⏳ Early-bird pricing ends in</p><div class="qa-countdown-grid" role="timer" aria-label="Time remaining for early-bird pricing"><div><strong data-countdown-days>02</strong><span>Days</span></div><div><strong data-countdown-hours>14</strong><span>Hours</span></div><div><strong data-countdown-minutes>35</strong><span>Min</span></div><div><strong data-countdown-seconds>48</strong><span>Sec</span></div></div>';
+                }
                 const timerKey = 'qa-masterclass-live-timer-v3';
                 const defaultDuration = (2 * 86400 + 14 * 3600 + 35 * 60 + 48) * 1000;
                 let deadline;

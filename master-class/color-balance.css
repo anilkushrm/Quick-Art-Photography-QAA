@@ -1114,7 +1114,12 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
   padding: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 13px !important;
+  gap: 12px !important;
+}
+
+/* Remove site.css top-margin on qa-field inside deck so gap alone controls spacing */
+.mc-deck-body .qa-field {
+  margin-top: 0 !important;
 }
 
 .mc-deck-body form.qa-enquiry h2,
@@ -1123,35 +1128,68 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
 }
 
 .mc-deck-body .qa-field label {
-  color: #e2e8f0 !important;
-  font-size: 12.5px !important;
-  font-weight: 650 !important;
-  display: block !important;
-  margin-bottom: 5px !important;
-}
-
-.mc-deck-body form.qa-enquiry :is(input, select) {
-  width: 100% !important;
-  height: 48px !important;
-  padding: 0 16px !important;
-  font-size: 14.5px !important;
   color: #ffffff !important;
-  background: #141722 !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-radius: 12px !important;
-  transition: all 0.2s ease !important;
-  box-sizing: border-box !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  display: block !important;
+  margin-bottom: 6px !important;
+  letter-spacing: 0.01em !important;
 }
 
-.mc-deck-body form.qa-enquiry :is(input, select):focus {
-  background: #191d2c !important;
+/* All text inputs, selects & textareas — dark theme */
+.mc-deck-body form.qa-enquiry :is(input, select, textarea) {
+  width: 100% !important;
+  padding: 0 14px !important;
+  font-size: 14px !important;
+  font-family: inherit !important;
+  color: #f1f5f9 !important;
+  background: #0d1017 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 10px !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  box-sizing: border-box !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Fixed heights */
+.mc-deck-body form.qa-enquiry :is(input, select) {
+  height: 46px !important;
+  line-height: 46px !important;
+}
+
+.mc-deck-body form.qa-enquiry textarea {
+  height: auto !important;
+  min-height: 80px !important;
+  padding: 10px 14px !important;
+  line-height: 1.5 !important;
+  resize: vertical !important;
+}
+
+/* Select arrow — keep readable */
+.mc-deck-body form.qa-enquiry select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f1f5f9' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 14px center !important;
+  padding-right: 36px !important;
+}
+
+/* Select option text (system-level) */
+.mc-deck-body form.qa-enquiry select option {
+  color: #f1f5f9 !important;
+  background: #0d1017 !important;
+}
+
+.mc-deck-body form.qa-enquiry :is(input, select, textarea):focus {
+  background: #111827 !important;
   border-color: #f59e0b !important;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22) !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2) !important;
   outline: none !important;
 }
 
-.mc-deck-body form.qa-enquiry input::placeholder {
-  color: #64748b !important;
+.mc-deck-body form.qa-enquiry :is(input, textarea)::placeholder {
+  color: #475569 !important;
+  opacity: 1 !important;
 }
 
 .mc-deck-body form.qa-enquiry .qa-consent {

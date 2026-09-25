@@ -1076,7 +1076,17 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
 }
 
 .mc-deck-body {
-  padding: 24px 24px 28px 24px !important;
+  padding: 28px 24px 28px 24px !important;
+}
+
+.mc-deck-kicker {
+  display: inline-block !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.14em !important;
+  color: #f59e0b !important;
+  text-transform: uppercase !important;
+  margin-bottom: 8px !important;
 }
 
 .mc-deck-title {

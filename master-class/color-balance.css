@@ -701,7 +701,7 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
   }
 }
 
-/* ── 2. HERO ENQUIRY CARD COLOR BALANCE (MOBILE DARK APPROVED · PC LUXURY LIGHT BALANCED) ── */
+/* ── 2. HERO ENQUIRY CARD LUXURY REDESIGN (UNIFIED OBSIDIAN STUDIO GLASS FOR DESKTOP & MOBILE) ── */
 
 /* Form inside Hero Card - Global Reset */
 .qa-master-hero .mc-hero-card form.qa-enquiry,
@@ -710,6 +710,9 @@ main > section.qa-master-hero form.qa-enquiry {
   border: none !important;
   box-shadow: none !important;
   padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
 }
 
 main > section.qa-master-hero form.qa-enquiry h2,
@@ -717,313 +720,409 @@ main > section.qa-master-hero form.qa-enquiry > p {
   display: none !important;
 }
 
-/* Form Buttons (Shared Gold Gradient CTA) */
+/* Master Hero Card Container (Both Desktop & Mobile) */
+main > section.qa-master-hero .qa-master-hero-grid > div:last-child > div,
+main > section.qa-master-hero .qa-master-hero-grid .mc-hero-card,
+.qa-master-hero .mc-hero-card,
+.qa-master-hero .lg\:col-span-2 > div {
+  background: linear-gradient(165deg, rgba(20, 24, 36, 0.95) 0%, rgba(10, 13, 20, 0.98) 100%) !important;
+  border: 1px solid rgba(245, 200, 121, 0.38) !important;
+  box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.9), 0 0 40px -8px rgba(216, 161, 83, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border-radius: 28px !important;
+  color: #f1f5f9 !important;
+  position: relative !important;
+  padding: 30px 26px !important;
+  box-sizing: border-box !important;
+}
+
+/* Floating Top Status Badge */
+.qa-master-hero .mc-hero-card .mc-card-pill-top,
+.qa-master-hero .mc-hero-card > .absolute.-top-4.-right-4 {
+  position: absolute !important;
+  top: -12px !important;
+  right: 20px !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  padding: 4px 12px !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  z-index: 10 !important;
+}
+
+.mc-card-pill-pulse {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 8px #ffffff !important;
+  animation: qaLivePulse 1.8s infinite !important;
+}
+
+/* Headings inside Hero Form Card */
+main > section.qa-master-hero .qa-master-hero-grid > div:last-child :is(h2, h3),
+main > section.qa-master-hero .mc-hero-card :is(h2, h3),
+.qa-master-hero .mc-hero-card h3,
+.qa-master-hero .lg\:col-span-2 h3 {
+  color: #ffffff !important;
+  font-size: clamp(23px, 2.5vw, 29px) !important;
+  font-weight: 850 !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.2 !important;
+  margin: 6px 0 4px 0 !important;
+}
+
+main > section.qa-master-hero .qa-master-hero-grid > div:last-child p,
+main > section.qa-master-hero .mc-hero-card p,
+.qa-master-hero .mc-hero-card p,
+.qa-master-hero .lg\:col-span-2 p {
+  color: #94a3b8 !important;
+  font-size: 13.5px !important;
+  line-height: 1.55 !important;
+}
+
+main > section.qa-master-hero .mc-hero-card .text-gold-600,
+main > section.qa-master-hero .mc-hero-card .text-gold-700,
+.qa-master-hero .mc-hero-card .text-gold-700,
+.qa-master-hero .lg\:col-span-2 .text-gold-700 {
+  color: #f5c879 !important;
+  font-weight: 750 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.1em !important;
+}
+
+.qa-master-hero .mc-hero-card svg.lucide-badge-check {
+  color: #f5c879 !important;
+}
+
+/* Field Labels */
+main > section.qa-master-hero .qa-master-hero-grid > div:last-child label,
+main > section.qa-master-hero form.qa-enquiry .qa-field label {
+  color: #f1f5f9 !important;
+  font-size: 12.5px !important;
+  font-weight: 650 !important;
+  display: block !important;
+  margin-bottom: 5px !important;
+  text-align: left !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* Modern Dark Studio Inputs */
+main > section.qa-master-hero form.qa-enquiry :is(input, select, textarea) {
+  width: 100% !important;
+  height: 48px !important;
+  padding: 0 16px !important;
+  font-size: 14.5px !important;
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 12px !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  text-align: left !important;
+  box-sizing: border-box !important;
+}
+
+main > section.qa-master-hero form.qa-enquiry select {
+  color: #ffffff !important;
+  background-color: #0e121a !important;
+}
+
+main > section.qa-master-hero form.qa-enquiry select option {
+  background-color: #0e121a !important;
+  color: #ffffff !important;
+}
+
+main > section.qa-master-hero form.qa-enquiry textarea {
+  height: auto !important;
+  min-height: 80px !important;
+  padding: 12px 16px !important;
+}
+
+main > section.qa-master-hero form.qa-enquiry :is(input, select, textarea):focus {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: #f5c879 !important;
+  box-shadow: 0 0 0 3px rgba(245, 200, 121, 0.22) !important;
+  outline: none !important;
+}
+
+main > section.qa-master-hero form.qa-enquiry input::placeholder,
+main > section.qa-master-hero form.qa-enquiry textarea::placeholder {
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Consent Checkbox */
+main > section.qa-master-hero form.qa-enquiry .qa-consent {
+  color: #cbd5e1 !important;
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 9px !important;
+  text-align: left !important;
+  margin: 4px 0 6px 0 !important;
+  cursor: pointer !important;
+}
+
+main > section.qa-master-hero form.qa-enquiry .qa-consent input[type="checkbox"] {
+  width: 16px !important;
+  height: 16px !important;
+  accent-color: #f5c879 !important;
+  margin-top: 2px !important;
+  flex-shrink: 0 !important;
+  cursor: pointer !important;
+}
+
+/* Form Submit Button (Ultra-Glowing Studio Gold CTA) */
 main > section.qa-master-hero form.qa-enquiry .qa-demo,
 main > section.qa-master-hero form.qa-enquiry button[type="submit"] {
   width: 100% !important;
   height: 52px !important;
-  background: linear-gradient(135deg, #f5c879 0%, #d8a153 55%, #bd863a 100%) !important;
-  color: #0b0c10 !important;
-  font-weight: 800 !important;
-  font-size: 15px !important;
+  background: linear-gradient(135deg, #ffd166 0%, #f59e0b 50%, #d97706 100%) !important;
+  color: #080a0f !important;
+  font-weight: 850 !important;
+  font-size: 15.5px !important;
+  letter-spacing: 0.02em !important;
   border-radius: 14px !important;
   border: none !important;
   cursor: pointer !important;
-  box-shadow: 0 10px 25px -5px rgba(216, 161, 83, 0.45) !important;
-  transition: all 0.25s ease !important;
+  box-shadow: 0 12px 30px -5px rgba(245, 158, 11, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 main > section.qa-master-hero form.qa-enquiry .qa-demo:hover,
 main > section.qa-master-hero form.qa-enquiry button[type="submit"]:hover {
   transform: translateY(-2px) !important;
-  box-shadow: 0 14px 30px -5px rgba(216, 161, 83, 0.6) !important;
+  box-shadow: 0 16px 36px -5px rgba(245, 158, 11, 0.65) !important;
 }
 
-/* ── 2A. MOBILE HERO FORM (CONFIRMED & PRESERVED: LUXURY OBSIDIAN DARK) ── */
-@media (max-width: 1023px) {
-  main > section.qa-master-hero .qa-master-hero-grid > div:last-child > div,
-  main > section.qa-master-hero .qa-master-hero-grid .mc-hero-card,
-  .qa-master-hero .mc-hero-card,
-  .qa-master-hero .lg\:col-span-2 > div {
-    background: linear-gradient(145deg, rgba(20, 24, 36, 0.98), rgba(10, 12, 18, 0.99)) !important;
-    border: 1px solid rgba(216, 161, 83, 0.35) !important;
-    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.8), 0 0 35px rgba(216, 161, 83, 0.12) !important;
-    color: #f1f5f9 !important;
-    border-radius: 28px !important;
-  }
+/* Form Proof Footer */
+main > section.qa-master-hero .qa-form-proof,
+main > section.qa-master-hero .mc-hero-card .qa-form-proof {
+  margin-top: 14px !important;
+  padding-top: 12px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #94a3b8 !important;
+  font-size: 11.5px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 6px !important;
+  text-align: center !important;
+}
 
-  main > section.qa-master-hero .qa-master-hero-grid > div:last-child :is(h2, h3),
-  main > section.qa-master-hero .mc-hero-card :is(h2, h3),
-  .qa-master-hero .mc-hero-card h3,
-  .qa-master-hero .lg\:col-span-2 h3 {
-    color: #ffffff !important;
-    font-size: clamp(22px, 3vw, 28px) !important;
-    font-weight: 800 !important;
-    letter-spacing: -0.02em !important;
-  }
+main > section.qa-master-hero .qa-proof-safe {
+  color: #94a3b8 !important;
+  font-size: 11.5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
 
-  main > section.qa-master-hero .qa-master-hero-grid > div:last-child p,
-  main > section.qa-master-hero .mc-hero-card p,
-  .qa-master-hero .mc-hero-card p,
-  .qa-master-hero .lg\:col-span-2 p {
-    color: #94a3b8 !important;
-  }
+main > section.qa-master-hero .qa-proof-social {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
 
-  main > section.qa-master-hero .mc-hero-card .text-gold-600,
-  main > section.qa-master-hero .mc-hero-card .text-gold-700,
-  .qa-master-hero .mc-hero-card .text-gold-700,
-  .qa-master-hero .lg\:col-span-2 .text-gold-700 {
-    color: #f6d389 !important;
-  }
+main > section.qa-master-hero .qa-proof-text {
+  color: #cbd5e1 !important;
+  font-size: 11.5px !important;
+}
 
-  main > section.qa-master-hero form.qa-enquiry .qa-kicker {
-    color: #f6d389 !important;
-    font-size: 11px !important;
-    letter-spacing: 0.15em !important;
-    font-weight: 700 !important;
-  }
+main > section.qa-master-hero .qa-proof-text strong {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
 
-  main > section.qa-master-hero .qa-master-hero-grid > div:last-child label,
-  main > section.qa-master-hero form.qa-enquiry .qa-field label {
-    color: #f1f5f9 !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    display: block !important;
-    margin-bottom: 6px !important;
-    text-align: left !important;
-  }
+main > section.qa-master-hero .qa-proof-text .qa-proof-rating {
+  color: #f5c879 !important;
+  font-weight: 800 !important;
+}
 
-  main > section.qa-master-hero form.qa-enquiry :is(input, select, textarea) {
-    width: 100% !important;
-    height: 48px !important;
-    padding: 0 14px !important;
-    font-size: 14.5px !important;
-    color: #ffffff !important;
-    background: rgba(8, 10, 16, 0.9) !important;
-    border: 1px solid rgba(216, 161, 83, 0.3) !important;
-    border-radius: 12px !important;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
-    text-align: left !important;
-  }
+/* ── 2C. 4 PILLARS QUICK-METRICS LUXURY GLASS TILES ── */
+.qa-mc-pillars-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 12px !important;
+  margin-top: 24px !important;
+  max-width: 760px !important;
+}
 
-  main > section.qa-master-hero form.qa-enquiry select {
-    color: #f1f5f9 !important;
-    background-color: #0b0d13 !important;
-  }
+.qa-pillar-card {
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 16px !important;
+  padding: 12px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 11px !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.25s ease !important;
+}
 
-  main > section.qa-master-hero form.qa-enquiry select option {
-    background-color: #0b0d13 !important;
-    color: #f1f5f9 !important;
-  }
+.qa-pillar-card:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(245, 200, 121, 0.4) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(216, 161, 83, 0.15) !important;
+}
 
-  main > section.qa-master-hero form.qa-enquiry textarea {
-    height: auto !important;
-    min-height: 80px !important;
-    padding: 12px 14px !important;
-  }
+.qa-pillar-icon {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, rgba(245, 200, 121, 0.2) 0%, rgba(216, 161, 83, 0.06) 100%) !important;
+  border: 1px solid rgba(245, 200, 121, 0.35) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #f5c879 !important;
+  flex-shrink: 0 !important;
+}
 
-  main > section.qa-master-hero form.qa-enquiry :is(input, select, textarea):focus {
-    border-color: #d8a153 !important;
-    box-shadow: 0 0 0 3px rgba(216, 161, 83, 0.25) !important;
-    outline: none !important;
-  }
+.qa-pillar-icon svg {
+  width: 17px !important;
+  height: 17px !important;
+}
 
-  main > section.qa-master-hero form.qa-enquiry input::placeholder,
-  main > section.qa-master-hero form.qa-enquiry textarea::placeholder {
-    color: #64748b !important;
-  }
+.qa-pillar-meta {
+  min-width: 0 !important;
+}
 
-  main > section.qa-master-hero form.qa-enquiry .qa-consent {
-    color: #cbd5e1 !important;
-    font-size: 12.5px !important;
-    display: flex !important;
-    align-items: flex-start !important;
+.qa-pillar-label {
+  font-size: 9.5px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.12em !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+.qa-pillar-val {
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  margin-top: 3px !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+@media (max-width: 768px) {
+  .qa-mc-pillars-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
     gap: 8px !important;
-    text-align: left !important;
-    margin: 12px 0 !important;
+    margin-top: 18px !important;
   }
-
-  main > section.qa-master-hero form.qa-enquiry .qa-consent input[type="checkbox"] {
-    width: 16px !important;
-    height: 16px !important;
-    accent-color: #d8a153 !important;
-    margin-top: 2px !important;
-    flex-shrink: 0 !important;
+  .qa-pillar-card {
+    padding: 10px 11px !important;
+    border-radius: 14px !important;
   }
-
-  main > section.qa-master-hero .qa-form-proof,
-  main > section.qa-master-hero .mc-hero-card .qa-form-proof {
-    margin-top: 14px !important;
-    color: #94a3b8 !important;
-    font-size: 11.5px !important;
+  .qa-pillar-icon {
+    width: 32px !important;
+    height: 32px !important;
   }
-
-  main > section.qa-master-hero .qa-proof-safe {
-    color: #94a3b8 !important;
+  .qa-pillar-icon svg {
+    width: 15px !important;
+    height: 15px !important;
   }
-
-  main > section.qa-master-hero .qa-proof-text {
-    color: #cbd5e1 !important;
-  }
-
-  main > section.qa-master-hero .qa-proof-text strong {
-    color: #ffffff !important;
-  }
-
-  main > section.qa-master-hero .qa-proof-text .qa-proof-rating {
-    color: #f5c879 !important;
+  .qa-pillar-val {
+    font-size: 12px !important;
   }
 }
 
-/* ── 2B. PC DESKTOP HERO FORM (COLOR-BALANCED LUXURY WHITE CARD) ── */
-@media (min-width: 1024px) {
-  main > section.qa-master-hero .qa-master-hero-grid > div:last-child > div,
-  main > section.qa-master-hero .qa-master-hero-grid .mc-hero-card,
-  .qa-master-hero .mc-hero-card,
-  .qa-master-hero .lg\:col-span-2 > div {
-    background: #ffffff !important;
-    border: 1.5px solid rgba(216, 161, 83, 0.45) !important;
-    box-shadow: 0 25px 65px -10px rgba(0, 0, 0, 0.7), 0 0 35px rgba(216, 161, 83, 0.22) !important;
-    color: #0f172a !important;
-    border-radius: 28px !important;
-  }
+/* ── 2D. COUNTDOWN TIMER PRECISION LED REFINEMENT ── */
+.qa-master-hero .qa-countdown {
+  margin-top: 26px !important;
+}
 
-  main > section.qa-master-hero .mc-hero-card .absolute.-top-4.-right-4 {
-    background: #059669 !important;
-    color: #ffffff !important;
-    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.35) !important;
-  }
+.qa-master-hero .qa-countdown > p {
+  color: #f5c879 !important;
+  font-size: 11.5px !important;
+  font-weight: 750 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 12px !important;
+}
 
-  main > section.qa-master-hero .qa-master-hero-grid > div:last-child :is(h2, h3),
-  main > section.qa-master-hero .mc-hero-card :is(h2, h3),
-  .qa-master-hero .mc-hero-card h3,
-  .qa-master-hero .lg\:col-span-2 h3 {
-    color: #0f172a !important;
-    font-size: 28px !important;
-    font-weight: 800 !important;
-    letter-spacing: -0.02em !important;
-  }
+.qa-master-hero .qa-countdown-grid {
+  display: flex !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+}
 
-  main > section.qa-master-hero .qa-master-hero-grid > div:last-child p,
-  main > section.qa-master-hero .mc-hero-card p,
-  .qa-master-hero .mc-hero-card p,
-  .qa-master-hero .lg\:col-span-2 p {
-    color: #475569 !important;
-    font-size: 14px !important;
-  }
+.qa-master-hero .qa-countdown-grid > div {
+  background: linear-gradient(180deg, rgba(26, 31, 46, 0.85) 0%, rgba(13, 16, 25, 0.95) 100%) !important;
+  border: 1px solid rgba(245, 200, 121, 0.3) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  border-radius: 14px !important;
+  min-width: 74px !important;
+  padding: 11px 12px !important;
+  backdrop-filter: blur(10px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: transform 0.2s ease, border-color 0.2s ease !important;
+}
 
-  main > section.qa-master-hero .mc-hero-card .text-gold-600,
-  main > section.qa-master-hero .mc-hero-card .text-gold-700,
-  .qa-master-hero .mc-hero-card .text-gold-700,
-  .qa-master-hero .lg\:col-span-2 .text-gold-700 {
-    color: #b45309 !important;
-    font-weight: 700 !important;
-  }
+.qa-master-hero .qa-countdown-grid > div:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(245, 200, 121, 0.6) !important;
+}
 
-  .qa-master-hero .mc-hero-card svg.lucide-badge-check {
-    color: #d97706 !important;
-  }
+.qa-master-hero .qa-countdown-grid strong {
+  font-family: 'Outfit', 'Plus Jakarta Sans', monospace !important;
+  font-size: 30px !important;
+  font-weight: 850 !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 16px rgba(245, 200, 121, 0.45) !important;
+  line-height: 1 !important;
+  letter-spacing: -0.02em !important;
+}
 
-  main > section.qa-master-hero form.qa-enquiry .qa-kicker {
-    color: #b45309 !important;
-    font-size: 11px !important;
-    letter-spacing: 0.15em !important;
-    font-weight: 700 !important;
-  }
+.qa-master-hero .qa-countdown-grid span {
+  font-size: 9.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.15em !important;
+  color: #94a3b8 !important;
+  text-transform: uppercase !important;
+  margin-top: 5px !important;
+}
 
-  main > section.qa-master-hero .qa-master-hero-grid > div:last-child label,
-  main > section.qa-master-hero form.qa-enquiry .qa-field label {
-    color: #1e293b !important;
-    font-size: 13.5px !important;
-    font-weight: 700 !important;
-    display: block !important;
-    margin-bottom: 6px !important;
-    text-align: left !important;
-  }
-
-  main > section.qa-master-hero form.qa-enquiry :is(input, select, textarea) {
-    width: 100% !important;
-    height: 48px !important;
-    padding: 0 14px !important;
-    font-size: 14.5px !important;
-    color: #0f172a !important;
-    background: #f8fafc !important;
-    border: 1.5px solid #cbd5e1 !important;
-    border-radius: 12px !important;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
-    text-align: left !important;
-  }
-
-  main > section.qa-master-hero form.qa-enquiry select {
-    color: #0f172a !important;
-    background-color: #f8fafc !important;
-  }
-
-  main > section.qa-master-hero form.qa-enquiry select option {
-    background-color: #ffffff !important;
-    color: #0f172a !important;
-  }
-
-  main > section.qa-master-hero form.qa-enquiry textarea {
-    height: auto !important;
-    min-height: 80px !important;
-    padding: 12px 14px !important;
-  }
-
-  main > section.qa-master-hero form.qa-enquiry :is(input, select, textarea):focus {
-    background: #ffffff !important;
-    border-color: #d8a153 !important;
-    box-shadow: 0 0 0 3.5px rgba(216, 161, 83, 0.28) !important;
-    outline: none !important;
-  }
-
-  main > section.qa-master-hero form.qa-enquiry input::placeholder,
-  main > section.qa-master-hero form.qa-enquiry textarea::placeholder {
-    color: #94a3b8 !important;
-  }
-
-  main > section.qa-master-hero form.qa-enquiry .qa-consent {
-    color: #334155 !important;
-    font-size: 12.5px !important;
-    font-weight: 500 !important;
-    display: flex !important;
-    align-items: flex-start !important;
+@media (max-width: 640px) {
+  .qa-master-hero .qa-countdown-grid {
     gap: 8px !important;
-    text-align: left !important;
-    margin: 12px 0 !important;
+    justify-content: flex-start !important;
   }
-
-  main > section.qa-master-hero form.qa-enquiry .qa-consent input[type="checkbox"] {
-    width: 16px !important;
-    height: 16px !important;
-    accent-color: #d8a153 !important;
-    margin-top: 2px !important;
-    flex-shrink: 0 !important;
+  .qa-master-hero .qa-countdown-grid > div {
+    min-width: 62px !important;
+    padding: 8px 9px !important;
+    border-radius: 11px !important;
   }
-
-  main > section.qa-master-hero .qa-form-proof,
-  main > section.qa-master-hero .mc-hero-card .qa-form-proof {
-    margin-top: 14px !important;
-    color: #64748b !important;
-    font-size: 11.5px !important;
+  .qa-master-hero .qa-countdown-grid strong {
+    font-size: 24px !important;
   }
-
-  main > section.qa-master-hero .qa-proof-safe {
-    color: #64748b !important;
-  }
-
-  main > section.qa-master-hero .qa-proof-text {
-    color: #475569 !important;
-  }
-
-  main > section.qa-master-hero .qa-proof-text strong {
-    color: #0f172a !important;
-    font-weight: 700 !important;
-  }
-
-  main > section.qa-master-hero .qa-proof-text .qa-proof-rating {
-    color: #d97706 !important;
-    font-weight: 700 !important;
+  .qa-master-hero .qa-countdown-grid span {
+    font-size: 8.5px !important;
   }
 }
 

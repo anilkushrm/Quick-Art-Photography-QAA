@@ -1091,8 +1091,8 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
 
 .mc-deck-title {
   font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
-  font-size: 24px !important;
-  font-weight: 850 !important;
+  font-size: 26px !important;
+  font-weight: 900 !important;
   color: #ffffff !important;
   letter-spacing: -0.025em !important;
   line-height: 1.2 !important;
@@ -1307,10 +1307,42 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
     font-size: 10px !important;
   }
   .mc-deck-body {
-    padding: 18px 16px !important;
+    padding: 22px 18px 24px !important;
   }
   .mc-deck-title {
-    font-size: 21px !important;
+    font-size: clamp(23px, 6.2vw, 27px) !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.025em !important;
+  }
+
+  /* Countdown strictly 1 line on mobile */
+  .qa-master-hero .qa-countdown-grid,
+  .mc-studio-timer-wrap .qa-countdown-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 380px !important;
+    flex-wrap: nowrap !important;
+  }
+  .qa-master-hero .qa-countdown-grid > div,
+  .mc-studio-timer-wrap .qa-countdown-grid > div {
+    min-width: 0 !important;
+    width: 100% !important;
+    padding: 8px 4px !important;
+    border-radius: 10px !important;
+  }
+  .qa-master-hero .qa-countdown-grid strong,
+  .mc-studio-timer-wrap .qa-countdown-grid strong {
+    font-size: clamp(20px, 5.5vw, 25px) !important;
+    line-height: 1 !important;
+  }
+  .qa-master-hero .qa-countdown-grid span,
+  .mc-studio-timer-wrap .qa-countdown-grid span {
+    font-size: 8px !important;
+    letter-spacing: 0.08em !important;
+    margin-top: 3px !important;
   }
 }
 

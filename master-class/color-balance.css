@@ -701,428 +701,571 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
   }
 }
 
-/* ── 2. HERO ENQUIRY CARD LUXURY REDESIGN (UNIFIED OBSIDIAN STUDIO GLASS FOR DESKTOP & MOBILE) ── */
+/* ── 2. APPLE PRO / DAVINCI RESOLVE STUDIO MODERN MINIMAL SUITE ── */
 
-/* Form inside Hero Card - Global Reset */
-.qa-master-hero .mc-hero-card form.qa-enquiry,
-main > section.qa-master-hero form.qa-enquiry {
+/* 2A. Studio Top Eyebrow & Mini Pill */
+.mc-studio-eyebrow-wrap {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-bottom: 20px !important;
+}
+
+.mc-studio-eyebrow {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 9999px !important;
+  padding: 5px 14px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  color: #e2e8f0 !important;
+  text-transform: uppercase !important;
+  backdrop-filter: blur(12px) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+.mc-studio-led {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  background: #10b981 !important;
+  box-shadow: 0 0 10px #10b981 !important;
+  animation: qaLivePulse 2s infinite !important;
+}
+
+.mc-live-mini-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(20, 10, 14, 0.8) 100%) !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  border-radius: 9999px !important;
+  padding: 5px 14px !important;
+  font-size: 11.5px !important;
+  font-weight: 650 !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  transition: all 0.25s ease !important;
+}
+
+.mc-live-mini-pill:hover {
+  border-color: #f59e0b !important;
+  color: #fde68a !important;
+  transform: translateY(-1px) !important;
+}
+
+.mc-live-dot {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #ef4444 !important;
+  box-shadow: 0 0 8px #ef4444 !important;
+}
+
+/* 2B. Apple Pro High-Contrast Typography */
+.mc-studio-h1,
+.qa-master-hero h1.mc-studio-h1 {
+  font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+  font-size: clamp(34px, 4.5vw, 58px) !important;
+  font-weight: 850 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.035em !important;
+  margin: 0 0 16px 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  text-wrap: balance !important;
+  max-width: 760px !important;
+}
+
+.mc-studio-white {
+  color: #ffffff !important;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.7) !important;
+}
+
+.mc-studio-gradient {
+  background: linear-gradient(135deg, #FFF4D0 0%, #F59E0B 50%, #D97706 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  filter: drop-shadow(0 2px 16px rgba(245, 158, 11, 0.35)) !important;
+}
+
+.mc-studio-lead {
+  font-size: clamp(15px, 1.25vw, 17.5px) !important;
+  line-height: 1.65 !important;
+  color: #94a3b8 !important;
+  font-weight: 400 !important;
+  max-width: 620px !important;
+  margin: 0 0 24px 0 !important;
+}
+
+/* 2C. Consolidated Studio Offer Card (Price + Specs in High-Contrast) */
+.mc-studio-offer-card {
+  background: linear-gradient(150deg, rgba(22, 26, 38, 0.85) 0%, rgba(10, 12, 18, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 20px !important;
+  padding: 20px 24px !important;
+  display: grid !important;
+  grid-template-columns: 1.05fr 1px 1.4fr !important;
+  align-items: center !important;
+  gap: 22px !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  max-width: 720px !important;
+  margin-bottom: 24px !important;
+}
+
+.mc-offer-price-col {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+.mc-offer-tags {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.mc-offer-tag-discount {
+  background: rgba(16, 185, 129, 0.16) !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  color: #34d399 !important;
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  text-transform: uppercase !important;
+}
+
+.mc-offer-tag-seats {
+  background: rgba(245, 158, 11, 0.12) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  color: #fbbf24 !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+}
+
+.mc-offer-price-row {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 10px !important;
+  margin-top: 2px !important;
+}
+
+.mc-offer-strike {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  text-decoration: line-through !important;
+  text-decoration-color: #ef4444 !important;
+  text-decoration-thickness: 2px !important;
+}
+
+.mc-offer-current {
+  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+  font-size: clamp(34px, 3.8vw, 44px) !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  color: #f59e0b !important;
+  letter-spacing: -0.03em !important;
+  text-shadow: 0 0 20px rgba(245, 158, 11, 0.35) !important;
+}
+
+.mc-offer-emi {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 12.5px !important;
+  color: #94a3b8 !important;
+}
+
+.mc-offer-emi strong {
+  color: #ffffff !important;
+}
+
+.mc-offer-divider {
+  width: 1px !important;
+  height: 80% !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+.mc-offer-specs-col {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 12px 14px !important;
+}
+
+.mc-spec-chip {
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+}
+
+.mc-spec-chip svg {
+  flex-shrink: 0 !important;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.3)) !important;
+}
+
+.mc-spec-chip div {
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+}
+
+.mc-spec-chip strong {
+  font-size: 13px !important;
+  font-weight: 750 !important;
+  color: #ffffff !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+}
+
+.mc-spec-chip span {
+  font-size: 11px !important;
+  color: #94a3b8 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+}
+
+/* 2D. Studio Countdown Timer HUD */
+.mc-studio-timer-wrap {
+  margin-top: 10px !important;
+}
+
+.mc-timer-label {
+  display: block !important;
+  font-size: 11.5px !important;
+  font-weight: 750 !important;
+  letter-spacing: 0.15em !important;
+  color: #f59e0b !important;
+  text-transform: uppercase !important;
+  margin-bottom: 10px !important;
+}
+
+.qa-master-hero .qa-countdown {
+  margin-top: 0 !important;
+}
+
+.qa-master-hero .qa-countdown > p {
+  display: none !important;
+}
+
+.qa-master-hero .qa-countdown-grid {
+  display: flex !important;
+  gap: 10px !important;
+}
+
+.qa-master-hero .qa-countdown-grid > div {
+  background: #0d0f17 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  min-width: 72px !important;
+  padding: 10px 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+}
+
+.qa-master-hero .qa-countdown-grid > div:hover {
+  border-color: #f59e0b !important;
+  transform: translateY(-2px) !important;
+}
+
+.qa-master-hero .qa-countdown-grid strong {
+  font-family: 'Outfit', 'Plus Jakarta Sans', monospace !important;
+  font-size: 28px !important;
+  font-weight: 850 !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 12px rgba(245, 158, 11, 0.4) !important;
+  line-height: 1 !important;
+}
+
+.qa-master-hero .qa-countdown-grid span {
+  font-size: 9px !important;
+  font-weight: 750 !important;
+  letter-spacing: 0.15em !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  margin-top: 4px !important;
+}
+
+/* 2E. DaVinci Control Deck (Right Column Console) */
+.mc-console-deck {
+  background: linear-gradient(165deg, #12151e 0%, #090b10 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.mc-deck-topbar {
+  background: #171a25 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 12px 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.mc-deck-status {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  color: #e2e8f0 !important;
+  text-transform: uppercase !important;
+}
+
+.mc-deck-led {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #10b981 !important;
+  box-shadow: 0 0 8px #10b981 !important;
+  animation: qaLivePulse 1.8s infinite !important;
+}
+
+.mc-deck-batch {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  color: #f59e0b !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  padding: 3px 8px !important;
+  border-radius: 5px !important;
+  text-transform: uppercase !important;
+}
+
+.mc-deck-body {
+  padding: 24px 24px 28px 24px !important;
+}
+
+.mc-deck-title {
+  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 850 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.2 !important;
+  margin: 0 0 6px 0 !important;
+}
+
+.mc-deck-desc {
+  font-size: 13.5px !important;
+  color: #94a3b8 !important;
+  line-height: 1.5 !important;
+  margin: 0 0 20px 0 !important;
+}
+
+/* Reset form inside deck */
+.mc-deck-body form.qa-enquiry {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   padding: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 12px !important;
+  gap: 13px !important;
 }
 
-main > section.qa-master-hero form.qa-enquiry h2,
-main > section.qa-master-hero form.qa-enquiry > p {
+.mc-deck-body form.qa-enquiry h2,
+.mc-deck-body form.qa-enquiry > p {
   display: none !important;
 }
 
-/* Master Hero Card Container (Both Desktop & Mobile) */
-main > section.qa-master-hero .qa-master-hero-grid > div:last-child > div,
-main > section.qa-master-hero .qa-master-hero-grid .mc-hero-card,
-.qa-master-hero .mc-hero-card,
-.qa-master-hero .lg\:col-span-2 > div {
-  background: linear-gradient(165deg, rgba(20, 24, 36, 0.95) 0%, rgba(10, 13, 20, 0.98) 100%) !important;
-  border: 1px solid rgba(245, 200, 121, 0.38) !important;
-  box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.9), 0 0 40px -8px rgba(216, 161, 83, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  border-radius: 28px !important;
-  color: #f1f5f9 !important;
-  position: relative !important;
-  padding: 30px 26px !important;
-  box-sizing: border-box !important;
-}
-
-/* Floating Top Status Badge */
-.qa-master-hero .mc-hero-card .mc-card-pill-top,
-.qa-master-hero .mc-hero-card > .absolute.-top-4.-right-4 {
-  position: absolute !important;
-  top: -12px !important;
-  right: 20px !important;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-  color: #ffffff !important;
-  font-size: 10px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-  padding: 4px 12px !important;
-  border-radius: 9999px !important;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  z-index: 10 !important;
-}
-
-.mc-card-pill-pulse {
-  width: 6px !important;
-  height: 6px !important;
-  border-radius: 50% !important;
-  background: #ffffff !important;
-  box-shadow: 0 0 8px #ffffff !important;
-  animation: qaLivePulse 1.8s infinite !important;
-}
-
-/* Headings inside Hero Form Card */
-main > section.qa-master-hero .qa-master-hero-grid > div:last-child :is(h2, h3),
-main > section.qa-master-hero .mc-hero-card :is(h2, h3),
-.qa-master-hero .mc-hero-card h3,
-.qa-master-hero .lg\:col-span-2 h3 {
-  color: #ffffff !important;
-  font-size: clamp(23px, 2.5vw, 29px) !important;
-  font-weight: 850 !important;
-  letter-spacing: -0.025em !important;
-  line-height: 1.2 !important;
-  margin: 6px 0 4px 0 !important;
-}
-
-main > section.qa-master-hero .qa-master-hero-grid > div:last-child p,
-main > section.qa-master-hero .mc-hero-card p,
-.qa-master-hero .mc-hero-card p,
-.qa-master-hero .lg\:col-span-2 p {
-  color: #94a3b8 !important;
-  font-size: 13.5px !important;
-  line-height: 1.55 !important;
-}
-
-main > section.qa-master-hero .mc-hero-card .text-gold-600,
-main > section.qa-master-hero .mc-hero-card .text-gold-700,
-.qa-master-hero .mc-hero-card .text-gold-700,
-.qa-master-hero .lg\:col-span-2 .text-gold-700 {
-  color: #f5c879 !important;
-  font-weight: 750 !important;
-  font-size: 11px !important;
-  letter-spacing: 0.1em !important;
-}
-
-.qa-master-hero .mc-hero-card svg.lucide-badge-check {
-  color: #f5c879 !important;
-}
-
-/* Field Labels */
-main > section.qa-master-hero .qa-master-hero-grid > div:last-child label,
-main > section.qa-master-hero form.qa-enquiry .qa-field label {
-  color: #f1f5f9 !important;
+.mc-deck-body .qa-field label {
+  color: #e2e8f0 !important;
   font-size: 12.5px !important;
   font-weight: 650 !important;
   display: block !important;
   margin-bottom: 5px !important;
-  text-align: left !important;
-  letter-spacing: 0.01em !important;
 }
 
-/* Modern Dark Studio Inputs */
-main > section.qa-master-hero form.qa-enquiry :is(input, select, textarea) {
+.mc-deck-body form.qa-enquiry :is(input, select) {
   width: 100% !important;
   height: 48px !important;
   padding: 0 16px !important;
   font-size: 14.5px !important;
   color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: #141722 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   border-radius: 12px !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  text-align: left !important;
+  transition: all 0.2s ease !important;
   box-sizing: border-box !important;
 }
 
-main > section.qa-master-hero form.qa-enquiry select {
-  color: #ffffff !important;
-  background-color: #0e121a !important;
-}
-
-main > section.qa-master-hero form.qa-enquiry select option {
-  background-color: #0e121a !important;
-  color: #ffffff !important;
-}
-
-main > section.qa-master-hero form.qa-enquiry textarea {
-  height: auto !important;
-  min-height: 80px !important;
-  padding: 12px 16px !important;
-}
-
-main > section.qa-master-hero form.qa-enquiry :is(input, select, textarea):focus {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: #f5c879 !important;
-  box-shadow: 0 0 0 3px rgba(245, 200, 121, 0.22) !important;
+.mc-deck-body form.qa-enquiry :is(input, select):focus {
+  background: #191d2c !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22) !important;
   outline: none !important;
 }
 
-main > section.qa-master-hero form.qa-enquiry input::placeholder,
-main > section.qa-master-hero form.qa-enquiry textarea::placeholder {
-  color: rgba(255, 255, 255, 0.35) !important;
+.mc-deck-body form.qa-enquiry input::placeholder {
+  color: #64748b !important;
 }
 
-/* Consent Checkbox */
-main > section.qa-master-hero form.qa-enquiry .qa-consent {
-  color: #cbd5e1 !important;
-  font-size: 12px !important;
-  line-height: 1.45 !important;
+.mc-deck-body form.qa-enquiry .qa-consent {
+  color: #94a3b8 !important;
+  font-size: 11.5px !important;
+  line-height: 1.4 !important;
   display: flex !important;
   align-items: flex-start !important;
-  gap: 9px !important;
-  text-align: left !important;
-  margin: 4px 0 6px 0 !important;
+  gap: 8px !important;
+  margin: 3px 0 !important;
   cursor: pointer !important;
 }
 
-main > section.qa-master-hero form.qa-enquiry .qa-consent input[type="checkbox"] {
+.mc-deck-body form.qa-enquiry .qa-consent input[type="checkbox"] {
   width: 16px !important;
   height: 16px !important;
-  accent-color: #f5c879 !important;
-  margin-top: 2px !important;
+  accent-color: #f59e0b !important;
+  margin-top: 1px !important;
   flex-shrink: 0 !important;
-  cursor: pointer !important;
 }
 
-/* Form Submit Button (Ultra-Glowing Studio Gold CTA) */
-main > section.qa-master-hero form.qa-enquiry .qa-demo,
-main > section.qa-master-hero form.qa-enquiry button[type="submit"] {
+.mc-deck-btn,
+.mc-deck-body form.qa-enquiry button[type="submit"] {
   width: 100% !important;
   height: 52px !important;
-  background: linear-gradient(135deg, #ffd166 0%, #f59e0b 50%, #d97706 100%) !important;
-  color: #080a0f !important;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: #050608 !important;
   font-weight: 850 !important;
   font-size: 15.5px !important;
   letter-spacing: 0.02em !important;
-  border-radius: 14px !important;
+  border-radius: 13px !important;
   border: none !important;
   cursor: pointer !important;
-  box-shadow: 0 12px 30px -5px rgba(245, 158, 11, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 12px 28px -5px rgba(245, 158, 11, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 6px !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: all 0.22s ease !important;
+  margin-top: 4px !important;
 }
 
-main > section.qa-master-hero form.qa-enquiry .qa-demo:hover,
-main > section.qa-master-hero form.qa-enquiry button[type="submit"]:hover {
+.mc-deck-btn:hover,
+.mc-deck-body form.qa-enquiry button[type="submit"]:hover {
   transform: translateY(-2px) !important;
   box-shadow: 0 16px 36px -5px rgba(245, 158, 11, 0.65) !important;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
 }
 
-/* Form Proof Footer */
-main > section.qa-master-hero .qa-form-proof,
-main > section.qa-master-hero .mc-hero-card .qa-form-proof {
+/* Proof beneath button */
+.mc-deck-body .qa-form-proof {
   margin-top: 14px !important;
   padding-top: 12px !important;
   border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-  color: #94a3b8 !important;
+  color: #64748b !important;
   font-size: 11.5px !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   gap: 6px !important;
-  text-align: center !important;
 }
 
-main > section.qa-master-hero .qa-proof-safe {
-  color: #94a3b8 !important;
-  font-size: 11.5px !important;
+.mc-deck-body .qa-proof-safe {
+  color: #64748b !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 5px !important;
 }
 
-main > section.qa-master-hero .qa-proof-social {
+.mc-deck-body .qa-proof-social {
   display: inline-flex !important;
   align-items: center !important;
   gap: 8px !important;
 }
 
-main > section.qa-master-hero .qa-proof-text {
-  color: #cbd5e1 !important;
-  font-size: 11.5px !important;
+.mc-deck-body .qa-proof-text {
+  color: #94a3b8 !important;
 }
 
-main > section.qa-master-hero .qa-proof-text strong {
+.mc-deck-body .qa-proof-text strong {
   color: #ffffff !important;
-  font-weight: 700 !important;
 }
 
-main > section.qa-master-hero .qa-proof-text .qa-proof-rating {
-  color: #f5c879 !important;
+.mc-deck-body .qa-proof-rating {
+  color: #f59e0b !important;
   font-weight: 800 !important;
 }
 
-/* ── 2C. 4 PILLARS QUICK-METRICS LUXURY GLASS TILES ── */
-.qa-mc-pillars-grid {
-  display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
-  gap: 12px !important;
-  margin-top: 24px !important;
-  max-width: 760px !important;
-}
-
-.qa-pillar-card {
-  background: rgba(255, 255, 255, 0.035) !important;
-  border: 1px solid rgba(255, 255, 255, 0.09) !important;
-  border-radius: 16px !important;
-  padding: 12px 14px !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 11px !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
-  transition: all 0.25s ease !important;
-}
-
-.qa-pillar-card:hover {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(245, 200, 121, 0.4) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 8px 24px rgba(216, 161, 83, 0.15) !important;
-}
-
-.qa-pillar-icon {
-  width: 36px !important;
-  height: 36px !important;
-  border-radius: 10px !important;
-  background: linear-gradient(135deg, rgba(245, 200, 121, 0.2) 0%, rgba(216, 161, 83, 0.06) 100%) !important;
-  border: 1px solid rgba(245, 200, 121, 0.35) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  color: #f5c879 !important;
-  flex-shrink: 0 !important;
-}
-
-.qa-pillar-icon svg {
-  width: 17px !important;
-  height: 17px !important;
-}
-
-.qa-pillar-meta {
-  min-width: 0 !important;
-}
-
-.qa-pillar-label {
-  font-size: 9.5px !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.12em !important;
-  color: rgba(255, 255, 255, 0.5) !important;
-  font-weight: 700 !important;
-  line-height: 1 !important;
-}
-
-.qa-pillar-val {
-  font-size: 13.5px !important;
-  font-weight: 700 !important;
-  color: #ffffff !important;
-  margin-top: 3px !important;
-  line-height: 1.25 !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
-
-@media (max-width: 768px) {
-  .qa-mc-pillars-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 8px !important;
-    margin-top: 18px !important;
+/* 2F. Mobile Responsive Overrides */
+@media (max-width: 1023px) {
+  .mc-studio-offer-card {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    padding: 18px 20px !important;
   }
-  .qa-pillar-card {
-    padding: 10px 11px !important;
-    border-radius: 14px !important;
+  .mc-offer-divider {
+    width: 100% !important;
+    height: 1px !important;
   }
-  .qa-pillar-icon {
-    width: 32px !important;
-    height: 32px !important;
+  .mc-console-deck {
+    margin-top: 24px !important;
   }
-  .qa-pillar-icon svg {
-    width: 15px !important;
-    height: 15px !important;
-  }
-  .qa-pillar-val {
-    font-size: 12px !important;
-  }
-}
-
-/* ── 2D. COUNTDOWN TIMER PRECISION LED REFINEMENT ── */
-.qa-master-hero .qa-countdown {
-  margin-top: 26px !important;
-}
-
-.qa-master-hero .qa-countdown > p {
-  color: #f5c879 !important;
-  font-size: 11.5px !important;
-  font-weight: 750 !important;
-  letter-spacing: 0.16em !important;
-  text-transform: uppercase !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  margin-bottom: 12px !important;
-}
-
-.qa-master-hero .qa-countdown-grid {
-  display: flex !important;
-  gap: 12px !important;
-  flex-wrap: wrap !important;
-}
-
-.qa-master-hero .qa-countdown-grid > div {
-  background: linear-gradient(180deg, rgba(26, 31, 46, 0.85) 0%, rgba(13, 16, 25, 0.95) 100%) !important;
-  border: 1px solid rgba(245, 200, 121, 0.3) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-  border-radius: 14px !important;
-  min-width: 74px !important;
-  padding: 11px 12px !important;
-  backdrop-filter: blur(10px) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  transition: transform 0.2s ease, border-color 0.2s ease !important;
-}
-
-.qa-master-hero .qa-countdown-grid > div:hover {
-  transform: translateY(-2px) !important;
-  border-color: rgba(245, 200, 121, 0.6) !important;
-}
-
-.qa-master-hero .qa-countdown-grid strong {
-  font-family: 'Outfit', 'Plus Jakarta Sans', monospace !important;
-  font-size: 30px !important;
-  font-weight: 850 !important;
-  color: #ffffff !important;
-  text-shadow: 0 0 16px rgba(245, 200, 121, 0.45) !important;
-  line-height: 1 !important;
-  letter-spacing: -0.02em !important;
-}
-
-.qa-master-hero .qa-countdown-grid span {
-  font-size: 9.5px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.15em !important;
-  color: #94a3b8 !important;
-  text-transform: uppercase !important;
-  margin-top: 5px !important;
 }
 
 @media (max-width: 640px) {
-  .qa-master-hero .qa-countdown-grid {
+  .mc-studio-eyebrow-wrap {
     gap: 8px !important;
-    justify-content: flex-start !important;
+    margin-bottom: 14px !important;
   }
-  .qa-master-hero .qa-countdown-grid > div {
-    min-width: 62px !important;
-    padding: 8px 9px !important;
-    border-radius: 11px !important;
+  .mc-studio-eyebrow {
+    font-size: 9.5px !important;
+    padding: 4px 10px !important;
   }
-  .qa-master-hero .qa-countdown-grid strong {
-    font-size: 24px !important;
+  .mc-live-mini-pill {
+    font-size: 10px !important;
+    padding: 4px 10px !important;
   }
-  .qa-master-hero .qa-countdown-grid span {
-    font-size: 8.5px !important;
+  .mc-studio-h1,
+  .qa-master-hero h1.mc-studio-h1 {
+    font-size: clamp(28px, 8vw, 36px) !important;
+  }
+  .mc-studio-lead {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    margin-bottom: 18px !important;
+  }
+  .mc-offer-current {
+    font-size: 32px !important;
+  }
+  .mc-offer-specs-col {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px 8px !important;
+  }
+  .mc-spec-chip strong {
+    font-size: 11.5px !important;
+  }
+  .mc-spec-chip span {
+    font-size: 10px !important;
+  }
+  .mc-deck-body {
+    padding: 18px 16px !important;
+  }
+  .mc-deck-title {
+    font-size: 21px !important;
   }
 }
 

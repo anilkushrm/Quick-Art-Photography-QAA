@@ -126,6 +126,16 @@
     if (categories && panels) {
       categories.replaceChildren();panels.replaceChildren();
       const aiMarketing=wedding.cloneNode(true);
+      const rawHref = wedding.getAttribute('href') || '';
+      if (rawHref.includes('ai-wedding-filmmaking/')) {
+        aiMarketing.href = rawHref.replace('ai-wedding-filmmaking/', 'ai-digital-marketing/');
+      } else if (rawHref.includes('video-editing/')) {
+        aiMarketing.href = rawHref.replace('video-editing/', 'ai-digital-marketing/');
+      } else if (rawHref.includes('album-design/')) {
+        aiMarketing.href = rawHref.replace('album-design/', 'ai-digital-marketing/');
+      } else {
+        aiMarketing.href = 'courses/ai-digital-marketing/';
+      }
       const aiSpan = aiMarketing.querySelector('span:last-child');
       if (aiSpan) aiSpan.textContent='AI Marketing Course (Free)';
       const aiIcon = aiMarketing.querySelector('.ref-course-icon');

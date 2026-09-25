@@ -332,15 +332,43 @@
   letter-spacing: 0.04em !important;
 }
 
+/* ── Hero Ambient Background ── */
+.qa-home-hero {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.qa-home-hero-bg {
+  position: absolute !important;
+  inset: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.qa-home-hero-bg picture,
+.qa-home-hero-bg img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: 65% center !important;
+  display: block !important;
+}
+
+.qa-hero-inner {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
 /* ── Hero Visual Card (Prominent & Balanced) ── */
 .qa-hero-visual {
   position: relative !important;
-  border: 1px solid rgba(214, 172, 98, 0.32) !important;
+  border: 1px solid rgba(214, 172, 98, 0.38) !important;
   border-radius: 20px !important;
   overflow: hidden !important;
   background: #09090b !important;
-  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.85), inset 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
-  height: 480px !important;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.9), 0 0 35px -10px rgba(214, 172, 98, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  height: 520px !important;
   width: 100% !important;
   min-width: 0 !important;
   display: flex !important;
@@ -348,24 +376,33 @@
   justify-content: center !important;
 }
 
+.qa-hero-visual picture {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+.qa-hero-visual img,
 .qa-hero-visual > img {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
-  object-position: 50% 25% !important;
+  object-position: 65% 35% !important;
   display: block !important;
+  opacity: 1 !important;
+  filter: none !important;
   transition: transform 0.5s ease, filter 0.5s ease !important;
 }
 
-.qa-hero-visual:hover > img {
+.qa-hero-visual:hover img {
   transform: scale(1.02) !important;
 }
 
 .qa-hero-visual:after {
   content: "" !important;
   position: absolute !important;
-  inset: 55% 0 0 !important;
-  background: linear-gradient(to bottom, transparent, rgba(9, 9, 11, 0.85)) !important;
+  inset: 65% 0 0 !important;
+  background: linear-gradient(to bottom, transparent, rgba(9, 9, 11, 0.75)) !important;
   pointer-events: none !important;
 }
 
@@ -485,11 +522,12 @@
     justify-content: center !important;
   }
   .qa-hero-visual {
-    height: 250px !important;
+    height: 290px !important;
     border-radius: 16px !important;
   }
+  .qa-hero-visual img,
   .qa-hero-visual > img {
-    object-position: 50% 20% !important;
+    object-position: 65% 25% !important;
   }
   .qa-floating {
     padding: 6px 10px !important;

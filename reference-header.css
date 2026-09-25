@@ -515,25 +515,25 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
 
   /* Drawer Actions at Bottom */
   .ref-drawer-actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
+    display:flex;
+    align-items:center;
     gap:10px;
     padding:10px 14px calc(12px + env(safe-area-inset-bottom));
-    background:#0a0c10;
-    border-top:1px solid rgba(216,161,83,0.2);
+    background:#080a0f;
+    border-top:1px solid rgba(216,161,83,0.22);
     flex-shrink:0;
   }
   .ref-drawer-actions a,
   .ref-drawer-actions button,
   .ref-drawer-actions .ref-drawer-login,
   .ref-drawer-actions .ref-drawer-logout{
-    display:flex !important;
+    display:inline-flex !important;
     align-items:center !important;
     justify-content:center !important;
     text-align:center !important;
-    min-height:42px !important;
-    height:42px !important;
-    padding:6px 12px !important;
+    min-height:44px !important;
+    height:44px !important;
+    padding:6px 14px !important;
     margin:0 !important;
     border-radius:999px !important;
     font-size:13px !important;
@@ -543,16 +543,23 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
     letter-spacing:0.2px !important;
     box-sizing:border-box !important;
     cursor:pointer !important;
+    white-space:nowrap !important;
   }
   .ref-drawer-actions .ref-drawer-login:not(.ref-drawer-mycourse){
-    border:1px solid #d8a153 !important;
-    color:#f5c879 !important;
-    background:transparent !important;
+    flex:0 0 auto !important;
+    min-width:88px !important;
+    padding:0 18px !important;
+    border:1px solid rgba(216,161,83,0.45) !important;
+    color:#f7d287 !important;
+    background:rgba(216,161,83,0.08) !important;
   }
   .ref-drawer-actions .ref-drawer-login:not(.ref-drawer-mycourse):hover{
-    background:rgba(216,161,83,0.15) !important;
+    background:rgba(216,161,83,0.18) !important;
+    border-color:#f7d287 !important;
+    color:#ffffff !important;
   }
   .ref-drawer-actions .ref-drawer-mycourse{
+    flex:1 1 0 !important;
     background:linear-gradient(110deg,#f3d695,#d8a447) !important;
     color:#17120b !important;
     border:none !important;
@@ -564,6 +571,7 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
     transform:translateY(-1px) !important;
   }
   .ref-drawer-actions .ref-drawer-logout{
+    flex:1 1 0 !important;
     background:rgba(244,63,94,0.12) !important;
     border:1px solid rgba(244,63,94,0.45) !important;
     color:#fda4af !important;
@@ -577,15 +585,20 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
     transform:translateY(-1px) !important;
   }
   .ref-drawer-actions .ref-demo-cta{
-    background:linear-gradient(135deg,#f5c879,#d8a153) !important;
-    color:#0c0e12 !important;
+    flex:1 1 auto !important;
+    background:linear-gradient(135deg,#f7d287 0%,#e5aa49 50%,#c88924 100%) !important;
+    color:#0c0d12 !important;
+    font-weight:800 !important;
+    font-size:13.5px !important;
     border:0 !important;
     border-radius:999px !important;
-    box-shadow:0 3px 10px rgba(216,161,83,0.3) !important;
+    box-shadow:0 4px 16px rgba(216,161,83,0.35) !important;
+    white-space:nowrap !important;
   }
   .ref-drawer-actions .ref-demo-cta:hover{
     transform:translateY(-1px) !important;
-    box-shadow:0 5px 14px rgba(216,161,83,0.4) !important;
+    box-shadow:0 6px 20px rgba(216,161,83,0.48) !important;
+    filter:brightness(1.06) !important;
   }
 
   /* Mobile Top Bar: Logged-in "My Course" Button */

@@ -29,7 +29,7 @@
 
   // 4) InitiateCheckout - portal enroll button
   document.addEventListener('click', function (e) {
-    var a = e.target.closest && e.target.closest('a[href*="portal/index.html?enroll="],a[href*="/portal/?enroll="]');
+    var a = e.target.closest && e.target.closest('a[href*="portal/?enroll="],a[href*="portal/index.html?enroll="],a[href*="/portal/?enroll="]');
     if (a) { fbq('track', 'InitiateCheckout', { content_name: document.title, currency: 'INR' }); dataLayer.push({ event: 'begin_enroll', page_path: path }); }
   }, true);
 })();

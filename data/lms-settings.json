@@ -14,7 +14,7 @@
     "otpDemoMode": false,
     "defaultOtp": "123456",
     "fast2smsApiKey": "",
-    "fast2smsOtpTemplate": "Dear Student,\n\nYour Quick Art Photography Academy portal verification code is: {otp}\n\nValid for 10 minutes. Please do not share this OTP with anyone.\n\nWarm regards,\nAnil Sharma\nQuick Art Photography Academy\nHelpline: 9939800780",
+    "fast2smsOtpTemplate": "Your Quick Art Academy login code is: {otp}. Valid for 10 mins. Helpline: 9939800780",
     "supabaseUrl": "https://wysgdueraejdmphenjkp.supabase.co",
     "supabaseAnonKey": "",
     "supabaseSecretKey": "",

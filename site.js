@@ -18,7 +18,7 @@
             if (faq) faq.remove();
             if (!nav.querySelector('.qa-resources')) {
                 const resources = document.createElement('details'); resources.className = 'qa-resources';
-                resources.innerHTML = `<summary>Resources <span class="qa-chevron" aria-hidden="true">⌄</span></summary><div class="qa-resources-menu"><a href="${about?.getAttribute('href') || '../about-us/index.html'}">About Us</a><a href="${blog?.getAttribute('href') || '../blog/index.html'}">Blog</a><a href="${faq?.getAttribute('href') || '../index.html#faq'}">FAQ</a><a href="https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes&amp;hl=en" target="_blank" rel="noreferrer">Download Our App</a><a href="https://www.youtube.com/@QuickartPhotographyAcademy/videos" target="_blank" rel="noreferrer">YouTube</a><a href="https://wa.me/919939800780" target="_blank" rel="noreferrer">WhatsApp</a></div>`;
+                resources.innerHTML = `<summary>Resources <span class="qa-chevron" aria-hidden="true">⌄</span></summary><div class="qa-resources-menu"><a href="${about?.getAttribute('href') || '../about-us/'}">About Us</a><a href="${blog?.getAttribute('href') || '../blog/'}">Blog</a><a href="${faq?.getAttribute('href') || '../#faq'}">FAQ</a><a href="https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes&amp;hl=en" target="_blank" rel="noreferrer">Download Our App</a><a href="https://www.youtube.com/@QuickartPhotographyAcademy/videos" target="_blank" rel="noreferrer">YouTube</a><a href="https://wa.me/919939800780" target="_blank" rel="noreferrer">WhatsApp</a></div>`;
                 const contact = links.find(a => a.textContent.trim() === 'Contact');
                 if (contact && nav.insertBefore) nav.insertBefore(resources, contact); else nav.append(resources);
             }
@@ -40,10 +40,10 @@
             if (labels[3]) labels[3].textContent = 'BY MODE';
             const groups = courses.querySelectorAll('.qa-tag-group');
             const addChip = (group, text, href) => { if (group && ![...group.querySelectorAll('a')].some(a => a.textContent.trim() === text)) { const a = document.createElement('a'); a.href = href; a.textContent = text; group.querySelector('div')?.append(a); } };
-            addChip(groups[0], 'Content Creator', 'https://quickartphotography.in/courses/index.html');
-            addChip(groups[1], 'After Effects', 'https://quickartphotography.in/courses/video-editing/index.html');
-            addChip(groups[1], 'AI Tools', 'https://quickartphotography.in/courses/ai-wedding-filmmaking/index.html');
-            addChip(groups[2], 'Weekend Batch', 'https://quickartphotography.in/contact-us/index.html');
+            addChip(groups[0], 'Content Creator', 'https://quickartphotography.in/courses/');
+            addChip(groups[1], 'After Effects', 'https://quickartphotography.in/courses/video-editing/');
+            addChip(groups[1], 'AI Tools', 'https://quickartphotography.in/courses/ai-wedding-filmmaking/');
+            addChip(groups[2], 'Weekend Batch', 'https://quickartphotography.in/contact-us/');
         }
         document.documentElement.classList.add('qa-js');
         // Transparent dark header at the top; a light floating bar after scrolling.
@@ -254,7 +254,7 @@
                     if (data.name) localStorage.setItem('qa_user_name', data.name.trim());
                     if (phone) localStorage.setItem('qa_user_phone', phone.replace(/\D/g, '').slice(-10));
                 } catch (_) { }
-                location.assign(new URL('thank-you/index.html', siteRoot));
+                location.assign(new URL('thank-you/', siteRoot));
             } catch (error) {
                 status.replaceChildren();
                 status.append(document.createTextNode('We could not confirm your enquiry. Please call +91 9939800780 or '));
@@ -441,7 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (data.name) localStorage.setItem('qa_user_name', data.name.trim());
                     if (data.phone) localStorage.setItem('qa_user_phone', data.phone.replace(/\D/g, '').slice(-10));
                 } catch (_) { }
-                location.assign(new URL('thank-you/index.html', popupRoot));
+                location.assign(new URL('thank-you/', popupRoot));
             } catch (_) { status.textContent = 'Unable to save your enquiry. Please try again or call +91 9939800780.'; button.disabled = false; }
             finally { clearTimeout(timeout); }
         });
@@ -501,7 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = document.createElement('div'); grid.className = 'qaa-examples-grid';
     const examples = [['portrait', 'AI Portrait Enhancement', 'Natural skin retouching, lighting & professional portrait enhancement.'], ['landscape', 'AI Color Enhancement', 'Turn flat images into vibrant, cinematic and eye-catching visuals.'], ['retouch', 'AI Beauty Retouching', 'Professional skin cleanup, facial enhancement and polished results.']];
     examples.forEach(([file, title, description], i) => { const figure = document.createElement('figure'); const img = document.createElement('img'); img.src = new URL('assets/editing-example-' + file + '.webp', root).href; img.alt = title + ' — before and after editing example'; img.width = 1000; img.height = 450; img.loading = 'lazy'; img.decoding = 'async'; const caption = document.createElement('figcaption'); const copy = document.createElement('div'); const label = document.createElement('h3'); label.textContent = title; const text = document.createElement('p'); text.textContent = description; copy.append(label, text); caption.append(copy); figure.append(img, caption); grid.append(figure); });
-    const actions = document.createElement('div'); actions.className = 'qaa-examples-actions'; const cta = document.createElement('a'); cta.href = new URL('courses/index.html', root).href; cta.textContent = 'Explore Our Courses →'; actions.append(cta);
+    const actions = document.createElement('div'); actions.className = 'qaa-examples-actions'; const cta = document.createElement('a'); cta.href = new URL('courses/', root).href; cta.textContent = 'Explore Our Courses →'; actions.append(cta);
     const profiles = [['Raju Sharma', 'RS', 'AI Portrait Editor'], ['Harendra Yadav', 'HY', 'Colorist'], ['Nidhi Kumari', 'NK', 'Retouching Experts']];
     [...grid.children].forEach((figure, i) => {
         const [name, initials, role] = profiles[i]; const profile = document.createElement('div'); profile.className = 'qaa-example-profile';

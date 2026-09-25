@@ -4,12 +4,27 @@ ErrorDocument 404 /404.html
 
 <IfModule mod_rewrite.c>
 RewriteEngine On
+
+# 1. Force HTTPS non-www domain
+RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} ^www\.quickartphotography\.in$ [NC]
 RewriteRule ^(.*)$ https://quickartphotography.in/$1 [L,R=301]
+
+# 2. Redirect /index.html to /
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.html [NC]
+RewriteRule ^index\.html$ https://quickartphotography.in/ [R=301,L]
+
+# 3. Redirect any /directory/index.html to /directory/
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*?)/index\.html [NC]
+RewriteRule ^(.*?)/index\.html$ https://quickartphotography.in/$1/ [R=301,L]
 </IfModule>
 <IfModule mod_headers.c>
 Header always set X-Content-Type-Options "nosniff"
 Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header set X-Robots-Tag "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+<FilesMatch "(admin\.html|email-template-preview\.html)">
+  Header set X-Robots-Tag "noindex, nofollow"
+</FilesMatch>
 </IfModule>
 <IfModule mod_deflate.c>
 AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
@@ -35,5 +50,15 @@ RedirectMatch 301 ^/join-video-editing-album-design-course/index\.html$ /online/
  ExpiresByType image/webp "access plus 30 days"
  ExpiresByType image/jpeg "access plus 30 days"
  ExpiresByType image/png "access plus 30 days"
+ ExpiresByType image/svg+xml "access plus 30 days"
  ExpiresByType font/woff2 "access plus 30 days"
+ ExpiresByType font/woff "access plus 30 days"
+ ExpiresByType text/css "access plus 7 days"
+ ExpiresByType application/javascript "access plus 7 days"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(ico|webp|jpg|jpeg|png|gif|svg|woff2|woff|css|js)$">
+    Header set Cache-Control "max-age=604800, public"
+  </FilesMatch>
 </IfModule>

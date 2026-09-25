@@ -1383,13 +1383,16 @@ fbq('track', 'PageView');
         <div style="background:#090e1a;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;margin-bottom:22px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px">
             <label for="fast2smsOtpTemplate" style="font-size:12.5px;font-weight:700;color:#e2e8f0;display:flex;align-items:center;gap:6px">
-              ✉️ Professional SMS Text Template (Student ke mobile par aane wala message)
+              ✉️ SMS Text Template (Fallback / Backup SMS)
             </label>
-            <span id="fast2smsCharCount" style="font-size:11.5px;color:var(--gold);font-weight:600">147 / 160 chars (1 SMS Credit)</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700">⚡ Dedicated OTP Route Active (~₹0.20 / OTP)</span>
+              <span id="fast2smsCharCount" style="font-size:11.5px;color:var(--gold);font-weight:600">85 / 160 chars (1 SMS Credit)</span>
+            </div>
           </div>
-          <textarea id="fast2smsOtpTemplate" rows="6" style="width:100%;font-size:13px;line-height:1.6;padding:10px 14px;border-radius:8px;resize:vertical;color:#f8fafc;background:#030712;border:1px solid rgba(255,255,255,0.12)" placeholder="Dear Student,&#10;&#10;Your Quick Art Photography Academy portal verification code is: {otp}&#10;&#10;Valid for 10 minutes. Please do not share this OTP with anyone.&#10;&#10;Warm regards,&#10;Anil Sharma&#10;Quick Art Photography Academy&#10;Helpline: 9939800780"></textarea>
+          <textarea id="fast2smsOtpTemplate" rows="4" style="width:100%;font-size:13px;line-height:1.6;padding:10px 14px;border-radius:8px;resize:vertical;color:#f8fafc;background:#030712;border:1px solid rgba(255,255,255,0.12)" placeholder="Your Quick Art Academy login code is: {otp}. Valid for 10 mins. Helpline: 9939800780"></textarea>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:11.5px;color:var(--muted);flex-wrap:wrap;gap:8px">
-            <span>Use <code>{otp}</code> jahan 6-digit code replace hoga. (160 characters ke andar 1 SMS credit charge hota hai).</span>
+            <span>Primary login OTPs Fast2SMS ke dedicated OTP route se jaate hain (~₹0.20 rate, no DLT needed).</span>
             <button type="button" onclick="resetDefaultOtpTemplate()" class="btn-link" style="font-size:11.5px;color:var(--gold);cursor:pointer;background:none;border:none;text-decoration:underline">Reset to Default Template</button>
           </div>
         </div>
@@ -2882,16 +2885,7 @@ function cleanFast2SmsKey(k) {
     .trim();
 }
 
-const DEFAULT_OTP_TEMPLATE = `Dear Student,
-
-Your Quick Art Photography Academy portal verification code is: {otp}
-
-Valid for 10 minutes. Please do not share this OTP with anyone.
-
-Warm regards,
-Anil Sharma
-Quick Art Photography Academy
-Helpline: 9939800780`;
+const DEFAULT_OTP_TEMPLATE = `Your Quick Art Academy login code is: {otp}. Valid for 10 mins. Helpline: 9939800780`;
 
 function updateSmsCharCount() {
   const tpl = document.getElementById('fast2smsOtpTemplate');
@@ -3993,7 +3987,7 @@ function renderLmsStudents() {
           <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
             <button onclick="openStudentWhatsApp('${s.phone}', '${escapeHtml(s.name || '')}')" class="btn btn-outline" style="padding:5px 10px;font-size:11px;color:#34d399;border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.12)" title="Send WhatsApp login &amp; course info">💬 WhatsApp</button>
             <a href="tel:+91${s.phone}" class="btn btn-outline" style="padding:5px 10px;font-size:11px;color:#93c5fd;border-color:rgba(59,130,246,0.3);background:rgba(59,130,246,0.12)" title="Call Student">📞 Call</a>
-            <a href="portal/index.html?verify=${encodeURIComponent(certCode)}" target="_blank" class="btn btn-outline" style="padding:5px 10px;font-size:11px;color:#fde68a;border-color:rgba(216,161,83,0.3);background:rgba(216,161,83,0.12)" title="Verify Certificate">🎓 Cert</a>
+            <a href="portal/?verify=${encodeURIComponent(certCode)}" target="_blank" class="btn btn-outline" style="padding:5px 10px;font-size:11px;color:#fde68a;border-color:rgba(216,161,83,0.3);background:rgba(216,161,83,0.12)" title="Verify Certificate">🎓 Cert</a>
             <button onclick="openSetPasswordModal('${s.phone}', '${escapeHtml(s.email || '')}')" class="btn btn-outline" style="padding:5px 10px;font-size:11px;color:#c4b5fd;border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.12)" title="Set Email &amp; Password Login">🔑 Password</button>
             <button onclick="openEditStudentModal('${s.phone}')" class="btn btn-outline" style="padding:5px 9px;font-size:11px">✏️</button>
             <button onclick="deleteStudent('${s.phone}')" class="btn btn-danger" style="padding:5px 9px;font-size:11px" title="Remove Student">✕</button>

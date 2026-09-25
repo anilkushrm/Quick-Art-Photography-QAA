@@ -376,19 +376,13 @@ function send_fast2sms_otp($phone, $otp, $apiKey, $customTemplate = '') {
         return ['ok' => false, 'error' => 'Valid 10-digit mobile number enter karein'];
     }
 
-    // Build custom SMS body
-    if (!empty($customTemplate) && strpos($customTemplate, '{otp}') !== false) {
-        $smsBody = str_replace('{otp}', $otp, $customTemplate);
-    } else {
-        $smsBody = "Dear Student,\n\nYour Quick Art Photography Academy portal verification code is: {$otp}\n\nValid for 10 minutes. Please do not share this OTP with anyone.\n\nWarm regards,\nAnil Sharma\nQuick Art Photography Academy\nHelpline: 9939800780";
-    }
-
-    // 1. Send via Quick route ('q') with the exact customized template
-    $payloadQ = [
-        "route" => "q",
-        "message" => $smsBody,
-        "language" => "english",
-        "flash" => 0,
+    // 1. PRIMARY ROUTE: Dedicated Fast2SMS OTP Route ('otp')
+    // Fast2SMS dedicated OTP route uses pre-approved DLT templates by Fast2SMS.
+    // Cost: Only ~₹0.20 to ₹0.25 (20 to 25 paise) per OTP.
+    // Does NOT require any DLT registration or entity paperwork from admin.
+    $payloadOtp = [
+        "route" => "otp",
+        "variables_values" => (string)$otp,
         "numbers" => $cleanPhone
     ];
 
@@ -396,7 +390,7 @@ function send_fast2sms_otp($phone, $otp, $apiKey, $customTemplate = '') {
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS => json_encode($payloadQ),
+        CURLOPT_POSTFIELDS => json_encode($payloadOtp),
         CURLOPT_HTTPHEADER => [
             "authorization: " . $apiKey,
             "Content-Type: application/json"
@@ -411,16 +405,25 @@ function send_fast2sms_otp($phone, $otp, $apiKey, $customTemplate = '') {
     if ($res && isset($res['return']) && $res['return'] === true) {
         return [
             'ok' => true,
-            'route' => 'q',
-            'message' => "OTP {$otp} delivered via Fast2SMS with custom template",
+            'route' => 'otp',
+            'message' => "OTP {$otp} delivered via Fast2SMS dedicated OTP route (~₹0.20 rate)",
             'response' => $res
         ];
     }
 
-    // 2. Fallback to route: 'otp' if Quick route fails
-    $payloadOtp = [
-        "route" => "otp",
-        "variables_values" => (string)$otp,
+    // 2. FALLBACK ROUTE: Quick route ('q') only if dedicated OTP route fails
+    // Keep custom fallback template concise (<=160 chars) so even in fallback it never uses 2 credits.
+    if (!empty($customTemplate) && strpos($customTemplate, '{otp}') !== false) {
+        $smsBody = str_replace('{otp}', $otp, $customTemplate);
+    } else {
+        $smsBody = "Your Quick Art Academy verification code is: {$otp}. Valid for 10 mins. Helpline: 9939800780";
+    }
+
+    $payloadQ = [
+        "route" => "q",
+        "message" => $smsBody,
+        "language" => "english",
+        "flash" => 0,
         "numbers" => $cleanPhone
     ];
 
@@ -428,7 +431,7 @@ function send_fast2sms_otp($phone, $otp, $apiKey, $customTemplate = '') {
     curl_setopt_array($ch2, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS => json_encode($payloadOtp),
+        CURLOPT_POSTFIELDS => json_encode($payloadQ),
         CURLOPT_HTTPHEADER => [
             "authorization: " . $apiKey,
             "Content-Type: application/json"
@@ -443,19 +446,19 @@ function send_fast2sms_otp($phone, $otp, $apiKey, $customTemplate = '') {
     if ($res2 && isset($res2['return']) && $res2['return'] === true) {
         return [
             'ok' => true,
-            'route' => 'otp',
-            'message' => "OTP {$otp} delivered via Fast2SMS OTP route",
+            'route' => 'q',
+            'message' => "OTP {$otp} delivered via Fast2SMS Quick route (fallback)",
             'response' => $res2
         ];
     }
 
     $errMsg = 'Fast2SMS delivery failed';
-    if ($res2 && !empty($res2['message'])) {
-        $errMsg = is_array($res2['message']) ? implode(', ', $res2['message']) : $res2['message'];
-    } elseif ($res && !empty($res['message'])) {
+    if ($res && !empty($res['message'])) {
         $errMsg = is_array($res['message']) ? implode(', ', $res['message']) : $res['message'];
-    } elseif ($err2 || $err) {
-        $errMsg = $err2 ?: $err;
+    } elseif ($res2 && !empty($res2['message'])) {
+        $errMsg = is_array($res2['message']) ? implode(', ', $res2['message']) : $res2['message'];
+    } elseif ($err || $err2) {
+        $errMsg = $err ?: $err2;
     }
 
     return ['ok' => false, 'error' => $errMsg];

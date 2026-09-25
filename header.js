@@ -16,12 +16,12 @@
      if (mTitle) mTitle.textContent='Digital Marketing';
      design.after(marketing);
      const onlineSample=online.querySelector('a[href*="premiere-pro-course"]')||online.querySelector('a[href*="edius-course"]')||online.querySelector('a');
-     let onlineAlbumHref='online/album-design-course/index.html';
+     let onlineAlbumHref='online/album-design-course/';
      if(onlineSample){
       const s=onlineSample.getAttribute('href');
-      if(s.includes('premiere-pro-course/index.html'))onlineAlbumHref=s.replace('premiere-pro-course/index.html','album-design-course/index.html');
-      else if(s.includes('edius-course/index.html'))onlineAlbumHref=s.replace('edius-course/index.html','album-design-course/index.html');
-      else onlineAlbumHref=s.replace(/[^/]+\/index\.html$/,'album-design-course/index.html');
+      if(s.includes('premiere-pro-course/'))onlineAlbumHref=s.replace('premiere-pro-course/','album-design-course/').replace('index.html','');
+      else if(s.includes('edius-course/'))onlineAlbumHref=s.replace('edius-course/','album-design-course/').replace('index.html','');
+      else onlineAlbumHref=s.replace(/[^/]+\/?$/,'album-design-course/').replace('index.html','');
      }
      const onlineAlbumCard=document.createElement('a');onlineAlbumCard.className='ref-course';onlineAlbumCard.href=onlineAlbumHref;
      onlineAlbumCard.innerHTML='<span class="ref-course-icon" aria-hidden="true">Ad</span><span>Wedding Album Design</span>';
@@ -40,13 +40,13 @@
        if(groups[0])groups[0].innerHTML=label;
        if(groups[2]){groups[2].textContent='Graphics Design Course';const card=onlineAlbumCard.cloneNode(true);groups[2].after(card);const heading=document.createElement('p');heading.className='ref-mobile-group';heading.textContent='Digital Marketing';card.after(heading);}
      }
-     let onlineAutomationHref='online/automation-course/index.html';
+     let onlineAutomationHref='online/automation-course/';
      if(onlineSample){
       const s=onlineSample.getAttribute('href');
-      if(s.includes('premiere-pro-course/index.html'))onlineAutomationHref=s.replace('premiere-pro-course/index.html','automation-course/index.html');
-      else if(s.includes('edius-course/index.html'))onlineAutomationHref=s.replace('edius-course/index.html','automation-course/index.html');
-      else if(s.includes('online/'))onlineAutomationHref=s.replace(/online\/.*$/,'online/automation-course/index.html');
-      else onlineAutomationHref=s.replace(/[^/]+\/index\.html$/,'automation-course/index.html');
+      if(s.includes('premiere-pro-course/'))onlineAutomationHref=s.replace('premiere-pro-course/','automation-course/').replace('index.html','');
+      else if(s.includes('edius-course/'))onlineAutomationHref=s.replace('edius-course/','automation-course/').replace('index.html','');
+      else if(s.includes('online/'))onlineAutomationHref=s.replace(/online\/.*$/,'online/automation-course/').replace('index.html','');
+      else onlineAutomationHref=s.replace(/[^/]+\/?$/,'automation-course/').replace('index.html','');
      }
      const marketingCard=marketing.querySelector('a[href*="digital-marketing-course/"]');
      if (marketingCard) {
@@ -70,14 +70,14 @@
 
   // Ensure "View All Online Programs" is prominently present in all online panels & mobile nav
   if(online){
-   let onlineHubHref = 'online/index.html';
+   let onlineHubHref = 'online/';
    const sampleOnline = online.querySelector('a[href*="premiere-pro-course"]') || online.querySelector('a[href*="edius-course"]');
    if(sampleOnline){
     const s = sampleOnline.getAttribute('href');
     if(s.includes('online/')){
-     onlineHubHref = s.replace(/online\/.*$/, 'online/index.html');
+     onlineHubHref = s.replace(/online\/.*$/, 'online/').replace('index.html','');
     } else {
-     onlineHubHref = s.replace(/[^/]+\/index\.html.*$/, 'index.html');
+     onlineHubHref = s.replace(/[^/]+\/?.*$/, './').replace('index.html','');
     }
    }
 
@@ -145,7 +145,7 @@
   }
  }
  const contact=header.querySelector('.ref-nav>a[href*="contact-us"]');
- if(mobileNav&&contact){const cta=document.createElement('a');cta.className='ref-demo-cta';cta.href=contact.href;cta.textContent='Book Free Demo Class';mobileNav.append(cta);}
+ if(mobileNav&&contact){const cta=document.createElement('a');cta.className='ref-demo-cta';cta.href=contact.href;cta.textContent='Book Free Demo';mobileNav.append(cta);}
  const drops=[...header.querySelectorAll('.ref-dropdown')];
  header.querySelectorAll('#ref-online-tab-1,#ref-online-panel-1 :is(h2, .ref-panel-title),#ref-mobile .ref-mobile-group').forEach(label=>{
   if(label.textContent.replace('›','').trim()!=='Wedding Filmmaking')return;
@@ -275,7 +275,7 @@
     if (!menu.id) menu.id = 'ref-mobile';
     if (!menu.classList.contains('ref-mobile')) menu.classList.add('ref-mobile');
     const originalLogin = header.querySelector('.ref-login');
-    const loginHref = originalLogin ? (originalLogin.getAttribute('href') || 'portal/index.html') : 'portal/index.html';
+    const loginHref = originalLogin ? (originalLogin.getAttribute('href') || 'portal/') : 'portal/';
 
     // Check student logged in status from portal
     const studentToken = localStorage.getItem('qaa_student_token') || '';

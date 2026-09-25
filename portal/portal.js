@@ -574,7 +574,7 @@ function renderMyCoursesGrid() {
           <h3 style="font-size: 20px; font-weight: 700; color: #fff;">No courses assigned yet</h3>
           <p class="muted" style="margin: 8px auto 24px; max-width: 440px;">Your enrollment is being activated. Contact academy support or explore available masterclasses.</p>
           <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-            <a href="../online/index.html" class="btn btn-gold">🌟 Browse All Masterclasses →</a>
+            <a href="../online/" class="btn btn-gold">🌟 Browse All Masterclasses →</a>
             <a href="https://wa.me/919939800780" target="_blank" class="btn btn-outline">WhatsApp Support 💬</a>
           </div>
         </div>
@@ -1374,7 +1374,7 @@ function populateCertificateUI(studentName, courseTitle, courseId, duration, cer
   const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const verifyUrl = isLocal 
     ? `${window.location.origin}${window.location.pathname}?verify=${encodeURIComponent(cId)}`
-    : `https://quickartphotography.in/portal/index.html?verify=${encodeURIComponent(cId)}`;
+    : `https://quickartphotography.in/portal/?verify=${encodeURIComponent(cId)}`;
 
   const qrContainer = document.getElementById('cert-qr-frame');
 
@@ -2184,7 +2184,7 @@ async function openCatalogModal() {
               </button>
             ` : `
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                <a href="../online/${c.slug || ''}/index.html" class="btn btn-outline btn-block" style="text-decoration:none;font-size:12px;padding:8px 6px;text-align:center;">
+                <a href="../online/${c.slug || ''}/" class="btn btn-outline btn-block" style="text-decoration:none;font-size:12px;padding:8px 6px;text-align:center;">
                   Syllabus →
                 </a>
                 <button type="button" class="btn btn-gold btn-block" style="font-size:12px;padding:8px 6px;" onclick="closeCatalogModal(); openCheckoutModal('${c.id}')">
@@ -2214,7 +2214,7 @@ function handleCheckoutBack() {
   if (window.history.length > 1 && (document.referrer.includes('quickart') || document.referrer.includes(window.location.host))) {
     window.history.back();
   } else {
-    window.location.href = '../index.html#courses';
+    window.location.href = '../#courses';
   }
 }
 
@@ -3814,7 +3814,7 @@ async function loadStudentLiveClasses() {
           if (c.type === 'workshop') {
             actionBtn = `<a href="/master-class/live.html" class="btn btn-gold btn-block" style="text-decoration:none;display:block;text-align:center">🎟️ Book Ticket (₹${Number(c.ticketPrice||299).toLocaleString()})</a>`;
           } else {
-            actionBtn = `<a href="../online/index.html" class="btn btn-gold-outline btn-block" style="text-decoration:none;display:block;text-align:center">🔒 Enroll in Course</a>`;
+            actionBtn = `<a href="../online/" class="btn btn-gold-outline btn-block" style="text-decoration:none;display:block;text-align:center">🔒 Enroll in Course</a>`;
           }
         }
 

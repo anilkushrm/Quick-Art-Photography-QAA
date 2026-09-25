@@ -539,17 +539,17 @@
     background: linear-gradient(to bottom, transparent, rgba(9, 9, 11, 0.75)) !important;
     pointer-events: none !important;
   }
-  .qa-float-top {
-    top: 20px !important;
-    left: 20px !important;
-  }
   .qa-float-ai {
-    top: 20px !important;
-    right: 20px !important;
+    display: block !important;
+    top: 16px !important;
+    left: 16px !important;
+    right: auto !important;
   }
   .qa-float-proof {
-    bottom: 20px !important;
-    right: 20px !important;
+    display: block !important;
+    bottom: 16px !important;
+    right: 16px !important;
+    left: auto !important;
   }
 }
 
@@ -595,24 +595,36 @@
     padding: 6px 10px !important;
     border-radius: 10px !important;
   }
-  .qa-float-top {
+  .qa-float-ai {
+    display: block !important;
     top: 10px !important;
     left: 10px !important;
+    right: auto !important;
+    padding: 6px 10px !important;
   }
-  .qa-float-top small {
-    font-size: 8.5px !important;
+  .qa-float-ai small {
+    font-size: 7.5px !important;
+    letter-spacing: 0.08em !important;
   }
-  .qa-float-top strong {
-    font-size: 11px !important;
-  }
-  .qa-float-ai {
-    top: 10px !important;
-    right: 10px !important;
-    font-size: 10px !important;
-    padding: 5px 9px !important;
+  .qa-float-ai strong {
+    font-size: 10.5px !important;
   }
   .qa-float-proof {
-    display: none !important; /* Hide duplicate 1,800+ proof card on mobile so image is clean & visible */
+    display: block !important;
+    bottom: 10px !important;
+    right: 10px !important;
+    left: auto !important;
+    padding: 6px 10px !important;
+    max-width: 220px !important;
+  }
+  .qa-float-proof small {
+    font-size: 7.5px !important;
+    letter-spacing: 0.08em !important;
+    line-height: 1.25 !important;
+  }
+  .qa-float-proof strong {
+    font-size: 10.5px !important;
+    line-height: 1.25 !important;
   }
 }
 

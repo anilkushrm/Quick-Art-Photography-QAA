@@ -411,57 +411,16 @@ function send_fast2sms_otp($phone, $otp, $apiKey, $customTemplate = '') {
         ];
     }
 
-    // 2. FALLBACK ROUTE: Quick route ('q') only if dedicated OTP route fails
-    // Keep custom fallback template concise (<=160 chars) so even in fallback it never uses 2 credits.
-    if (!empty($customTemplate) && strpos($customTemplate, '{otp}') !== false) {
-        $smsBody = str_replace('{otp}', $otp, $customTemplate);
-    } else {
-        $smsBody = "Your Quick Art Academy verification code is: {$otp}. Valid for 10 mins. Helpline: 9939800780";
-    }
-
-    $payloadQ = [
-        "route" => "q",
-        "message" => $smsBody,
-        "language" => "english",
-        "flash" => 0,
-        "numbers" => $cleanPhone
-    ];
-
-    $ch2 = curl_init("https://www.fast2sms.com/dev/bulkV2");
-    curl_setopt_array($ch2, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS => json_encode($payloadQ),
-        CURLOPT_HTTPHEADER => [
-            "authorization: " . $apiKey,
-            "Content-Type: application/json"
-        ],
-        CURLOPT_TIMEOUT => 9
-    ]);
-    $raw2 = curl_exec($ch2);
-    $err2 = curl_error($ch2);
-    @curl_close($ch2);
-
-    $res2 = $raw2 ? json_decode($raw2, true) : null;
-    if ($res2 && isset($res2['return']) && $res2['return'] === true) {
-        return [
-            'ok' => true,
-            'route' => 'q',
-            'message' => "OTP {$otp} delivered via Fast2SMS Quick route (fallback)",
-            'response' => $res2
-        ];
-    }
-
+    // Do NOT fall back to Quick route ('q') because Fast2SMS charges ₹5 per SMS on route 'q'.
+    // Only dedicated 'otp' route (~₹0.20 to ₹0.25) must be used.
     $errMsg = 'Fast2SMS delivery failed';
     if ($res && !empty($res['message'])) {
         $errMsg = is_array($res['message']) ? implode(', ', $res['message']) : $res['message'];
-    } elseif ($res2 && !empty($res2['message'])) {
-        $errMsg = is_array($res2['message']) ? implode(', ', $res2['message']) : $res2['message'];
-    } elseif ($err || $err2) {
-        $errMsg = $err ?: $err2;
+    } elseif ($err) {
+        $errMsg = $err;
     }
 
-    return ['ok' => false, 'error' => $errMsg];
+    return ['ok' => false, 'error' => $errMsg, 'raw' => $raw];
 }
 
 // ---------- Email OTP Helpers (Supabase + Direct Mail) ----------

@@ -122,7 +122,7 @@
     if ((location.pathname || '').includes('/courses/ai-wedding-filmmaking/')) document.querySelector('main')?.classList.add('qa-ai-page');
     // Match the Master Class hero to the cinematic campaign layout while keeping the page content factual.
     if ((location.pathname || '').includes('/master-class/')) {
-        const hero = document.querySelector('main > section.relative.bg-ink');
+        const hero = document.querySelector('main > section.qa-master-hero') || document.querySelector('main > section.relative.bg-ink');
         if (hero) {
             hero.classList.add('qa-master-hero');
             const heroGrid = hero.querySelector('.container.relative > .grid');

@@ -998,7 +998,8 @@ section.qa-section .text-black,
 
 .qa-master-hero .qa-enquiry :is(input, select, textarea):focus {
     border-color: #d8a153 !important;
-    box-shadow: 0 0 0 3px rgba(216, 161, 83, 0.25) !important;
+    box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
+    outline: none !important;
 }
 
 .qa-master-hero .qa-enquiry .qa-consent {
@@ -1249,7 +1250,7 @@ a[class*="bg-white\/10"]:hover {
 
 #book form.qa-enquiry :is(input, select, textarea):focus {
     border-color: #d8a153 !important;
-    box-shadow: 0 0 0 3px rgba(216, 161, 83, 0.25) !important;
+    box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
     outline: none !important;
 }
 

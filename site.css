@@ -739,8 +739,13 @@ img {
 }
 
 :focus-visible {
-  outline: 3px solid #b38944;
-  outline-offset: 4px
+  outline: 2px solid #b38944;
+  outline-offset: 2px
+}
+
+:where(input, select, textarea):focus,
+:where(input, select, textarea):focus-visible {
+  outline: none !important;
 }
 
 .qa-breadcrumb {
@@ -4719,9 +4724,9 @@ a.qa-float-call:hover svg {
 }
 
 .qa-popup-form input:focus {
-  outline: none;
+  outline: none !important;
   border-color: #d2a253;
-  box-shadow: 0 0 0 3px rgba(210, 162, 83, 0.2);
+  box-shadow: 0 0 0 1.5px rgba(210, 162, 83, 0.16);
   background: #fff;
 }
 
@@ -4768,11 +4773,6 @@ a.qa-float-call:hover svg {
   color: #18865f;
   font-size: 13px;
   margin: 0
-}
-
-.qa-popup-form input:focus {
-  outline: 2px solid #d2a253;
-  outline-offset: 1px
 }
 
 @keyframes qa-fade-in {
@@ -5126,9 +5126,14 @@ main>section.relative.bg-white .bg-ink h3 {
 }
 
 /* Final polish: consistent focus, contrast, and small-screen overflow protection. */
-:where(a, button, input, select, textarea, summary):focus-visible {
-  outline: 3px solid #f0c36d;
-  outline-offset: 3px;
+:where(a, button, summary):focus-visible {
+  outline: 2px solid #f0c36d;
+  outline-offset: 2px;
+}
+
+:where(input, select, textarea):focus,
+:where(input, select, textarea):focus-visible {
+  outline: none !important;
 }
 
 html {
@@ -5359,7 +5364,7 @@ main>section.qa-master-hero form.qa-enquiry .qa-field label {
   color: #27231e !important;
 }
 
-main>section.qa-master-hero form.qa-enquiry input,
+main>section.qa-master-hero form.qa-enquiry input:not([type="checkbox"]):not([type="radio"]),
 main>section.qa-master-hero form.qa-enquiry textarea,
 main>section.qa-master-hero form.qa-enquiry select {
   background: #fff !important;
@@ -5376,8 +5381,8 @@ main>section.qa-master-hero form.qa-enquiry textarea::placeholder {
   color: #94a3b8 !important;
 }
 
-main>section.qa-master-hero form.qa-enquiry .qa-field:nth-of-type(n+4) {
-  display: none !important;
+main>section.qa-master-hero form.qa-enquiry .qa-field {
+  display: block !important;
 }
 
 main>section.qa-master-hero form.qa-enquiry .qa-demo {
@@ -5577,7 +5582,7 @@ main>section.qa-master-hero>div:first-child>img {
   outline: none !important;
   background: #ffffff !important;
   border-color: #d4a755 !important;
-  box-shadow: 0 0 0 3px rgba(212, 167, 85, 0.18) !important;
+  box-shadow: 0 0 0 1.5px rgba(212, 167, 85, 0.18) !important;
 }
 
 #book form.qa-enquiry .qa-field input::placeholder,
@@ -5961,6 +5966,50 @@ main>section.qa-master-hero form.qa-enquiry .qa-proof-text .qa-proof-rating,
   background: rgba(245, 158, 11, 0.18) !important;
   border-color: #f59e0b !important;
   color: #fbbf24 !important;
+}
+
+/* Unified delicate input focus rings across all forms (removes thick borders) */
+:where(input, select, textarea):focus,
+:where(input, select, textarea):focus-visible,
+:is(input[type="text"], input[type="tel"], input[type="email"], input[type="number"], input[type="password"], select, textarea):focus,
+.qa-field :is(input, select, textarea):focus,
+.qa-enquiry :is(input, select, textarea):focus,
+.qa-popup-form input:focus {
+  outline: none !important;
+  border-color: #d97706 !important;
+  box-shadow: 0 0 0 1.5px rgba(217, 119, 6, 0.16) !important;
+}
+
+.qa-dark :is(input, select, textarea):focus,
+.qa-dark .qa-field :is(input, select, textarea):focus,
+.qa-dark .qa-enquiry :is(input, select, textarea):focus,
+.qa-contact-page .qa-field :is(input, select, textarea):focus,
+#enquiry .qa-enquiry :is(input, select, textarea):focus,
+.qa-dark-form :is(input, select, textarea):focus,
+.glass-dark :is(input, select, textarea):focus,
+[data-theme="dark"] :is(input, select, textarea):focus,
+.checkout-modal input:focus {
+  outline: none !important;
+  border-color: #d8a153 !important;
+  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.qa-phone-group:focus-within {
+  box-shadow: 0 0 0 1.5px rgba(217, 119, 6, 0.16) !important;
+  border-radius: 9px !important;
+}
+
+.qa-dark .qa-phone-group:focus-within,
+.qa-dark-form .qa-phone-group:focus-within,
+.checkout-modal .qa-phone-group:focus-within,
+[data-theme="dark"] .qa-phone-group:focus-within {
+  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
+  border-radius: 9px !important;
+}
+
+.qa-phone-group input:focus {
+  box-shadow: none !important;
 }
 
 

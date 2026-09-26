@@ -225,7 +225,8 @@
 .blog-search-input:focus {
   background: #ffffff;
   border-color: var(--blog-gold);
-  box-shadow: 0 0 0 3px rgba(201, 146, 56, 0.15);
+  box-shadow: 0 0 0 1.5px rgba(201, 146, 56, 0.18);
+  outline: none !important;
 }
 
 /* --- Featured Cover Story --- */
@@ -851,8 +852,8 @@
 .blog-sidebar-search-box input:focus {
   background: #ffffff;
   border-color: var(--blog-gold);
-  box-shadow: 0 0 0 3px rgba(201, 146, 56, 0.18);
-  outline: none;
+  box-shadow: 0 0 0 1.5px rgba(201, 146, 56, 0.18);
+  outline: none !important;
 }
 
 .blog-sidebar-search-box .blog-search-btn {

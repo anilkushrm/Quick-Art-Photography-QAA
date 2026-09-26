@@ -353,36 +353,52 @@ a {
 
 .input-phone-group {
   display: flex;
+  align-items: stretch;
+  min-height: 48px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--bg-input);
   overflow: hidden;
   margin-bottom: 20px;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .input-phone-group:focus-within {
   border-color: var(--gold);
+  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
 }
 
 .phone-prefix {
-  padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.03);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.04);
   color: var(--text-muted);
   font-weight: 600;
   border-right: 1px solid var(--border);
-  font-size: 15px;
+  font-size: 14.5px;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+  gap: 5px;
+  height: auto;
+  align-self: stretch;
 }
 
 .input-phone-group input {
   flex: 1;
   background: transparent;
   border: none;
-  padding: 14px 16px;
+  padding: 0 14px;
   color: var(--text-main);
-  font-size: 16px;
-  outline: none;
+  font-size: 15.5px;
+  outline: none !important;
+  box-shadow: none !important;
   letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
 }
 
 .input-otp {
@@ -492,7 +508,8 @@ a {
 #input-email:focus,
 #input-password:focus {
   border-color: var(--gold) !important;
-  box-shadow: 0 0 0 3px rgba(216,161,83,0.15) !important;
+  box-shadow: 0 0 0 1.5px rgba(216,161,83,0.18) !important;
+  outline: none !important;
 }
 
 /* Reusable portal inputs */
@@ -511,8 +528,9 @@ a {
 }
 
 .portal-input:focus {
-  border-color: var(--gold, #d8a153);
-  box-shadow: 0 0 0 3px rgba(216,161,83,0.15);
+  border-color: var(--gold, #d8a153) !important;
+  box-shadow: 0 0 0 1.5px rgba(216,161,83,0.18) !important;
+  outline: none !important;
 }
 
 /* Password eye button */
@@ -2753,8 +2771,8 @@ a {
 }
 .discussion-textarea:focus {
   outline: none;
-  border-color: rgba(216, 161, 83, 0.5);
-  box-shadow: 0 0 0 3px rgba(216, 161, 83, 0.10);
+  border-color: rgba(216, 161, 83, 0.6);
+  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.15);
 }
 .discussion-textarea::placeholder {
   color: var(--text-sub, #6c6c7a);
@@ -3176,11 +3194,23 @@ a {
     display: none;
   }
   .input-phone-group {
-    gap: 6px;
+    gap: 0;
+    min-height: 46px;
   }
   .phone-prefix {
-    font-size: 13px;
-    padding: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13.5px;
+    padding: 0 12px;
+    line-height: 1;
+    height: auto;
+    align-self: stretch;
+  }
+  .input-phone-group input {
+    padding: 0 12px;
+    font-size: 15px;
+    min-height: 46px;
   }
   .btn-block {
     padding: 14px 18px;
@@ -4949,7 +4979,7 @@ video::-webkit-media-controls-download-button {
 #mycourses-search-input:focus {
   outline: none;
   border-color: var(--gold, #d8a153);
-  box-shadow: 0 0 0 3px rgba(216, 161, 83, 0.15);
+  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18);
 }
 
 .student-perk-chip {
@@ -6089,7 +6119,8 @@ video::-webkit-media-controls-download-button {
 .checkout-input:focus {
   border-color: var(--gold, #d8a153) !important;
   background: #1e1e2d;
-  box-shadow: 0 0 0 3px rgba(216, 161, 83, 0.2) !important;
+  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
+  outline: none !important;
 }
 .checkout-input::placeholder {
   color: #64748b;
@@ -6097,7 +6128,8 @@ video::-webkit-media-controls-download-button {
 
 .checkout-phone-input-wrap {
   display: flex;
-  align-items: center;
+  align-items: stretch;
+  min-height: 46px;
   background: #1a1a25;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 11px;
@@ -6107,16 +6139,21 @@ video::-webkit-media-controls-download-button {
 .checkout-phone-input-wrap:focus-within {
   border-color: var(--gold, #d8a153) !important;
   background: #1e1e2d;
-  box-shadow: 0 0 0 3px rgba(216, 161, 83, 0.2) !important;
+  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
 }
 .checkout-phone-input-wrap .phone-flag {
-  padding: 12px 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
   font-size: 13.5px;
   font-weight: 700;
   color: var(--gold-light, #f0c78a);
   background: rgba(255, 255, 255, 0.03);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   white-space: nowrap;
+  line-height: 1;
+  gap: 4px;
 }
 .checkout-phone-input-wrap input {
   flex: 1;
@@ -6378,7 +6415,8 @@ video::-webkit-media-controls-download-button {
 }
 .checkout-otp-input:focus {
   border-color: var(--gold, #c99738);
-  box-shadow: 0 0 0 3px rgba(201, 151, 56, 0.2);
+  box-shadow: 0 0 0 1.5px rgba(201, 151, 56, 0.18);
+  outline: none !important;
 }
 .btn-verify-inline-otp {
   background: linear-gradient(135deg, #c99738, #e5b35a);

@@ -1114,13 +1114,31 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
   padding: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 9px !important;
+  gap: 8px !important;
+}
+
+/* 2-column input rows for hero form */
+.mc-form-row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+@media (max-width: 440px) {
+  .mc-form-row {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
 }
 
 /* Remove site.css top-margin on qa-field inside deck so gap alone controls spacing */
-.mc-deck-body .qa-field {
+.mc-deck-body .qa-field,
+main>section.qa-master-hero form.qa-enquiry .qa-field {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
+  width: 100% !important;
+  display: block !important;
 }
 
 .mc-deck-body form.qa-enquiry h2,
@@ -1128,9 +1146,10 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
   display: none !important;
 }
 
-.mc-deck-body .qa-field label {
+.mc-deck-body .qa-field label,
+main>section.qa-master-hero form.qa-enquiry .qa-field label {
   color: #1e293b !important;
-  font-size: 11.5px !important;
+  font-size: 11px !important;
   font-weight: 700 !important;
   display: block !important;
   margin-bottom: 3px !important;
@@ -1138,10 +1157,11 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
 }
 
 /* All text inputs, selects & textareas — compact sleek style */
-.mc-deck-body form.qa-enquiry :is(input, select, textarea) {
+.mc-deck-body form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+main>section.qa-master-hero form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
   width: 100% !important;
-  padding: 0 12px !important;
-  font-size: 13.5px !important;
+  padding: 0 10px !important;
+  font-size: 12.5px !important;
   font-family: inherit !important;
   color: #0f172a !important;
   background: #ffffff !important;
@@ -1154,61 +1174,139 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
 }
 
 /* Fixed heights */
-.mc-deck-body form.qa-enquiry :is(input, select) {
-  height: 40px !important;
-  line-height: 40px !important;
+.mc-deck-body form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select),
+main>section.qa-master-hero form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select) {
+  height: 38px !important;
+  line-height: 38px !important;
 }
 
-.mc-deck-body form.qa-enquiry textarea {
+.mc-deck-body form.qa-enquiry textarea,
+main>section.qa-master-hero form.qa-enquiry textarea {
   height: auto !important;
-  min-height: 70px !important;
-  padding: 8px 12px !important;
-  line-height: 1.4 !important;
+  min-height: 50px !important;
+  max-height: 90px !important;
+  padding: 7px 10px !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
   resize: vertical !important;
 }
 
+/* Phone input group in deck */
+.mc-deck-body .qa-phone-group,
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group {
+  display: flex !important;
+  align-items: stretch !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  border-radius: 9px !important;
+  border: 1.5px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  overflow: hidden !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.mc-deck-body .qa-phone-group:focus-within,
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group:focus-within {
+  border-color: #d97706 !important;
+  box-shadow: 0 0 0 1.5px rgba(217, 119, 6, 0.16) !important;
+}
+
+.mc-deck-body .qa-phone-prefix,
+main>section.qa-master-hero form.qa-enquiry .qa-phone-prefix {
+  height: 100% !important;
+  padding: 0 7px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  border: none !important;
+  border-right: 1px solid #cbd5e1 !important;
+  border-radius: 0 !important;
+  background: #f8fafc !important;
+  color: #334155 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+}
+
+.mc-deck-body .qa-phone-group input,
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group input {
+  height: 100% !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 8px !important;
+  font-size: 12.5px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.mc-deck-body .qa-phone-group input:focus,
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group input:focus {
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
 /* Select arrow — keep readable */
-.mc-deck-body form.qa-enquiry select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23334155' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+.mc-deck-body form.qa-enquiry select,
+main>section.qa-master-hero form.qa-enquiry select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23334155' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
   background-repeat: no-repeat !important;
-  background-position: right 14px center !important;
-  padding-right: 36px !important;
+  background-position: right 10px center !important;
+  padding-right: 26px !important;
 }
 
 /* Select option text (system-level) */
-.mc-deck-body form.qa-enquiry select option {
+.mc-deck-body form.qa-enquiry select option,
+main>section.qa-master-hero form.qa-enquiry select option {
   color: #0f172a !important;
   background: #ffffff !important;
 }
 
-.mc-deck-body form.qa-enquiry :is(input, select, textarea):focus {
+.mc-deck-body form.qa-enquiry :is(input, select, textarea):focus,
+main>section.qa-master-hero form.qa-enquiry :is(input, select, textarea):focus {
   background: #ffffff !important;
   border-color: #d97706 !important;
-  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15) !important;
+  box-shadow: 0 0 0 1.5px rgba(217, 119, 6, 0.14) !important;
   outline: none !important;
 }
 
-.mc-deck-body form.qa-enquiry :is(input, textarea)::placeholder {
+.mc-deck-body form.qa-enquiry :is(input, textarea)::placeholder,
+main>section.qa-master-hero form.qa-enquiry :is(input, textarea)::placeholder {
   color: #94a3b8 !important;
   opacity: 1 !important;
 }
 
-.mc-deck-body form.qa-enquiry .qa-consent {
-  color: #64748b !important;
+/* Consent checkbox - perfectly crisp native checkbox */
+.mc-deck-body form.qa-enquiry .qa-consent,
+main>section.qa-master-hero form.qa-enquiry .qa-consent {
+  color: #475569 !important;
   font-size: 11px !important;
   line-height: 1.35 !important;
   display: flex !important;
   align-items: flex-start !important;
-  gap: 7px !important;
-  margin: 1px 0 !important;
+  gap: 8px !important;
+  margin: 2px 0 3px !important;
   cursor: pointer !important;
 }
 
-.mc-deck-body form.qa-enquiry .qa-consent input[type="checkbox"] {
+.mc-deck-body form.qa-enquiry .qa-consent input[type="checkbox"],
+main>section.qa-master-hero form.qa-enquiry .qa-consent input[type="checkbox"] {
+  -webkit-appearance: checkbox !important;
+  appearance: checkbox !important;
+  display: inline-block !important;
   width: 15px !important;
   height: 15px !important;
+  min-width: 15px !important;
+  min-height: 15px !important;
+  max-width: 15px !important;
+  max-height: 15px !important;
+  border-radius: 3.5px !important;
+  border: 1.5px solid #94a3b8 !important;
   accent-color: #d97706 !important;
-  margin-top: 1px !important;
+  margin: 1px 0 0 0 !important;
+  padding: 0 !important;
+  cursor: pointer !important;
   flex-shrink: 0 !important;
 }
 

@@ -153,13 +153,32 @@ main .qa-master-hero>div:first-child>img {
   border-color: rgba(216, 161, 83, 0.45);
 }
 
-:where(a,button,input,select,textarea,summary):focus-visible {
-  outline: 3px solid #d8a153;
-  outline-offset: 4px;
+:where(a,button,summary):focus-visible {
+  outline: 2px solid #d8a153;
+  outline-offset: 2px;
 }
-.qa-dark :focus-visible,
-.qaa-header :focus-visible {
+.qa-dark :is(a,button,summary):focus-visible,
+.qaa-header :is(a,button,summary):focus-visible {
   outline-color: #f5c879;
+}
+
+:where(input,select,textarea):focus,
+:where(input,select,textarea):focus-visible {
+  outline: none !important;
+}
+.qa-field :is(input,select,textarea):focus {
+  outline: none !important;
+  border-color: #d97706 !important;
+  box-shadow: 0 0 0 1.5px rgba(217, 119, 6, 0.16) !important;
+}
+.qa-dark .qa-field :is(input,select,textarea):focus,
+.qa-dark .qa-enquiry :is(input,select,textarea):focus,
+.qa-contact-page .qa-field :is(input,select,textarea):focus,
+.qa-dark-form :is(input,select,textarea):focus {
+  outline: none !important;
+  border-color: #d8a153 !important;
+  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
+  background: rgba(255, 255, 255, 0.10) !important;
 }
 
 .qa-section {

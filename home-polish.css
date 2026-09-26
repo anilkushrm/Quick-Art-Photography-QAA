@@ -207,11 +207,11 @@
 .qa-home-hero .qa-hero-inner h1 {
   font-family: 'Outfit', 'Plus Jakarta Sans', var(--font-heading, "Inter", sans-serif) !important;
   font-size: clamp(36px, 3.4vw, 50px) !important;
-  font-weight: 900 !important;
-  line-height: 1.12 !important;
-  letter-spacing: -0.03em !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.02em !important;
   color: #ffffff !important;
-  margin: 0 0 18px !important;
+  margin: 0 0 16px !important;
   text-wrap: balance !important;
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
@@ -219,33 +219,33 @@
 
 .qa-home-hero #home-title span,
 .qa-home-hero .qa-hero-inner h1 span {
-  font-weight: 900 !important;
+  font-weight: 800 !important;
   display: inline-block !important;
-  background: linear-gradient(100deg, #ffc21b 0%, #ff9635 48%, #f73c64 100%) !important;
+  background: linear-gradient(90deg, #d8a153, #f6d389) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  filter: drop-shadow(0 2px 14px rgba(255, 150, 53, 0.28)) !important;
+  filter: drop-shadow(0 2px 12px rgba(216, 161, 83, 0.22)) !important;
 }
 
 .qa-hero-copy > p {
-  font-size: 15.5px !important;
-  line-height: 1.68 !important;
-  color: #94a3b8 !important;
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+  color: rgba(255, 255, 255, 0.65) !important;
   max-width: 660px !important;
-  margin: 0 0 8px 0 !important;
+  margin: 0 0 16px 0 !important;
 }
 
 .qa-hero-copy > p strong {
-  color: #f1ebd8 !important;
+  color: rgba(255, 255, 255, 0.95) !important;
   font-weight: 600 !important;
 }
 
 .qa-hero-copy > p strong:last-child {
   display: block !important;
   font-size: 13.5px !important;
-  color: #f5c879 !important;
-  margin-top: 8px !important;
+  color: #f6d389 !important;
+  margin-top: 10px !important;
   letter-spacing: 0.02em !important;
 }
 

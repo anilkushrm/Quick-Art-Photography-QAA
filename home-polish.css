@@ -221,12 +221,12 @@
 .qa-home-hero .qa-hero-inner h1 span {
   font-weight: 850 !important;
   display: inline-block !important;
-  background: linear-gradient(135deg, #FFF4D0 0%, #FFBE19 42%, #FF7C10 80%, #E86D00 100%) !important;
+  background: linear-gradient(135deg, #FFF6D8 0%, #F5C869 35%, #D99026 70%, #F5CE7B 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
-  filter: drop-shadow(0 2px 16px rgba(255, 124, 16, 0.38)) !important;
+  filter: drop-shadow(0 2px 16px rgba(216, 161, 83, 0.40)) !important;
 }
 
 .qa-hero-copy > p {
@@ -245,7 +245,7 @@
 .qa-hero-copy > p strong:last-child {
   display: block !important;
   font-size: 13.5px !important;
-  color: #f6d389 !important;
+  color: #f5c879 !important;
   margin-top: 10px !important;
   letter-spacing: 0.02em !important;
 }
@@ -259,21 +259,54 @@
   margin-bottom: 26px !important;
 }
 
+/* Landing Page Luxury Button & Shimmer Effects */
+.qa-demo,
 .qa-home-hero .qa-demo {
-  background: linear-gradient(110deg, #ffbe19, #ff7c10) !important;
-  color: #0a0a0a !important;
-  font-weight: 750 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  background: linear-gradient(135deg, #f5c879 0%, #d8a153 55%, #bd863a 100%) !important;
+  color: #0b0c10 !important;
+  font-weight: 800 !important;
   font-size: 15px !important;
-  padding: 13px 26px !important;
+  padding: 14px 28px !important;
   border-radius: 12px !important;
-  box-shadow: 0 6px 20px rgba(255, 124, 16, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 4px 20px rgba(216, 161, 83, 0.45) !important;
   text-decoration: none !important;
   transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  animation: btnPulseGlow 2.5s ease-in-out infinite !important;
+  z-index: 1 !important;
 }
 
+.qa-demo::after,
+.qa-home-hero .qa-demo::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 60% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent) !important;
+  animation: btnShine 2.5s ease-in-out infinite !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+
+.qa-demo:hover,
 .qa-home-hero .qa-demo:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 8px 24px rgba(255, 124, 16, 0.4) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  background: linear-gradient(135deg, #fae0a2 0%, #dfad5e 55%, #c89243 100%) !important;
+  box-shadow: 0 8px 28px rgba(216, 161, 83, 0.6) !important;
+}
+
+@keyframes btnShine {
+  0% { left: -100%; }
+  50%, 100% { left: 150%; }
+}
+
+@keyframes btnPulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(216, 161, 83, 0.4), 0 8px 22px -4px rgba(216, 161, 83, 0.45); }
+  50% { box-shadow: 0 0 0 8px rgba(216, 161, 83, 0), 0 12px 28px -4px rgba(216, 161, 83, 0.65); }
 }
 
 .qa-home-hero .qa-outline {

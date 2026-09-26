@@ -631,6 +631,7 @@ body.landing-page-body {
   letter-spacing: 0.5px;
   margin-bottom: 8px;
 }
+.lp-bonus-card h3,
 .lp-bonus-card h4 {
   font-size: 16px;
   font-weight: 700;

@@ -411,16 +411,56 @@ function send_fast2sms_otp($phone, $otp, $apiKey, $customTemplate = '') {
         ];
     }
 
-    // Do NOT fall back to Quick route ('q') because Fast2SMS charges ₹5 per SMS on route 'q'.
-    // Only dedicated 'otp' route (~₹0.20 to ₹0.25) must be used.
-    $errMsg = 'Fast2SMS delivery failed';
-    if ($res && !empty($res['message'])) {
-        $errMsg = is_array($res['message']) ? implode(', ', $res['message']) : $res['message'];
-    } elseif ($err) {
-        $errMsg = $err;
+    // 2. FALLBACK ROUTE: Quick SMS Route ('q')
+    // If dedicated 'otp' route is blocked (e.g. pending Website Verification or DLT registration),
+    // automatically fall back to Quick route ('q') so the student/user actually receives the OTP on their mobile!
+    $textMsg = !empty($customTemplate)
+        ? str_replace('{otp}', (string)$otp, $customTemplate)
+        : "Your Quick Art Academy login code is: {$otp}. Valid for 10 mins. Helpline: 9939800780";
+
+    $payloadQuick = [
+        "route" => "q",
+        "message" => $textMsg,
+        "language" => "english",
+        "flash" => 0,
+        "numbers" => $cleanPhone
+    ];
+
+    $ch2 = curl_init("https://www.fast2sms.com/dev/bulkV2");
+    curl_setopt_array($ch2, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($payloadQuick),
+        CURLOPT_HTTPHEADER => [
+            "authorization: " . $apiKey,
+            "Content-Type: application/json"
+        ],
+        CURLOPT_TIMEOUT => 9
+    ]);
+    $raw2 = curl_exec($ch2);
+    $err2 = curl_error($ch2);
+    @curl_close($ch2);
+
+    $res2 = $raw2 ? json_decode($raw2, true) : null;
+    if ($res2 && isset($res2['return']) && $res2['return'] === true) {
+        return [
+            'ok' => true,
+            'route' => 'q',
+            'message' => "OTP {$otp} delivered via Fast2SMS Quick SMS route",
+            'response' => $res2
+        ];
     }
 
-    return ['ok' => false, 'error' => $errMsg, 'raw' => $raw];
+    $errMsg = 'Fast2SMS delivery failed';
+    if ($res2 && !empty($res2['message'])) {
+        $errMsg = is_array($res2['message']) ? implode(', ', $res2['message']) : $res2['message'];
+    } elseif ($res && !empty($res['message'])) {
+        $errMsg = is_array($res['message']) ? implode(', ', $res['message']) : $res['message'];
+    } elseif ($err2 || $err) {
+        $errMsg = $err2 ?: $err;
+    }
+
+    return ['ok' => false, 'error' => $errMsg, 'raw' => $raw2 ?: $raw];
 }
 
 // ---------- Email OTP Helpers (Supabase + Direct Mail) ----------

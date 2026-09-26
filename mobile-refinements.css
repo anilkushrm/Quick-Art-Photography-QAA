@@ -679,15 +679,15 @@ img {
   }
 }
 
-/* ── Homepage Hero Mobile Typography — Side Aligned (Left Aligned) ── */
+/* ── Homepage Hero Mobile Typography — Centered & Slightly Larger 3 Lines ── */
 @media (max-width: 768px) {
   .qa-home-hero .qa-hero-inner {
-    text-align: left !important;
+    text-align: center !important;
   }
 
   .qa-home-hero .qa-hero-copy {
-    text-align: left !important;
-    align-items: flex-start !important;
+    text-align: center !important;
+    align-items: center !important;
   }
 
   .qa-home-hero .qa-hero-badge {
@@ -696,26 +696,24 @@ img {
     letter-spacing: 0.04em !important;
     padding: 6px 16px !important;
     margin-bottom: 14px !important;
-    margin-left: 0 !important;
-    margin-right: auto !important;
+    margin-inline: auto !important;
     display: inline-flex !important;
-    align-self: flex-start !important;
+    align-self: center !important;
   }
 
-  /* Homepage Hero Main Heading — Left Aligned, Strictly 3 Lines on Mobile, Full-Width & Cinematic */
+  /* Homepage Hero Main Heading — Strictly 3 Lines, Bold, Centered & Slightly Larger */
   .qa-home-hero #home-title,
   .qa-home-hero .qa-hero-inner h1,
   section.qa-home-hero h1,
   section.qa-home-hero.qa-texture-hero h1 {
     display: flex !important;
     flex-direction: column !important;
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
-    text-align: left !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
     width: 100% !important;
     max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: auto !important;
+    margin-inline: auto !important;
     margin-bottom: 16px !important;
     padding: 0 !important;
     text-wrap: nowrap !important;
@@ -733,14 +731,14 @@ img {
     white-space: nowrap !important;
     text-wrap: nowrap !important;
     width: 100% !important;
-    text-align: left !important;
+    text-align: center !important;
     color: #ffffff !important;
     background: none !important;
     -webkit-background-clip: unset !important;
     background-clip: unset !important;
     -webkit-text-fill-color: #ffffff !important;
     filter: none !important;
-    font-size: clamp(17px, 5.3vw, 25px) !important;
+    font-size: clamp(18px, 5.65vw, 27px) !important;
     font-weight: 800 !important;
     line-height: 1.25 !important;
     letter-spacing: -0.015em !important;
@@ -750,7 +748,7 @@ img {
   .qa-home-hero .qa-hero-inner h1 .qa-hero-line2 {
     display: flex !important;
     flex-direction: column !important;
-    align-items: flex-start !important;
+    align-items: center !important;
     width: 100% !important;
     margin-top: 5px !important;
     background: none !important;
@@ -765,8 +763,8 @@ img {
     white-space: nowrap !important;
     text-wrap: nowrap !important;
     width: 100% !important;
-    text-align: left !important;
-    font-size: clamp(20px, 6.2vw, 29px) !important;
+    text-align: center !important;
+    font-size: clamp(22px, 6.8vw, 32px) !important;
     font-weight: 800 !important;
     line-height: 1.25 !important;
     letter-spacing: -0.02em !important;
@@ -784,8 +782,8 @@ img {
     white-space: nowrap !important;
     text-wrap: nowrap !important;
     width: 100% !important;
-    text-align: left !important;
-    font-size: clamp(19px, 5.8vw, 27px) !important;
+    text-align: center !important;
+    font-size: clamp(21px, 6.4vw, 30px) !important;
     font-weight: 800 !important;
     line-height: 1.25 !important;
     letter-spacing: -0.02em !important;
@@ -802,11 +800,10 @@ img {
     line-height: 1.68 !important;
     color: rgba(255, 255, 255, 0.65) !important;
     margin-bottom: 20px !important;
-    margin-left: 0 !important;
-    margin-right: auto !important;
-    max-width: 100% !important;
-    text-wrap: pretty !important;
-    text-align: left !important;
+    margin-inline: auto !important;
+    max-width: 520px !important;
+    text-wrap: balance !important;
+    text-align: center !important;
   }
 
   .qa-home-hero .qa-hero-copy > p strong {
@@ -824,13 +821,13 @@ img {
     color: #f6d389 !important;
     margin-top: 8px !important;
     letter-spacing: 0.02em !important;
-    text-align: left !important;
+    text-align: center !important;
   }
 
   .qa-home-hero .qa-actions,
   .qa-home-hero .qa-hero-inner .qa-actions {
-    justify-content: flex-start !important;
-    align-items: flex-start !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
 }
 

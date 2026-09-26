@@ -258,7 +258,12 @@ if ($action === 'send-otp' && $method === 'POST') {
         if (!$sendRes['ok']) {
             error_log("Fast2SMS OTP delivery failure for {$phone}: " . ($sendRes['error'] ?? 'Unknown error'));
             if (!$isLocal) {
-                json_err("SMS bhejne me dikkat aayi: " . ($sendRes['error'] ?? 'Fast2SMS delivery error'), 502);
+                $rawErr = $sendRes['error'] ?? 'Fast2SMS delivery error';
+                if (stripos($rawErr, 'website verification') !== false || stripos($rawErr, 'OTP Message API') !== false) {
+                    json_err("Fast2SMS Website Verification Pending: Fast2SMS.com par login karke DEV API -> 'OTP Message' menu me website (quickartphotography.in) verify karein. Tab tak ke liye Admin Panel se 'OTP Demo Mode' ON karke login kar sakte hain.", 502);
+                } else {
+                    json_err("SMS bhejne me dikkat aayi: " . $rawErr, 502);
+                }
             }
         }
     } elseif (!$demoMode && empty($settings['fast2smsApiKey'])) {

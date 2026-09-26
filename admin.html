@@ -1411,13 +1411,23 @@ fbq('track', 'PageView');
 
         <!-- 4. Hindi Step-by-Step Guide -->
         <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px 20px">
-          <h3 style="font-size:14px;color:var(--gold);margin:0 0 10px;font-family:'Outfit',sans-serif">📖 Fast2SMS Setup Guide (Step-by-step Hindi)</h3>
+          <h3 style="font-size:14px;color:var(--gold);margin:0 0 10px;font-family:'Outfit',sans-serif">📖 Fast2SMS Setup &amp; Website Verification Guide (Step-by-step Hindi)</h3>
+          <div style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);padding:12px 14px;border-radius:10px;margin-bottom:14px;font-size:12.5px;color:#fca5a5;line-height:1.6">
+            ⚠️ <b>"Before using OTP Message API, complete website verification" Error kyun aata hai?</b><br>
+            Fast2SMS aur TRAI regulations ke hisab se OTP route use karne se pehle aapko apne Fast2SMS account me apni website URL verify karana zaroori hota hai. Yeh sirf 1 baar karna hota hai.
+          </div>
           <ol style="font-size:12.5px;color:#cbd5e1;line-height:1.9;margin:0;padding-left:20px">
-            <li><a href="https://www.fast2sms.com" target="_blank" rel="noopener noreferrer" style="color:#60a5fa;text-decoration:underline;font-weight:600">www.fast2sms.com</a> par jakar apna Free Account banayein.</li>
-            <li>Wallet me <b>Add Credit</b> par click karke sirf <b>₹100</b> recharge karein (Koi monthly subscription ya hidden renewal fee nahi hoti, wallet balance expire nahi hota).</li>
-            <li>Left side menu me <b>Dev API</b> option par click karein aur waha se apni <b>Authorization Key</b> copy karein.</li>
-            <li>Wahi Key upar <b>Fast2SMS API Authorization Key</b> box me paste karein aur <b>Save Fast2SMS Key</b> par click karein.</li>
-            <li><b>Send Live Test OTP Now</b> me apna mobile number daal kar check karein — aapke mobile par live OTP message turant receive ho jayega!</li>
+            <li><a href="https://www.fast2sms.com" target="_blank" rel="noopener noreferrer" style="color:#60a5fa;text-decoration:underline;font-weight:600">www.fast2sms.com</a> par jakar login karein.</li>
+            <li>Wallet me <b>Add Credit</b> par click karke minimum <b>₹100</b> recharge karein.</li>
+            <li><b>⚡ Website Verification / KYC (Most Important):</b>
+              <ul style="margin:4px 0 8px 16px;padding:0;color:#94a3b8">
+                <li>Left menu me <b>DEV API</b> &rarr; <b>OTP Message</b> (ya <b>OTP SMS</b>) par click karein.</li>
+                <li>Waha <b>Website Verification</b> ya <b>KYC</b> section me apna website URL dalein: <code style="color:#fce7b0;background:#030712;padding:2px 6px;border-radius:4px">https://quickartphotography.in</code></li>
+                <li>Aadhaar OTP verify karke KYC submit karein. Verification complete hote hi Fast2SMS OTP route active ho jayega.</li>
+              </ul>
+            </li>
+            <li>Left side menu me <b>Dev API</b> par jakar apni <b>Authorization Key</b> copy karein aur upar paste karke <b>Save Fast2SMS Key</b> dabayein.</li>
+            <li><b>💡 Note:</b> Jab tak Fast2SMS verification process chal raha ho, aap upar <b>"OTP Demo / Free Test Mode"</b> tick karke save kar sakte hain taaki students bina kisi rukawat ke Default OTP <b style="color:var(--gold)">123456</b> se turant login kar sakein!</li>
           </ol>
         </div>
       </div>

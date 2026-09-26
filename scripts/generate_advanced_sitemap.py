@@ -348,6 +348,32 @@ sitemap_data = [
         ]
     },
     {
+        "loc": "https://quickartphotography.in/blog/cinematic-wedding-video-editing-course/",
+        "lastmod": "2026-09-25",
+        "changefreq": "weekly",
+        "priority": "0.85",
+        "images": [
+            {
+                "loc": "https://quickartphotography.in/assets/blog-cinematic-wedding-video-editing-course-hero.webp",
+                "title": "Cinematic Wedding Video Editing Course",
+                "caption": "6 Weeks offline practical training in Premiere Pro, DaVinci Resolve, EDIUS with free hostel"
+            }
+        ]
+    },
+    {
+        "loc": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/",
+        "lastmod": "2026-09-27",
+        "changefreq": "weekly",
+        "priority": "0.85",
+        "images": [
+            {
+                "loc": "https://quickartphotography.in/assets/best-video-editing-course-in-gopalganj-quick-art.webp",
+                "title": "Best Video Editing Course in Gopalganj",
+                "caption": "Professional video editing, wedding filmmaking, album design & color grading training near Gopalganj"
+            }
+        ]
+    },
+    {
         "loc": "https://quickartphotography.in/privacy-policy/",
         "lastmod": "2026-09-21",
         "changefreq": "monthly",

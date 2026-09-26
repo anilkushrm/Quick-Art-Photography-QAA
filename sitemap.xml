@@ -4,13 +4,13 @@
 
   <url>
     <loc>https://quickartphotography.in/</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://quickartphotography.in/assets/hero-anil-sharma-studio.jpg</image:loc>
-      <image:title>Anil Sharma - Video Editing Course in Siwan Bihar Studio Training</image:title>
-      <image:caption>Practical video editing studio training with Anil Sharma at Quick Art Photography Academy in Siwan, Bihar</image:caption>
+      <image:loc>https://quickartphotography.in/assets/editing-timeline.jpg</image:loc>
+      <image:title>Video Editing Course in Siwan Bihar - Practical Timeline Training</image:title>
+      <image:caption>Hands-on video editing studio training at Quick Art Photography Academy in Siwan, Bihar</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://quickartphotography.in/home-assets/ec55a6be3747a9.webp</image:loc>
@@ -32,17 +32,6 @@
       <image:loc>https://quickartphotography.in/assets/anil-sharma.webp</image:loc>
       <image:title>Anil Sharma - Founder &amp; Lead Instructor</image:title>
       <image:caption>Anil Sharma mentor at Quick Art Photography Academy</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://quickartphotography.in/master-class/live.html</loc>
-    <lastmod>2026-09-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-    <image:image>
-      <image:loc>https://quickartphotography.in/assets/editing-timeline.jpg</image:loc>
-      <image:title>Wedding Video Editing Me AI Ka Sahi Use - 2-Day Live Workshop</image:title>
-      <image:caption>Live AI workshop for wedding photographers and video editors by Anil Sharma</image:caption>
     </image:image>
   </url>
   <url>
@@ -200,46 +189,35 @@
   </url>
   <url>
     <loc>https://quickartphotography.in/courses/video-editing/</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
     <image:image>
       <image:loc>https://quickartphotography.in/assets/editing-timeline.jpg</image:loc>
-      <image:title>Best Video Editing Course in Bihar - Video Editing Classes &amp; Fees</image:title>
-      <image:caption>Practical video editing classes in Hindi at Quick Art Photography Academy</image:caption>
+      <image:title>Offline Video Editing Course in Siwan Bihar</image:title>
+      <image:caption>14-week practical video editing training in Siwan studio</image:caption>
     </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/courses/album-design/</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <image:image>
       <image:loc>https://quickartphotography.in/assets/course-photoshop-album.webp</image:loc>
-      <image:title>Wedding Album Design Course | Photo Album Design Class - Quick Art Academy</image:title>
-      <image:caption>Practical wedding album design course and photo album design class in Photoshop at Quick Art Academy</image:caption>
+      <image:title>Offline Wedding Album Design Course in Siwan</image:title>
+      <image:caption>Practical Photoshop album design and retouching in classroom</image:caption>
     </image:image>
   </url>
   <url>
     <loc>https://quickartphotography.in/courses/ai-wedding-filmmaking/</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://quickartphotography.in/assets/course-ai-wedding-filmmaking.webp</image:loc>
-      <image:title>AI Wedding Filmmaking Course in Bihar &amp; Patna</image:title>
-      <image:caption>AI Wedding Filmmaking Course in Hindi at Quick Art Photography Academy</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://quickartphotography.in/courses/ai-digital-marketing/</loc>
-    <lastmod>2026-09-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
-    <image:image>
-      <image:loc>https://quickartphotography.in/assets/course-ai-digital-marketing.webp</image:loc>
-      <image:title>Free AI Digital Marketing Course in Siwan | In Hindi</image:title>
-      <image:caption>Free AI Digital Marketing Course in Siwan Bihar with live ads and hostel facility at Quick Art Academy</image:caption>
+      <image:loc>https://quickartphotography.in/assets/course-studio-automation.webp</image:loc>
+      <image:title>AI Wedding Filmmaking Course in Siwan Bihar</image:title>
+      <image:caption>AI-powered editing, color workflows and automated delivery</image:caption>
     </image:image>
   </url>
   <url>
@@ -251,17 +229,6 @@
       <image:loc>https://quickartphotography.in/assets/editing-timeline.jpg</image:loc>
       <image:title>Quick Art Photography Academy Blog</image:title>
       <image:caption>Video editing guides, tutorials and photography industry insights</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://quickartphotography.in/blog/cinematic-wedding-video-editing-course/</loc>
-    <lastmod>2026-09-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-    <image:image>
-      <image:loc>https://quickartphotography.in/assets/blog-cinematic-wedding-video-editing-course-hero.webp</image:loc>
-      <image:title>Cinematic Wedding Video Editing Course - Learn to Edit Wedding Films That Tell a Story</image:title>
-      <image:caption>Cinematic video editing course at Quick Art Photography Academy</image:caption>
     </image:image>
   </url>
   <url>
@@ -328,6 +295,28 @@
       <image:loc>https://quickartphotography.in/assets/editing-timeline.jpg</image:loc>
       <image:title>Video Editing Course in Gaya: Fees, Syllabus &amp; Career Opportunities</image:title>
       <image:caption>Practical video editing guide for students in Gaya, Bihar</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/blog/cinematic-wedding-video-editing-course/</loc>
+    <lastmod>2026-09-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/blog-cinematic-wedding-video-editing-course-hero.webp</image:loc>
+      <image:title>Cinematic Wedding Video Editing Course</image:title>
+      <image:caption>6 Weeks offline practical training in Premiere Pro, DaVinci Resolve, EDIUS with free hostel</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/</loc>
+    <lastmod>2026-09-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/best-video-editing-course-in-gopalganj-quick-art.webp</image:loc>
+      <image:title>Best Video Editing Course in Gopalganj</image:title>
+      <image:caption>Professional video editing, wedding filmmaking, album design &amp; color grading training near Gopalganj</image:caption>
     </image:image>
   </url>
   <url>

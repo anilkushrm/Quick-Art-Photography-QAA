@@ -647,7 +647,15 @@ img {
     color: transparent !important;
     filter: drop-shadow(0 2px 16px rgba(216, 161, 83, 0.40)) !important;
   }
-  .qa-home-hero #home-title .qa-hero-part1,
+  .qa-home-hero #home-title .qa-hero-part1 {
+    display: inline !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    background: transparent !important;
+    -webkit-text-fill-color: inherit !important;
+    filter: none !important;
+    margin-right: 0.32em !important;
+  }
   .qa-home-hero #home-title .qa-hero-part2 {
     display: inline !important;
     font-size: inherit !important;
@@ -655,6 +663,7 @@ img {
     background: transparent !important;
     -webkit-text-fill-color: inherit !important;
     filter: none !important;
+    margin-left: 0 !important;
   }
   .qa-home-hero #home-title .qa-hero-br-mobile {
     display: none !important;

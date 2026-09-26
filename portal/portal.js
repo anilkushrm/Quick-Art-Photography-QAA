@@ -2515,7 +2515,7 @@ async function sendCheckoutOtp(phone) {
     btn.disabled = true;
     btn.innerHTML = `
       <span class="btn-pay-text">⚡ Sending Verification OTP...</span>
-      <span class="btn-pay-sub">Fast2SMS OTP bheja ja raha hai...</span>
+      <span class="btn-pay-sub">WhatsApp OTP bheja ja raha hai...</span>
     `;
   }
 

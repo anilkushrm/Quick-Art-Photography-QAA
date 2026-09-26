@@ -106,7 +106,6 @@ function load_lms_settings() {
         'watermarkOpacity' => 0.35,
         'otpDemoMode' => false,
         'defaultOtp' => '123456',
-        'fast2smsApiKey' => '',
         'aibotflowApiKey' => '',
         'aibotflowOtpTemplate' => 'quickart_login_otp',
         'academyName' => 'Quick Art Photography Academy',
@@ -372,7 +371,8 @@ function send_aibotflow_whatsapp_otp($phone, $otp, $apiKey, $templateName = 'qui
         return ['ok' => false, 'error' => 'Valid 10-digit mobile number enter karein'];
     }
 
-    $targetPhone = '+91' . $cleanPhone;
+    // Meta Cloud API / AIbotflow requires international number without '+' prefix (e.g. 919939967431)
+    $targetPhone = '91' . $cleanPhone;
     $tpl = !empty($templateName) ? trim($templateName) : 'quickart_login_otp';
 
     $payload = [
@@ -426,72 +426,6 @@ function send_aibotflow_whatsapp_otp($phone, $otp, $apiKey, $templateName = 'qui
     return ['ok' => false, 'error' => $errMsg, 'raw' => $raw, 'httpCode' => $code];
 }
 
-// ---------- Fast2SMS Helpers ----------
-function clean_fast2sms_key($key) {
-    $key = trim((string)$key);
-    $key = preg_replace('/^(key|authorization|auth|api[_\s-]?key)\s*[-:=]\s*/i', '', $key);
-    return trim($key, " \t\n\r\0\x0B\"'");
-}
-
-function send_fast2sms_otp($phone, $otp, $apiKey, $customTemplate = '') {
-    $apiKey = clean_fast2sms_key($apiKey);
-    if (empty($apiKey)) {
-        return ['ok' => false, 'error' => 'Fast2SMS API Key is required'];
-    }
-
-    $cleanPhone = preg_replace('/[^0-9]/', '', (string)$phone);
-    if (strlen($cleanPhone) === 12 && substr($cleanPhone, 0, 2) === '91') {
-        $cleanPhone = substr($cleanPhone, 2);
-    }
-    if (strlen($cleanPhone) !== 10) {
-        return ['ok' => false, 'error' => 'Valid 10-digit mobile number enter karein'];
-    }
-
-    // 1. PRIMARY ROUTE: Dedicated Fast2SMS OTP Route ('otp')
-    // Fast2SMS dedicated OTP route uses pre-approved DLT templates by Fast2SMS.
-    // Cost: Only ~₹0.20 to ₹0.25 (20 to 25 paise) per OTP.
-    // Does NOT require any DLT registration or entity paperwork from admin.
-    $payloadOtp = [
-        "route" => "otp",
-        "variables_values" => (string)$otp,
-        "numbers" => $cleanPhone
-    ];
-
-    $ch = curl_init("https://www.fast2sms.com/dev/bulkV2");
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS => json_encode($payloadOtp),
-        CURLOPT_HTTPHEADER => [
-            "authorization: " . $apiKey,
-            "Content-Type: application/json"
-        ],
-        CURLOPT_TIMEOUT => 9
-    ]);
-    $raw = curl_exec($ch);
-    $err = curl_error($ch);
-    @curl_close($ch);
-
-    $res = $raw ? json_decode($raw, true) : null;
-    if ($res && isset($res['return']) && $res['return'] === true) {
-        return [
-            'ok' => true,
-            'route' => 'otp',
-            'message' => "OTP {$otp} delivered via Fast2SMS dedicated OTP route (~₹0.20 rate)",
-            'response' => $res
-        ];
-    }
-
-    // Do NOT use Quick route ('q') because Fast2SMS charges ₹5 per SMS and reviews manually.
-    $errMsg = 'Fast2SMS delivery failed';
-    if ($res && !empty($res['message'])) {
-        $errMsg = is_array($res['message']) ? implode(', ', $res['message']) : $res['message'];
-    } elseif ($err) {
-        $errMsg = $err;
-    }
-
-    return ['ok' => false, 'error' => $errMsg, 'raw' => $raw];
-}
 
 // ---------- Email OTP Helpers (Supabase + Direct Mail) ----------
 const EMAIL_OTPS_FILE = DATA_DIR . '/email-otps.json';

@@ -326,8 +326,8 @@ if ($action === 'save-lms-settings' && $method === 'POST') {
         'watermarkOpacity' => isset($body['watermarkOpacity']) ? floatval($body['watermarkOpacity']) : ($currSettings['watermarkOpacity'] ?? 0.35),
         'otpDemoMode' => isset($body['otpDemoMode']) ? !empty($body['otpDemoMode']) : ($currSettings['otpDemoMode'] ?? false),
         'defaultOtp' => isset($body['defaultOtp']) ? trim($body['defaultOtp']) : ($currSettings['defaultOtp'] ?? '123456'),
-        'fast2smsApiKey' => isset($body['fast2smsApiKey']) ? clean_fast2sms_key($body['fast2smsApiKey']) : ($currSettings['fast2smsApiKey'] ?? ''),
-        'fast2smsOtpTemplate' => isset($body['fast2smsOtpTemplate']) ? trim($body['fast2smsOtpTemplate']) : ($currSettings['fast2smsOtpTemplate'] ?? "Dear Student,\n\nYour Quick Art Photography Academy portal verification code is: {otp}\n\nValid for 10 minutes. Please do not share this OTP with anyone.\n\nWarm regards,\nAnil Sharma\nQuick Art Photography Academy\nHelpline: 9939800780"),
+        'aibotflowApiKey' => isset($body['aibotflowApiKey']) ? trim($body['aibotflowApiKey']) : ($currSettings['aibotflowApiKey'] ?? ''),
+        'aibotflowOtpTemplate' => isset($body['aibotflowOtpTemplate']) ? trim($body['aibotflowOtpTemplate']) : ($currSettings['aibotflowOtpTemplate'] ?? 'quickart_login_otp'),
         'supabaseUrl' => isset($body['supabaseUrl']) ? rtrim(trim($body['supabaseUrl']), '/') : ($currSettings['supabaseUrl'] ?? ''),
         'supabaseAnonKey' => isset($body['supabaseAnonKey']) ? trim($body['supabaseAnonKey']) : ($currSettings['supabaseAnonKey'] ?? ''),
         'supabaseSecretKey' => isset($body['supabaseSecretKey']) ? trim($body['supabaseSecretKey']) : ($currSettings['supabaseSecretKey'] ?? ''),
@@ -435,8 +435,8 @@ if ($action === 'test-razorpay' && ($method === 'GET' || $method === 'POST')) {
     }
 }
 
-// 8.3 Test Fast2SMS Live OTP Delivery
-if ($action === 'test-fast2sms' && $method === 'POST') {
+// 8.3 Test AIbotflow WhatsApp Live OTP Delivery
+if ($action === 'test-whatsapp-otp' && $method === 'POST') {
     $body = read_json_body();
     $rawPhone = $body['phone'] ?? '';
     $testPhone = preg_replace('/[^0-9]/', '', (string)$rawPhone);
@@ -444,73 +444,28 @@ if ($action === 'test-fast2sms' && $method === 'POST') {
         $testPhone = substr($testPhone, 2);
     }
 
-    $apiKey = clean_fast2sms_key($body['apiKey'] ?? '');
     $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
-    if (empty($apiKey)) {
-        $apiKey = clean_fast2sms_key($settings['fast2smsApiKey'] ?? '');
-    }
-    $template = trim($body['template'] ?? ($settings['fast2smsOtpTemplate'] ?? ''));
+    $apiKey = trim($body['apiKey'] ?? ($settings['aibotflowApiKey'] ?? ''));
+    $template = trim($body['template'] ?? ($settings['aibotflowOtpTemplate'] ?? 'quickart_login_otp'));
 
     if (empty($apiKey)) {
-        json_err('Fast2SMS API Key darj karein pehle', 400);
+        json_err('AIbotflow WhatsApp API Key darj karein pehle', 400);
     }
     if (strlen($testPhone) < 10) {
         json_err('Valid 10-digit mobile number enter karein', 400);
     }
 
     $testOtp = strval(random_int(100000, 999999));
-    $sendRes = send_fast2sms_otp($testPhone, $testOtp, $apiKey, $template);
+    $sendRes = send_aibotflow_whatsapp_otp($testPhone, $testOtp, $apiKey, $template);
 
     if ($sendRes['ok']) {
         json_ok([
             'success' => true,
-            'message' => "Test OTP [{$testOtp}] successfully delivered to +91 {$testPhone} via Fast2SMS ({$sendRes['route']} route)!",
-            'fast2smsResponse' => $sendRes['response'] ?? []
+            'message' => "Live Test OTP [{$testOtp}] successfully delivered to WhatsApp (+91 {$testPhone})!",
+            'response' => $sendRes['response'] ?? []
         ]);
     } else {
-        json_err("Fast2SMS error: " . ($sendRes['error'] ?? 'Delivery failed'), 400);
-    }
-}
-
-// 8.4 Check Fast2SMS Wallet Balance
-if ($action === 'fast2sms-balance' && ($method === 'GET' || $method === 'POST')) {
-    $body = read_json_body();
-    $apiKey = clean_fast2sms_key($_GET['apiKey'] ?? ($body['apiKey'] ?? ''));
-    if (empty($apiKey)) {
-        $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
-        $apiKey = clean_fast2sms_key($settings['fast2smsApiKey'] ?? '');
-    }
-    if (empty($apiKey)) {
-        json_err('Fast2SMS API Key required', 400);
-    }
-
-    $curl = curl_init();
-    curl_setopt_array($curl, [
-        CURLOPT_URL => "https://www.fast2sms.com/dev/wallet",
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_HTTPHEADER => [
-            "authorization: " . $apiKey,
-            "Content-Type: application/json"
-        ],
-        CURLOPT_TIMEOUT => 8
-    ]);
-    $raw = curl_exec($curl);
-    $curlErr = curl_error($curl);
-    @curl_close($curl);
-
-    if ($curlErr) {
-        json_err("Connection failed: " . $curlErr, 502);
-    }
-    $res = json_decode($raw, true);
-    if ($res && isset($res['wallet'])) {
-        json_ok([
-            'balance' => $res['wallet'],
-            'currency' => 'INR'
-        ]);
-    } else {
-        $msg = is_array($res['message'] ?? null) ? implode(', ', $res['message']) : ($res['message'] ?? 'Invalid key or wallet error');
-        json_err($msg, 400);
+        json_err("WhatsApp OTP error: " . ($sendRes['error'] ?? 'Delivery failed'), 400);
     }
 }
 

@@ -255,40 +255,19 @@ if ($action === 'send-otp' && $method === 'POST') {
 
     $isSenderOwnNumber = ($phone === '9939800780'); // WhatsApp Cloud API disallows sending from number to itself
 
-    // Priority 1: WhatsApp OTP via AIbotflow
-    // Priority 2: SMS OTP via Fast2SMS
-    // Fallback: If demo mode or admin self-number, include devOtp
+    // Direct WhatsApp OTP via AIbotflow (Official Meta WhatsApp Cloud API)
     if (!$demoMode && !$isSenderOwnNumber && !empty($settings['aibotflowApiKey'])) {
         $sendRes = send_aibotflow_whatsapp_otp($phone, $otp, $settings['aibotflowApiKey'], $settings['aibotflowOtpTemplate'] ?? 'quickart_login_otp');
         if (!$sendRes['ok']) {
             error_log("AIbotflow WhatsApp OTP delivery failure for {$phone}: " . ($sendRes['error'] ?? 'Unknown error'));
-            // If Fast2SMS configured, try fallback
-            if (!empty($settings['fast2smsApiKey'])) {
-                $fallbackRes = send_fast2sms_otp($phone, $otp, $settings['fast2smsApiKey'], $settings['fast2smsOtpTemplate'] ?? '');
-                if (!$fallbackRes['ok'] && !$isLocal) {
-                    json_err("WhatsApp OTP bhejne me dikkat aayi: " . ($sendRes['error'] ?? 'Delivery failed'), 502);
-                }
-            } elseif (!$isLocal) {
+            if (!$isLocal) {
                 json_err("WhatsApp OTP bhejne me dikkat aayi: " . ($sendRes['error'] ?? 'Delivery failed'), 502);
             }
         }
-    } elseif (!$demoMode && !$isSenderOwnNumber && !empty($settings['fast2smsApiKey'])) {
-        $sendRes = send_fast2sms_otp($phone, $otp, $settings['fast2smsApiKey'], $settings['fast2smsOtpTemplate'] ?? '');
-        if (!$sendRes['ok']) {
-            error_log("Fast2SMS OTP delivery failure for {$phone}: " . ($sendRes['error'] ?? 'Unknown error'));
-            if (!$isLocal) {
-                $rawErr = $sendRes['error'] ?? 'Fast2SMS delivery error';
-                if (stripos($rawErr, 'website verification') !== false || stripos($rawErr, 'OTP Message API') !== false) {
-                    json_err("Fast2SMS Website Verification Pending: Fast2SMS.com par login karke DEV API -> 'OTP Message' menu me website (quickartphotography.in) verify karein. Tab tak ke liye Admin Panel se 'OTP Demo Mode' ON karke login kar sakte hain.", 502);
-                } else {
-                    json_err("SMS bhejne me dikkat aayi: " . $rawErr, 502);
-                }
-            }
-        }
-    } elseif (!$demoMode && !$isSenderOwnNumber && empty($settings['aibotflowApiKey']) && empty($settings['fast2smsApiKey'])) {
-        error_log("OTP Gateway (AIbotflow / Fast2SMS) is not configured for phone: {$phone}");
+    } elseif (!$demoMode && !$isSenderOwnNumber && empty($settings['aibotflowApiKey'])) {
+        error_log("WhatsApp OTP Gateway (AIbotflow) is not configured for phone: {$phone}");
         if (!$isLocal) {
-            json_err("OTP gateway configured nahi hai. Kripya helpline +91 9939800780 par sampark karein.", 503);
+            json_err("WhatsApp OTP gateway configured nahi hai. Kripya helpline +91 9939800780 par sampark karein.", 503);
         }
     }
 

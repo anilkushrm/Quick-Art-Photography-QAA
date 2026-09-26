@@ -623,7 +623,7 @@ fbq('track', 'PageView');
       <button class="tab" data-tab="lms-transactions">💰 Orders / Revenue</button>
       <button class="tab" data-tab="lms-live" style="border:1px solid rgba(239,68,68,0.55);color:#fca5a5;font-weight:700">🔴 Live Studio &amp; Masterclasses</button>
       <button class="tab" data-tab="lms-razorpay">💳 Razorpay Gateway</button>
-      <button class="tab" data-tab="lms-fast2sms" style="border:1px solid rgba(216,161,83,0.45);color:#ffe09c;font-weight:700">📱 Mobile OTP (Fast2SMS)</button>
+      <button class="tab" data-tab="lms-whatsapp" style="border:1px solid rgba(37,211,102,0.45);color:#86efac;font-weight:700">💬 WhatsApp OTP (AIbotflow)</button>
       <button class="tab" data-tab="lms-email" style="border:1px solid rgba(59,130,246,0.45);color:#93c5fd;font-weight:700">✉️ Email OTP (Supabase)</button>
       <button class="tab" data-tab="lms-settings">🎥 Bunny.net &amp; Video</button>
       <button class="tab" data-tab="settings">⚙️ Webhook &amp; Admin</button>
@@ -1114,14 +1114,14 @@ fbq('track', 'PageView');
           </label>
         </div>
 
-        <!-- QUICK LINK TO DEDICATED FAST2SMS TAB -->
-        <div style="margin-top:20px;padding:16px 20px;background:rgba(216,161,83,0.08);border:1px solid rgba(216,161,83,0.25);border-radius:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <!-- QUICK LINK TO DEDICATED WHATSAPP OTP TAB -->
+        <div style="margin-top:20px;padding:16px 20px;background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.25);border-radius:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
           <div>
-            <div style="font-weight:700;color:var(--gold);font-size:14px">📱 Mobile OTP &amp; Fast2SMS Gateway</div>
-            <p style="margin:4px 0 0;font-size:12px;color:var(--muted)">Fast2SMS API Key, Live Wallet Balance, aur Test SMS ke liye alag se dedicated tab banaya gaya hai.</p>
+            <div style="font-weight:700;color:#86efac;font-size:14px">💬 WhatsApp OTP Gateway (AIbotflow)</div>
+            <p style="margin:4px 0 0;font-size:12px;color:var(--muted)">AIbotflow WhatsApp API Key, Template setup, aur Live Test OTP ke liye dedicated tab banaya gaya hai.</p>
           </div>
-          <button type="button" onclick="switchAdminTab('lms-fast2sms')" class="btn btn-gold" style="font-size:12px;padding:8px 18px">
-            📱 Open Fast2SMS Tab →
+          <button type="button" onclick="switchAdminTab('lms-whatsapp')" class="btn" style="background:#25d366;color:#000;font-weight:700;font-size:12px;padding:8px 18px">
+            💬 Open WhatsApp Tab →
           </button>
         </div>
 
@@ -1326,22 +1326,22 @@ fbq('track', 'PageView');
       </div>
     </div>
 
-    <!-- FAST2SMS OTP GATEWAY TAB -->
-    <div id="tab-lms-fast2sms" class="tab-content hidden" style="margin-top:16px">
-      <div class="card" style="border:1px solid rgba(216,161,83,0.3);background:linear-gradient(180deg,#0d1527 0%,#090e1a 100%)">
+    <!-- WHATSAPP OTP (AIBOTFLOW) GATEWAY TAB -->
+    <div id="tab-lms-whatsapp" class="tab-content hidden" style="margin-top:16px">
+      <div class="card" style="border:1px solid rgba(37,211,102,0.3);background:linear-gradient(180deg,#091712 0%,#060e0a 100%)">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:18px;margin-bottom:20px">
           <div>
-            <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(216,161,83,0.12);border:1px solid rgba(216,161,83,0.3);color:#fce7b0;padding:4px 12px;border-radius:9999px;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">
-              ⚡ India's Cheapest OTP Gateway (Pay-As-You-Go)
+            <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(37,211,102,0.12);border:1px solid rgba(37,211,102,0.3);color:#86efac;padding:4px 12px;border-radius:9999px;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">
+              ⚡ Official Meta WhatsApp Business Cloud API
             </div>
-            <h2 style="font-size:22px;margin:10px 0 4px;font-family:'Outfit',sans-serif;color:#fff">📱 Fast2SMS Mobile OTP Gateway</h2>
+            <h2 style="font-size:22px;margin:10px 0 4px;font-family:'Outfit',sans-serif;color:#fff">💬 AIbotflow WhatsApp OTP Gateway</h2>
             <p class="muted" style="margin:0;font-size:13.5px">
-              Koi Monthly Subscription Nahi (₹0/month) · Sirf jitna OTP message send hoga utna hi paisa katega (~₹0.15–₹0.20 per SMS) · Minimum recharge sirf ₹100
+              Student login ke liye fast &amp; high-delivery WhatsApp OTP service · Official Meta Authentication Template · Ultra-fast delivery in &lt; 3 seconds
             </p>
           </div>
-          <div id="fast2smsBalanceBadge" style="display:inline-flex;align-items:center;gap:8px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#34d399;padding:8px 16px;border-radius:14px;font-size:13px;font-weight:600">
-            <span style="width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981"></span>
-            <span id="fast2smsBalanceText">Fast2SMS Gateway Ready</span>
+          <div id="whatsappStatusBadge" style="display:inline-flex;align-items:center;gap:8px;background:rgba(37,211,102,0.15);border:1px solid rgba(37,211,102,0.4);color:#86efac;padding:8px 16px;border-radius:14px;font-size:13px;font-weight:600">
+            <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e"></span>
+            <span id="whatsappStatusText">WhatsApp OTP Active</span>
           </div>
         </div>
 
@@ -1349,86 +1349,67 @@ fbq('track', 'PageView');
         <div style="background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px 18px;margin-bottom:22px">
           <label style="display:flex;align-items:center;gap:12px;cursor:pointer;font-size:14px;color:#fff;font-weight:600;margin:0">
             <input type="checkbox" id="otpDemoMode" style="width:19px;height:19px;cursor:pointer;accent-color:var(--gold)" />
-            <span>OTP Demo / Free Test Mode (Testing ke liye bina SMS charge ke Default OTP: <b style="color:var(--gold)">123456</b> chalega)</span>
+            <span>OTP Demo / Free Test Mode (Testing ke liye bina WhatsApp charge ke Default OTP: <b style="color:var(--gold)">123456</b> chalega)</span>
           </label>
           <p style="font-size:12px;color:var(--muted);margin:8px 0 0 31px;line-height:1.5">
-            Jab tak aapka Fast2SMS recharge nahi hai tab tak isse <b>ON (Checked)</b> rakhein. Real mobile par SMS bhejna ho to ise <b>Uncheck (OFF)</b> karein aur niche API Key save karein.
+            Jab tak aapka WhatsApp balance ya template setup test ho raha ho tab tak ise <b>ON (Checked)</b> rakh sakte hain. Live students ke WhatsApp par real OTP bhejna ho to ise <b>Uncheck (OFF)</b> rakhein.
           </p>
         </div>
 
-        <!-- 2. API Key Form -->
+        <!-- 2. AIbotflow API Key Form -->
         <div style="background:#090e1a;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;margin-bottom:22px">
           <div class="grid" style="grid-template-columns:1fr auto;gap:14px;align-items:flex-end">
             <div>
-              <label for="fast2smsApiKey" style="font-size:12.5px;font-weight:700;color:#e2e8f0;margin-bottom:6px;display:block">
-                Fast2SMS API Authorization Key *
+              <label for="aibotflowApiKey" style="font-size:12.5px;font-weight:700;color:#e2e8f0;margin-bottom:6px;display:block">
+                AIbotflow API Bearer Key *
               </label>
               <div style="position:relative">
-                <input type="password" id="fast2smsApiKey" placeholder="e.g. 5xV7l9QoKzZfJbTuO0wYeR1mNgPsW... (fast2sms.com -> Dev API se copy karein)" style="padding-right:42px" />
-                <button type="button" onclick="togglePasswordVisibility('fast2smsApiKey')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px" title="Show / Hide Key">👁</button>
+                <input type="password" id="aibotflowApiKey" placeholder="wacrm_live_... (AIbotflow -> Settings / API se copy karein)" style="padding-right:42px" />
+                <button type="button" onclick="togglePasswordVisibility('aibotflowApiKey')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px" title="Show / Hide Key">👁</button>
               </div>
             </div>
             <div style="display:flex;gap:10px">
-              <button type="button" onclick="checkFast2SmsBalance()" class="btn btn-outline" style="padding:11px 18px;font-size:12.5px;white-space:nowrap;border-color:rgba(16,185,129,0.3);color:#34d399">
-                💰 Check Wallet Balance
-              </button>
-              <button type="button" onclick="saveFast2SmsSettingsOnly()" class="btn btn-gold" style="padding:11px 22px;font-size:12.5px;white-space:nowrap">
-                💾 Save Fast2SMS Key
+              <button type="button" onclick="saveWhatsAppSettingsOnly()" class="btn btn-gold" style="padding:11px 22px;font-size:12.5px;white-space:nowrap">
+                💾 Save WhatsApp Settings
               </button>
             </div>
           </div>
         </div>
 
-        <!-- 2.5 Professional SMS Template -->
+        <!-- 2.5 Template Name -->
         <div style="background:#090e1a;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;margin-bottom:22px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px">
-            <label for="fast2smsOtpTemplate" style="font-size:12.5px;font-weight:700;color:#e2e8f0;display:flex;align-items:center;gap:6px">
-              ✉️ SMS Text Template (Fallback / Backup SMS)
-            </label>
-            <div style="display:flex;align-items:center;gap:8px">
-              <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700">⚡ Dedicated OTP Route Active (~₹0.20 / OTP)</span>
-              <span id="fast2smsCharCount" style="font-size:11.5px;color:var(--gold);font-weight:600">85 / 160 chars (1 SMS Credit)</span>
-            </div>
-          </div>
-          <textarea id="fast2smsOtpTemplate" rows="4" style="width:100%;font-size:13px;line-height:1.6;padding:10px 14px;border-radius:8px;resize:vertical;color:#f8fafc;background:#030712;border:1px solid rgba(255,255,255,0.12)" placeholder="Your Quick Art Academy login code is: {otp}. Valid for 10 mins. Helpline: 9939800780"></textarea>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:11.5px;color:var(--muted);flex-wrap:wrap;gap:8px">
-            <span>Primary login OTPs Fast2SMS ke dedicated OTP route se jaate hain (~₹0.20 rate, no DLT needed).</span>
-            <button type="button" onclick="resetDefaultOtpTemplate()" class="btn-link" style="font-size:11.5px;color:var(--gold);cursor:pointer;background:none;border:none;text-decoration:underline">Reset to Default Template</button>
+          <label for="aibotflowOtpTemplate" style="font-size:12.5px;font-weight:700;color:#e2e8f0;margin-bottom:6px;display:block">
+            Meta Approved Template Name *
+          </label>
+          <input type="text" id="aibotflowOtpTemplate" placeholder="quickart_login_otp" style="font-weight:600;letter-spacing:0.5px" />
+          <div style="margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.5">
+            Default: <code style="color:#86efac;background:#030712;padding:2px 6px;border-radius:4px">quickart_login_otp</code> — Official Authentication template jisme 1 body param (OTP code) aur 1 Copy Code Button param hota hai.
           </div>
         </div>
 
         <!-- 3. Live Test OTP Tool -->
-        <div style="padding:18px 20px;background:rgba(0,0,0,0.35);border:1px solid rgba(216,161,83,0.25);border-radius:16px;margin-bottom:22px">
-          <div style="font-size:13.5px;font-weight:700;color:var(--gold);margin-bottom:10px">📲 Send Live Test OTP (Mobile par SMS aana check karein):</div>
+        <div style="padding:18px 20px;background:rgba(0,0,0,0.35);border:1px solid rgba(37,211,102,0.35);border-radius:16px;margin-bottom:22px">
+          <div style="font-size:13.5px;font-weight:700;color:#86efac;margin-bottom:10px">💬 Send Live Test OTP on WhatsApp:</div>
           <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-            <input type="tel" id="fast2smsTestPhone" placeholder="Enter your 10-digit phone (e.g. 9939800780)" style="max-width:320px;padding:10px 14px;font-size:13px" />
-            <button type="button" onclick="sendTestFast2SmsOtp()" class="btn btn-gold" style="padding:10px 22px;font-size:12.5px">
-              ⚡ Send Live Test OTP Now
+            <input type="tel" id="whatsappTestPhone" placeholder="Enter student phone (e.g. 9939967431)" style="max-width:320px;padding:10px 14px;font-size:13px" />
+            <button type="button" onclick="sendTestWhatsAppOtp()" class="btn" style="background:#25d366;color:#000;font-weight:700;padding:10px 22px;font-size:12.5px">
+              💬 Send Test WhatsApp OTP Now
             </button>
-            <span id="fast2smsTestResult" style="font-size:12.5px;font-weight:600"></span>
+            <span id="whatsappTestResult" style="font-size:12.5px;font-weight:600"></span>
+          </div>
+          <div style="margin-top:8px;font-size:11.5px;color:var(--muted)">
+            Note: WhatsApp Business Cloud API rules ke tehat registered sender number khud apne hi number par WhatsApp OTP template nahi bhej sakta. Kisi dusre mobile number par test karein.
           </div>
         </div>
 
-        <!-- 4. Hindi Step-by-Step Guide -->
+        <!-- 4. Setup Guide -->
         <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px 20px">
-          <h3 style="font-size:14px;color:var(--gold);margin:0 0 10px;font-family:'Outfit',sans-serif">📖 Fast2SMS Setup &amp; Website Verification Guide (Step-by-step Hindi)</h3>
-          <div style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);padding:12px 14px;border-radius:10px;margin-bottom:14px;font-size:12.5px;color:#fca5a5;line-height:1.6">
-            ⚠️ <b>"Before using OTP Message API, complete website verification" Error kyun aata hai?</b><br>
-            Fast2SMS aur TRAI regulations ke hisab se OTP route use karne se pehle aapko apne Fast2SMS account me apni website URL verify karana zaroori hota hai. Yeh sirf 1 baar karna hota hai.
-          </div>
-          <ol style="font-size:12.5px;color:#cbd5e1;line-height:1.9;margin:0;padding-left:20px">
-            <li><a href="https://www.fast2sms.com" target="_blank" rel="noopener noreferrer" style="color:#60a5fa;text-decoration:underline;font-weight:600">www.fast2sms.com</a> par jakar login karein.</li>
-            <li>Wallet me <b>Add Credit</b> par click karke minimum <b>₹100</b> recharge karein.</li>
-            <li><b>⚡ Website Verification / KYC (Most Important):</b>
-              <ul style="margin:4px 0 8px 16px;padding:0;color:#94a3b8">
-                <li>Left menu me <b>DEV API</b> &rarr; <b>OTP Message</b> (ya <b>OTP SMS</b>) par click karein.</li>
-                <li>Waha <b>Website Verification</b> ya <b>KYC</b> section me apna website URL dalein: <code style="color:#fce7b0;background:#030712;padding:2px 6px;border-radius:4px">https://quickartphotography.in</code></li>
-                <li>Aadhaar OTP verify karke KYC submit karein. Verification complete hote hi Fast2SMS OTP route active ho jayega.</li>
-              </ul>
-            </li>
-            <li>Left side menu me <b>Dev API</b> par jakar apni <b>Authorization Key</b> copy karein aur upar paste karke <b>Save Fast2SMS Key</b> dabayein.</li>
-            <li><b>💡 Note:</b> Jab tak Fast2SMS verification process chal raha ho, aap upar <b>"OTP Demo / Free Test Mode"</b> tick karke save kar sakte hain taaki students bina kisi rukawat ke Default OTP <b style="color:var(--gold)">123456</b> se turant login kar sakein!</li>
-          </ol>
+          <h3 style="font-size:14px;color:#86efac;margin:0 0 10px;font-family:'Outfit',sans-serif">📖 AIbotflow &amp; WhatsApp OTP Guide</h3>
+          <ul style="font-size:12.5px;color:#cbd5e1;line-height:1.9;margin:0;padding-left:20px">
+            <li>WhatsApp OTP Meta Cloud API ke official high-speed authentication pipe se deliver hota hai.</li>
+            <li>Student jaise hi login form par apna 10-digit number submit karega, unhe WhatsApp par OTP message mil jayega jisme ek-click <b>"Copy code"</b> button bhi hota hai.</li>
+            <li>Agar kisi student ka WhatsApp available nahi ho ya demo test karna ho, to aap <b>OTP Demo / Free Test Mode</b> tick kar sakte hain.</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -2712,7 +2693,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) =
   const targetTab = document.getElementById('tab-' + tabName);
   if (targetTab) targetTab.classList.remove('hidden');
 
-  const isLmsTab = ['lms-courses', 'lms-students', 'lms-coupons', 'lms-transactions', 'lms-live', 'lms-razorpay', 'lms-fast2sms', 'lms-email', 'lms-settings'].includes(tabName);
+  const isLmsTab = ['lms-courses', 'lms-students', 'lms-coupons', 'lms-transactions', 'lms-live', 'lms-razorpay', 'lms-whatsapp', 'lms-email', 'lms-settings'].includes(tabName);
   const lmsKpiRow = document.getElementById('lmsKpiRow');
   if (lmsKpiRow) {
     if (isLmsTab) {
@@ -2729,7 +2710,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) =
   if (tabName === 'lms-transactions') loadLmsTransactions();
   if (tabName === 'lms-live') loadLiveClassesAdmin();
   if (tabName === 'lms-razorpay') loadRazorpaySettings();
-  if (tabName === 'lms-fast2sms') loadFast2SmsSettings();
+  if (tabName === 'lms-whatsapp') loadWhatsAppSettings();
   if (tabName === 'lms-email') loadSupabaseSettings();
   if (tabName === 'lms-settings') loadLmsSettings();
   if (tabName === 'settings') loadSettings();
@@ -2887,80 +2868,40 @@ async function sendTestEmailOtpAdmin() {
   }
 }
 
-function cleanFast2SmsKey(k) {
-  if (!k) return '';
-  return String(k).trim()
-    .replace(/^(key|authorization|auth|api[_\s-]?key)\s*[-:=]\s*/i, '')
-    .replace(/^["']|["']$/g, '')
-    .trim();
-}
-
-const DEFAULT_OTP_TEMPLATE = `Your Quick Art Academy login code is: {otp}. Valid for 10 mins. Helpline: 9939800780`;
-
-function updateSmsCharCount() {
-  const tpl = document.getElementById('fast2smsOtpTemplate');
-  const countSpan = document.getElementById('fast2smsCharCount');
-  if (!tpl || !countSpan) return;
-  const sample = (tpl.value || DEFAULT_OTP_TEMPLATE).replace('{otp}', '123456');
-  const len = sample.length;
-  const credits = Math.ceil(len / 160) || 1;
-  countSpan.innerHTML = `${len} / 160 chars (${credits} SMS Credit${credits > 1 ? 's' : ''})`;
-  countSpan.style.color = len > 160 ? '#f59e0b' : 'var(--gold)';
-}
-
-function resetDefaultOtpTemplate() {
-  const tpl = document.getElementById('fast2smsOtpTemplate');
-  if (tpl) {
-    tpl.value = DEFAULT_OTP_TEMPLATE;
-    updateSmsCharCount();
-    toast('Template reset to default professional format');
-  }
-}
-
-async function loadFast2SmsSettings() {
+async function loadWhatsAppSettings() {
   try {
     const res = await lmsAdmin('get-lms-settings');
     const s = res.settings || {};
-    const key = cleanFast2SmsKey(s.fast2smsApiKey || '');
-    const keyInput = document.getElementById('fast2smsApiKey');
+    const key = (s.aibotflowApiKey || '').trim();
+    const tpl = (s.aibotflowOtpTemplate || 'quickart_login_otp').trim();
+    const keyInput = document.getElementById('aibotflowApiKey');
     const demoInput = document.getElementById('otpDemoMode');
-    const tplInput = document.getElementById('fast2smsOtpTemplate');
+    const tplInput = document.getElementById('aibotflowOtpTemplate');
     if (keyInput) keyInput.value = key;
     if (demoInput) demoInput.checked = s.otpDemoMode !== false;
-    if (tplInput) {
-      tplInput.value = s.fast2smsOtpTemplate || DEFAULT_OTP_TEMPLATE;
-      updateSmsCharCount();
-      tplInput.oninput = updateSmsCharCount;
-    }
-    if (key) {
-      checkFast2SmsBalance(true);
-    }
+    if (tplInput) tplInput.value = tpl;
   } catch(e){}
 }
 
-async function saveFast2SmsSettingsOnly() {
-  const keyInput = document.getElementById('fast2smsApiKey');
-  const fast2smsApiKey = cleanFast2SmsKey(keyInput ? keyInput.value : '');
-  if (keyInput) keyInput.value = fast2smsApiKey;
+async function saveWhatsAppSettingsOnly() {
+  const keyInput = document.getElementById('aibotflowApiKey');
+  const aibotflowApiKey = keyInput ? keyInput.value.trim() : '';
   const otpDemoMode = document.getElementById('otpDemoMode').checked;
-  const tplInput = document.getElementById('fast2smsOtpTemplate');
-  const fast2smsOtpTemplate = tplInput ? (tplInput.value.trim() || DEFAULT_OTP_TEMPLATE) : DEFAULT_OTP_TEMPLATE;
+  const tplInput = document.getElementById('aibotflowOtpTemplate');
+  const aibotflowOtpTemplate = tplInput ? (tplInput.value.trim() || 'quickart_login_otp') : 'quickart_login_otp';
 
   try {
     const curr = await lmsAdmin('get-lms-settings');
     const body = {
       ...(curr.settings || {}),
-      fast2smsApiKey,
+      aibotflowApiKey,
       otpDemoMode,
-      fast2smsOtpTemplate
+      aibotflowOtpTemplate
     };
     await lmsAdmin('save-lms-settings', { method: 'POST', body });
-    toast('✅ Fast2SMS settings & message template saved!');
-    if (fast2smsApiKey) {
-      checkFast2SmsBalance();
-    }
+    toast('✅ WhatsApp OTP settings saved successfully!');
   } catch (err) {
-    toast(`Failed to save Fast2SMS settings: ${err.message}`, false);
+    toast(`Failed to save WhatsApp settings: ${err.message}`, false);
   }
 }
 
@@ -4562,7 +4503,7 @@ async function loadLmsSettings() {
     document.getElementById('bunnyHostname').value = s.bunnyHostname || 'iframe.mediadelivery.net';
     document.getElementById('watermarkEnabled').checked = s.watermarkEnabled !== false;
     document.getElementById('otpDemoMode').checked = s.otpDemoMode !== false;
-    document.getElementById('fast2smsApiKey').value = s.fast2smsApiKey || '';
+    if (document.getElementById('aibotflowApiKey')) document.getElementById('aibotflowApiKey').value = s.aibotflowApiKey || '';
 
     if (s.bunnyLibraryId) {
       testBunnyConnection(true);
@@ -5003,7 +4944,7 @@ async function saveLmsSettingsForm() {
     bunnyHostname: document.getElementById('bunnyHostname').value.trim(),
     watermarkEnabled: document.getElementById('watermarkEnabled').checked,
     otpDemoMode: document.getElementById('otpDemoMode').checked,
-    fast2smsApiKey: document.getElementById('fast2smsApiKey').value.trim()
+    aibotflowApiKey: (document.getElementById('aibotflowApiKey')?.value || '').trim()
   };
 
   try {
@@ -5015,65 +4956,30 @@ async function saveLmsSettingsForm() {
   }
 }
 
-async function checkFast2SmsBalance(silent = false) {
-  const keyInput = document.getElementById('fast2smsApiKey');
-  const apiKey = cleanFast2SmsKey(keyInput ? keyInput.value : '');
-  if (keyInput && keyInput.value !== apiKey) keyInput.value = apiKey;
-  const badgeText = document.getElementById('fast2smsBalanceText');
-  const badge = document.getElementById('fast2smsBalanceBadge');
+async function sendTestWhatsAppOtp() {
+  const keyInput = document.getElementById('aibotflowApiKey');
+  const apiKey = keyInput ? keyInput.value.trim() : '';
+  const phone = (document.getElementById('whatsappTestPhone')?.value || '').trim();
+  const template = (document.getElementById('aibotflowOtpTemplate')?.value || 'quickart_login_otp').trim();
+  const resSpan = document.getElementById('whatsappTestResult');
 
   if (!apiKey) {
-    if (!silent) toast('Fast2SMS API Key enter karein pehle', false);
-    return;
-  }
-
-  badgeText.textContent = 'Checking Balance…';
-  try {
-    const res = await lmsAdmin('fast2sms-balance', {
-      method: 'POST',
-      body: { apiKey }
-    });
-    const bal = parseFloat(res.balance || 0).toFixed(2);
-    badgeText.innerHTML = `Wallet Balance: <b>₹${bal}</b>`;
-    badge.style.background = 'rgba(16,185,129,0.18)';
-    badge.style.borderColor = 'rgba(16,185,129,0.4)';
-    badge.style.color = '#34d399';
-    if (!silent) toast(`✅ Fast2SMS Wallet Balance: ₹${bal}`);
-  } catch (err) {
-    badgeText.textContent = 'Balance Error';
-    badge.style.background = 'rgba(239,68,68,0.15)';
-    badge.style.borderColor = 'rgba(239,68,68,0.3)';
-    badge.style.color = '#f87171';
-    if (!silent) toast(`Fast2SMS Error: ${err.message}`, false);
-  }
-}
-
-async function sendTestFast2SmsOtp() {
-  const keyInput = document.getElementById('fast2smsApiKey');
-  const apiKey = cleanFast2SmsKey(keyInput ? keyInput.value : '');
-  if (keyInput && keyInput.value !== apiKey) keyInput.value = apiKey;
-  const phone = document.getElementById('fast2smsTestPhone').value.trim();
-  const resSpan = document.getElementById('fast2smsTestResult');
-
-  if (!apiKey) {
-    toast('Fast2SMS API Key enter karein pehle', false);
+    toast('AIbotflow API Key enter karein pehle', false);
     return;
   }
   if (!phone || phone.length < 10) {
-    toast('Apna 10-digit mobile number enter karein', false);
+    toast('Student ka 10-digit mobile number enter karein', false);
     return;
   }
 
-  const template = document.getElementById('fast2smsOtpTemplate')?.value.trim() || '';
-  resSpan.innerHTML = '<span style="color:var(--gold)">Sending Test OTP…</span>';
+  resSpan.innerHTML = '<span style="color:var(--gold)">Sending Test WhatsApp OTP…</span>';
   try {
-    const res = await lmsAdmin('test-fast2sms', {
+    const res = await lmsAdmin('test-whatsapp-otp', {
       method: 'POST',
       body: { apiKey, phone, template }
     });
-    resSpan.innerHTML = `<span style="color:#34d399">✅ ${escapeHtml(res.message || 'OTP Sent Successfully!')} Check your phone.</span>`;
-    toast(res.message || 'Test OTP successfully sent!');
-    checkFast2SmsBalance();
+    resSpan.innerHTML = `<span style="color:#34d399">✅ ${escapeHtml(res.message || 'OTP Sent Successfully on WhatsApp!')}</span>`;
+    toast(res.message || 'Test OTP successfully delivered on WhatsApp!');
   } catch (err) {
     resSpan.innerHTML = `<span style="color:#f87171">❌ Failed: ${escapeHtml(err.message)}</span>`;
     toast(`Test Failed: ${err.message}`, false);

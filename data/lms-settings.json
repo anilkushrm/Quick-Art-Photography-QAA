@@ -15,8 +15,6 @@
     "defaultOtp": "123456",
     "aibotflowApiKey": "wacrm_live_xYgH2pOeWSdjay1bExayki4yniEUCxzTlVset6dL8rk",
     "aibotflowOtpTemplate": "quickart_login_otp",
-    "fast2smsApiKey": "jQyG9RuNpd47hVwtIOEk1evm8cxCYAzgSiTZBqb0WXlPFa6sMLnxRrqlwFjyT71Ca4c5XYdm3KGBsIiD",
-    "fast2smsOtpTemplate": "Your Quick Art Academy login code is: {otp}. Valid for 10 mins. Helpline: 9939800780",
     "supabaseUrl": "https://wysgdueraejdmphenjkp.supabase.co",
     "supabaseAnonKey": "",
     "supabaseSecretKey": "",

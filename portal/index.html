@@ -282,7 +282,7 @@ fbq('track', 'PageView');
                   <div id="view-checkout-otp-wrap" class="checkout-inline-otp hidden">
                     <div class="inline-otp-card">
                       <div class="inline-otp-header">
-                        <span class="inline-otp-title">📲 6-Digit OTP Verification</span>
+                        <span class="inline-otp-title">💬 WhatsApp OTP Verification</span>
                         <button type="button" class="inline-otp-change-btn" onclick="cancelCheckoutOtp()">Change Number</button>
                       </div>
                       <p class="inline-otp-sub" style="display:flex;align-items:center;gap:6px;color:#a7f3d0;">
@@ -381,7 +381,7 @@ fbq('track', 'PageView');
           <!-- Login Method Tabs — only 2 -->
           <div class="login-tabs" role="tablist" aria-label="Login method">
             <button class="login-tab active" id="tab-phone" role="tab" aria-selected="true" aria-controls="panel-phone" onclick="switchLoginTab('phone')">
-              <span class="tab-icon">📱</span> Mobile OTP (Main)
+              <span class="tab-icon">💬</span> WhatsApp OTP Login
             </button>
             <button class="login-tab" id="tab-email" role="tab" aria-selected="false" aria-controls="panel-email" onclick="switchLoginTab('email')">
               <span class="tab-icon">✉️</span> Email Login
@@ -391,20 +391,20 @@ fbq('track', 'PageView');
           <!-- Panel: Phone OTP -->
           <div id="panel-phone" role="tabpanel" aria-labelledby="tab-phone">
             <form id="form-phone" class="login-form">
-              <label for="input-phone">Mobile Number (WhatsApp) *</label>
+              <label for="input-phone">WhatsApp Mobile Number *</label>
               <div class="input-phone-group">
                 <span class="phone-prefix">+91</span>
                 <input type="tel" id="input-phone" placeholder="98765 43210" maxlength="10" autocomplete="tel" required autofocus />
               </div>
-              <span class="muted" style="font-size: 11.5px; display: block; margin-top: -6px; margin-bottom: 12px;">Enrolled students apne 10-digit number se login karein.</span>
+              <span class="muted" style="font-size: 11.5px; display: block; margin-top: -6px; margin-bottom: 12px;">Enrolled students apne WhatsApp number se login karein.</span>
               <button type="submit" id="btn-send-otp" class="btn btn-gold btn-block">
-                Send OTP Code <span aria-hidden="true">→</span>
+                Send WhatsApp OTP 💬
               </button>
             </form>
 
             <form id="form-otp" class="login-form hidden">
               <div class="otp-sent-info">
-                <span>Code sent to <b id="otp-phone-display">+91 ••••••••••</b></span>
+                <span>Code sent to WhatsApp: <b id="otp-phone-display">+91 ••••••••••</b></span>
                 <button type="button" class="btn-link" onclick="resetToPhoneStep()">Change</button>
               </div>
 
@@ -429,7 +429,7 @@ fbq('track', 'PageView');
               </button>
               <div class="otp-resend">
                 Didn't receive code?
-                <button type="button" id="btn-resend-otp" class="btn-link" onclick="resendOtp()">Resend OTP</button>
+                <button type="button" id="btn-resend-otp" class="btn-link" onclick="resendOtp()">Resend WhatsApp OTP</button>
               </div>
             </form>
           </div>

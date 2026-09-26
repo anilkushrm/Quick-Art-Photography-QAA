@@ -65,6 +65,7 @@
     <link rel="stylesheet" href="../../reference-header.css?v=3.8">
     <link rel="stylesheet" href="../../design-system.css">
     <link rel="stylesheet" href="../blog.css">
+    <link rel="stylesheet" href="../../mobile-refinements.css?v=4.0">
     <link rel="manifest" href="../../site.webmanifest">
     <link rel="icon" href="../../home-assets/ec55a6be3747a9.webp" type="image/webp">
     <script src="../../site.js" defer></script>
@@ -347,7 +348,7 @@
                 "name": "Amit Kushwaha (Gopalganj Town)"
               },
               "datePublished": "2026-07-20",
-              "reviewBody": "Gopalganj me koi aisi video editing classes nahi hai jahan DaVinci Resolve aur Premiere Pro 2025 deep level pe sikhaye. Siwan sirf 40 minute ki doori pe hai. Quick Art me admission lene ke baad meri editing speed 3x fast ho gayi. Best video editing institute in Bihar!",
+              "reviewBody": "Gopalganj me koi aisi video editing classes nahi hai jahan DaVinci Resolve aur Premiere Pro 2026 deep level pe sikhaye. Siwan sirf 40 minute ki doori pe hai. Quick Art me admission lene ke baad meri editing speed 3x fast ho gayi. Best video editing institute in Bihar!",
               "reviewRating": {
                 "@type": "Rating",
                 "ratingValue": "5",
@@ -452,7 +453,7 @@
               "name": "What software will I learn?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "You’ll learn Adobe Premiere Pro 2025, Edius, DaVinci Resolve, Photoshop 2025, and data recovery tools."
+                "text": "You’ll learn Adobe Premiere Pro 2026, Edius, DaVinci Resolve, Photoshop 2026, and data recovery tools."
               }
             },
             {
@@ -556,35 +557,57 @@
             font-size: 1.25rem;
             flex-shrink: 0;
         }
+
+        /* ─── High Contrast & Elegant Software Covered Section ─── */
         .gop-software-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 18px;
             margin: 24px 0 32px;
         }
         .gop-software-card {
-            background: linear-gradient(135deg, #111520 0%, #1b2030 100%);
-            border: 1px solid rgba(216,161,83,0.3);
+            background: linear-gradient(145deg, #101422 0%, #192033 100%) !important;
+            border: 1px solid rgba(216,161,83,0.35) !important;
             border-radius: 14px;
-            padding: 20px;
-            color: #ffffff;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            padding: 22px;
+            color: #ffffff !important;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .gop-software-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(216,161,83,0.7) !important;
         }
         .gop-software-title {
-            color: #f7ce86;
-            font-size: 1.12rem;
-            font-weight: 700;
-            margin-bottom: 6px;
+            color: #ffffff !important;
+            font-size: 1.15rem !important;
+            font-weight: 800 !important;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            font-family: 'Outfit', sans-serif;
         }
+        .gop-software-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 10px;
+            border-radius: 7px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        /* Override any parent .blog-article-body p color to ensure high contrast readability */
+        .blog-article-body .gop-software-card p,
         .gop-software-desc {
-            color: #cbd5e1;
-            font-size: 0.92rem;
-            line-height: 1.55;
-            margin: 0;
+            color: #e2e8f0 !important;
+            font-size: 0.94rem !important;
+            line-height: 1.65 !important;
+            margin: 0 !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
         }
+
         .gop-career-list {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -670,6 +693,103 @@
             margin: 36px 0;
             text-align: center;
             box-shadow: 0 14px 40px rgba(0,0,0,0.22);
+        }
+
+        /* ─── Mobile Responsiveness Polish ─── */
+        @media (max-width: 900px) {
+            .gop-stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                margin: 20px 0 26px;
+            }
+            .gop-benefit-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            .gop-software-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            .gop-software-card[style*="grid-column"] {
+                grid-column: 1 !important;
+            }
+            .gop-career-list {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+        @media (max-width: 640px) {
+            .gop-stat-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .gop-stat-card {
+                padding: 14px 10px;
+                border-radius: 12px;
+            }
+            .gop-stat-num {
+                font-size: 1.35rem;
+            }
+            .gop-stat-label {
+                font-size: 0.78rem;
+                line-height: 1.4;
+            }
+            .gop-benefit-card {
+                padding: 16px;
+                gap: 12px;
+            }
+            .gop-benefit-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1.1rem;
+            }
+            .gop-software-card {
+                padding: 18px 16px;
+            }
+            .gop-software-title {
+                font-size: 1.05rem !important;
+            }
+            .gop-cta-strip {
+                padding: 24px 16px;
+                border-radius: 14px;
+            }
+            .gop-cta-strip .gop-btn-whatsapp,
+            .gop-cta-strip .gop-btn-gold {
+                width: 100% !important;
+                justify-content: center !important;
+                padding: 12px 18px !important;
+                box-sizing: border-box;
+            }
+            .gop-map-container {
+                padding: 14px;
+                border-radius: 14px;
+            }
+            .gop-map-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .gop-map-header .gop-btn-gold {
+                width: 100% !important;
+                justify-content: center !important;
+                box-sizing: border-box;
+            }
+            .gop-map-container iframe {
+                height: 280px !important;
+            }
+            .blog-toc-box {
+                padding: 18px 16px;
+            }
+            .blog-sidebar {
+                grid-template-columns: 1fr !important;
+                gap: 18px !important;
+            }
+            .blog-article-card {
+                padding: 20px 14px !important;
+            }
+            .blog-article-title {
+                font-size: 1.55rem !important;
+                line-height: 1.25 !important;
+            }
         }
     </style>
 </head>
@@ -852,7 +972,7 @@
                                 <li><a href="#overview">&#127916; Master Professional Video Editing in Gopalganj</a></li>
                                 <li><a href="#why-choose">&#127909; Why Choose Quick Art Photography Academy?</a></li>
                                 <li><a href="#what-you-learn">&#128161; What You&#8217;ll Learn in This Course</a></li>
-                                <li><a href="#software-covered">&#128421;&#65039; Latest Software Covered (2025 Editions)</a></li>
+                                <li><a href="#software-covered">&#128421;&#65039; Latest Software Covered (2026 Editions)</a></li>
                                 <li><a href="#certificate-demo">&#127942; ISO 9001:2015 Course Certificate Demo</a></li>
                                 <li><a href="#why-gopalganj-students">&#128205; Why Gopalganj Students Choose Us</a></li>
                                 <li><a href="#course-details">&#128176; Course Duration, Fee &amp; EMI Details</a></li>
@@ -911,8 +1031,8 @@
                                 <div class="gop-benefit-card">
                                     <div class="gop-benefit-icon">&#9989;</div>
                                     <div>
-                                        <strong style="display:block; font-size:1.05rem; color:#0f172a; margin-bottom:4px;">Modern 2025 Creative Suite</strong>
-                                        <span style="color:#475569; font-size:0.92rem; line-height:1.6;">Adobe Premiere Pro 2025, DaVinci Resolve Studio, Edius Pro aur Adobe Photoshop 2025 ke modern AI features aur cutting techniques.</span>
+                                        <strong style="display:block; font-size:1.05rem; color:#0f172a; margin-bottom:4px;">Modern 2026 Creative Suite</strong>
+                                        <span style="color:#475569; font-size:0.92rem; line-height:1.6;">Adobe Premiere Pro 2026, DaVinci Resolve Studio, Edius Pro aur Adobe Photoshop 2026 ke modern AI features aur cutting techniques.</span>
                                     </div>
                                 </div>
 
@@ -980,48 +1100,48 @@
 
                         <!-- Section 4: Software Covered -->
                         <section id="software-covered">
-                            <h2>&#128421;&#65039; Software Covered (Latest 2025 Versions)</h2>
+                            <h2>&#128421;&#65039; Software Covered (Latest 2026 Versions)</h2>
                             <p>Students work on dedicated workstations equipped with all industry-standard software tools:</p>
 
                             <div class="gop-software-grid">
                                 <div class="gop-software-card">
                                     <div class="gop-software-title">
-                                        <span style="background:#00005b;color:#9999ff;padding:3px 8px;border-radius:6px;font-weight:900;font-size:0.85rem;">Pr</span>
-                                        Adobe Premiere Pro
+                                        <span class="gop-software-badge" style="background:rgba(99,102,241,0.25);color:#c7d2fe;border:1px solid rgba(99,102,241,0.5);">Pr</span>
+                                        <span style="color:#ffffff;">Adobe Premiere Pro</span>
                                     </div>
-                                    <p class="gop-software-desc">Professional video editing, multi-cam switching, timeline speed techniques, audio synchronization, and broadcast rendering.</p>
+                                    <p class="gop-software-desc" style="color:#e2e8f0 !important; font-size:0.94rem; line-height:1.65; margin:0;">Professional video editing, multi-cam switching, timeline speed techniques, audio synchronization, and broadcast rendering.</p>
                                 </div>
 
                                 <div class="gop-software-card">
                                     <div class="gop-software-title">
-                                        <span style="background:#1e1e24;color:#f97316;padding:3px 8px;border-radius:6px;font-weight:900;font-size:0.85rem;">Da</span>
-                                        DaVinci Resolve
+                                        <span class="gop-software-badge" style="background:rgba(249,115,22,0.25);color:#fdba74;border:1px solid rgba(249,115,22,0.5);">Da</span>
+                                        <span style="color:#ffffff;">DaVinci Resolve</span>
                                     </div>
-                                    <p class="gop-software-desc">Industry-leading advanced color grading, color wheels, node-based corrections, and cinematic film looks.</p>
+                                    <p class="gop-software-desc" style="color:#e2e8f0 !important; font-size:0.94rem; line-height:1.65; margin:0;">Industry-leading advanced color grading, color wheels, node-based corrections, and cinematic film looks.</p>
                                 </div>
 
                                 <div class="gop-software-card">
                                     <div class="gop-software-title">
-                                        <span style="background:#0f3820;color:#34d399;padding:3px 8px;border-radius:6px;font-weight:900;font-size:0.85rem;">Ed</span>
-                                        Edius
+                                        <span class="gop-software-badge" style="background:rgba(16,185,129,0.25);color:#a7f3d0;border:1px solid rgba(16,185,129,0.5);">Ed</span>
+                                        <span style="color:#ffffff;">Edius</span>
                                     </div>
-                                    <p class="gop-software-desc">Super-fast timeline cutting, real-time background rendering, and unmatched speed for full-length Indian wedding video delivery.</p>
+                                    <p class="gop-software-desc" style="color:#e2e8f0 !important; font-size:0.94rem; line-height:1.65; margin:0;">Super-fast timeline cutting, real-time background rendering, and unmatched speed for full-length Indian wedding video delivery.</p>
                                 </div>
 
                                 <div class="gop-software-card">
                                     <div class="gop-software-title">
-                                        <span style="background:#001e36;color:#38bdf8;padding:3px 8px;border-radius:6px;font-weight:900;font-size:0.85rem;">Ps</span>
-                                        Adobe Photoshop
+                                        <span class="gop-software-badge" style="background:rgba(14,165,233,0.25);color:#bae6fd;border:1px solid rgba(14,165,233,0.5);">Ps</span>
+                                        <span style="color:#ffffff;">Adobe Photoshop</span>
                                     </div>
-                                    <p class="gop-software-desc">High-end wedding album design, beauty skin retouching, background enhancement, and digital printing preparation.</p>
+                                    <p class="gop-software-desc" style="color:#e2e8f0 !important; font-size:0.94rem; line-height:1.65; margin:0;">High-end wedding album design, beauty skin retouching, background enhancement, and digital printing preparation.</p>
                                 </div>
 
                                 <div class="gop-software-card" style="grid-column: 1 / -1;">
                                     <div class="gop-software-title">
-                                        <span style="background:#3b1111;color:#f87171;padding:3px 8px;border-radius:6px;font-weight:900;font-size:0.85rem;">DR</span>
-                                        Data Recovery &amp; Project Backup Tools
+                                        <span class="gop-software-badge" style="background:rgba(239,68,68,0.25);color:#fecaca;border:1px solid rgba(239,68,68,0.5);">DR</span>
+                                        <span style="color:#ffffff;">Data Recovery &amp; Project Backup Tools</span>
                                     </div>
-                                    <p class="gop-software-desc">Specialized software tools and secure procedures to safeguard client assets and recover damaged memory cards without missing a delivery deadline.</p>
+                                    <p class="gop-software-desc" style="color:#e2e8f0 !important; font-size:0.94rem; line-height:1.65; margin:0;">Specialized software tools and secure procedures to safeguard client assets and recover damaged memory cards without missing a delivery deadline.</p>
                                 </div>
                             </div>
                         </section>
@@ -1088,7 +1208,7 @@
                             <h2>&#128176; Course Details &middot; Transparent &amp; Affordable Fees</h2>
                             <p>Naye batch ke liye duration, fee structure, hostel aur easy EMI suvidha ki puri jankari niche di gayi hai:</p>
 
-                            <div style="background: #ffffff; border: 2px solid #ebd9be; border-radius: 16px; overflow: hidden; margin: 24px 0 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                            <div style="background: #ffffff; border: 2px solid #ebd9be; border-radius: 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 24px 0 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
                                 <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.98rem;">
                                     <tbody>
                                         <tr style="border-bottom: 1px solid #f1f5f9; background: #fdfaf4;">
@@ -1456,42 +1576,131 @@
     <footer role="contentinfo" class="qa-footer">
         <div class="container qa-footer-grid">
             <div class="qa-footer-brand-col">
-                <a class="qa-brand" href="https://quickartphotography.in/" aria-label="Quick Art Photography Academy Home">
-                    <img src="../../home-assets/ec55a6be3747a9.webp" width="48" height="48" alt="Quick Art Photography Academy logo" loading="lazy">
+                <a class="qa-brand" href="https://quickartphotography.in/"
+                    aria-label="Quick Art Photography Academy Home">
+                    <img src="../../home-assets/ec55a6be3747a9.webp" width="48" height="48"
+                        alt="Quick Art Photography Academy logo" loading="lazy">
                     <span>Quick <b>Art</b><small>PHOTOGRAPHY ACADEMY</small></span>
                 </a>
-                <p class="qa-footer-brand-desc">Practical training in wedding filmmaking, cinematography, video editing, and album design. Build a high-earning creative career with mentor Anil Sharma in Siwan, Bihar.</p>
+                <p class="qa-footer-brand-desc">Practical training in wedding filmmaking, cinematography, video editing,
+                    and album design. Build a high-earning creative career with mentor Anil Sharma in Siwan, Bihar.</p>
                 <div class="qa-footer-badges">
-                    <a href="https://maps.app.goo.gl/FaDPbjTHsV5QehoU9" target="_blank" rel="noopener" class="qa-footer-badge-pill" style="text-decoration:none;display:inline-block;">4.9/5 · 1,800+ student reviews</a>
+                    <a href="https://maps.app.goo.gl/avp33qPyUnAKZuJa7" target="_blank" rel="noopener"
+                        class="qa-footer-badge-pill" style="text-decoration:none;display:inline-block;">4.9/5 · 1,800+
+                        student reviews</a>
+                    <span class="qa-footer-badge-pill">Free Hostel &amp; Stay for Outstation Students</span>
+                    <span class="qa-footer-badge-pill">100% Practical Studio Lab</span>
+                </div>
+                <div class="qa-footer-contacts">
+                    <a href="tel:+919939800780" class="qa-contact-link" aria-label="Call Quick Art Academy">
+                        <span>Call: +91 99398 00780</span>
+                    </a>
+                    <a href="https://wa.me/919939800780" class="qa-contact-link" target="_blank"
+                        rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+                        WhatsApp: +91 99398 00780
+                    </a>
+                    <a href="mailto:support@quickartphotography.in" class="qa-contact-link"
+                        aria-label="Email Quick Art Academy">
+                        <span>support@quickartphotography.in</span>
+                    </a>
+                    <a href="https://maps.app.goo.gl/avp33qPyUnAKZuJa7" class="qa-contact-link" target="_blank"
+                        rel="noopener" aria-label="Quick Art Photography Academy on Google Maps">
+                        Quick Art Photography Academy on Google Maps
+                    </a>
+                </div>
+                <div class="qa-footer-address">
+                    <p><strong>Campus:</strong> Ayodhya Puri, Near Lalit Bus Stand, Siwan, Bihar - 841226, India</p>
+                    <p class="qa-footer-hours">Mon – Sat: 9:00 AM – 7:00 PM (Sunday by appointment)</p>
                 </div>
             </div>
-            <div class="qa-footer-links-col">
-                <div class="qa-footer-link-group">
-                    <h4>Courses</h4>
-                    <a href="../../courses/video-editing/">Video Editing</a>
-                    <a href="../../courses/ai-wedding-filmmaking/">AI Wedding Filmmaking</a>
-                    <a href="../../courses/album-design/">Wedding Album Design</a>
-                    <a href="../../online/">Online Programs</a>
-                </div>
-                <div class="qa-footer-link-group">
-                    <h4>Academy</h4>
-                    <a href="../../about-us/">About Us</a>
-                    <a href="../../contact-us/">Contact</a>
-                    <a href="../../blog/">Blog</a>
-                    <a href="../../master-class/">Masterclass</a>
-                </div>
-                <div class="qa-footer-link-group">
-                    <h4>Legal</h4>
-                    <a href="../../privacy-policy/">Privacy Policy</a>
-                    <a href="../../terms-and-conditions/">Terms &amp; Conditions</a>
-                    <a href="../../refund-policy/">Refund Policy</a>
-                </div>
+            <div>
+                <h3 class="qa-footer-heading">On-Campus Courses</h3>
+                <ul class="qa-footer-links-list">
+                    <li><a href="../../courses/video-editing/">Video Editing Course in Siwan</a></li>
+                    <li><a href="../../courses/album-design/">Wedding Album Design Course</a></li>
+                    <li><a href="../../courses/ai-wedding-filmmaking/">AI Wedding Filmmaking Course</a></li>
+                    <li><a href="../../courses/ai-digital-marketing/">Free AI Digital Marketing Course</a></li>
+                    <li><a href="../../master-class/">14-Week Master Class in Siwan</a></li>
+                    <li><a href="../../courses/">All On-Campus Courses Overview</a></li>
+                    <li><a href="../../contact-us/" class="qa-footer-highlight-link">Book Free 1-on-1 Demo Class</a>
+                    </li>
+                    <li><a href="../../downloads/course-details.pdf" target="_blank" rel="noopener noreferrer">Download
+                            Syllabus (PDF)</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="qa-footer-heading">Popular Online Courses</h3>
+                <ul class="qa-footer-links-list">
+                    <li><a href="../../online/premiere-pro-course/">Adobe Premiere Pro Course in Hindi</a></li>
+                    <li><a href="../../online/davinci-resolve-course/">DaVinci Resolve Course in Hindi</a></li>
+                    <li><a href="../../online/edius-course/">EDIUS Fast Wedding Editing Course</a></li>
+                    <li><a href="../../online/cinematic-editing-course/">Cinematic Wedding Video Editing Course</a>
+                    </li>
+                    <li><a href="../../online/pre-wedding-shoot-course/">Pre-Wedding Shoot Course in Hindi</a></li>
+                    <li><a href="../../online/album-design-course/">Album Designing Course Online in Hindi</a></li>
+                    <li><a href="../../online/website-design-course/">Website Design Course in Hindi</a></li>
+                    <li><a href="../../online/digital-marketing-course/">Digital Marketing Course in Hindi</a></li>
+                    <li><a href="../../online/automation-course/">Studio Automation &amp; AI CRM</a></li>
+                    <li><a href="../../online/">All Online Video Editing Courses</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="qa-footer-heading">Student &amp; Academy</h3>
+                <ul class="qa-footer-links-list">
+                    <li><a href="../../portal/" class="qa-footer-highlight-link">Student Portal Login</a></li>
+                    <li><a href="../../online/">Online Course Catalog</a></li>
+                    <li><a href="../../about-us/">About Anil Sharma &amp; Mentors</a></li>
+                    <li><a href="../../contact-us/">Contact Us &amp; Campus Visit</a></li>
+                    <li><a href="../../blog/">Editing Blogs &amp; Tutorials</a></li>
+                    <li><a href="../../blog/best-video-editing-software-in-2026/">Best Video Editing Software in
+                            2026</a></li>
+                    <li><a href="../../blog/freelance-video-editor-earn-in-bihar/">Freelance Video Editor in
+                            Bihar</a></li>
+                    <li><a href="../../blog/how-ai-is-changing-wedding-filmmaking-2026/">AI in Wedding Filmmaking
+                            2026</a></li>
+                    <li><a href="../../sitemap.html">Complete Website Sitemap</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="qa-footer-heading">Connect &amp; Policies</h3>
+                <ul class="qa-footer-links-list">
+                    <li><a href="https://www.youtube.com/@QuickartPhotographyAcademy/videos" target="_blank"
+                            rel="noopener noreferrer me">YouTube Channel</a></li>
+                    <li><a href="https://www.instagram.com/quick.art.photography.academy/" target="_blank"
+                            rel="noopener noreferrer me">Instagram Profile</a></li>
+                    <li><a href="https://www.facebook.com/Quick.art.Photography.Academy" target="_blank"
+                            rel="noopener noreferrer me">Facebook Page</a></li>
+                    <li><a href="https://wa.me/919939800780" target="_blank" rel="noopener noreferrer">WhatsApp
+                            Helpdesk</a></li>
+                    <li><a href="../../privacy-policy/">Privacy Policy</a></li>
+                    <li><a href="../../terms-and-conditions/">Terms &amp; Conditions</a></li>
+                    <li><a href="../../refund-policy/">Refund Policy</a></li>
+                    <li><a href="../../shipping-policy/">Shipping Policy</a></li>
+                </ul>
             </div>
         </div>
-        <div class="qa-footer-bottom">
-            <span>&copy; 2026 Quick Art Photography Academy. All rights reserved.</span>
+        <div class="container qa-footer-seo-strip">
+            <p style="margin:0;color:#94a3b8;font-size:13.5px;line-height:1.6;">Students from Siwan, Gopalganj, Chhapra
+                and Patna attend our offline classes; online courses are available across India.</p>
+        </div>
+        <div class="container qa-footer-base">
+            <div>© <span data-year>2026</span> Quick Art Photography Academy. All Rights Reserved. | Managed by Anil
+                Sharma</div>
+            <div class="qa-footer-base-links">
+                <a href="../../portal/">Student Login</a> ·
+                <a href="../../about-us/">About</a> ·
+                <a href="../../courses/">Courses</a> ·
+                <a href="../../online/">Online Courses</a> ·
+                <a href="../../contact-us/">Contact</a> ·
+                <a href="../../privacy-policy/">Privacy</a> ·
+                <a href="../../terms-and-conditions/">Terms</a> ·
+                <a href="../../refund-policy/">Refunds</a> ·
+                <a href="../../shipping-policy/">Shipping</a> ·
+                <a href="../../sitemap.html">Sitemap</a>
+            </div>
         </div>
     </footer>
+    <script defer src="../../meta-events.js"></script>
 
 </body>
 </html>

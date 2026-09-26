@@ -1037,9 +1037,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const statEls = document.querySelectorAll('.lp-stat-val, .lp-stat-num, .cs-stat-val');
         if (!statEls.length) return;
 
+        // Ensure all stat elements have full opacity and proper transform by default
+        statEls.forEach(el => {
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+        });
+
         const items = [];
         statEls.forEach(el => {
             const raw = el.textContent.trim();
+            if (!raw || raw === '-' || raw === '—' || raw === 'Loading...') return;
+
             // Match leading text, numbers (with optional commas/decimals), and trailing text
             const match = raw.match(/^([^\d]*)([\d,]+(?:\.\d+)?)(.*)$/);
             if (match) {
@@ -1068,11 +1076,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Set initial visual state to 0 so when page loads it starts from 0
                 const initialFormatted = hasComma ? '0' : (decimals > 0 ? (0).toFixed(decimals) : '0');
                 el.textContent = prefix + initialFormatted + suffix;
-            } else {
-                // Non-numeric items like "Lifetime" or "Zero Lag": subtle scale/glow entry
-                el.style.opacity = '0.4';
-                el.style.transform = 'scale(0.92)';
-                el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
             }
         });
 
@@ -1115,11 +1118,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const revealNonNumeric = () => {
             statEls.forEach(el => {
-                const raw = el.textContent.trim();
-                if (!/\d/.test(raw)) {
-                    el.style.opacity = '1';
-                    el.style.transform = 'scale(1)';
-                }
+                el.style.opacity = '1';
+                el.style.transform = 'none';
             });
         };
 

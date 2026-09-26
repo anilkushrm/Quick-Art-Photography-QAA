@@ -1896,12 +1896,14 @@ main>section.qa-master-hero form.qa-enquiry .qa-consent input[type="checkbox"] {
     font-size: 17px !important;
     font-weight: 900 !important;
     color: #f5c879 !important;
+    opacity: 1 !important;
   }
 
   .cs-stat-label {
     font-size: 10px !important;
-    color: #94a3b8 !important;
+    color: #cbd5e1 !important;
     letter-spacing: 0.04em !important;
+    opacity: 1 !important;
   }
 
   /* PART Dividers */

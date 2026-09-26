@@ -8,8 +8,9 @@ send_cors();
 if (!defined('LMS_COURSES_FILE'))  define('LMS_COURSES_FILE', DATA_DIR . '/courses.json');
 if (!defined('LMS_STUDENTS_FILE')) define('LMS_STUDENTS_FILE', DATA_DIR . '/students.json');
 if (!defined('LMS_SETTINGS_FILE')) define('LMS_SETTINGS_FILE', DATA_DIR . '/lms-settings.json');
-if (!defined('LMS_OTPS_FILE'))     define('LMS_OTPS_FILE', DATA_DIR . '/otps.json');
-if (!defined('LMS_SESSIONS_FILE')) define('LMS_SESSIONS_FILE', DATA_DIR . '/student-sessions.json');
+$isLocalHost = in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1']) || in_array($_SERVER['SERVER_NAME'] ?? '', ['localhost', '127.0.0.1']);
+if (!defined('LMS_OTPS_FILE'))     define('LMS_OTPS_FILE', $isLocalHost ? (sys_get_temp_dir() . '/quickart-otps.json') : (DATA_DIR . '/otps.json'));
+if (!defined('LMS_SESSIONS_FILE')) define('LMS_SESSIONS_FILE', $isLocalHost ? (sys_get_temp_dir() . '/quickart-sessions.json') : (DATA_DIR . '/student-sessions.json'));
 if (!defined('LMS_COUPONS_FILE'))  define('LMS_COUPONS_FILE', DATA_DIR . '/coupons.json');
 if (!defined('LMS_TRANSACTIONS_FILE')) define('LMS_TRANSACTIONS_FILE', DATA_DIR . '/transactions.json');
 if (!defined('LMS_LIVE_CLASSES_FILE')) define('LMS_LIVE_CLASSES_FILE', DATA_DIR . '/live-classes.json');
@@ -252,8 +253,26 @@ if ($action === 'send-otp' && $method === 'POST') {
     ];
     file_put_contents(LMS_OTPS_FILE, json_encode($otps, JSON_PRETTY_PRINT), LOCK_EX);
 
-    // If Fast2SMS API key is set and not demo mode, send SMS
-    if (!$demoMode && !empty($settings['fast2smsApiKey'])) {
+    // Priority 1: WhatsApp OTP via AIbotflow
+    // Priority 2: SMS OTP via Fast2SMS
+    // Fallback: If demo mode, instant devOtp
+    if (!$demoMode && !empty($settings['aibotflowApiKey'])) {
+        $sendRes = send_aibotflow_whatsapp_otp($phone, $otp, $settings['aibotflowApiKey'], $settings['aibotflowOtpTemplate'] ?? 'quickart_login_otp');
+        if (!$sendRes['ok']) {
+            error_log("AIbotflow WhatsApp OTP delivery failure for {$phone}: " . ($sendRes['error'] ?? 'Unknown error'));
+            if (!$isLocal) {
+                // If Fast2SMS configured, try fallback
+                if (!empty($settings['fast2smsApiKey'])) {
+                    $fallbackRes = send_fast2sms_otp($phone, $otp, $settings['fast2smsApiKey'], $settings['fast2smsOtpTemplate'] ?? '');
+                    if (!$fallbackRes['ok']) {
+                        json_err("WhatsApp OTP bhejne me dikkat aayi: " . ($sendRes['error'] ?? 'Delivery failed'), 502);
+                    }
+                } else {
+                    json_err("WhatsApp OTP bhejne me dikkat aayi: " . ($sendRes['error'] ?? 'Delivery failed'), 502);
+                }
+            }
+        }
+    } elseif (!$demoMode && !empty($settings['fast2smsApiKey'])) {
         $sendRes = send_fast2sms_otp($phone, $otp, $settings['fast2smsApiKey'], $settings['fast2smsOtpTemplate'] ?? '');
         if (!$sendRes['ok']) {
             error_log("Fast2SMS OTP delivery failure for {$phone}: " . ($sendRes['error'] ?? 'Unknown error'));
@@ -266,10 +285,10 @@ if ($action === 'send-otp' && $method === 'POST') {
                 }
             }
         }
-    } elseif (!$demoMode && empty($settings['fast2smsApiKey'])) {
-        error_log("SMS Gateway (Fast2SMS API Key) is not configured for phone: {$phone}");
+    } elseif (!$demoMode && empty($settings['aibotflowApiKey']) && empty($settings['fast2smsApiKey'])) {
+        error_log("OTP Gateway (AIbotflow / Fast2SMS) is not configured for phone: {$phone}");
         if (!$isLocal) {
-            json_err("SMS gateway configured nahi hai. Kripya helpline +91 9939800780 par sampark karein.", 503);
+            json_err("OTP gateway configured nahi hai. Kripya helpline +91 9939800780 par sampark karein.", 503);
         }
     }
 

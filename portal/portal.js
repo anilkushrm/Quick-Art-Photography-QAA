@@ -90,15 +90,18 @@ document.getElementById('form-phone').addEventListener('submit', async (e) => {
   try {
     const res = await lmsApi('send-otp', { method: 'POST', body: { phone } });
     currentPhone = phone;
+    sessionStorage.setItem('pending_otp_phone', phone);
     document.getElementById('otp-phone-display').textContent = `+91 ${phone}`;
     
     // If dev/demo OTP is returned, display helper banner
     const devBanner = document.getElementById('dev-otp-banner');
     if (res.devOtp) {
+      sessionStorage.setItem('pending_dev_otp', res.devOtp);
       document.getElementById('dev-otp-val').textContent = res.devOtp;
       devBanner.classList.remove('hidden');
       document.getElementById('input-otp').value = res.devOtp;
     } else {
+      sessionStorage.removeItem('pending_dev_otp');
       devBanner.classList.add('hidden');
     }
 
@@ -115,6 +118,8 @@ document.getElementById('form-phone').addEventListener('submit', async (e) => {
 });
 
 function resetToPhoneStep() {
+  sessionStorage.removeItem('pending_otp_phone');
+  sessionStorage.removeItem('pending_dev_otp');
   document.getElementById('form-otp').classList.add('hidden');
   document.getElementById('form-phone').classList.remove('hidden');
   document.getElementById('input-otp').value = '';
@@ -150,6 +155,8 @@ document.getElementById('form-otp').addEventListener('submit', async (e) => {
     const res = await lmsApi('verify-otp', { method: 'POST', body: { phone: currentPhone, otp } });
     studentToken = res.token;
     localStorage.setItem(TOKEN_KEY, studentToken);
+    sessionStorage.removeItem('pending_otp_phone');
+    sessionStorage.removeItem('pending_dev_otp');
     currentStudent = res.student;
     toast('Login successful! Welcome to Quick Art Academy.');
     await initStudentSession();
@@ -3092,6 +3099,32 @@ async function initStudentSession() {
       return;
     }
     switchView('login');
+    // Restore pending OTP screen if page reloaded
+    const pendingPhone = sessionStorage.getItem('pending_otp_phone');
+    if (pendingPhone) {
+      currentPhone = pendingPhone;
+      const displayEl = document.getElementById('otp-phone-display');
+      if (displayEl) displayEl.textContent = `+91 ${pendingPhone}`;
+      const devOtp = sessionStorage.getItem('pending_dev_otp');
+      const devBanner = document.getElementById('dev-otp-banner');
+      if (devOtp) {
+        const valEl = document.getElementById('dev-otp-val');
+        if (valEl) valEl.textContent = devOtp;
+        if (devBanner) devBanner.classList.remove('hidden');
+        const inputOtp = document.getElementById('input-otp');
+        if (inputOtp) inputOtp.value = devOtp;
+      }
+      const formPhone = document.getElementById('form-phone');
+      const formOtp = document.getElementById('form-otp');
+      if (formPhone) formPhone.classList.add('hidden');
+      if (formOtp) {
+        formOtp.classList.remove('hidden');
+        setTimeout(() => {
+          const inp = document.getElementById('input-otp');
+          if (inp) inp.focus();
+        }, 100);
+      }
+    }
     if (catalogParam) {
       openCatalogModal();
     }

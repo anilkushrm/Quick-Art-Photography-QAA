@@ -108,7 +108,7 @@ document.getElementById('form-phone').addEventListener('submit', async (e) => {
     document.getElementById('form-phone').classList.add('hidden');
     document.getElementById('form-otp').classList.remove('hidden');
     document.getElementById('input-otp').focus();
-    toast('OTP code sent successfully!');
+    toast('💬 OTP आपके WhatsApp पर भेज दिया गया है! WhatsApp चेक करें।');
   } catch (err) {
     toast(err.message, false);
   } finally {
@@ -133,7 +133,7 @@ async function resendOtp() {
       document.getElementById('dev-otp-val').textContent = res.devOtp;
       document.getElementById('dev-otp-banner').classList.remove('hidden');
     }
-    toast('New OTP sent to your number!');
+    toast('💬 नया OTP आपके WhatsApp पर भेज दिया गया है!');
   } catch (err) {
     toast(err.message, false);
   }

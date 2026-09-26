@@ -615,11 +615,12 @@ img {
 .qa-home-hero #home-title .qa-hero-line2,
 .qa-home-hero .qa-hero-inner h1 .qa-hero-line2 {
   display: inline-block !important;
-  background: linear-gradient(90deg, #d8a153, #f6d389) !important;
+  background: linear-gradient(135deg, #FFF4D0 0%, #FFBE19 42%, #FF7C10 80%, #E86D00 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  filter: drop-shadow(0 2px 12px rgba(216, 161, 83, 0.22)) !important;
+  color: transparent !important;
+  filter: drop-shadow(0 2px 16px rgba(255, 124, 16, 0.38)) !important;
 }
 
 @media (min-width: 769px) {
@@ -628,6 +629,7 @@ img {
     font-size: inherit !important;
     font-weight: inherit !important;
     line-height: inherit !important;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.7) !important;
   }
   .qa-home-hero #home-title .qa-hero-br-pc {
     display: inline !important;
@@ -638,11 +640,12 @@ img {
     font-weight: inherit !important;
     line-height: inherit !important;
     margin-top: 0 !important;
-    background: linear-gradient(90deg, #d8a153, #f6d389) !important;
+    background: linear-gradient(135deg, #FFF4D0 0%, #FFBE19 42%, #FF7C10 80%, #E86D00 100%) !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
-    filter: drop-shadow(0 2px 12px rgba(216, 161, 83, 0.22)) !important;
+    color: transparent !important;
+    filter: drop-shadow(0 2px 16px rgba(255, 124, 16, 0.38)) !important;
   }
   .qa-home-hero #home-title .qa-hero-part1,
   .qa-home-hero #home-title .qa-hero-part2 {
@@ -765,14 +768,15 @@ img {
     width: 100% !important;
     text-align: center !important;
     font-size: clamp(22px, 6.8vw, 32px) !important;
-    font-weight: 800 !important;
+    font-weight: 850 !important;
     line-height: 1.25 !important;
     letter-spacing: -0.02em !important;
-    background: linear-gradient(90deg, #d8a153, #f6d389) !important;
+    background: linear-gradient(135deg, #FFF4D0 0%, #FFBE19 42%, #FF7C10 80%, #E86D00 100%) !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
-    filter: drop-shadow(0 2px 12px rgba(216, 161, 83, 0.22)) !important;
+    color: transparent !important;
+    filter: drop-shadow(0 2px 16px rgba(255, 124, 16, 0.38)) !important;
   }
 
   /* Line 3: in Siwan, Bihar */
@@ -784,15 +788,16 @@ img {
     width: 100% !important;
     text-align: center !important;
     font-size: clamp(21px, 6.4vw, 30px) !important;
-    font-weight: 800 !important;
+    font-weight: 850 !important;
     line-height: 1.25 !important;
     letter-spacing: -0.02em !important;
     margin-top: 3px !important;
-    background: linear-gradient(90deg, #d8a153, #f6d389) !important;
+    background: linear-gradient(135deg, #FFF4D0 0%, #FFBE19 42%, #FF7C10 80%, #E86D00 100%) !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
-    filter: drop-shadow(0 2px 12px rgba(216, 161, 83, 0.22)) !important;
+    color: transparent !important;
+    filter: drop-shadow(0 2px 16px rgba(255, 124, 16, 0.38)) !important;
   }
 
   .qa-home-hero .qa-hero-copy > p {

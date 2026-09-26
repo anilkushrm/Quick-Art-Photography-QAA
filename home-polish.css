@@ -219,13 +219,14 @@
 
 .qa-home-hero #home-title span,
 .qa-home-hero .qa-hero-inner h1 span {
-  font-weight: 800 !important;
+  font-weight: 850 !important;
   display: inline-block !important;
-  background: linear-gradient(90deg, #d8a153, #f6d389) !important;
+  background: linear-gradient(135deg, #FFF4D0 0%, #FFBE19 42%, #FF7C10 80%, #E86D00 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  filter: drop-shadow(0 2px 12px rgba(216, 161, 83, 0.22)) !important;
+  color: transparent !important;
+  filter: drop-shadow(0 2px 16px rgba(255, 124, 16, 0.38)) !important;
 }
 
 .qa-hero-copy > p {

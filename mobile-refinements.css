@@ -599,6 +599,65 @@ img {
   font-weight: 900 !important;
 }
 
+/* Structured hero lines: ensure Line 1 is pure white and Line 2 keeps the fiery gradient */
+.qa-home-hero #home-title .qa-hero-line1,
+.qa-home-hero .qa-hero-inner h1 .qa-hero-line1 {
+  display: inline !important;
+  color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+.qa-home-hero #home-title .qa-hero-line2,
+.qa-home-hero .qa-hero-inner h1 .qa-hero-line2 {
+  display: inline-block !important;
+  background: linear-gradient(100deg, #ffc21b 0%, #ff9635 48%, #f73c64 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 2px 14px rgba(255, 150, 53, 0.28)) !important;
+}
+
+@media (min-width: 769px) {
+  .qa-home-hero #home-title .qa-hero-line1 {
+    display: inline !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+  }
+  .qa-home-hero #home-title .qa-hero-br-pc {
+    display: inline !important;
+  }
+  .qa-home-hero #home-title .qa-hero-line2 {
+    display: inline-block !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+    margin-top: 0 !important;
+    background: linear-gradient(100deg, #ffc21b 0%, #ff9635 48%, #f73c64 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    filter: drop-shadow(0 2px 14px rgba(255, 150, 53, 0.28)) !important;
+  }
+  .qa-home-hero #home-title .qa-hero-part1,
+  .qa-home-hero #home-title .qa-hero-part2 {
+    display: inline !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    background: transparent !important;
+    -webkit-text-fill-color: inherit !important;
+    filter: none !important;
+  }
+  .qa-home-hero #home-title .qa-hero-br-mobile {
+    display: none !important;
+  }
+}
+
 @media (max-width: 950px) {
   .ref-header ~ main .qa-home-hero,
   .qa-home-hero {
@@ -630,23 +689,99 @@ img {
     margin-bottom: 14px !important;
     display: inline-flex !important;
   }
+  /* Homepage Hero Main Heading — Strictly 3 Lines on Mobile, Full-Width, Bold & Cinematic */
   .qa-home-hero #home-title,
   .qa-home-hero .qa-hero-inner h1,
   section.qa-home-hero h1,
   section.qa-home-hero.qa-texture-hero h1 {
-    font-size: clamp(23px, 6.5vw, 30px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: 16px !important;
+    padding: 0 !important;
+    text-wrap: nowrap !important;
+  }
+
+  .qa-home-hero #home-title .qa-hero-br-pc,
+  .qa-home-hero #home-title .qa-hero-br-mobile {
+    display: none !important;
+  }
+
+  /* Line 1: Quick Art Photography Academy – */
+  .qa-home-hero #home-title .qa-hero-line1,
+  .qa-home-hero .qa-hero-inner h1 .qa-hero-line1 {
+    display: block !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+    width: 100% !important;
+    text-align: center !important;
+    color: #ffffff !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    -webkit-text-fill-color: #ffffff !important;
+    filter: none !important;
+    font-size: clamp(17px, 5.3vw, 25px) !important;
     font-weight: 800 !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.015em !important;
+  }
+
+  .qa-home-hero #home-title .qa-hero-line2,
+  .qa-home-hero .qa-hero-inner h1 .qa-hero-line2 {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-top: 5px !important;
+    background: none !important;
+    -webkit-text-fill-color: initial !important;
+    filter: none !important;
+  }
+
+  /* Line 2: Best Video Editing Course */
+  .qa-home-hero #home-title .qa-hero-part1,
+  .qa-home-hero .qa-hero-inner h1 .qa-hero-part1 {
+    display: block !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+    width: 100% !important;
+    text-align: center !important;
+    font-size: clamp(20px, 6.2vw, 29px) !important;
+    font-weight: 900 !important;
     line-height: 1.22 !important;
     letter-spacing: -0.02em !important;
-    margin-bottom: 14px !important;
-    text-wrap: balance !important;
-    -webkit-text-stroke: 0 !important;
+    background: linear-gradient(100deg, #ffc21b 0%, #ff9635 48%, #f73c64 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    filter: drop-shadow(0 2px 14px rgba(255, 150, 53, 0.28)) !important;
   }
-  .qa-home-hero #home-title span,
-  .qa-home-hero .qa-hero-inner h1 span,
-  section.qa-home-hero h1 span {
-    font-weight: 800 !important;
-    -webkit-text-stroke: 0 !important;
+
+  /* Line 3: in Siwan, Bihar */
+  .qa-home-hero #home-title .qa-hero-part2,
+  .qa-home-hero .qa-hero-inner h1 .qa-hero-part2 {
+    display: block !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+    width: 100% !important;
+    text-align: center !important;
+    font-size: clamp(19px, 5.8vw, 27px) !important;
+    font-weight: 900 !important;
+    line-height: 1.22 !important;
+    letter-spacing: -0.02em !important;
+    margin-top: 3px !important;
+    background: linear-gradient(100deg, #ffc21b 0%, #ff9635 48%, #f73c64 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    filter: drop-shadow(0 2px 14px rgba(255, 150, 53, 0.28)) !important;
   }
   .qa-home-hero .qa-hero-copy > p {
     font-size: 14px !important;

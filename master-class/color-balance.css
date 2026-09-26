@@ -1117,7 +1117,7 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
   gap: 8px !important;
 }
 
-/* 2-column input rows for hero form */
+/* 2-column input rows for hero form — remains sleek 2-columns on mobile */
 .mc-form-row {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
@@ -1125,10 +1125,31 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
   width: 100% !important;
 }
 
-@media (max-width: 440px) {
+@media (max-width: 640px) {
   .mc-form-row {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr 1fr !important;
     gap: 8px !important;
+  }
+  .mc-deck-title {
+    font-size: 20px !important;
+  }
+  .mc-deck-desc {
+    font-size: 11.5px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 8px !important;
+  }
+  .mc-deck-body .qa-field label,
+  main>section.qa-master-hero form.qa-enquiry .qa-field label {
+    font-size: 10.5px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    margin-bottom: 2px !important;
+  }
+  .mc-deck-body .qa-phone-prefix,
+  main>section.qa-master-hero form.qa-enquiry .qa-phone-prefix {
+    padding: 0 6px !important;
+    font-size: 10.5px !important;
   }
 }
 
@@ -1158,14 +1179,15 @@ main>section.qa-master-hero form.qa-enquiry .qa-field label {
 
 /* All text inputs, selects & textareas — compact sleek style */
 .mc-deck-body form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
-main>section.qa-master-hero form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+main>section.qa-master-hero form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+#book form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
   width: 100% !important;
   padding: 0 10px !important;
   font-size: 12.5px !important;
   font-family: inherit !important;
   color: #0f172a !important;
   background: #ffffff !important;
-  border: 1.5px solid #cbd5e1 !important;
+  border: 1px solid #cbd5e1 !important;
   border-radius: 9px !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
   box-sizing: border-box !important;
@@ -1173,17 +1195,17 @@ main>section.qa-master-hero form.qa-enquiry :is(input:not([type="checkbox"]):not
   appearance: none !important;
 }
 
-/* Fixed heights */
+/* Fixed heights & perfect vertical text centering */
 .mc-deck-body form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select),
 main>section.qa-master-hero form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select) {
   height: 38px !important;
-  line-height: 38px !important;
+  line-height: normal !important;
 }
 
 .mc-deck-body form.qa-enquiry textarea,
 main>section.qa-master-hero form.qa-enquiry textarea {
   height: auto !important;
-  min-height: 50px !important;
+  min-height: 48px !important;
   max-height: 90px !important;
   padding: 7px 10px !important;
   font-size: 12px !important;
@@ -1193,26 +1215,32 @@ main>section.qa-master-hero form.qa-enquiry textarea {
 
 /* Phone input group in deck */
 .mc-deck-body .qa-phone-group,
-main>section.qa-master-hero form.qa-enquiry .qa-phone-group {
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group,
+#book form.qa-enquiry .qa-phone-group {
   display: flex !important;
   align-items: stretch !important;
   height: 38px !important;
   min-height: 38px !important;
+  max-height: 38px !important;
   border-radius: 9px !important;
-  border: 1.5px solid #cbd5e1 !important;
+  border: 1px solid #cbd5e1 !important;
   background: #ffffff !important;
   overflow: hidden !important;
+  box-sizing: border-box !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 .mc-deck-body .qa-phone-group:focus-within,
-main>section.qa-master-hero form.qa-enquiry .qa-phone-group:focus-within {
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group:focus-within,
+#book form.qa-enquiry .qa-phone-group:focus-within {
+  outline: none !important;
   border-color: rgba(217, 119, 6, 0.55) !important;
   box-shadow: none !important;
 }
 
 .mc-deck-body .qa-phone-prefix,
-main>section.qa-master-hero form.qa-enquiry .qa-phone-prefix {
+main>section.qa-master-hero form.qa-enquiry .qa-phone-prefix,
+#book form.qa-enquiry .qa-phone-prefix {
   height: 100% !important;
   padding: 0 7px !important;
   font-size: 11px !important;
@@ -1227,21 +1255,44 @@ main>section.qa-master-hero form.qa-enquiry .qa-phone-prefix {
   justify-content: center !important;
   line-height: 1 !important;
   flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s ease, color 0.2s ease !important;
+}
+
+.mc-deck-body .qa-phone-group:focus-within .qa-phone-prefix,
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group:focus-within .qa-phone-prefix,
+#book form.qa-enquiry .qa-phone-group:focus-within .qa-phone-prefix {
+  border-right-color: rgba(217, 119, 6, 0.4) !important;
+  color: #b45309 !important;
 }
 
 .mc-deck-body .qa-phone-group input,
-main>section.qa-master-hero form.qa-enquiry .qa-phone-group input {
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group input,
+#book form.qa-enquiry .qa-phone-group input {
   height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+  line-height: normal !important;
   border: none !important;
   border-radius: 0 !important;
   padding: 0 8px !important;
+  margin: 0 !important;
   font-size: 12.5px !important;
   background: transparent !important;
   box-shadow: none !important;
   outline: none !important;
+  display: flex !important;
+  align-items: center !important;
+  vertical-align: middle !important;
+  box-sizing: border-box !important;
+  flex: 1 1 auto !important;
 }
 .mc-deck-body .qa-phone-group input:focus,
-main>section.qa-master-hero form.qa-enquiry .qa-phone-group input:focus {
+.mc-deck-body .qa-phone-group input:focus-visible,
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group input:focus,
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group input:focus-visible,
+#book form.qa-enquiry .qa-phone-group input:focus,
+#book form.qa-enquiry .qa-phone-group input:focus-visible {
   box-shadow: none !important;
   border: none !important;
   outline: none !important;
@@ -1249,7 +1300,8 @@ main>section.qa-master-hero form.qa-enquiry .qa-phone-group input:focus {
 
 /* Select arrow — keep readable */
 .mc-deck-body form.qa-enquiry select,
-main>section.qa-master-hero form.qa-enquiry select {
+main>section.qa-master-hero form.qa-enquiry select,
+#book form.qa-enquiry select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23334155' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
   background-repeat: no-repeat !important;
   background-position: right 10px center !important;
@@ -1258,13 +1310,19 @@ main>section.qa-master-hero form.qa-enquiry select {
 
 /* Select option text (system-level) */
 .mc-deck-body form.qa-enquiry select option,
-main>section.qa-master-hero form.qa-enquiry select option {
+main>section.qa-master-hero form.qa-enquiry select option,
+#book form.qa-enquiry select option {
   color: #0f172a !important;
   background: #ffffff !important;
 }
 
+/* Unified sleek subtle focus across all inputs, selects & textareas */
 .mc-deck-body form.qa-enquiry :is(input, select, textarea):focus,
-main>section.qa-master-hero form.qa-enquiry :is(input, select, textarea):focus {
+.mc-deck-body form.qa-enquiry :is(input, select, textarea):focus-visible,
+main>section.qa-master-hero form.qa-enquiry :is(input, select, textarea):focus,
+main>section.qa-master-hero form.qa-enquiry :is(input, select, textarea):focus-visible,
+#book form.qa-enquiry :is(input, select, textarea):focus,
+#book form.qa-enquiry :is(input, select, textarea):focus-visible {
   background: #ffffff !important;
   border-color: rgba(217, 119, 6, 0.55) !important;
   box-shadow: none !important;

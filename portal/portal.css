@@ -513,8 +513,8 @@ a {
 /* Email input focus states */
 #input-email:focus,
 #input-password:focus {
-  border-color: var(--gold) !important;
-  box-shadow: 0 0 0 1.5px rgba(216,161,83,0.18) !important;
+  border-color: rgba(216, 161, 83, 0.55) !important;
+  box-shadow: none !important;
   outline: none !important;
 }
 
@@ -534,8 +534,8 @@ a {
 }
 
 .portal-input:focus {
-  border-color: var(--gold, #d8a153) !important;
-  box-shadow: 0 0 0 1.5px rgba(216,161,83,0.18) !important;
+  border-color: rgba(216, 161, 83, 0.55) !important;
+  box-shadow: none !important;
   outline: none !important;
 }
 
@@ -4988,9 +4988,9 @@ video::-webkit-media-controls-download-button {
 }
 
 #mycourses-search-input:focus {
-  outline: none;
-  border-color: var(--gold, #d8a153);
-  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18);
+  outline: none !important;
+  border-color: rgba(216, 161, 83, 0.55) !important;
+  box-shadow: none !important;
 }
 
 .student-perk-chip {
@@ -6128,9 +6128,9 @@ video::-webkit-media-controls-download-button {
   font-family: inherit;
 }
 .checkout-input:focus {
-  border-color: var(--gold, #d8a153) !important;
+  border-color: rgba(216, 161, 83, 0.55) !important;
   background: #1e1e2d;
-  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
+  box-shadow: none !important;
   outline: none !important;
 }
 .checkout-input::placeholder {

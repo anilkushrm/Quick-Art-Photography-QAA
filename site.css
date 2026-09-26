@@ -4725,8 +4725,8 @@ a.qa-float-call:hover svg {
 
 .qa-popup-form input:focus {
   outline: none !important;
-  border-color: #d2a253;
-  box-shadow: 0 0 0 1.5px rgba(210, 162, 83, 0.16);
+  border-color: rgba(217, 119, 6, 0.55) !important;
+  box-shadow: none !important;
   background: #fff;
 }
 
@@ -5581,8 +5581,8 @@ main>section.qa-master-hero>div:first-child>img {
 #book form.qa-enquiry .qa-field textarea:focus {
   outline: none !important;
   background: #ffffff !important;
-  border-color: #d4a755 !important;
-  box-shadow: 0 0 0 1.5px rgba(212, 167, 85, 0.18) !important;
+  border-color: rgba(217, 119, 6, 0.55) !important;
+  box-shadow: none !important;
 }
 
 #book form.qa-enquiry .qa-field input::placeholder,
@@ -5934,6 +5934,15 @@ main>section.qa-master-hero form.qa-enquiry .qa-proof-text .qa-proof-rating,
   flex: 1 1 auto !important;
   min-width: 0 !important;
   width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  line-height: normal !important;
+  display: flex !important;
+  align-items: center !important;
+  vertical-align: middle !important;
+  box-sizing: border-box !important;
+  padding: 0 10px !important;
+  margin: 0 !important;
   border-left: 1px solid #cbd5e1 !important;
 }
 
@@ -5972,23 +5981,38 @@ main>section.qa-master-hero form.qa-enquiry .qa-proof-text .qa-proof-rating,
 :where(input, select, textarea):focus,
 :where(input, select, textarea):focus-visible,
 :is(input[type="text"], input[type="tel"], input[type="email"], input[type="number"], input[type="password"], select, textarea):focus,
+:is(input[type="text"], input[type="tel"], input[type="email"], input[type="number"], input[type="password"], select, textarea):focus-visible,
 .qa-field :is(input, select, textarea):focus,
+.qa-field :is(input, select, textarea):focus-visible,
 .qa-enquiry :is(input, select, textarea):focus,
-.qa-popup-form input:focus {
+.qa-enquiry :is(input, select, textarea):focus-visible,
+form :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):focus,
+form :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):focus-visible,
+.qa-popup-form input:focus,
+.qa-popup-form input:focus-visible {
   outline: none !important;
   border-color: rgba(217, 119, 6, 0.55) !important;
   box-shadow: none !important;
 }
 
 .qa-dark :is(input, select, textarea):focus,
+.qa-dark :is(input, select, textarea):focus-visible,
 .qa-dark .qa-field :is(input, select, textarea):focus,
+.qa-dark .qa-field :is(input, select, textarea):focus-visible,
 .qa-dark .qa-enquiry :is(input, select, textarea):focus,
+.qa-dark .qa-enquiry :is(input, select, textarea):focus-visible,
 .qa-contact-page .qa-field :is(input, select, textarea):focus,
+.qa-contact-page .qa-field :is(input, select, textarea):focus-visible,
 #enquiry .qa-enquiry :is(input, select, textarea):focus,
+#enquiry .qa-enquiry :is(input, select, textarea):focus-visible,
 .qa-dark-form :is(input, select, textarea):focus,
+.qa-dark-form :is(input, select, textarea):focus-visible,
 .glass-dark :is(input, select, textarea):focus,
+.glass-dark :is(input, select, textarea):focus-visible,
 [data-theme="dark"] :is(input, select, textarea):focus,
-.checkout-modal input:focus {
+[data-theme="dark"] :is(input, select, textarea):focus-visible,
+.checkout-modal input:focus,
+.checkout-modal input:focus-visible {
   outline: none !important;
   border-color: rgba(216, 161, 83, 0.55) !important;
   box-shadow: none !important;
@@ -5996,6 +6020,7 @@ main>section.qa-master-hero form.qa-enquiry .qa-proof-text .qa-proof-rating,
 }
 
 .qa-phone-group:focus-within {
+  outline: none !important;
   box-shadow: none !important;
   border-color: rgba(217, 119, 6, 0.55) !important;
   border-radius: 9px !important;
@@ -6005,14 +6030,17 @@ main>section.qa-master-hero form.qa-enquiry .qa-proof-text .qa-proof-rating,
 .qa-dark-form .qa-phone-group:focus-within,
 .checkout-modal .qa-phone-group:focus-within,
 [data-theme="dark"] .qa-phone-group:focus-within {
+  outline: none !important;
   box-shadow: none !important;
   border-color: rgba(216, 161, 83, 0.55) !important;
   border-radius: 9px !important;
 }
 
-.qa-phone-group input:focus {
+.qa-phone-group input:focus,
+.qa-phone-group input:focus-visible {
   box-shadow: none !important;
-  border-color: rgba(216, 161, 83, 0.55) !important;
+  border: none !important;
+  outline: none !important;
 }
 
 

@@ -654,7 +654,8 @@ img {
     background: transparent !important;
     -webkit-text-fill-color: inherit !important;
     filter: none !important;
-    margin-right: 0.32em !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   .qa-home-hero #home-title .qa-hero-part2 {
     display: inline !important;
@@ -663,7 +664,8 @@ img {
     background: transparent !important;
     -webkit-text-fill-color: inherit !important;
     filter: none !important;
-    margin-left: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   .qa-home-hero #home-title .qa-hero-br-mobile {
     display: none !important;

@@ -3950,6 +3950,15 @@ h3 {
   color: var(--qa-ink)
 }
 
+.lp-bonus-card h3,
+.lp-bonus-card h4,
+.lp-bonus-grid h3,
+.lp-learn-card h3,
+.lp-review-card h3,
+.lp-pricing-card h3 {
+  color: #ffffff !important;
+}
+
 .qa-light-pill {
   background: #fffaf0
 }

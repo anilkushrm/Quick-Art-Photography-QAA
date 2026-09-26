@@ -1118,7 +1118,7 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
   text-align: left !important;
 }
 
-/* 2-column input rows for hero form — remains sleek 2-columns on mobile */
+/* 2-column input rows for hero form on desktop, 1-column on mobile */
 .mc-form-row {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
@@ -1127,35 +1127,37 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
   text-align: left !important;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .mc-form-row {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 8px !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
     text-align: left !important;
   }
   .mc-deck-title {
-    font-size: 20px !important;
+    font-size: 22px !important;
   }
   .mc-deck-desc {
-    font-size: 11.5px !important;
-    line-height: 1.35 !important;
-    margin-bottom: 8px !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    margin-bottom: 12px !important;
   }
   .mc-deck-body .qa-field,
   .mc-deck-body .mc-form-row .qa-field,
   .mc-deck-body .mc-field-message,
   main>section.qa-master-hero form.qa-enquiry .qa-field {
     text-align: left !important;
+    width: 100% !important;
   }
   .mc-deck-body .qa-field label,
   .mc-deck-body .mc-form-row .qa-field label,
   .mc-deck-body .mc-field-message label,
   main>section.qa-master-hero form.qa-enquiry .qa-field label {
-    font-size: 10.5px !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    margin-bottom: 2px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    margin-bottom: 4px !important;
     text-align: left !important;
     display: block !important;
     width: 100% !important;
@@ -1164,8 +1166,20 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
   }
   .mc-deck-body .qa-phone-prefix,
   main>section.qa-master-hero form.qa-enquiry .qa-phone-prefix {
-    padding: 0 6px !important;
-    font-size: 10.5px !important;
+    padding: 0 10px !important;
+    font-size: 13px !important;
+  }
+  .mc-deck-body form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select),
+  main>section.qa-master-hero form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select) {
+    height: 42px !important;
+    font-size: 14px !important;
+    padding: 0 12px !important;
+  }
+  .mc-deck-body .qa-phone-group,
+  main>section.qa-master-hero form.qa-enquiry .qa-phone-group {
+    height: 42px !important;
+    min-height: 42px !important;
+    max-height: 42px !important;
   }
 }
 

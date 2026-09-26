@@ -1179,10 +1179,9 @@ main>section.qa-master-hero form.qa-enquiry .qa-field label {
 
 /* All text inputs, selects & textareas — compact sleek style */
 .mc-deck-body form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
-main>section.qa-master-hero form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
-#book form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+main>section.qa-master-hero form.qa-enquiry :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
   width: 100% !important;
-  padding: 0 10px !important;
+  padding: 0 11px !important;
   font-size: 12.5px !important;
   font-family: inherit !important;
   color: #0f172a !important;
@@ -1207,7 +1206,7 @@ main>section.qa-master-hero form.qa-enquiry textarea {
   height: auto !important;
   min-height: 48px !important;
   max-height: 90px !important;
-  padding: 7px 10px !important;
+  padding: 7px 11px !important;
   font-size: 12px !important;
   line-height: 1.35 !important;
   resize: vertical !important;
@@ -1215,8 +1214,7 @@ main>section.qa-master-hero form.qa-enquiry textarea {
 
 /* Phone input group in deck */
 .mc-deck-body .qa-phone-group,
-main>section.qa-master-hero form.qa-enquiry .qa-phone-group,
-#book form.qa-enquiry .qa-phone-group {
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group {
   display: flex !important;
   align-items: stretch !important;
   height: 38px !important;
@@ -1231,18 +1229,16 @@ main>section.qa-master-hero form.qa-enquiry .qa-phone-group,
 }
 
 .mc-deck-body .qa-phone-group:focus-within,
-main>section.qa-master-hero form.qa-enquiry .qa-phone-group:focus-within,
-#book form.qa-enquiry .qa-phone-group:focus-within {
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group:focus-within {
   outline: none !important;
   border-color: rgba(217, 119, 6, 0.55) !important;
   box-shadow: none !important;
 }
 
 .mc-deck-body .qa-phone-prefix,
-main>section.qa-master-hero form.qa-enquiry .qa-phone-prefix,
-#book form.qa-enquiry .qa-phone-prefix {
+main>section.qa-master-hero form.qa-enquiry .qa-phone-prefix {
   height: 100% !important;
-  padding: 0 7px !important;
+  padding: 0 8px !important;
   font-size: 11px !important;
   font-weight: 700 !important;
   border: none !important;
@@ -1260,22 +1256,20 @@ main>section.qa-master-hero form.qa-enquiry .qa-phone-prefix,
 }
 
 .mc-deck-body .qa-phone-group:focus-within .qa-phone-prefix,
-main>section.qa-master-hero form.qa-enquiry .qa-phone-group:focus-within .qa-phone-prefix,
-#book form.qa-enquiry .qa-phone-group:focus-within .qa-phone-prefix {
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group:focus-within .qa-phone-prefix {
   border-right-color: rgba(217, 119, 6, 0.4) !important;
   color: #b45309 !important;
 }
 
 .mc-deck-body .qa-phone-group input,
-main>section.qa-master-hero form.qa-enquiry .qa-phone-group input,
-#book form.qa-enquiry .qa-phone-group input {
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group input {
   height: 100% !important;
   min-height: 100% !important;
   max-height: 100% !important;
   line-height: normal !important;
   border: none !important;
   border-radius: 0 !important;
-  padding: 0 8px !important;
+  padding: 0 11px !important;
   margin: 0 !important;
   font-size: 12.5px !important;
   background: transparent !important;
@@ -1290,7 +1284,92 @@ main>section.qa-master-hero form.qa-enquiry .qa-phone-group input,
 .mc-deck-body .qa-phone-group input:focus,
 .mc-deck-body .qa-phone-group input:focus-visible,
 main>section.qa-master-hero form.qa-enquiry .qa-phone-group input:focus,
-main>section.qa-master-hero form.qa-enquiry .qa-phone-group input:focus-visible,
+main>section.qa-master-hero form.qa-enquiry .qa-phone-group input:focus-visible {
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* ==========================================================================
+   Bottom Booking Form (#book) — Professional 48px height matching all inputs
+   ========================================================================== */
+#book form.qa-enquiry .qa-field input,
+#book form.qa-enquiry .qa-field select {
+  height: 48px !important;
+  min-height: 48px !important;
+  padding: 0 14px !important;
+  font-size: 14.5px !important;
+  border-radius: 12px !important;
+  border: 1px solid #dcd7ce !important;
+  background: #faf8f5 !important;
+  color: #1a1714 !important;
+  box-sizing: border-box !important;
+}
+
+#book form.qa-enquiry .qa-phone-group {
+  display: flex !important;
+  align-items: stretch !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  border-radius: 12px !important;
+  border: 1px solid #dcd7ce !important;
+  background: #faf8f5 !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+#book form.qa-enquiry .qa-phone-prefix {
+  height: 100% !important;
+  padding: 0 14px !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  border: none !important;
+  border-right: 1px solid #dcd7ce !important;
+  border-radius: 0 !important;
+  background: #f3eee4 !important;
+  color: #26221d !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+}
+
+#book form.qa-enquiry .qa-phone-group input {
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+  line-height: normal !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 14px !important;
+  margin: 0 !important;
+  font-size: 14.5px !important;
+  color: #1a1714 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  display: flex !important;
+  align-items: center !important;
+  vertical-align: middle !important;
+  box-sizing: border-box !important;
+  flex: 1 1 auto !important;
+}
+
+#book form.qa-enquiry .qa-phone-group:focus-within {
+  outline: none !important;
+  border-color: rgba(217, 119, 6, 0.55) !important;
+  box-shadow: none !important;
+}
+
+#book form.qa-enquiry .qa-phone-group:focus-within .qa-phone-prefix {
+  border-right-color: rgba(217, 119, 6, 0.4) !important;
+  color: #b45309 !important;
+}
+
 #book form.qa-enquiry .qa-phone-group input:focus,
 #book form.qa-enquiry .qa-phone-group input:focus-visible {
   box-shadow: none !important;

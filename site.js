@@ -219,12 +219,20 @@
             });
         }
         if (form.elements.phone) {
+            const phoneEl = form.elements.phone;
+            phoneEl.setAttribute('maxlength', '10');
+            phoneEl.setAttribute('pattern', '[0-9]{10}');
+            phoneEl.setAttribute('inputmode', 'numeric');
             const sp = localStorage.getItem('qa_user_phone');
-            if (sp && !form.elements.phone.value) form.elements.phone.value = sp;
-            form.elements.phone.addEventListener('input', e => {
+            if (sp && !phoneEl.value) phoneEl.value = sp.replace(/\D/g, '').slice(-10);
+            phoneEl.addEventListener('input', e => {
+                const raw = e.target.value;
+                const digits = raw.replace(/\D/g, '').slice(0, 10);
+                if (raw !== digits) {
+                    e.target.value = digits;
+                }
                 try {
-                    const cleanPhone = e.target.value.replace(/\D/g, '').slice(-10);
-                    if (cleanPhone) localStorage.setItem('qa_user_phone', cleanPhone);
+                    if (digits) localStorage.setItem('qa_user_phone', digits);
                 } catch (_) {}
             });
         }
@@ -234,8 +242,13 @@
             if (!form.reportValidity()) return;
             const status = form.querySelector('.qa-form-status');
             const button = form.querySelector('button[type="submit"]');
-            const phone = form.elements.phone.value.trim();
-            if (phone.replace(/\D/g, '').length < 8) { status.textContent = 'Please enter a valid phone number.'; form.elements.phone.focus(); return; }
+            const rawPhone = form.elements.phone ? form.elements.phone.value.trim() : '';
+            const phone = rawPhone.replace(/\D/g, '').slice(0, 10);
+            if (phone.length !== 10) { 
+                status.textContent = 'Please enter a valid 10-digit mobile number.'; 
+                form.elements.phone.focus(); 
+                return; 
+            }
             const data = Object.fromEntries(new FormData(form));
             data.source = form.dataset.source || 'website';
             data.consent = true;
@@ -386,7 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.querySelector('.qa-popup-overlay')) return;
         markAutoPopupShown();
         const overlay = document.createElement('div'); overlay.className = 'qa-popup-overlay';
-        overlay.innerHTML = '<div class="qa-popup" role="dialog" aria-modal="true" aria-labelledby="qa-popup-title"><div class="qa-popup-top"><button class="qa-popup-close" type="button" aria-label="Close popup" title="Close">✕</button><span>♔ LIMITED SEATS LEFT</span><h2 id="qa-popup-title">Get a <em>FREE</em> Course Consultation</h2><p>Leave your details — our mentor will call within 60 minutes and guide you on the best course for your goals.</p></div><form class="qa-popup-form"><input name="name" required placeholder="Your Full Name *" autocomplete="name"><div class="qa-phone-group"><span class="qa-phone-prefix">🇮🇳 +91</span><input name="phone" required type="tel" placeholder="WhatsApp Number *" autocomplete="tel"></div><input name="city" placeholder="Your City (optional)" autocomplete="address-level2"><input name="course" placeholder="Which course are you interested in? (optional)"><button type="submit">Request Free Callback <span>→</span></button>' + getProofHTML() + '<p class="qa-popup-status" role="status"></p></form></div>';
+        overlay.innerHTML = '<div class="qa-popup" role="dialog" aria-modal="true" aria-labelledby="qa-popup-title"><div class="qa-popup-top"><button class="qa-popup-close" type="button" aria-label="Close popup" title="Close">✕</button><span>♔ LIMITED SEATS LEFT</span><h2 id="qa-popup-title">Get a <em>FREE</em> Course Consultation</h2><p>Leave your details — our mentor will call within 60 minutes and guide you on the best course for your goals.</p></div><form class="qa-popup-form"><input name="name" required placeholder="Your Full Name *" autocomplete="name"><div class="qa-phone-group"><span class="qa-phone-prefix">🇮🇳 +91</span><input name="phone" required type="tel" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" placeholder="10-digit number *" autocomplete="tel"></div><input name="city" placeholder="Your City (optional)" autocomplete="address-level2"><input name="course" placeholder="Which course are you interested in? (optional)"><button type="submit">Request Free Callback <span>→</span></button>' + getProofHTML() + '<p class="qa-popup-status" role="status"></p></form></div>';
         document.body.append(overlay);
         const close = () => overlay.remove();
         overlay.querySelector('.qa-popup-close').addEventListener('click', close);
@@ -404,11 +417,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (popupPhoneInp) {
             const sp = localStorage.getItem('qa_user_phone');
-            if (sp && !popupPhoneInp.value) popupPhoneInp.value = sp;
+            if (sp && !popupPhoneInp.value) popupPhoneInp.value = sp.replace(/\D/g, '').slice(0, 10);
             popupPhoneInp.addEventListener('input', e => {
+                const raw = e.target.value;
+                const digits = raw.replace(/\D/g, '').slice(0, 10);
+                if (raw !== digits) e.target.value = digits;
                 try {
-                    const cleanPhone = e.target.value.replace(/\D/g, '').slice(-10);
-                    if (cleanPhone) localStorage.setItem('qa_user_phone', cleanPhone);
+                    if (digits) localStorage.setItem('qa_user_phone', digits);
                 } catch (_) {}
             });
         }
@@ -430,7 +445,9 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault(); const form = e.currentTarget; if (!form.reportValidity()) return;
             const status = overlay.querySelector('.qa-popup-status'), button = form.querySelector('button');
             const data = Object.fromEntries(new FormData(form));
-            if (data.phone.replace(/\D/g, '').length < 8) { status.textContent = 'Please enter a valid phone number.'; return; }
+            const phoneDigits = (data.phone || '').replace(/\D/g, '').slice(0, 10);
+            if (phoneDigits.length !== 10) { status.textContent = 'Please enter a valid 10-digit mobile number.'; return; }
+            data.phone = phoneDigits;
             data.source = 'course-popup'; data.consent = true; button.disabled = true; status.textContent = 'Sending your enquiry…';
             const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 20000);
             try {
@@ -448,6 +465,48 @@ document.addEventListener('DOMContentLoaded', () => {
             finally { clearTimeout(timeout); }
         });
     };
+
+    // Universal 10-digit numeric constraint for all phone/whatsapp inputs
+    document.addEventListener('input', e => {
+        const t = e.target;
+        if (!t || t.tagName !== 'INPUT') return;
+        if (t.type === 'tel' || t.name === 'phone' || (t.id && t.id.toLowerCase().includes('phone'))) {
+            const raw = t.value;
+            const digits = raw.replace(/\D/g, '').slice(0, 10);
+            if (raw !== digits) {
+                t.value = digits;
+            }
+        }
+    }, true);
+
+    document.addEventListener('paste', e => {
+        const t = e.target;
+        if (!t || t.tagName !== 'INPUT') return;
+        if (t.type === 'tel' || t.name === 'phone' || (t.id && t.id.toLowerCase().includes('phone'))) {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+            let digits = text.replace(/\D/g, '');
+            if (digits.length === 12 && digits.startsWith('91')) {
+                digits = digits.slice(2);
+            } else if (digits.length > 10) {
+                digits = digits.slice(-10);
+            }
+            t.value = digits.slice(0, 10);
+            t.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    }, true);
+
+    document.addEventListener('keydown', e => {
+        const t = e.target;
+        if (!t || t.tagName !== 'INPUT') return;
+        if (t.type === 'tel' || t.name === 'phone' || (t.id && t.id.toLowerCase().includes('phone'))) {
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Enter', 'Home', 'End'].includes(e.key)) return;
+            if (!/^[0-9]$/.test(e.key)) {
+                e.preventDefault();
+            }
+        }
+    }, true);
 
     // Connect all "Book Free Demo" buttons/links on the page to open the popup form
     document.addEventListener('click', e => {

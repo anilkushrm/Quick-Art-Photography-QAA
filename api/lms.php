@@ -1854,7 +1854,14 @@ if ($action === 'create-workshop-order' && $method === 'POST') {
     }
     if (!$target) json_err('Workshop session not found', 404);
 
-    $ticketPrice = (int)($target['ticketPrice'] ?? 299);
+    $ticketPrice = (int)($target['ticketPrice'] ?? 21);
+    $landingFile = DATA_DIR . '/masterclass-landing.json';
+    if (file_exists($landingFile)) {
+        $lpData = json_decode(file_get_contents($landingFile), true) ?: [];
+        if (!empty($lpData['ticketPrice'])) {
+            $ticketPrice = (int)$lpData['ticketPrice'];
+        }
+    }
     $settings = load_lms_settings();
     $keyId = trim($settings['razorpayKeyId'] ?? '');
     $keySecret = trim($settings['razorpayKeySecret'] ?? '');

@@ -1,52 +1,54 @@
 {
-    "topAnnouncement": "🔥 SPECIAL AI MASTERCLASS: Only 15 Seats Left For This Live Online Workshop!",
-    "heroBadge": "🔴 LIVE WORKSHOP • WEDDING VIDEO EDITING ME AI KA SAHI USE",
-    "title": "Wedding Video Editing Me AI Ka Sahi Use",
-    "titleHighlight": "AI Se 10x Fast Wedding Video Kaise Edit Karein",
-    "subtitle": "Premiere Pro & DaVinci Resolve me Topaz AI, Speech Enhance, AI Face Glow, Auto Color Match aur Beat Sync ka practical live timeline workflow. Wedding videos ghanton ke badle minton me cinematic banayein.",
+    "topAnnouncement": "⚡ 2 DIN KA LIVE WORKSHOP ONLY ₹21 MEIN! • BATCH STARTS HAR SUNDAY SHAAM 07:00 BAJE",
+    "heroBadge": "🔴 2-DAY LIVE WORKSHOP • SPECIAL FOR WEDDING PHOTOGRAPHERS & EDITORS",
+    "title": "Wedding Video Editing Me AI का सही use",
+    "titleHighlight": "AI Se 10x Fast Wedding Video कैसे Edit करे",
+    "subtitle": "Special Wedding Photographers & Editors ke liye 2-Day Practical Timeline Masterclass. Day 1: AI Se Wedding Photo Editing & Retouching | Day 2: AI Se Wedding Video Editing & 10x Fast Timeline Workflow. Shaadi season me raat-raat bhar jagna band — ghanton ka manual kaam minton me finish karein!",
     "promoVideoUrl": "https://youtu.be/dQw4w9WgXcQ",
-    "scheduledAt": "2026-09-25T19:00:00+05:30",
-    "ticketPrice": 299,
+    "scheduledAt": "2026-09-27T19:00:00+05:30",
+    "ticketPrice": 21,
     "originalPrice": 999,
-    "seatsRemaining": "🔥 ONLY 7 SEATS LEFT AT ₹299",
-    "duration": "120 Mins (2 Hours Live)",
+    "seatsRemaining": "🔥 ONLY 17 SEATS LEFT AT ₹21",
+    "duration": "2 Days Live Workshop (Har Sunday & Monday Shaam 7:00 PM)",
     "language": "Hindi (हिंदी)",
-    "software": "Premiere Pro & DaVinci Resolve (AI Workflow)",
+    "software": "Photoshop AI, Lightroom AI, Premiere Pro & DaVinci Resolve (AI Workflow)",
     "modules": [
         {
-            "title": "Part 1: Wedding Footage Me AI Ka Sahi Use & Instant Audio Clean",
-            "desc": "AI Speech Enhancement se background noise aur fan hum 1-click me hatayein. AI Scene Detection se 500+ raw clips ko 2 minute me organize karna aur Text-Based rough cut banana."
+            "day": "Day 01",
+            "title": "Day 1 (Sunday 7:00 PM): AI Se Wedding Photo Editing & Retouching",
+            "desc": "Haldi/party yellow lights ko creamy natural skin tone banana in 1-click. AI face glow, blemish removal, background se unwanted rishtedar/wires remove karna aur 500+ RAW wedding photos ko 15 minute me bulk batch edit karna."
         },
         {
-            "title": "Part 2: AI Face Refinement, Low-Light Video Upscale & Color Match",
-            "desc": "DaVinci Neural Engine & Topaz AI se shaky/low-light clips crystal clear banana. Bridal face glow & skin tones auto smooth karna aur multi-camera footage ko 1 click me match karna."
-        },
-        {
-            "title": "Part 3: 10x Fast Wedding Teaser Editing with AI Beat Sync",
-            "desc": "Music beat markers par auto cut sync karna, AI auto smart reframe (9:16 reels + 16:9 full 4K teaser), aur signature wedding LUTs se client-ready cinematic output nikalna."
+            "day": "Day 02",
+            "title": "Day 2 (Monday 7:00 PM): AI Se Wedding Video Editing & 10x Fast Timeline Workflow",
+            "desc": "Premiere Pro & DaVinci me 1-click AI speech enhance (bad microphone/noise clean), Topaz AI se low-light/shaky clips 4K upscale, AI beat sync se 30 min me wedding teaser cut, multi-cam color match aur viral 9:16 reels reframe."
         }
     ],
     "bonusValue": "₹4,999",
     "bonuses": [
         {
-            "title": "50+ Signature AI-Optimized Wedding LUTs Pack",
+            "title": "50+ Signature AI Wedding Cinematic LUTs & Color Grading Presets",
             "worth": "₹1,999 FREE"
         },
         {
-            "title": "Wedding Editor AI Prompts & 10x Workflow Guide",
-            "worth": "₹999 FREE"
-        },
-        {
-            "title": "4K RAW Practice Wedding Footage Pack",
+            "title": "Photoshop & Lightroom AI Wedding Retouching Actions & Presets Pack",
             "worth": "₹1,499 FREE"
         },
         {
-            "title": "30-Day Full HD Replay Access + Community Access",
+            "title": "Wedding Editor 10x AI Prompts & Timeline Workflow Cheat Sheet",
+            "worth": "₹999 FREE"
+        },
+        {
+            "title": "30-Day Full HD Replay Access + 4K Practice RAW Project Files",
             "worth": "₹1,000 FREE"
+        },
+        {
+            "title": "Official ISO 9001:2015 Verifiable Academy Workshop Certificate",
+            "worth": "PRICELESS"
         }
     ],
     "mentorName": "Anil Sharma",
     "mentorTitle": "Lead Video Editor & Founder, Quick Art Photography Academy",
-    "mentorBio": "10+ saal ka wedding filmmaking aur cinematic editing experience. 1,800+ editors aur photographers ko practical timeline workflows sikhaye hain.",
+    "mentorBio": "10+ saal ka wedding filmmaking aur photo/video editing experience. 1,800+ wedding photographers aur editors ko ground-level practical workflows sikhaye hain.",
     "whatsappPhone": "9939800780"
 }

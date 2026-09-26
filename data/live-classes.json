@@ -1,14 +1,14 @@
 [
     {
         "id": "live_demo_01",
-        "title": "Ultimate Cinematic Wedding Filmmaking & Color Grading",
-        "description": "2 ghante ka practical hands-on live timeline session Mentor Anil Sharma ke saath. DaVinci Resolve & Premiere Pro me cinematic skin tones, node tree, aur custom LUTs banana seekhein.",
+        "title": "Wedding Video Editing Me AI Ka Sahi Use (2-Day Live Workshop)",
+        "description": "2 Din Ka Live Workshop Special Wedding Photographers & Video Editors Ke Liye. Day 1: AI Se Wedding Photo Editing & Retouching | Day 2: AI Se Wedding Video Editing & 10x Fast Timeline Workflow. Har Sunday Shaam 7:00 PM.",
         "type": "workshop",
-        "courseId": "course-davinci-resolve",
-        "ticketPrice": 499,
+        "courseId": "course-cinematic-wedding",
+        "ticketPrice": 21,
         "originalPrice": 999,
-        "scheduledAt": "2026-09-25T19:00:00+05:30",
-        "duration": "120 Mins (2 Hours Live)",
+        "scheduledAt": "2026-09-27T19:00:00+05:30",
+        "duration": "2 Days Live Workshop (Har Sunday & Monday Shaam 7:00 PM)",
         "status": "scheduled",
         "streamId": "dQw4w9WgXcQ",
         "replayUrl": "",
@@ -16,11 +16,11 @@
         "resources": [
             {
                 "title": "Practice RAW Video Footage (4K)",
-                "url": "https:\/\/quickartphotography.in\/downloads\/sample-raw-footage.zip"
+                "url": "https://quickartphotography.in/downloads/sample-raw-footage.zip"
             },
             {
                 "title": "Quick Art Cinematic LUTs Pack v2",
-                "url": "https:\/\/quickartphotography.in\/downloads\/cinematic-luts.zip"
+                "url": "https://quickartphotography.in/downloads/cinematic-luts.zip"
             }
         ],
         "createdAt": "2026-09-21T14:45:00+05:30"

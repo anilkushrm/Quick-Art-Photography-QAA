@@ -5362,6 +5362,9 @@ main>section.qa-master-hero form.qa-enquiry .qa-kicker {
 
 main>section.qa-master-hero form.qa-enquiry .qa-field label {
   color: #27231e !important;
+  text-align: left !important;
+  display: block !important;
+  width: 100% !important;
 }
 
 main>section.qa-master-hero form.qa-enquiry input:not([type="checkbox"]):not([type="radio"]),
@@ -5383,6 +5386,7 @@ main>section.qa-master-hero form.qa-enquiry textarea::placeholder {
 
 main>section.qa-master-hero form.qa-enquiry .qa-field {
   display: block !important;
+  text-align: left !important;
 }
 
 main>section.qa-master-hero form.qa-enquiry .qa-demo {

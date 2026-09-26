@@ -1115,6 +1115,7 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
   display: flex !important;
   flex-direction: column !important;
   gap: 8px !important;
+  text-align: left !important;
 }
 
 /* 2-column input rows for hero form — remains sleek 2-columns on mobile */
@@ -1123,12 +1124,14 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
   grid-template-columns: 1fr 1fr !important;
   gap: 10px !important;
   width: 100% !important;
+  text-align: left !important;
 }
 
 @media (max-width: 640px) {
   .mc-form-row {
     grid-template-columns: 1fr 1fr !important;
     gap: 8px !important;
+    text-align: left !important;
   }
   .mc-deck-title {
     font-size: 20px !important;
@@ -1138,13 +1141,26 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
     line-height: 1.35 !important;
     margin-bottom: 8px !important;
   }
+  .mc-deck-body .qa-field,
+  .mc-deck-body .mc-form-row .qa-field,
+  .mc-deck-body .mc-field-message,
+  main>section.qa-master-hero form.qa-enquiry .qa-field {
+    text-align: left !important;
+  }
   .mc-deck-body .qa-field label,
+  .mc-deck-body .mc-form-row .qa-field label,
+  .mc-deck-body .mc-field-message label,
   main>section.qa-master-hero form.qa-enquiry .qa-field label {
     font-size: 10.5px !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     margin-bottom: 2px !important;
+    text-align: left !important;
+    display: block !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
   }
   .mc-deck-body .qa-phone-prefix,
   main>section.qa-master-hero form.qa-enquiry .qa-phone-prefix {
@@ -1155,11 +1171,14 @@ main > section.relative.bg-ink .qa-master-hero-grid > div:first-child h1 {
 
 /* Remove site.css top-margin on qa-field inside deck so gap alone controls spacing */
 .mc-deck-body .qa-field,
+.mc-deck-body .mc-form-row .qa-field,
+.mc-deck-body .mc-field-message,
 main>section.qa-master-hero form.qa-enquiry .qa-field {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   width: 100% !important;
   display: block !important;
+  text-align: left !important;
 }
 
 .mc-deck-body form.qa-enquiry h2,
@@ -1168,11 +1187,17 @@ main>section.qa-master-hero form.qa-enquiry .qa-field {
 }
 
 .mc-deck-body .qa-field label,
+.mc-deck-body .mc-form-row .qa-field label,
+.mc-deck-body .mc-field-message label,
 main>section.qa-master-hero form.qa-enquiry .qa-field label {
   color: #1e293b !important;
   font-size: 11px !important;
   font-weight: 700 !important;
   display: block !important;
+  width: 100% !important;
+  text-align: left !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
   margin-bottom: 3px !important;
   letter-spacing: 0.01em !important;
 }

@@ -11,7 +11,7 @@
     "razorpayMode": "live",
     "watermarkEnabled": false,
     "watermarkOpacity": 0.35,
-    "otpDemoMode": false,
+    "otpDemoMode": true,
     "defaultOtp": "123456",
     "fast2smsApiKey": "jQyG9RuNpd47hVwtIOEk1evm8cxCYAzgSiTZBqb0WXlPFa6sMLnxRrqlwFjyT71Ca4c5XYdm3KGBsIiD",
     "fast2smsOtpTemplate": "Your Quick Art Academy login code is: {otp}. Valid for 10 mins. Helpline: 9939800780",

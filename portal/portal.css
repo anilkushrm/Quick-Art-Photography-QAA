@@ -355,41 +355,45 @@ a {
   display: flex;
   align-items: stretch;
   min-height: 48px;
+  height: 48px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--bg-input);
   overflow: hidden;
   margin-bottom: 20px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease;
 }
 
 .input-phone-group:focus-within {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
+  border-color: rgba(216, 161, 83, 0.55) !important;
+  box-shadow: none !important;
 }
 
 .phone-prefix {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 14px;
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text-muted);
-  font-weight: 600;
-  border-right: 1px solid var(--border);
-  font-size: 14.5px;
-  line-height: 1;
-  white-space: nowrap;
-  user-select: none;
-  gap: 5px;
-  height: auto;
-  align-self: stretch;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 0 16px !important;
+  min-width: 60px !important;
+  height: 100% !important;
+  align-self: stretch !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: var(--text-muted) !important;
+  font-weight: 600 !important;
+  border-right: 1px solid var(--border) !important;
+  font-size: 14.5px !important;
+  line-height: normal !important;
+  white-space: nowrap !important;
+  user-select: none !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
 }
 
 .input-phone-group input {
   flex: 1;
   background: transparent;
-  border: none;
+  border: none !important;
   padding: 0 14px;
   color: var(--text-main);
   font-size: 15.5px;
@@ -398,7 +402,9 @@ a {
   letter-spacing: 0.05em;
   display: flex;
   align-items: center;
+  height: 100%;
   min-height: 48px;
+  box-sizing: border-box;
 }
 
 .input-otp {
@@ -3196,21 +3202,26 @@ a {
   .input-phone-group {
     gap: 0;
     min-height: 46px;
+    height: 46px;
   }
   .phone-prefix {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13.5px;
-    padding: 0 12px;
-    line-height: 1;
-    height: auto;
-    align-self: stretch;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    font-size: 13.5px !important;
+    padding: 0 14px !important;
+    min-width: 56px !important;
+    line-height: normal !important;
+    height: 100% !important;
+    align-self: stretch !important;
+    box-sizing: border-box !important;
   }
   .input-phone-group input {
     padding: 0 12px;
     font-size: 15px;
     min-height: 46px;
+    height: 100%;
   }
   .btn-block {
     padding: 14px 18px;
@@ -6137,9 +6148,9 @@ video::-webkit-media-controls-download-button {
   transition: all 0.2s ease;
 }
 .checkout-phone-input-wrap:focus-within {
-  border-color: var(--gold, #d8a153) !important;
+  border-color: rgba(216, 161, 83, 0.55) !important;
   background: #1e1e2d;
-  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
+  box-shadow: none !important;
 }
 .checkout-phone-input-wrap .phone-flag {
   display: inline-flex;

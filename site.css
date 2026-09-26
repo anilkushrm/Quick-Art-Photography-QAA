@@ -5938,9 +5938,9 @@ main>section.qa-master-hero form.qa-enquiry .qa-proof-text .qa-proof-rating,
 }
 
 .qa-phone-group:focus-within .qa-phone-prefix {
-  border-color: #d97706 !important;
-  background: #fef3c7 !important;
-  color: #92400e !important;
+  border-color: rgba(217, 119, 6, 0.55) !important;
+  background: #f8fafc !important;
+  color: #d97706 !important;
 }
 
 /* Dark mode / dark theme variation */
@@ -5963,12 +5963,12 @@ main>section.qa-master-hero form.qa-enquiry .qa-proof-text .qa-proof-rating,
 
 .qa-dark .qa-phone-group:focus-within .qa-phone-prefix,
 [data-theme="dark"] .qa-phone-group:focus-within .qa-phone-prefix {
-  background: rgba(245, 158, 11, 0.18) !important;
-  border-color: #f59e0b !important;
-  color: #fbbf24 !important;
+  background: #171b26 !important;
+  border-color: rgba(216, 161, 83, 0.55) !important;
+  color: #f5c879 !important;
 }
 
-/* Unified delicate input focus rings across all forms (removes thick borders) */
+/* Unified sleek & subtle input focus across all forms (1px crisp border, zero thick glow) */
 :where(input, select, textarea):focus,
 :where(input, select, textarea):focus-visible,
 :is(input[type="text"], input[type="tel"], input[type="email"], input[type="number"], input[type="password"], select, textarea):focus,
@@ -5976,8 +5976,8 @@ main>section.qa-master-hero form.qa-enquiry .qa-proof-text .qa-proof-rating,
 .qa-enquiry :is(input, select, textarea):focus,
 .qa-popup-form input:focus {
   outline: none !important;
-  border-color: #d97706 !important;
-  box-shadow: 0 0 0 1.5px rgba(217, 119, 6, 0.16) !important;
+  border-color: rgba(217, 119, 6, 0.55) !important;
+  box-shadow: none !important;
 }
 
 .qa-dark :is(input, select, textarea):focus,
@@ -5990,13 +5990,14 @@ main>section.qa-master-hero form.qa-enquiry .qa-proof-text .qa-proof-rating,
 [data-theme="dark"] :is(input, select, textarea):focus,
 .checkout-modal input:focus {
   outline: none !important;
-  border-color: #d8a153 !important;
-  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
-  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(216, 161, 83, 0.55) !important;
+  box-shadow: none !important;
+  background: rgba(255, 255, 255, 0.08) !important;
 }
 
 .qa-phone-group:focus-within {
-  box-shadow: 0 0 0 1.5px rgba(217, 119, 6, 0.16) !important;
+  box-shadow: none !important;
+  border-color: rgba(217, 119, 6, 0.55) !important;
   border-radius: 9px !important;
 }
 
@@ -6004,12 +6005,14 @@ main>section.qa-master-hero form.qa-enquiry .qa-proof-text .qa-proof-rating,
 .qa-dark-form .qa-phone-group:focus-within,
 .checkout-modal .qa-phone-group:focus-within,
 [data-theme="dark"] .qa-phone-group:focus-within {
-  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
+  box-shadow: none !important;
+  border-color: rgba(216, 161, 83, 0.55) !important;
   border-radius: 9px !important;
 }
 
 .qa-phone-group input:focus {
   box-shadow: none !important;
+  border-color: rgba(216, 161, 83, 0.55) !important;
 }
 
 

@@ -58,8 +58,8 @@
 .home-contact-form .qa-enquiry .qa-field select:focus,
 .home-contact-form .qa-enquiry .qa-field textarea:focus {
   outline: none !important;
-  border-color: #d8a153 !important;
-  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
+  border-color: rgba(216, 161, 83, 0.55) !important;
+  box-shadow: none !important;
   background: rgba(255, 255, 255, 0.08);
 }
 .home-contact-form .qa-enquiry .qa-consent { color: #94a3b8; }

@@ -1207,8 +1207,8 @@ main>section.qa-master-hero form.qa-enquiry .qa-phone-group {
 
 .mc-deck-body .qa-phone-group:focus-within,
 main>section.qa-master-hero form.qa-enquiry .qa-phone-group:focus-within {
-  border-color: #d97706 !important;
-  box-shadow: 0 0 0 1.5px rgba(217, 119, 6, 0.16) !important;
+  border-color: rgba(217, 119, 6, 0.55) !important;
+  box-shadow: none !important;
 }
 
 .mc-deck-body .qa-phone-prefix,
@@ -1266,8 +1266,8 @@ main>section.qa-master-hero form.qa-enquiry select option {
 .mc-deck-body form.qa-enquiry :is(input, select, textarea):focus,
 main>section.qa-master-hero form.qa-enquiry :is(input, select, textarea):focus {
   background: #ffffff !important;
-  border-color: #d97706 !important;
-  box-shadow: 0 0 0 1.5px rgba(217, 119, 6, 0.14) !important;
+  border-color: rgba(217, 119, 6, 0.55) !important;
+  box-shadow: none !important;
   outline: none !important;
 }
 

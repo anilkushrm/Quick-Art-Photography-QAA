@@ -165,20 +165,21 @@ main .qa-master-hero>div:first-child>img {
 :where(input,select,textarea):focus,
 :where(input,select,textarea):focus-visible {
   outline: none !important;
+  box-shadow: none !important;
 }
 .qa-field :is(input,select,textarea):focus {
   outline: none !important;
-  border-color: #d97706 !important;
-  box-shadow: 0 0 0 1.5px rgba(217, 119, 6, 0.16) !important;
+  border-color: rgba(217, 119, 6, 0.55) !important;
+  box-shadow: none !important;
 }
 .qa-dark .qa-field :is(input,select,textarea):focus,
 .qa-dark .qa-enquiry :is(input,select,textarea):focus,
 .qa-contact-page .qa-field :is(input,select,textarea):focus,
 .qa-dark-form :is(input,select,textarea):focus {
   outline: none !important;
-  border-color: #d8a153 !important;
-  box-shadow: 0 0 0 1.5px rgba(216, 161, 83, 0.18) !important;
-  background: rgba(255, 255, 255, 0.10) !important;
+  border-color: rgba(216, 161, 83, 0.55) !important;
+  box-shadow: none !important;
+  background: rgba(255, 255, 255, 0.08) !important;
 }
 
 .qa-section {

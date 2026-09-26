@@ -107,6 +107,8 @@ function load_lms_settings() {
         'otpDemoMode' => false,
         'defaultOtp' => '123456',
         'fast2smsApiKey' => '',
+        'aibotflowApiKey' => '',
+        'aibotflowOtpTemplate' => 'quickart_login_otp',
         'academyName' => 'Quick Art Photography Academy',
         'mentorName' => 'Anil Sharma'
     ];
@@ -353,6 +355,75 @@ function trigger_webhook($lead) {
         'body' => is_string($body) ? substr($body, 0, 800) : '',
         'error' => $err ?: null, 'errno' => $errno,
     ];
+}
+
+// ---------- AIbotflow WhatsApp OTP Helpers ----------
+function send_aibotflow_whatsapp_otp($phone, $otp, $apiKey, $templateName = 'quickart_login_otp') {
+    $apiKey = trim((string)$apiKey);
+    if (empty($apiKey)) {
+        return ['ok' => false, 'error' => 'AIbotflow WhatsApp API Key configure nahi hai'];
+    }
+
+    $cleanPhone = preg_replace('/[^0-9]/', '', (string)$phone);
+    if (strlen($cleanPhone) === 12 && substr($cleanPhone, 0, 2) === '91') {
+        $cleanPhone = substr($cleanPhone, 2);
+    }
+    if (strlen($cleanPhone) !== 10) {
+        return ['ok' => false, 'error' => 'Valid 10-digit mobile number enter karein'];
+    }
+
+    $targetPhone = '+91' . $cleanPhone;
+    $tpl = !empty($templateName) ? trim($templateName) : 'quickart_login_otp';
+
+    $payload = [
+        'to' => $targetPhone,
+        'type' => 'template',
+        'template' => [
+            'name' => $tpl,
+            'language' => 'en_US',
+            'params' => [
+                'body' => [(string)$otp],
+                'buttonParams' => [
+                    '0' => (string)$otp
+                ]
+            ]
+        ]
+    ];
+
+    $ch = curl_init("https://aibotflow.in/api/v1/messages");
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_HTTPHEADER => [
+            "Authorization: Bearer " . $apiKey,
+            "Content-Type: application/json"
+        ],
+        CURLOPT_TIMEOUT => 12
+    ]);
+    $raw = curl_exec($ch);
+    $err = curl_error($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    @curl_close($ch);
+
+    $res = $raw ? json_decode($raw, true) : null;
+    if ($code >= 200 && $code < 300) {
+        return [
+            'ok' => true,
+            'route' => 'whatsapp',
+            'message' => "OTP {$otp} delivered to WhatsApp ({$targetPhone}) via AIbotflow",
+            'response' => $res
+        ];
+    }
+
+    $errMsg = 'WhatsApp OTP delivery failed';
+    if ($res && !empty($res['error']['message'])) {
+        $errMsg = $res['error']['message'];
+    } elseif ($err) {
+        $errMsg = $err;
+    }
+
+    return ['ok' => false, 'error' => $errMsg, 'raw' => $raw, 'httpCode' => $code];
 }
 
 // ---------- Fast2SMS Helpers ----------

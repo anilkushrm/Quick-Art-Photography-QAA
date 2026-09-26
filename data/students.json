@@ -7,8 +7,8 @@
         "city": "Siwan",
         "enrolledAt": "2026-09-17T04:30:00Z",
         "enrolledCourses": [],
-        "completedLessons": {},
-        "lastActive": "2026-09-21T04:37:15+00:00"
+        "completedLessons": [],
+        "lastActive": "2026-09-26T15:11:50+00:00"
     },
     {
         "id": "stu_51138ea5",
@@ -17,9 +17,12 @@
         "email": "",
         "city": "",
         "enrolledAt": "2026-09-17T04:44:25+00:00",
-        "enrolledCourses": [],
+        "enrolledCourses": [
+            "course-premiere-pro",
+            "course-edius-pro"
+        ],
         "completedLessons": [],
-        "lastActive": "2026-09-17T04:44:25+00:00"
+        "lastActive": "2026-09-26T15:19:22+00:00"
     },
     {
         "id": "stu_b52400",

@@ -35,5 +35,17 @@
         "currency": "INR",
         "status": "SUCCESS",
         "createdAt": "2026-09-21T09:35:04+00:00"
+    },
+    {
+        "id": "tx_adm_76ef77f1",
+        "courseId": "course-premiere-pro,course-edius-pro",
+        "courseTitle": "Adobe Premiere Pro Masterclass, EDIUS Pro Fast Wedding Editing",
+        "amount": 8998,
+        "studentName": "Student 7431",
+        "studentPhone": "9939967431",
+        "paymentMethod": "UPI \/ QR Code",
+        "notes": "",
+        "status": "completed",
+        "date": "2026-09-26T15:15:37+00:00"
     }
 ]

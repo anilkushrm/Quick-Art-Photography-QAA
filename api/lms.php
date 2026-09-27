@@ -2345,22 +2345,22 @@ if ($action === 'get-alumni' && ($method === 'GET' || $method === 'POST')) {
             [
                 'id'          => 'alm_005',
                 'name'        => 'Manish Pandey',
-                'photo'       => '/assets/alumni/alumni_rahul_kumar.jpg',
+                'photo'       => '/assets/alumni/alumni_manish_pandey.jpg',
                 'studioName'  => 'Shree Wedding Photography',
-                'role'        => 'Studio Owner',
+                'role'        => 'Studio Owner & Director',
                 'city'        => 'Muzaffarpur',
                 'state'       => 'Bihar',
                 'batch'       => 'Master Class Batch 2024',
                 'course'      => 'Wedding Album Design & Commercial Filmmaking',
                 'certId'      => 'QAA-2024-0230',
                 'instagram'   => 'https://instagram.com/',
-                'highlight'   => 'Purani traditional photography lab ko upgrade karke modern 4K multi-cam production unit me convert kiya.',
+                'highlight'   => 'Purani traditional photography lab ko upgrade karke modern 4K multi-cam production unit me convert kiya. 5 editors ki team lead kar rahe hain.',
                 'featured'    => false
             ],
             [
                 'id'          => 'alm_006',
                 'name'        => 'Rohit Verma',
-                'photo'       => '/assets/alumni/alumni_amit_tiwari.jpg',
+                'photo'       => '/assets/alumni/alumni_rohit_verma.jpg',
                 'studioName'  => 'CineCraft Digital Ballia',
                 'role'        => 'Senior Video Editor',
                 'city'        => 'Ballia',
@@ -2369,8 +2369,38 @@ if ($action === 'get-alumni' && ($method === 'GET' || $method === 'POST')) {
                 'course'      => 'Video Editing & AI Automation',
                 'certId'      => 'QAA-2025-0955',
                 'instagram'   => 'https://instagram.com/',
-                'highlight'   => 'Academy ke hostel me rahkar course kiya. Ballia aur Varanasi wedding market me top video editor ke roop me kaam kar rahe hain.',
+                'highlight'   => 'Academy ke hostel me rahkar course kiya. Ballia aur Varanasi wedding market me top video editor ke roop me high-ticket shoots edit kar rahe hain.',
                 'featured'    => false
+            ],
+            [
+                'id'          => 'alm_007',
+                'name'        => 'Suraj Sharma',
+                'photo'       => '/assets/alumni/alumni_suraj_raxaul.jpg',
+                'studioName'  => 'Suraj Digital Cine World',
+                'role'        => 'Lead Wedding Filmmaker',
+                'city'        => 'Raxaul',
+                'state'       => 'Bihar',
+                'batch'       => 'Offline Lab Batch 2024',
+                'course'      => '14-Week Wedding Filmmaking & Color Grading',
+                'certId'      => 'QAA-2024-0812',
+                'instagram'   => 'https://instagram.com/',
+                'highlight'   => 'Raxaul aur Indo-Nepal border area me sabse popular wedding film creator. Slow-motion gimbal shots aur high-end color grading expert.',
+                'featured'    => true
+            ],
+            [
+                'id'          => 'alm_008',
+                'name'        => 'Ravi Raj',
+                'photo'       => '/assets/alumni/alumni_ravi_gaya.jpg',
+                'studioName'  => 'Magadh Motion Pictures',
+                'role'        => 'Founder & DaVinci Colorist',
+                'city'        => 'Gaya',
+                'state'       => 'Bihar',
+                'batch'       => 'Offline Studio Batch 2025',
+                'course'      => 'Cinematic Camera Shoot & DaVinci Resolve',
+                'certId'      => 'QAA-2025-0319',
+                'instagram'   => 'https://instagram.com/',
+                'highlight'   => 'Gaya se Siwan campus aakar seekha. Aaj Bodh Gaya aur Patna ke luxury weddings ke liye full cinema-style teasers bana rahe hain.',
+                'featured'    => true
             ]
         ];
         if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);

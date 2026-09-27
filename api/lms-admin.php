@@ -1031,6 +1031,182 @@ if ($action === 'save-masterclass-landing' && $method === 'POST') {
     json_ok(['saved' => true, 'landing' => $current]);
 }
 
+// 23. Get all offline admissions
+if ($action === 'get-offline-admissions' && ($method === 'GET' || $method === 'POST')) {
+    $admissionsFile = DATA_DIR . '/offline-admissions.json';
+    $admissions = file_exists($admissionsFile) ? json_decode(file_get_contents($admissionsFile), true) : [];
+    if (!is_array($admissions)) $admissions = [];
+    json_ok(['admissions' => array_reverse($admissions)]);
+}
+
+// 24. Approve offline admission & mark payment
+if ($action === 'approve-offline-admission' && $method === 'POST') {
+    $body = read_json_body() ?: $_POST;
+    $admissionId = trim($body['id'] ?? '');
+    $markPaid = !empty($body['markPaid']);
+
+    $admissionsFile = DATA_DIR . '/offline-admissions.json';
+    $admissions = file_exists($admissionsFile) ? json_decode(file_get_contents($admissionsFile), true) : [];
+    $found = false;
+
+    foreach ($admissions as &$adm) {
+        if ($adm['id'] === $admissionId) {
+            $adm['status'] = 'approved';
+            if ($markPaid) {
+                $adm['paymentStatus'] = 'paid';
+                $adm['paidAt'] = date('c');
+            }
+            $found = true;
+            break;
+        }
+    }
+    unset($adm);
+
+    if ($found) {
+        file_put_contents($admissionsFile, json_encode($admissions, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        json_ok(['approved' => true, 'id' => $admissionId]);
+    }
+    json_err('Admission not found', 404);
+}
+
+// 25. Approve graduate student to live Alumni page
+if ($action === 'approve-to-alumni' && $method === 'POST') {
+    $body = read_json_body() ?: $_POST;
+    $studentPhone = trim($body['phone'] ?? '');
+
+    $students = get_all_students();
+    $targetStudent = null;
+    foreach ($students as &$s) {
+        if (($s['phone'] ?? '') === $studentPhone) {
+            $s['alumniApproved'] = true;
+            $s['alumniPendingApproval'] = false;
+            $targetStudent = $s;
+            break;
+        }
+    }
+    unset($s);
+
+    if (!$targetStudent) {
+        json_err('Student record not found', 404);
+    }
+    save_all_students($students);
+
+    // Add to alumni.json
+    $alumniFile = DATA_DIR . '/alumni.json';
+    $alumni = file_exists($alumniFile) ? json_decode(file_get_contents($alumniFile), true) : [];
+    if (!is_array($alumni)) $alumni = [];
+
+    // Check if already in alumni
+    $exists = false;
+    foreach ($alumni as &$alm) {
+        if (($alm['phone'] ?? '') === $studentPhone || ($alm['certId'] ?? '') === ($targetStudent['certId'] ?? '')) {
+            $alm['name'] = $targetStudent['name'] ?? $alm['name'];
+            $alm['studioName'] = $targetStudent['studioName'] ?? $alm['studioName'];
+            $alm['role'] = $targetStudent['currentRole'] ?? $alm['role'];
+            $alm['city'] = $targetStudent['workCity'] ?? $alm['city'];
+            $alm['photo'] = $targetStudent['avatar'] ?? $alm['photo'];
+            $exists = true;
+            break;
+        }
+    }
+    unset($alm);
+
+    if (!$exists) {
+        $alumni[] = [
+            'id'          => 'alm_' . time() . '_' . substr(md5($studentPhone), 0, 4),
+            'phone'       => $studentPhone,
+            'name'        => $targetStudent['name'] ?? 'Alumnus',
+            'photo'       => $targetStudent['avatar'] ?? '/assets/anil-sharma.webp',
+            'studioName'  => $targetStudent['studioName'] ?? 'Creative Studio',
+            'role'        => $targetStudent['currentRole'] ?? 'Senior Video Editor',
+            'city'        => $targetStudent['workCity'] ?? 'Siwan',
+            'state'       => 'Bihar',
+            'batch'       => 'Batch ' . date('Y'),
+            'course'      => '14-Week Master Class',
+            'certId'      => $targetStudent['certId'] ?? ('QAA-' . date('Y') . '-ALM'),
+            'instagram'   => '',
+            'highlight'   => 'Certified Professional Editor from Quick Art Photography Academy.',
+            'featured'    => true
+        ];
+    }
+
+    file_put_contents($alumniFile, json_encode($alumni, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+    json_ok(['success' => true, 'message' => 'Student successfully published to Alumni Directory!']);
+}
+
+// 26. Manage Daily Tasks
+if ($action === 'save-daily-task' && $method === 'POST') {
+    $body = read_json_body() ?: $_POST;
+    $tasksFile = DATA_DIR . '/daily-tasks.json';
+    $tasks = file_exists($tasksFile) ? json_decode(file_get_contents($tasksFile), true) : [];
+    if (!is_array($tasks)) $tasks = [];
+
+    $id = trim($body['id'] ?? ('task_' . time()));
+    $taskItem = [
+        'id'          => $id,
+        'dayNumber'   => (int)($body['dayNumber'] ?? (count($tasks) + 1)),
+        'title'       => trim($body['title'] ?? 'Studio Editing Challenge'),
+        'description' => trim($body['description'] ?? ''),
+        'resource'    => trim($body['resource'] ?? ''),
+        'deadline'    => trim($body['deadline'] ?? ''),
+        'courseId'    => trim($body['courseId'] ?? 'master-class')
+    ];
+
+    $updated = false;
+    foreach ($tasks as &$t) {
+        if ($t['id'] === $id) {
+            $t = $taskItem;
+            $updated = true;
+            break;
+        }
+    }
+    unset($t);
+
+    if (!$updated) {
+        $tasks[] = $taskItem;
+    }
+
+    file_put_contents($tasksFile, json_encode($tasks, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    json_ok(['saved' => true, 'task' => $taskItem]);
+}
+
+// 27. Manage Offline Recordings
+if ($action === 'save-offline-recording' && $method === 'POST') {
+    $body = read_json_body() ?: $_POST;
+    $recFile = DATA_DIR . '/offline-recordings.json';
+    $recordings = file_exists($recFile) ? json_decode(file_get_contents($recFile), true) : [];
+    if (!is_array($recordings)) $recordings = [];
+
+    $id = trim($body['id'] ?? ('rec_' . time()));
+    $recItem = [
+        'id'          => $id,
+        'title'       => trim($body['title'] ?? ''),
+        'mentor'      => trim($body['mentor'] ?? 'Anil Sharma'),
+        'duration'    => trim($body['duration'] ?? ''),
+        'videoUrl'    => trim($body['videoUrl'] ?? ''),
+        'notes'       => trim($body['notes'] ?? ''),
+        'date'        => trim($body['date'] ?? date('Y-m-d'))
+    ];
+
+    $updated = false;
+    foreach ($recordings as &$r) {
+        if ($r['id'] === $id) {
+            $r = $recItem;
+            $updated = true;
+            break;
+        }
+    }
+    unset($r);
+
+    if (!$updated) {
+        $recordings[] = $recItem;
+    }
+
+    file_put_contents($recFile, json_encode($recordings, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    json_ok(['saved' => true, 'recording' => $recItem]);
+}
+
 json_err('Unknown action', 404);
 
 

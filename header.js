@@ -156,6 +156,58 @@
  }
  const contact=header.querySelector('.ref-nav>a[href*="contact-us"]');
  if(mobileNav&&contact){const cta=document.createElement('a');cta.className='ref-demo-cta';cta.href=contact.href;cta.textContent='Book Free Demo';mobileNav.append(cta);}
+
+ // ── Seamless Admission (₹500) & Alumni Links across desktop & mobile ──
+ const sampleNav = header.querySelector('.ref-nav a[href*="about-us"], .ref-nav a[href*="master-class"], .ref-nav a[href*="contact-us"]');
+ let navPrefix = '';
+ if (sampleNav) {
+   const href = sampleNav.getAttribute('href') || '';
+   if (href.startsWith('../../')) navPrefix = '../../';
+   else if (href.startsWith('../')) navPrefix = '../';
+   else navPrefix = '';
+ }
+
+ const desktopNav = header.querySelector('.ref-nav');
+ if (desktopNav && !desktopNav.querySelector('a[href*="admission"]')) {
+   const masterLink = desktopNav.querySelector('a[href*="master-class"]');
+   const admA = document.createElement('a');
+   admA.href = `${navPrefix}admission/`;
+   admA.className = 'ref-admission-nav-link';
+   admA.innerHTML = 'Admission <span style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-size:10px;font-weight:800;padding:1px 6px;border-radius:999px;margin-left:3px;letter-spacing:0.5px;box-shadow:0 2px 6px rgba(245,158,11,0.3);">₹500</span>';
+   admA.style.cssText = 'color:#f59e0b;font-weight:700;display:inline-flex;align-items:center;';
+
+   const alumniA = document.createElement('a');
+   alumniA.href = `${navPrefix}alumni/`;
+   alumniA.className = 'ref-alumni-nav-link';
+   alumniA.textContent = 'Alumni';
+
+   if (masterLink && masterLink.nextSibling) {
+     desktopNav.insertBefore(admA, masterLink.nextSibling);
+     desktopNav.insertBefore(alumniA, admA.nextSibling);
+   } else {
+     desktopNav.append(admA, alumniA);
+   }
+ }
+
+ if (mobileNav && !mobileNav.querySelector('a[href*="admission"]')) {
+   const mobMaster = mobileNav.querySelector('a[href*="master-class"]') || mobileNav.querySelector('a[href*="courses/"]');
+   const mobAdmA = document.createElement('a');
+   mobAdmA.href = `${navPrefix}admission/`;
+   mobAdmA.innerHTML = '🎓 Offline Admission <span style="background:#f59e0b;color:#000;font-size:11px;font-weight:800;padding:2px 7px;border-radius:999px;margin-left:6px;">Seat ₹500</span>';
+   mobAdmA.style.cssText = 'color:#f59e0b;font-weight:700;display:flex;align-items:center;';
+
+   const mobAlumniA = document.createElement('a');
+   mobAlumniA.href = `${navPrefix}alumni/`;
+   mobAlumniA.innerHTML = '👥 Alumni Hall of Fame';
+
+   if (mobMaster && mobMaster.nextSibling) {
+     mobileNav.insertBefore(mobAdmA, mobMaster.nextSibling);
+     mobileNav.insertBefore(mobAlumniA, mobAdmA.nextSibling);
+   } else {
+     mobileNav.append(mobAdmA, mobAlumniA);
+   }
+ }
+
  const drops=[...header.querySelectorAll('.ref-dropdown')];
  header.querySelectorAll('#ref-online-tab-1,#ref-online-panel-1 :is(h2, .ref-panel-title),#ref-mobile .ref-mobile-group').forEach(label=>{
   if(label.textContent.replace('›','').trim()!=='Wedding Filmmaking')return;

@@ -1,0 +1,542 @@
+/* alumni/alumni.css — Quick Art Photography Academy Alumni Showcase */
+
+:root {
+  --alm-bg: #090b10;
+  --alm-card-bg: #121622;
+  --alm-gold: #d97706;
+  --alm-gold-light: #f59e0b;
+  --alm-border: rgba(255, 255, 255, 0.08);
+}
+
+body.alm-body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #0b0d14;
+  color: #f1f5f9;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.alm-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Hero Section */
+.alm-hero {
+  position: relative;
+  padding: 130px 0 50px;
+  background: radial-gradient(circle at 50% 10%, rgba(217, 119, 6, 0.18) 0%, rgba(11, 13, 20, 1) 80%);
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.alm-hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(rgba(245, 158, 11, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.alm-hero-badge-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  margin-bottom: 18px;
+}
+
+.alm-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+}
+
+.alm-hero-badge {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #fcd34d;
+}
+
+.alm-hero-h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(34px, 5.2vw, 50px);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin: 0 0 14px 0;
+  color: #ffffff;
+}
+
+.alm-gold-text {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.alm-hero-sub {
+  font-size: clamp(15px, 2vw, 17px);
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 740px;
+  margin: 0 auto 36px;
+  line-height: 1.6;
+}
+
+.alm-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.alm-stat-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px 12px;
+  backdrop-filter: blur(10px);
+}
+
+.alm-stat-card strong {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  color: #fbbf24;
+  margin-bottom: 2px;
+}
+
+.alm-stat-card span {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Filter & Search Bar
+   ========================================================================== */
+.alm-search-section {
+  padding: 24px 0;
+  background: #0f121a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: sticky;
+  top: 70px;
+  z-index: 40;
+  backdrop-filter: blur(12px);
+}
+
+.alm-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.alm-search-input-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 520px;
+}
+
+.alm-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.alm-search-input-wrap input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 44px;
+  background: #181d28;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 0 16px 0 42px;
+  color: #ffffff;
+  font-size: 13.5px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.alm-search-input-wrap input:focus {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.alm-filter-selects {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.alm-filter-selects select {
+  height: 44px;
+  background: #181d28;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 0 32px 0 14px;
+  color: #e2e8f0;
+  font-size: 13px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  transition: all 0.2s;
+}
+
+.alm-filter-selects select:focus {
+  border-color: #f59e0b;
+}
+
+/* ==========================================================================
+   Alumni Cards Grid
+   ========================================================================== */
+.alm-grid-section {
+  padding: 40px 0 80px;
+}
+
+.alm-count-meta {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+.alm-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.alm-card {
+  background: linear-gradient(165deg, #151a26 0%, #0d1017 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.alm-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 20px 45px -10px rgba(245, 158, 11, 0.15);
+}
+
+.alm-card-featured-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.alm-card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.alm-avatar-wrap {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #f59e0b;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.25);
+  flex-shrink: 0;
+  position: relative;
+  background: #1e293b;
+}
+
+.alm-avatar-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.alm-card-meta h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 850;
+  color: #ffffff;
+  margin: 0 0 3px 0;
+}
+
+.alm-studio-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 2px;
+}
+
+.alm-role-tag {
+  font-size: 11.5px;
+  color: #94a3b8;
+}
+
+.alm-badges-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.alm-loc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.alm-batch-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #a7f3d0;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.alm-highlight-quote {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.45;
+  background: rgba(0, 0, 0, 0.25);
+  border-left: 2px solid #d97706;
+  padding: 8px 12px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 18px;
+  flex: 1;
+}
+
+.alm-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11.5px;
+}
+
+.alm-cert-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fcd34d;
+  font-weight: 700;
+  text-decoration: none;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  padding: 4px 9px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.alm-cert-pill:hover {
+  background: rgba(245, 158, 11, 0.25);
+}
+
+.alm-social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 11.5px;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.alm-social-btn:hover {
+  color: #ffffff;
+}
+
+/* Loading Spinner */
+.alm-loading-card {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #94a3b8;
+}
+
+.alm-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #f59e0b;
+  border-radius: 50%;
+  animation: almSpin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+
+@keyframes almSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   CTA Section
+   ========================================================================== */
+.alm-cta-section {
+  padding: 40px 0 90px;
+}
+
+.alm-cta-card {
+  background: radial-gradient(circle at 50% 50%, rgba(217, 119, 6, 0.2) 0%, rgba(18, 22, 34, 1) 75%);
+  border: 1.5px solid rgba(245, 158, 11, 0.35);
+  border-radius: 28px;
+  padding: 48px 40px;
+  text-align: center;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+}
+
+.alm-cta-kicker {
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  color: #fbbf24;
+}
+
+.alm-cta-content h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 900;
+  color: #ffffff;
+  margin: 8px 0 12px;
+}
+
+.alm-cta-content p {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 620px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+
+.alm-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.alm-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 50px;
+  padding: 0 26px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  border-radius: 12px;
+  text-decoration: none;
+  box-shadow: 0 10px 25px -4px rgba(217, 119, 6, 0.5);
+  transition: all 0.2s ease;
+}
+
+.alm-btn-primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+.alm-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 50px;
+  padding: 0 24px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.alm-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 768px) {
+  .alm-hero {
+    padding: 110px 0 40px;
+  }
+  .alm-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .alm-stat-card strong {
+    font-size: 20px;
+  }
+  .alm-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .alm-search-input-wrap {
+    max-width: 100%;
+  }
+  .alm-filter-selects {
+    flex-direction: column;
+  }
+  .alm-filter-selects select {
+    width: 100%;
+  }
+  .alm-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .alm-cta-card {
+    padding: 32px 20px;
+  }
+}

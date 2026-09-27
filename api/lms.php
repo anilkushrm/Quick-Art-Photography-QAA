@@ -2003,26 +2003,539 @@ if ($action === 'verify-workshop-payment' && $method === 'POST') {
     ]);
 }
 
-// 21.7 Fetch Custom Masterclass Landing Page Configuration
-if ($action === 'get-masterclass-landing' && ($method === 'GET' || $method === 'POST')) {
-    $landingFile = DATA_DIR . '/masterclass-landing.json';
-    $data = file_exists($landingFile) ? json_decode(file_get_contents($landingFile), true) : [];
-    if (!is_array($data) || empty($data)) {
-        $data = [
-            'topAnnouncement' => "🔥 LIMITED LIVE PASSES: Only 25 Seats Left For This Live Masterclass!",
-            'heroBadge'       => "🔴 Live Online Masterclass • 1080p 60fps",
-            'title'           => "Cinematic Wedding Video Editing & Color Grading",
-            'titleHighlight'  => "Live Masterclass",
-            'subtitle'        => "2 ghante ka practical hands-on live timeline session Mentor Anil Sharma ke saath.",
-            'scheduledAt'     => "2026-09-25T19:00:00+05:30",
-            'ticketPrice'     => 299,
-            'originalPrice'   => 999,
-            'seatsRemaining'  => "🔥 Only 7 Seats Remaining at ₹299",
-            'duration'        => "120 Mins (2 Hours Live)",
-            'whatsappPhone'   => "9939800780"
+// 22. Offline On-Campus Student Admission Flow
+if ($action === 'submit-offline-admission' && $method === 'POST') {
+    $uploadDir = __DIR__ . '/../uploads/admissions';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    $fullName     = trim($_POST['fullName'] ?? '');
+    $phone        = preg_replace('/\D/', '', $_POST['phone'] ?? '');
+    $email        = trim($_POST['email'] ?? '');
+    $dob          = trim($_POST['dob'] ?? '');
+    $gender       = trim($_POST['gender'] ?? 'Male');
+    $fatherName   = trim($_POST['fatherName'] ?? '');
+    $address      = trim($_POST['address'] ?? '');
+    $city         = trim($_POST['city'] ?? '');
+    $state        = trim($_POST['state'] ?? 'Bihar');
+    $pincode      = trim($_POST['pincode'] ?? '');
+    $courseTitle  = trim($_POST['courseTitle'] ?? '14-Week Master Class (Offline Lab)');
+    $hostelNeeded = !empty($_POST['hostelNeeded']) && $_POST['hostelNeeded'] === 'yes';
+    $studioName   = trim($_POST['studioName'] ?? '');
+    $currentRole  = trim($_POST['currentRole'] ?? 'Student / Beginner');
+    $workCity     = trim($_POST['workCity'] ?? $city);
+    $instagram    = trim($_POST['instagram'] ?? '');
+    $careerGoal   = trim($_POST['careerGoal'] ?? '');
+    $paymentMode  = trim($_POST['paymentMode'] ?? 'online'); // 'online' (Razorpay/UPI) or 'cash' (Pay at Campus)
+
+    if (!$fullName || strlen($phone) < 10) {
+        json_err('Full Name aur valid 10-digit mobile number mandatory hai.', 400);
+    }
+
+    // Helper to upload files safely
+    $saveUploadedDoc = function($fieldKey, $prefix) use ($uploadDir) {
+        if (empty($_FILES[$fieldKey]) || $_FILES[$fieldKey]['error'] !== UPLOAD_ERR_OK) {
+            return '';
+        }
+        $file = $_FILES[$fieldKey];
+        $origName = basename($file['name']);
+        $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'webp', 'pdf'];
+        if (!in_array($ext, $allowed)) {
+            return '';
+        }
+        $fileName = $prefix . '_' . substr(md5(uniqid(mt_rand(), true)), 0, 10) . '.' . $ext;
+        $dest = $uploadDir . '/' . $fileName;
+        if (move_uploaded_file($file['tmp_name'], $dest)) {
+            return '/uploads/admissions/' . $fileName;
+        }
+        return '';
+    };
+
+    $photoUrl = $saveUploadedDoc('photo_file', 'photo');
+    $aadhaarUrl = $saveUploadedDoc('aadhaar_file', 'aadhaar');
+    $certUrl = $saveUploadedDoc('cert_file', 'cert');
+
+    $admissionsFile = DATA_DIR . '/offline-admissions.json';
+    $admissions = file_exists($admissionsFile) ? json_decode(file_get_contents($admissionsFile), true) : [];
+    if (!is_array($admissions)) $admissions = [];
+
+    $admissionId = 'QAA-OFF-' . date('Y') . '-' . strtoupper(substr(uniqid(), -5));
+    $admissionFee = 500; // Fixed registration fee
+
+    $newAdmission = [
+        'id'            => $admissionId,
+        'fullName'      => $fullName,
+        'phone'         => $phone,
+        'email'         => $email,
+        'dob'           => $dob,
+        'gender'        => $gender,
+        'fatherName'    => $fatherName,
+        'address'       => $address,
+        'city'          => $city,
+        'state'         => $state,
+        'pincode'       => $pincode,
+        'courseTitle'   => $courseTitle,
+        'hostelNeeded'  => $hostelNeeded,
+        'studioName'    => $studioName,
+        'currentRole'   => $currentRole,
+        'workCity'      => $workCity,
+        'instagram'     => $instagram,
+        'careerGoal'    => $careerGoal,
+        'photoUrl'      => $photoUrl,
+        'aadhaarUrl'    => $aadhaarUrl,
+        'certUrl'       => $certUrl,
+        'paymentMode'   => $paymentMode,
+        'feeAmount'     => $admissionFee,
+        'paymentStatus' => ($paymentMode === 'cash') ? 'pending_campus' : 'awaiting_online_payment',
+        'status'        => 'submitted',
+        'createdAt'     => date('c')
+    ];
+
+    // If online payment chosen, initialize Razorpay order
+    $razorpayData = null;
+    $settings = load_settings();
+    $keyId = trim($settings['razorpayKeyId'] ?? '');
+    $keySecret = trim($settings['razorpayKeySecret'] ?? '');
+    $razorpayEnabled = !empty($settings['razorpayEnabled']) && !empty($keyId) && !empty($keySecret);
+
+    if ($paymentMode === 'online' && $razorpayEnabled) {
+        $ch = curl_init('https://api.razorpay.com/v1/orders');
+        $orderPayload = [
+            'amount'          => $admissionFee * 100, // 50000 paise
+            'currency'        => 'INR',
+            'receipt'         => 'adm_' . substr($admissionId, -8),
+            'payment_capture' => 1,
+            'notes'           => [
+                'admissionId' => $admissionId,
+                'studentName' => $fullName,
+                'phone'       => $phone,
+                'type'        => 'offline_admission_fee'
+            ]
+        ];
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => json_encode($orderPayload),
+            CURLOPT_USERPWD        => $keyId . ':' . $keySecret,
+            CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+            CURLOPT_TIMEOUT        => 15
+        ]);
+        $rpRes = curl_exec($ch);
+        $rpHttp = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($rpHttp === 200 && $rpRes) {
+            $rpOrder = json_decode($rpRes, true);
+            if (!empty($rpOrder['id'])) {
+                $newAdmission['razorpayOrderId'] = $rpOrder['id'];
+                $razorpayData = [
+                    'orderId'   => $rpOrder['id'],
+                    'keyId'     => $keyId,
+                    'amount'    => $admissionFee * 100,
+                    'currency'  => 'INR',
+                    'name'      => 'Quick Art Photography Academy',
+                    'description' => 'Offline On-Campus Admission Registration Fee',
+                    'prefill'   => [
+                        'name'    => $fullName,
+                        'contact' => $phone,
+                        'email'   => $email
+                    ]
+                ];
+            }
+        }
+    }
+
+    // Save admission record
+    $admissions[] = $newAdmission;
+    file_put_contents($admissionsFile, json_encode($admissions, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+    // Auto-create or update student in students.json for portal access
+    $students = get_all_students();
+    $existingStudent = null;
+    foreach ($students as &$s) {
+        if (($s['phone'] ?? '') === $phone) {
+            $existingStudent = &$s;
+            break;
+        }
+    }
+    unset($s);
+
+    if ($existingStudent) {
+        $existingStudent['name'] = $fullName;
+        if ($email) $existingStudent['email'] = $email;
+        if ($photoUrl) $existingStudent['avatar'] = $photoUrl;
+        $existingStudent['isOfflineStudent'] = true;
+        $existingStudent['offlineAdmissionId'] = $admissionId;
+        $existingStudent['studioName'] = $studioName;
+        $existingStudent['currentRole'] = $currentRole;
+        $existingStudent['workCity'] = $workCity;
+    } else {
+        $students[] = [
+            'id'                 => 'stu_' . time() . '_' . substr(md5($phone), 0, 4),
+            'name'               => $fullName,
+            'phone'              => $phone,
+            'email'              => $email,
+            'avatar'             => $photoUrl,
+            'enrolledCourses'    => ['master-class'],
+            'isOfflineStudent'   => true,
+            'offlineAdmissionId' => $admissionId,
+            'studioName'         => $studioName,
+            'currentRole'        => $currentRole,
+            'workCity'           => $workCity,
+            'registeredAt'       => date('c')
         ];
     }
-    json_ok(['landing' => $data]);
+    save_all_students($students);
+
+    json_ok([
+        'admissionId'  => $admissionId,
+        'fullName'     => $fullName,
+        'phone'        => $phone,
+        'feeAmount'    => $admissionFee,
+        'paymentMode'  => $paymentMode,
+        'razorpay'     => $razorpayData,
+        'message'      => ($paymentMode === 'cash')
+            ? 'Admission form successfully submit ho gaya hai! ₹500 registration fee aap On-Campus Siwan aakar pay kar sakte hain.'
+            : 'Admission form successfully submit ho gaya hai! Kripya ₹500 registration fee pay karein.'
+    ]);
+}
+
+// 23. Verify Offline Admission Razorpay Payment
+if ($action === 'verify-offline-admission-payment' && $method === 'POST') {
+    $body = read_json_body() ?: $_POST;
+    $admissionId = trim($body['admissionId'] ?? '');
+    $orderId     = trim($body['razorpay_order_id'] ?? '');
+    $paymentId   = trim($body['razorpay_payment_id'] ?? '');
+    $signature   = trim($body['razorpay_signature'] ?? '');
+
+    $settings = load_settings();
+    $keySecret = trim($settings['razorpayKeySecret'] ?? '');
+
+    if ($keySecret && $orderId && $paymentId && $signature) {
+        $expectedSig = hash_hmac('sha256', $orderId . '|' . $paymentId, $keySecret);
+        if (!hash_equals($expectedSig, $signature)) {
+            json_err('Payment verification failed. Invalid signature.', 400);
+        }
+    }
+
+    $admissionsFile = DATA_DIR . '/offline-admissions.json';
+    $admissions = file_exists($admissionsFile) ? json_decode(file_get_contents($admissionsFile), true) : [];
+    $matched = false;
+    $studentPhone = '';
+    $studentName = '';
+
+    foreach ($admissions as &$adm) {
+        if ($adm['id'] === $admissionId || (!empty($adm['razorpayOrderId']) && $adm['razorpayOrderId'] === $orderId)) {
+            $adm['paymentStatus'] = 'paid';
+            $adm['status'] = 'confirmed';
+            $adm['razorpayPaymentId'] = $paymentId;
+            $adm['paidAt'] = date('c');
+            $studentPhone = $adm['phone'];
+            $studentName = $adm['fullName'];
+            $matched = true;
+            break;
+        }
+    }
+    unset($adm);
+
+    if ($matched) {
+        file_put_contents($admissionsFile, json_encode($admissions, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+        // Record transaction
+        $transFile = DATA_DIR . '/transactions.json';
+        $transactions = file_exists($transFile) ? json_decode(file_get_contents($transFile), true) : [];
+        if (!is_array($transactions)) $transactions = [];
+        $transactions[] = [
+            'id'            => 'txn_' . time() . '_' . substr(md5(uniqid()), 0, 4),
+            'orderId'       => $orderId ?: ('off_' . time()),
+            'paymentId'     => $paymentId ?: ('pay_' . time()),
+            'studentPhone'  => $studentPhone,
+            'studentName'   => $studentName,
+            'title'         => 'Offline On-Campus Admission Fee',
+            'amount'        => 500,
+            'currency'      => 'INR',
+            'status'        => 'SUCCESS',
+            'createdAt'     => date('c')
+        ];
+        file_put_contents($transFile, json_encode($transactions, JSON_PRETTY_PRINT), LOCK_EX);
+
+        $sessionToken = create_student_session($studentPhone);
+        json_ok([
+            'verified'    => true,
+            'admissionId' => $admissionId,
+            'token'       => $sessionToken,
+            'studentName' => $studentName,
+            'message'     => 'Payment verified successfully! Welcome to Quick Art Photography Academy.'
+        ]);
+    }
+
+    json_err('Admission record nahi mila.', 404);
+}
+
+// 24. Public Alumni Showcase API
+if ($action === 'get-alumni' && ($method === 'GET' || $method === 'POST')) {
+    $alumniFile = DATA_DIR . '/alumni.json';
+    $alumni = file_exists($alumniFile) ? json_decode(file_get_contents($alumniFile), true) : [];
+
+    // Fallback/Seed Real Alumni if file is empty
+    if (!is_array($alumni) || empty($alumni)) {
+        $alumni = [
+            [
+                'id'          => 'alm_001',
+                'name'        => 'Priyanka Sharma',
+                'photo'       => '/assets/alumni/priyanka-sharma.webp',
+                'studioName'  => 'Studio Priyanka Films',
+                'role'        => 'Founder & Creative Director',
+                'city'        => 'Patna',
+                'state'       => 'Bihar',
+                'batch'       => 'Master Class Batch 2025',
+                'course'      => '14-Week Wedding Filmmaking & Color Grading',
+                'certId'      => 'QAA-2025-0814',
+                'instagram'   => 'https://instagram.com/',
+                'highlight'   => 'Shoots premium destination weddings across Bihar & Delhi NCR. Known for signature cinematic skin tone color grading.',
+                'featured'    => true
+            ],
+            [
+                'id'          => 'alm_002',
+                'name'        => 'Rohit Kumar Gupta',
+                'photo'       => '/assets/alumni/rohit-kumar.webp',
+                'studioName'  => 'Royal Cine Studio',
+                'role'        => 'Lead Wedding Editor',
+                'city'        => 'Siwan',
+                'state'       => 'Bihar',
+                'batch'       => 'Master Class Batch 2024',
+                'course'      => '14-Week Master Class',
+                'certId'      => 'QAA-2024-0429',
+                'instagram'   => 'https://instagram.com/',
+                'highlight'   => 'Established high-end editing studio in Siwan market, editing 80+ wedding teasers per season.',
+                'featured'    => true
+            ],
+            [
+                'id'          => 'alm_003',
+                'name'        => 'Vikash Kushwaha',
+                'photo'       => '/assets/alumni/vikash-kushwaha.webp',
+                'studioName'  => 'VK Pixel Creation',
+                'role'        => 'Colorist & Album Designer',
+                'city'        => 'Gopalganj',
+                'state'       => 'Bihar',
+                'batch'       => 'Offline Lab Batch 2025',
+                'course'      => 'Advanced Album Design & Color Grading',
+                'certId'      => 'QAA-2025-1102',
+                'instagram'   => 'https://instagram.com/',
+                'highlight'   => 'Specialist in 3D metallic wedding album layouts and DaVinci Resolve color wheels.',
+                'featured'    => true
+            ],
+            [
+                'id'          => 'alm_004',
+                'name'        => 'Amitabh Singh',
+                'photo'       => '/assets/alumni/amitabh-singh.webp',
+                'studioName'  => 'Drishti Wedding Films',
+                'role'        => 'Cinematographer & Post-Lead',
+                'city'        => 'Ballia',
+                'state'       => 'Uttar Pradesh',
+                'batch'       => 'Master Class Batch 2024',
+                'course'      => '14-Week Wedding Filmmaking',
+                'certId'      => 'QAA-2024-0618',
+                'instagram'   => 'https://instagram.com/',
+                'highlight'   => 'Outstation hostel student from Ballia. Now runs Eastern UP’s top luxury wedding film studio.',
+                'featured'    => true
+            ],
+            [
+                'id'          => 'alm_005',
+                'name'        => 'Rahul Verma',
+                'photo'       => '/assets/alumni/rahul-verma.webp',
+                'studioName'  => 'CineCraft Digital',
+                'role'        => 'Senior Video Editor',
+                'city'        => 'Gorakhpur',
+                'state'       => 'Uttar Pradesh',
+                'batch'       => 'Master Class Batch 2025',
+                'course'      => 'Video Editing & AI Automation',
+                'certId'      => 'QAA-2025-0955',
+                'instagram'   => 'https://instagram.com/',
+                'highlight'   => 'Full-time freelance video editor working with leading YouTube creators and Delhi wedding production houses.',
+                'featured'    => false
+            ],
+            [
+                'id'          => 'alm_006',
+                'name'        => 'Manish Pandey',
+                'photo'       => '/assets/alumni/manish-pandey.webp',
+                'studioName'  => 'Shree Wedding Photography',
+                'role'        => 'Studio Owner',
+                'city'        => 'Chapra',
+                'state'       => 'Bihar',
+                'batch'       => 'Master Class Batch 2024',
+                'course'      => 'Wedding Album Design & Commercial Filmmaking',
+                'certId'      => 'QAA-2024-0230',
+                'instagram'   => 'https://instagram.com/',
+                'highlight'   => 'Expanded traditional photography counter into modern 4K multi-cam production unit.',
+                'featured'    => false
+            ]
+        ];
+        if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+        file_put_contents($alumniFile, json_encode($alumni, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    }
+
+    json_ok(['alumni' => $alumni]);
+}
+
+// 25. Daily Tasks & Offline Lab Work for Students
+if ($action === 'get-daily-tasks' && ($method === 'GET' || $method === 'POST')) {
+    $tasksFile = DATA_DIR . '/daily-tasks.json';
+    $tasks = file_exists($tasksFile) ? json_decode(file_get_contents($tasksFile), true) : [];
+
+    if (!is_array($tasks) || empty($tasks)) {
+        $tasks = [
+            [
+                'id'          => 'task_001',
+                'dayNumber'   => 1,
+                'title'       => 'Camera Rushes Ingestion & Bin Organization',
+                'description' => 'Import raw 4K multi-cam wedding footage into DaVinci Resolve & Premiere Pro. Organize footage into Bins: Haldi, Sangeet, Jaimala, Bidaai with proper color tags.',
+                'resource'    => 'Practice Wedding Footage Pack (1.2 GB)',
+                'deadline'    => 'Submit project project file (.prproj / .drp)',
+                'courseId'    => 'master-class'
+            ],
+            [
+                'id'          => 'task_002',
+                'dayNumber'   => 2,
+                'title'       => 'Beat-Matched Teaser Rough Cut (60 Seconds)',
+                'description' => 'Cut a 60-second high-energy wedding teaser on given background track. Align cut points strictly on beat markers without jump cuts.',
+                'resource'    => 'Licensed Audio Stems & SFX Pack',
+                'deadline'    => 'Export 1080p H.264 preview for mentor review',
+                'courseId'    => 'master-class'
+            ],
+            [
+                'id'          => 'task_003',
+                'dayNumber'   => 3,
+                'title'       => 'DaVinci Resolve Primary Wheels & S-Log3 Balance',
+                'description' => 'Grade Sony S-Log3 footage using 4-node pipeline: Exposure Balance -> Color Space Transform -> Skin Tone Qualifier -> Warm Look.',
+                'resource'    => 'Raw Sony FX3 S-Log3 Clip Set',
+                'deadline'    => 'Export Still Stills Gallery (.drx / .jpg)',
+                'courseId'    => 'master-class'
+            ],
+            [
+                'id'          => 'task_004',
+                'dayNumber'   => 4,
+                'title'       => 'Canvera & Karizma 12x36 Album Spread Design',
+                'description' => 'Create a 3-spread premium Karizma album design in Photoshop with proper bleed margin, golden highlights, and frequency separation on portrait shots.',
+                'resource'    => 'Raw Wedding High-Res JPEGs',
+                'deadline'    => 'PSD file 300 DPI layout',
+                'courseId'    => 'master-class'
+            ]
+        ];
+        if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+        file_put_contents($tasksFile, json_encode($tasks, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    }
+
+    json_ok(['tasks' => $tasks]);
+}
+
+// 26. Offline Class Recordings & Studio Archives
+if ($action === 'get-offline-recordings' && ($method === 'GET' || $method === 'POST')) {
+    $recFile = DATA_DIR . '/offline-recordings.json';
+    $recordings = file_exists($recFile) ? json_decode(file_get_contents($recFile), true) : [];
+
+    if (!is_array($recordings) || empty($recordings)) {
+        $recordings = [
+            [
+                'id'          => 'rec_001',
+                'title'       => 'Module 1: NLE Timeline Setup & Video Codecs Mastery',
+                'mentor'      => 'Anil Sharma',
+                'duration'    => '45 Mins',
+                'videoUrl'    => 'https://www.youtube.com/embed/dQw4w9WgXcQ', // or academy stream
+                'notes'       => 'Full breakdown of ProRes vs H.264, Timeline Framerates (24fps vs 50fps vs 120fps), and GPU acceleration setup.',
+                'date'        => '2026-09-10'
+            ],
+            [
+                'id'          => 'rec_002',
+                'title'       => 'Module 2: DaVinci Resolve Color Grading Live Studio Breakdown',
+                'mentor'      => 'Anil Sharma',
+                'duration'    => '62 Mins',
+                'videoUrl'    => 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                'notes'       => 'Node graph hierarchy, skin-tone vector scope reading, and custom LUT generation for wedding highlights.',
+                'date'        => '2026-09-15'
+            ]
+        ];
+        if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+        file_put_contents($recFile, json_encode($recordings, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    }
+
+    json_ok(['recordings' => $recordings]);
+}
+
+// 27. Course Completion Exam & Auto-Certificate Issuance
+if ($action === 'submit-course-exam' && $method === 'POST') {
+    $body = read_json_body() ?: $_POST;
+    $studentPhone = trim($body['phone'] ?? '');
+    $answers = $body['answers'] ?? []; // Map of question index => selected option index
+
+    if (!$studentPhone || empty($answers)) {
+        json_err('Phone number aur answers mandatory hain.', 400);
+    }
+
+    // 10 Official Certification Exam Questions with correct keys
+    $examQuestions = [
+        ['q' => 'DaVinci Resolve me Color Space Transform (CST) kyu use kiya jata hai?', 'ans' => 1],
+        ['q' => 'Cinematic 24fps video record karte waqt shutter speed kya rakhni chahiye?', 'ans' => 2],
+        ['q' => 'Karizma / Canvera 12x36 wedding album print karne ke liye standard DPI kya honi chahiye?', 'ans' => 0],
+        ['q' => 'Premiere Pro me audio synchronization ke liye kaunsa tool sabse fast hai?', 'ans' => 1],
+        ['q' => 'Sony S-Log3 footage me overexposure kitne stop tak safely recommend kiya jata hai?', 'ans' => 1],
+        ['q' => 'Wedding teaser cut karte time pacing kispar depend karni chahiye?', 'ans' => 2],
+        ['q' => 'DaVinci Resolve me serial node aur parallel node me primary difference kya hai?', 'ans' => 0],
+        ['q' => 'Photoshop me skin retouching ke liye kaunsa high-end technique use hota hai?', 'ans' => 1],
+        ['q' => 'L-Cut aur J-Cut editing techniques ka primary purpose kya hota hai?', 'ans' => 0],
+        ['q' => 'LUT (Look-Up Table) apply karne se pehle exposure aur white balance fix karna zaroori hai?', 'ans' => 0]
+    ];
+
+    $score = 0;
+    $total = count($examQuestions);
+    foreach ($examQuestions as $idx => $eq) {
+        if (isset($answers[$idx]) && (int)$answers[$idx] === $eq['ans']) {
+            $score++;
+        }
+    }
+
+    $percentage = round(($score / $total) * 100);
+    $passed = $percentage >= 70;
+
+    $certId = null;
+    $certUrl = null;
+
+    if ($passed) {
+        $certId = 'QAA-' . date('Y') . '-' . strtoupper(substr(md5($studentPhone . time()), 0, 6));
+
+        // Find student and update status
+        $students = get_all_students();
+        $studentName = 'Student';
+        foreach ($students as &$s) {
+            if (($s['phone'] ?? '') === $studentPhone) {
+                $studentName = $s['name'] ?? 'Student';
+                $s['examPassed'] = true;
+                $s['examScore'] = $percentage;
+                $s['certId'] = $certId;
+                $s['certDate'] = date('Y-m-d');
+                $s['alumniPendingApproval'] = true; // Flag for admin approval to Alumni directory
+                break;
+            }
+        }
+        unset($s);
+        save_all_students($students);
+
+        $certUrl = '/portal/?cert=' . $certId;
+    }
+
+    json_ok([
+        'passed'      => $passed,
+        'score'       => $score,
+        'total'       => $total,
+        'percentage'  => $percentage,
+        'certId'      => $certId,
+        'certUrl'     => $certUrl,
+        'message'     => $passed
+            ? "Badhaai ho! Aapne {$percentage}% score karke Certification Exam pass kar liya hai. Aapka Official Certificate generate ho gaya hai!"
+            : "Aapka score {$percentage}% raha. Certificate ke liye kam se kam 70% chahiye. Kripya revision karke dobara test dein."
+    ]);
 }
 
 json_err('Unknown LMS action', 404);

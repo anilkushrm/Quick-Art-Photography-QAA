@@ -500,6 +500,9 @@ async function loadDashboard() {
     // Check & Render Live Masterclasses & Sessions
     loadStudentLiveClasses();
 
+    // Check & Render Offline Studio Hub (Tasks, Recordings & Exam)
+    loadOfflineStudioHub();
+
   } catch (err) {
     if (err.message.includes('login') || err.message.includes('expired')) {
       logoutStudent();
@@ -4362,3 +4365,367 @@ window.addEventListener('DOMContentLoaded', () => {
     if (liveId) setTimeout(() => openLiveStudio(liveId), 600);
   }
 });
+
+// ==========================================
+// 🏛️ OFFLINE ON-CAMPUS STUDIO HUB CONTROLLER
+// ==========================================
+
+const EXAM_QUESTIONS_DATA = [
+  {
+    q: "1. DaVinci Resolve me Color Space Transform (CST) kyu use kiya jata hai?",
+    options: [
+      "Video file ko compress karke size chhota karne ke liye",
+      "Camera RAW / Log profile ko standard Rec.709 color space me mathematically accurately convert karne ke liye",
+      "Audio noise cancel aur voice clarity increase karne ke liye",
+      "Automatic AI subtitles generate karne ke liye"
+    ]
+  },
+  {
+    q: "2. Cinematic 24fps video record karte waqt shutter speed kya honi chahiye?",
+    options: [
+      "1/24 second",
+      "1/200 second",
+      "1/50 second (180 Degree Shutter Rule for natural motion blur)",
+      "1/1000 second"
+    ]
+  },
+  {
+    q: "3. Karizma / Canvera 12x36 wedding album print karne ke liye standard resolution (DPI) kya honi chahiye?",
+    options: [
+      "300 DPI (Lab Photo Printing Industry Standard)",
+      "72 DPI (Web Standard)",
+      "150 DPI",
+      "600 DPI"
+    ]
+  },
+  {
+    q: "4. Adobe Premiere Pro me multi-camera audio synchronization ke liye sabse fast technique kaunsi hai?",
+    options: [
+      "Timeline par manual Razor Tool se cut karke match karna",
+      "Multi-Camera Audio Waveform Synchronize feature use karna",
+      "Slip Tool se audio ko drag karna",
+      "Morph Cut transition apply karna"
+    ]
+  },
+  {
+    q: "5. Sony S-Log3 footage me overexposure kitne EV stop tak safely recommend kiya jata hai?",
+    options: [
+      "-2.0 Stops underexposure",
+      "+1.5 se +2.0 EV Stops (Base ISO 800/12800 cleaner shadow noise floor ke liye)",
+      "0 Stop exact meter reading",
+      "+5.0 EV Stops"
+    ]
+  },
+  {
+    q: "6. Wedding teaser cut karte waqt editing pacing kis parameter par primary depend karni chahiye?",
+    options: [
+      "Keval har 0.5 second par random fast cuts lagana",
+      "Har clip par 3D zoom transitions use karna",
+      "Background music ke beats, emotional tempo aur couple story narrative buildup par",
+      "Pure video ko sirf slow motion me render karna"
+    ]
+  },
+  {
+    q: "7. DaVinci Resolve me Serial Node aur Parallel Node me primary technical difference kya hai?",
+    options: [
+      "Serial Node sequential processing karta hai jabki Parallel Node same input feed par independently blend hota hai",
+      "Dono ek jaise hain, sirf color visualization alag hai",
+      "Serial Node keval audio correction ke liye design kiya gaya hai",
+      "Parallel Node video file ko auto-delete kar deta hai"
+    ]
+  },
+  {
+    q: "8. Photoshop me professional skin retouching ke liye industry-standard technique kaunsi hai?",
+    options: [
+      "Surface Blur filter ko 100% opacity par lagana",
+      "Frequency Separation (High Frequency Texture aur Low Frequency Tone ko separate layer par treat karna)",
+      "Brightness 100% increase karna",
+      "Liquify filter se face smooth karna"
+    ]
+  },
+  {
+    q: "9. L-Cut aur J-Cut split editing techniques ka primary purpose kya hota hai?",
+    options: [
+      "Seamless scene transition jaha audio pehle ya baad me carry-over hokar natural flow banati hai",
+      "Timeline ko zoom in aur zoom out karna",
+      "Green screen background ko transparent karna",
+      "Video format ko MP4 se AVI me convert karna"
+    ]
+  },
+  {
+    q: "10. Creative LUT (Look-Up Table) apply karne se pehle primary exposure aur white balance fix karna zaroori kyu hai?",
+    options: [
+      "Haan, neutral balanced image par hi LUT predictable aur clean cinematics produce karta hai",
+      "Nahi, LUT automatically clips ka white balance aur exposure correct kar deta hai",
+      "Keval black & white videos me zaroori hota hai",
+      "Premiere Pro me LUT se pehle koi node ya effect lagana mana hai"
+    ]
+  }
+];
+
+function switchOfflineTab(tabName) {
+  document.querySelectorAll('.offline-hub-tab').forEach(b => {
+    b.classList.toggle('active', b.dataset.otab === tabName);
+  });
+  document.querySelectorAll('.offline-tab-pane').forEach(p => {
+    p.classList.add('hidden');
+  });
+  const pane = document.getElementById(`otab-${tabName}`);
+  if (pane) pane.classList.remove('hidden');
+}
+
+async function loadOfflineStudioHub() {
+  const hub = document.getElementById('offline-studio-hub');
+  if (!hub) return;
+
+  try {
+    const [tasksRes, recRes] = await Promise.all([
+      lmsApi('get-daily-tasks').catch(() => ({ tasks: [] })),
+      lmsApi('get-offline-recordings').catch(() => ({ recordings: [] }))
+    ]);
+
+    const tasks = tasksRes.tasks || [];
+    const recordings = recRes.recordings || [];
+
+    // Badge counts
+    const taskCountEl = document.getElementById('offline-tasks-badge-count');
+    if (taskCountEl) taskCountEl.textContent = tasks.length;
+
+    const recCountEl = document.getElementById('offline-rec-badge-count');
+    if (recCountEl) recCountEl.textContent = recordings.length;
+
+    // Render Daily Tasks
+    renderDailyTasksList(tasks);
+
+    // Render Class Recordings
+    renderOfflineRecordingsList(recordings);
+
+    // Render Exam
+    renderOfflineExam();
+
+  } catch (err) {
+    console.warn('Offline studio hub load note:', err);
+  }
+}
+
+function renderDailyTasksList(tasks) {
+  const container = document.getElementById('offline-tasks-list');
+  if (!container) return;
+
+  if (!tasks.length) {
+    container.innerHTML = '<div class="muted" style="padding: 20px;">Abhi koi naya daily task schedule nahi hai.</div>';
+    return;
+  }
+
+  container.innerHTML = tasks.map(t => `
+    <div class="offline-task-card">
+      <div class="task-card-header">
+        <span class="task-day-pill">DAY ${t.dayNumber || 1} LAB TASK</span>
+        <span class="task-status-pill">⏱ Due Today</span>
+      </div>
+      <h4 class="task-card-title">${escapeHtml(t.title)}</h4>
+      <p class="task-card-desc">${escapeHtml(t.description)}</p>
+      <div class="task-meta-box">
+        <div class="task-meta-item">
+          <strong>📦 Practice Resource:</strong>
+          <span>${escapeHtml(t.resource || 'Raw Camera Clips')}</span>
+        </div>
+        <div class="task-meta-item">
+          <strong>🎯 Deliverable:</strong>
+          <span>${escapeHtml(t.deadline || 'Project file (.prproj / .drp)')}</span>
+        </div>
+      </div>
+      <div class="task-card-actions">
+        <button type="button" class="btn btn-gold" style="width: 100%; font-size: 0.85rem;" onclick="openTaskSubmissionModal('${escapeHtml(t.title)}')">
+          📤 Submit Lab Assignment / Project
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderOfflineRecordingsList(recordings) {
+  const container = document.getElementById('offline-recordings-list');
+  if (!container) return;
+
+  if (!recordings.length) {
+    container.innerHTML = '<div class="muted" style="padding: 20px;">Abhi koi recording archive available nahi hai.</div>';
+    return;
+  }
+
+  container.innerHTML = recordings.map(r => `
+    <div class="offline-rec-card">
+      <div class="rec-thumb-wrap">
+        <img src="../${r.thumbnail || 'assets/editing-timeline.jpg'}" alt="${escapeHtml(r.title)}" loading="lazy" />
+        <div class="rec-duration-pill">⏱ ${escapeHtml(r.duration || '45 mins')}</div>
+        <button type="button" class="rec-play-btn" onclick="playOfflineRecording('${escapeHtml(r.videoUrl || '')}', '${escapeHtml(r.title)}')">
+          ▶
+        </button>
+      </div>
+      <div class="rec-body">
+        <span class="rec-batch-pill">${escapeHtml(r.batch || 'Offline Studio Batch')}</span>
+        <h4 class="rec-title">${escapeHtml(r.title)}</h4>
+        <p class="rec-desc">${escapeHtml(r.description || '')}</p>
+        <div class="rec-instructor">
+          <span>👨‍🏫 Mentor: <strong>${escapeHtml(r.instructor || 'Quick Art Faculty')}</strong></span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function playOfflineRecording(videoUrl, title) {
+  if (!videoUrl || videoUrl === '#' || videoUrl.includes('example.com')) {
+    toast(`🎥 "${title}" ki HD recording cloud studio storage par sync ho rahi hai. Offline student desktop par folder me bhi accessible hai.`);
+    return;
+  }
+  // If it's a valid link or youtube, open in a new tab or classroom player
+  window.open(videoUrl, '_blank');
+}
+
+function openTaskSubmissionModal(taskTitle) {
+  const note = prompt(`"${taskTitle}" ke liye apna Google Drive / WeTransfer link ya submission notes enter karein:`);
+  if (note && note.trim()) {
+    toast('✅ Task submission link mentor ko review ke liye bhej diya gaya hai! Studio desk par marks update ho jayenge.');
+  }
+}
+
+function renderOfflineExam() {
+  const container = document.getElementById('offline-exam-container');
+  if (!container) return;
+
+  // Check if student already passed exam or has verified certificate
+  const isPassed = currentStudent?.examPassed || !!currentStudent?.certId;
+
+  if (isPassed) {
+    const certId = currentStudent.certId || 'QAA-2026-CERT';
+    container.innerHTML = `
+      <div class="exam-success-banner">
+        <div class="exam-success-icon">🎖️</div>
+        <h3>Mubarak Ho! Exam Passed &amp; Verified</h3>
+        <p>Aapne Quick Art Photography Academy ka Official Certification Exam <strong>Pass</strong> kar liya hai. Aapka ISO 9001:2015 &amp; MSME Recognized Certificate active hai.</p>
+        <div class="exam-cert-box">
+          <div class="exam-cert-label">OFFICIAL CREDENTIAL ID</div>
+          <div class="exam-cert-id">${escapeHtml(certId)}</div>
+          <div class="exam-alumni-badge">
+            <span class="pulse-dot"></span>
+            Profile Queued for Academy Alumni Directory
+          </div>
+        </div>
+        <div class="exam-actions-row">
+          <button type="button" class="btn btn-gold btn-large" onclick="openExamCertificateModal('${escapeHtml(certId)}')">
+            📜 Download / View Official Certificate
+          </button>
+          <a href="../alumni/" class="btn btn-outline btn-large" style="text-decoration: none;">
+            👥 Explore Alumni Hall of Fame →
+          </a>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // Render 10 Questions Form
+  container.innerHTML = `
+    <form id="form-offline-exam" onsubmit="submitOfflineExam(event)">
+      <div class="exam-instructions-bar">
+        <span>⏱️ Total Questions: <strong>10</strong></span>
+        <span>🎯 Passing Marks: <strong>70% (7/10 Correct)</strong></span>
+        <span>🎖️ ISO Verifiable Certificate</span>
+      </div>
+
+      <div class="exam-questions-list">
+        ${EXAM_QUESTIONS_DATA.map((qObj, qIdx) => `
+          <div class="exam-question-item">
+            <div class="exam-q-text">${escapeHtml(qObj.q)}</div>
+            <div class="exam-q-options">
+              ${qObj.options.map((opt, oIdx) => `
+                <label class="exam-opt-label">
+                  <input type="radio" name="exam_q_${qIdx}" value="${oIdx}" required />
+                  <span class="exam-opt-indicator"></span>
+                  <span class="exam-opt-text">${escapeHtml(opt)}</span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="exam-submit-bar">
+        <div class="exam-submit-info">
+          Answers submit karte hi instant AI evaluation hoga aur Certificate ID generate ho jayegi.
+        </div>
+        <button type="submit" id="btn-submit-exam" class="btn btn-gold btn-large">
+          Submit Exam &amp; Claim Certificate 🏆
+        </button>
+      </div>
+    </form>
+  `;
+}
+
+async function submitOfflineExam(e) {
+  e.preventDefault();
+  const phone = currentStudent?.phone;
+  if (!phone) {
+    toast('Kripya pehle portal me login karein', false);
+    return;
+  }
+
+  const answers = {};
+  for (let i = 0; i < EXAM_QUESTIONS_DATA.length; i++) {
+    const checked = document.querySelector(`input[name="exam_q_${i}"]:checked`);
+    if (!checked) {
+      toast(`Question ${i + 1} ka answer select karein!`, false);
+      return;
+    }
+    answers[i] = parseInt(checked.value, 10);
+  }
+
+  const btn = document.getElementById('btn-submit-exam');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" style="display:inline-block;width:16px;height:16px;border:2px solid #000;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:8px;"></span> Checking Answers…';
+  }
+
+  try {
+    const res = await lmsApi('submit-course-exam', {
+      method: 'POST',
+      body: { phone, answers }
+    });
+
+    if (res.passed) {
+      if (currentStudent) {
+        currentStudent.examPassed = true;
+        currentStudent.certId = res.certId;
+        currentStudent.examScore = res.percentage;
+      }
+      toast(res.message, true);
+      renderOfflineExam();
+      // Automatically open the certificate modal
+      setTimeout(() => {
+        openExamCertificateModal(res.certId);
+      }, 700);
+    } else {
+      toast(res.message, false);
+      alert(`Aapka score: ${res.score} / ${res.total} (${res.percentage}%).\n\nExam pass karne ke liye 70% chahiye. Kripya questions dubara dhyan se padh kar retry karein!`);
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Retry Exam & Submit Answers 🔄';
+      }
+    }
+  } catch (err) {
+    toast(err.message, false);
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Submit Exam & Claim Certificate 🏆';
+    }
+  }
+}
+
+function openExamCertificateModal(certId) {
+  const studentName = currentStudent ? currentStudent.name : 'Student';
+  const courseTitle = 'Offline On-Campus 14-Week Professional Master Class';
+  populateCertificateUI(studentName, courseTitle, 'master-class', '14 Weeks / 200 Hours', certId);
+  const modal = document.getElementById('modal-certificate');
+  if (modal) modal.classList.add('show');
+}

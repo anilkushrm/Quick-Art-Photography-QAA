@@ -41,31 +41,25 @@
     <meta name="twitter:description"
         content="Quick Art Photography Academy offers the best video editing course in Siwan & Bihar. 100% practical editing course with free hostel facility. Enroll today!">
     <meta name="twitter:image" content="https://quickartphotography.in/assets/hero-anil-sharma-studio.jpg">
-    <!-- Fonts: Preconnect & Asynchronous Loading (Zero Render Blocking) -->
+    <!-- Fonts: Preconnect & Fast Load -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" media="print" onload="this.media='all'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap">
-    </noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Critical Above-the-fold Stylesheets -->
+    <!-- Critical Stylesheets (Include hero layout & polish for ZERO CLS) -->
     <link rel="stylesheet" href="home-assets/d268ef7c2fc87b.css">
     <link rel="stylesheet" href="home-assets/4c1165f32ac2c4.css">
     <link rel="stylesheet" href="site.css?v=20260926_05">
+    <link rel="stylesheet" href="design-system.css">
     <link rel="stylesheet" href="reference-header.css?v=3.8">
+    <link rel="stylesheet" href="home-polish.css?v=4.0">
     <link rel="stylesheet" href="mobile-refinements.css?v=4.0">
 
-    <!-- Non-Critical Below-the-fold Stylesheets (Deferred for Instant FCP) -->
-    <link rel="stylesheet" href="design-system.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="home-polish.css?v=4.0" media="print" onload="this.media='all'">
+    <!-- Non-Critical Below-the-fold Stylesheets -->
     <link rel="stylesheet" href="home-video.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="editing-examples.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="roadmap.css?v=3.2" media="print" onload="this.media='all'">
     <noscript>
-        <link rel="stylesheet" href="design-system.css">
-        <link rel="stylesheet" href="home-polish.css?v=4.0">
         <link rel="stylesheet" href="home-video.css">
         <link rel="stylesheet" href="editing-examples.css">
         <link rel="stylesheet" href="roadmap.css?v=3.2">
@@ -75,7 +69,6 @@
     <link rel="icon" href="home-assets/ec55a6be3747a9.webp" type="image/webp">
     <script src="site.js?v=20260926_05" defer></script>
     <script defer src="header.js?v=3.7"></script>
-    <script defer src="roadmap.js"></script>
 
     <!-- Analytics & Tracking: Instant In-Memory Queue + Deferred Network Load (Zero TBT Block) -->
     <script>
@@ -119,9 +112,9 @@
         }
 
         if ('requestIdleCallback' in window) {
-            requestIdleCallback(function () { setTimeout(initThirdPartyTracking, 1600); });
+            requestIdleCallback(function () { setTimeout(initThirdPartyTracking, 4000); });
         } else {
-            window.addEventListener('load', function () { setTimeout(initThirdPartyTracking, 1600); });
+            window.addEventListener('load', function () { setTimeout(initThirdPartyTracking, 4000); });
         }
         ['scroll', 'touchstart', 'mousemove', 'keydown', 'click'].forEach(function (evt) {
             window.addEventListener(evt, initThirdPartyTracking, { once: true, passive: true });
@@ -3340,6 +3333,7 @@
         </div>
     </footer>
     <script src="home-video.js" defer></script>
+    <script src="roadmap.js" defer></script>
     <script defer src="/meta-events.js"></script>
 </body>
 

@@ -2792,6 +2792,7 @@ async function launchRazorpayCheckout({ courseId, name, phone, couponCode }) {
           localStorage.setItem(TOKEN_KEY, studentToken);
           currentStudent = verifyRes.student;
           window._currentStudent = currentStudent;
+          if (window.qaTrackPurchase) qaTrackPurchase(orderRes, response, courseId);
 
           toast(`🎉 Badhai ho ${name}! Aapka course unlock ho gaya.`);
           window.history.replaceState(null, '', `index.html?course=${encodeURIComponent(courseId)}`);
@@ -2958,6 +2959,7 @@ if (modalCheckoutForm) {
             localStorage.setItem(TOKEN_KEY, studentToken);
             currentStudent = verifyRes.student;
             window._currentStudent = currentStudent;
+            if (window.qaTrackPurchase) qaTrackPurchase(orderRes, response, courseId);
 
             closeCheckoutModal();
             toast(`🎉 Badhai ho ${name}! Course unlock ho gaya.`);

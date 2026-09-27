@@ -28,7 +28,7 @@ sitemap_data = [
         "images": [
             {
                 "loc": "https://quickartphotography.in/assets/sample-certificate-demo.png",
-                "title": "Master Class Certificate of Completion & Excellence",
+                "title": "Master Class Certificate of Completion",
                 "caption": "Official ISO 9001:2015 accredited video editing certification"
             },
             {

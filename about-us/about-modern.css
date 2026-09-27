@@ -14,10 +14,23 @@
   color: #8f6723;
 }
 
-/* Hero Background Texture System */
+/* Hero Background Texture System & Header Clearance */
 .about-hero-texture {
   position: relative;
   isolation: isolate;
+  padding-top: 136px !important;
+}
+
+@media (max-width: 1024px) {
+  .about-hero-texture {
+    padding-top: 122px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-hero-texture {
+    padding-top: 108px !important;
+  }
 }
 .about-hero-texture::before {
   content: "";
@@ -69,6 +82,85 @@
 @media (max-width: 1023px) {
   .mentor-desktop-only {
     display: none !important;
+  }
+}
+
+/* Mentor Action & Social Profile Buttons */
+.about-btn-youtube,
+.about-btn-instagram,
+.about-btn-masterclass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 9999px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none !important;
+  white-space: nowrap;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  line-height: 1.4;
+}
+
+.about-btn-youtube {
+  background-color: #e60000;
+  color: #ffffff !important;
+  border: 1px solid #cc0000;
+  box-shadow: 0 4px 14px rgba(230, 0, 0, 0.22);
+}
+.about-btn-youtube:hover {
+  background-color: #cc0000;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(230, 0, 0, 0.35);
+}
+.about-btn-youtube svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.about-btn-instagram {
+  background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 14px rgba(225, 48, 108, 0.25);
+}
+.about-btn-instagram:hover {
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(225, 48, 108, 0.38);
+  filter: brightness(1.06);
+}
+.about-btn-instagram svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.about-btn-masterclass {
+  background: #ffffff;
+  color: #111111 !important;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.about-btn-masterclass:hover {
+  background: #fbf7ee;
+  border-color: #d8b36a;
+  color: #8f6723 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(216, 179, 106, 0.22);
+}
+
+@media (max-width: 640px) {
+  .about-btn-youtube,
+  .about-btn-instagram,
+  .about-btn-masterclass {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 13.5px;
   }
 }
 

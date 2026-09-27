@@ -53,6 +53,8 @@
 .blog-breadcrumb {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  row-gap: 6px;
   gap: 8px;
   color: var(--blog-muted);
 }
@@ -422,9 +424,10 @@
 /* --- 2-Column Main Magazine Layout --- */
 .blog-layout-grid {
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: minmax(0, 1fr) 340px;
   gap: 36px;
   margin-top: 32px;
+  min-width: 0;
 }
 
 /* --- Articles Feed (Left Column) --- */
@@ -1308,7 +1311,13 @@
     padding: 32px;
   }
   .blog-layout-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+  }
+  .blog-article-card {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   .blog-sidebar {
     display: grid;
@@ -1823,14 +1832,79 @@
 }
 
 @media (max-width: 768px) {
+  .blog-container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
   .blog-article-card {
-    padding: 24px 18px;
+    padding: 20px 14px;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   .blog-software-box {
     padding: 18px 16px;
   }
   .blog-spotlight-card {
     padding: 24px 18px;
+  }
+  .blog-sidebar {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Related Guides Grid */
+.blog-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+.blog-related-card {
+  background: #ffffff;
+  border: 1px solid var(--blog-border);
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.blog-related-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+.blog-related-img-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+.blog-related-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.blog-related-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+.blog-related-info h3 {
+  font-family: var(--font-heading, "Outfit", sans-serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--blog-ink);
+  line-height: 1.4;
+  margin: 0;
+}
+@media (max-width: 640px) {
+  .blog-related-grid {
+    grid-template-columns: 1fr;
   }
 }
 

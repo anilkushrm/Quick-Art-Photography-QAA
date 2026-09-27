@@ -163,8 +163,17 @@
   else label.textContent='Wedding Filmmaking Course';
  });
  const appLink=document.createElement('a');appLink.href='https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes&hl=en';appLink.target='_blank';appLink.rel='noopener noreferrer';appLink.textContent='Download Our App';
- const resources=header.querySelector('#ref-resources');if(resources)resources.append(appLink);
- const mobileResources=[...header.querySelectorAll('#ref-mobile details')].find(detail=>detail.querySelector('summary')?.textContent.trim()==='Free Resources');if(mobileResources)mobileResources.append(appLink.cloneNode(true));
+ const resources=header.querySelector('#ref-resources');if(resources&&!resources.querySelector('a[href*="com.lmwkkjh799.classes"]'))resources.append(appLink);
+ const mobileResources=[...header.querySelectorAll('#ref-mobile details')].find(detail=>detail.querySelector('summary')?.textContent.trim()==='Free Resources');
+ if(mobileResources&&!mobileResources.querySelector('a[href*="com.lmwkkjh799.classes"]')){
+   const mobileAppLink=document.createElement('a');
+   mobileAppLink.className='ref-course';
+   mobileAppLink.href='https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes&hl=en';
+   mobileAppLink.target='_blank';
+   mobileAppLink.rel='noopener noreferrer';
+   mobileAppLink.innerHTML='<span class="ref-course-icon" aria-hidden="true">Ap</span><span>Download Our App</span>';
+   mobileResources.append(mobileAppLink);
+ }
  header.querySelectorAll('.ref-ai-label').forEach(label=>label.classList.add('ref-highlight-badge'));
  header.querySelectorAll('#ref-courses .ref-category-label,#ref-courses :is(h2, .ref-panel-title),#ref-mobile .ref-mobile-group').forEach(label=>{
   if(label.textContent.trim()!=='Graphics Design')return;
@@ -300,7 +309,10 @@
       try {
         const token = localStorage.getItem('qaa_student_token');
         if (token) {
-          fetch('/api/lms.php?action=logout', {
+          const logoutApi = ['5500', '5501', '5502', '3000', '5173'].includes(window.location.port)
+            ? 'http://127.0.0.1:8000/api/lms.php?action=logout'
+            : '/api/lms.php?action=logout';
+          fetch(logoutApi, {
             method: 'POST',
             headers: { 'X-Student-Token': token }
           }).catch(() => {});
@@ -344,32 +356,199 @@
     }
 
     let mobileLogin = header.querySelector('.ref-mobile-login');
+    let mobileClassroomWrap = header.querySelector('.ref-mobile-classroom-wrap');
     const oldMenuBtn = header.querySelector('.ref-menu-button');
+    if (oldMenuBtn) oldMenuBtn.remove();
+
+    function toggleClassroomMenu(open) {
+      if (!mobileClassroomWrap) return;
+      const toggle = mobileClassroomWrap.querySelector('#ref-mobile-classroom-toggle');
+      const dropdown = mobileClassroomWrap.querySelector('#ref-mobile-classroom-dropdown');
+      if (!toggle || !dropdown) return;
+
+      const shouldOpen = open !== undefined ? open : dropdown.hidden;
+      if (shouldOpen) {
+        closeMobile();
+        closeAll();
+        dropdown.hidden = false;
+        dropdown.removeAttribute('hidden');
+        toggle.setAttribute('aria-expanded', 'true');
+      } else {
+        dropdown.hidden = true;
+        dropdown.setAttribute('hidden', '');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    }
 
     if (isStudentLoggedIn) {
-      const myCourseHtml = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg><span>My Course</span>';
-      if (!mobileLogin) {
-        mobileLogin = document.createElement('a');
-        mobileLogin.className = 'ref-mobile-login ref-mobile-mycourse-btn';
-        mobileLogin.href = loginHref;
-        mobileLogin.setAttribute('aria-label', 'My Course');
-        mobileLogin.title = 'My Course';
-        mobileLogin.innerHTML = myCourseHtml;
-        if (oldMenuBtn) {
-          oldMenuBtn.replaceWith(mobileLogin);
-        } else {
-          header.querySelector('.ref-bar')?.append(mobileLogin);
-        }
-      } else {
-        mobileLogin.className = 'ref-mobile-login ref-mobile-mycourse-btn';
-        mobileLogin.href = loginHref;
-        mobileLogin.removeAttribute('target');
-        mobileLogin.setAttribute('aria-label', 'My Course');
-        mobileLogin.title = 'My Course';
-        mobileLogin.innerHTML = myCourseHtml;
-        if (oldMenuBtn) oldMenuBtn.remove();
+      if (mobileLogin) {
+        mobileLogin.remove();
+        mobileLogin = null;
       }
+
+      function makePortalUrl(view) {
+        const base = loginHref.endsWith('/') || loginHref.endsWith('.html') ? loginHref : loginHref + '/';
+        return base.includes('?') ? `${base}&view=${view}` : `${base}?view=${view}`;
+      }
+      const certHref = makePortalUrl('certificates');
+      const profileHref = makePortalUrl('profile');
+      const settingsHref = makePortalUrl('settings');
+
+      const contact = header.querySelector('.ref-nav>a[href*="contact-us"]');
+      const contactHref = contact ? (contact.getAttribute('href') || 'contact-us/') : 'contact-us/';
+
+      let studentAvatarUrl = '';
+      let studentName = localStorage.getItem('qa_user_name') || '';
+      let studentPhone = localStorage.getItem('qa_user_phone') || '';
+      try {
+        const data = JSON.parse(localStorage.getItem('qaa_student_data') || '{}');
+        if (data.name && !studentName) studentName = data.name;
+        if (data.phone && !studentPhone) studentPhone = data.phone;
+        if (data.avatarUrl) studentAvatarUrl = data.avatarUrl;
+        if (data.id && localStorage.getItem('qaa_avatar_' + data.id)) {
+          studentAvatarUrl = localStorage.getItem('qaa_avatar_' + data.id);
+        }
+      } catch (e) {}
+
+      const initials = studentName.trim()
+        ? studentName.trim().split(/\s+/).map(w => w[0]).join('').substring(0, 2).toUpperCase()
+        : 'QA';
+
+      if (!mobileClassroomWrap) {
+        mobileClassroomWrap = document.createElement('div');
+        mobileClassroomWrap.className = 'ref-mobile-classroom-wrap';
+        mobileClassroomWrap.innerHTML = `
+          <button type="button" class="ref-mobile-classroom-btn user-menu-trigger" id="ref-mobile-classroom-toggle" aria-expanded="false" aria-label="Student Account Menu" title="${studentName ? studentName + ' Account' : 'Student Account'}">
+            <div class="nav-avatar-wrap">
+              ${studentAvatarUrl ? `<img src="${studentAvatarUrl}" class="nav-avatar-img" alt="${studentName}">` : ''}
+              <div class="nav-avatar-initials">${initials}</div>
+            </div>
+          </button>
+          <div class="ref-mobile-classroom-menu" id="ref-mobile-classroom-dropdown" hidden aria-hidden="true">
+            <div class="ref-classroom-user-header">
+              <div class="ref-classroom-avatar-lg">
+                ${studentAvatarUrl ? `<img src="${studentAvatarUrl}" class="ref-avatar-img-lg" alt="${studentName}">` : ''}
+                <div class="ref-avatar-initials-lg">${initials}</div>
+              </div>
+              <div class="ref-classroom-user-details">
+                <div class="ref-classroom-user-name">${studentName || 'Student'}</div>
+                <div class="ref-classroom-user-phone">${studentPhone ? `+91 ${studentPhone.replace(/(\d{5})(\d{5})/, '$1 •••••')}` : 'Enrolled Student'}</div>
+              </div>
+            </div>
+
+            <div class="ref-classroom-sep"></div>
+
+            <!-- Section: Learning -->
+            <div class="ref-classroom-section-label">LEARNING</div>
+            <div class="ref-classroom-menu-items">
+              <a href="${loginHref}" class="ref-classroom-action" id="ref-action-mycourse">
+                <span class="ref-action-ico">🎓</span>
+                <span class="ref-action-body">
+                  <span class="ref-action-title">My Courses</span>
+                  <span class="ref-action-desc">Enrolled lectures & projects</span>
+                </span>
+                <span class="ref-action-arrow">›</span>
+              </a>
+              <a href="${certHref}" class="ref-classroom-action" id="ref-action-cert">
+                <span class="ref-action-ico">🏆</span>
+                <span class="ref-action-body">
+                  <span class="ref-action-title">My Certificates</span>
+                  <span class="ref-action-desc">ISO 9001:2015 Accredited</span>
+                </span>
+                <span class="ref-action-arrow">›</span>
+              </a>
+            </div>
+
+            <div class="ref-classroom-sep"></div>
+
+            <!-- Section: Account -->
+            <div class="ref-classroom-section-label">ACCOUNT</div>
+            <div class="ref-classroom-menu-items">
+              <a href="${profileHref}" class="ref-classroom-action" id="ref-action-profile">
+                <span class="ref-action-ico">👤</span>
+                <span class="ref-action-body">
+                  <span class="ref-action-title">My Profile</span>
+                  <span class="ref-action-desc">Personal info & photo</span>
+                </span>
+                <span class="ref-action-arrow">›</span>
+              </a>
+              <a href="${settingsHref}" class="ref-classroom-action" id="ref-action-settings">
+                <span class="ref-action-ico">⚙️</span>
+                <span class="ref-action-body">
+                  <span class="ref-action-title">Settings</span>
+                  <span class="ref-action-desc">Playback & preferences</span>
+                </span>
+                <span class="ref-action-arrow">›</span>
+              </a>
+            </div>
+
+            <div class="ref-classroom-sep"></div>
+
+            <!-- Section: Support -->
+            <div class="ref-classroom-section-label">SUPPORT</div>
+            <div class="ref-classroom-menu-items">
+              <a href="https://wa.me/919939800780" target="_blank" rel="noopener noreferrer" class="ref-classroom-action" id="ref-action-help">
+                <span class="ref-action-ico">💬</span>
+                <span class="ref-action-body">
+                  <span class="ref-action-title">Help &amp; Support</span>
+                  <span class="ref-action-desc">Live chat on WhatsApp</span>
+                </span>
+                <span class="ref-action-ext">↗</span>
+              </a>
+              <a href="${contactHref}" class="ref-classroom-action" id="ref-action-contact">
+                <span class="ref-action-ico">📞</span>
+                <span class="ref-action-body">
+                  <span class="ref-action-title">Contact Academy</span>
+                  <span class="ref-action-desc">Phone & campus address</span>
+                </span>
+                <span class="ref-action-arrow">›</span>
+              </a>
+            </div>
+
+            <div class="ref-classroom-sep"></div>
+
+            <div class="ref-classroom-menu-items">
+              <button type="button" class="ref-classroom-action ref-action-logout" id="ref-action-logout">
+                <span class="ref-action-ico">🚪</span>
+                <span class="ref-action-body">
+                  <span class="ref-action-title">Logout</span>
+                  <span class="ref-action-desc">Sign out of student account</span>
+                </span>
+              </button>
+            </div>
+          </div>
+        `;
+        header.querySelector('.ref-bar')?.append(mobileClassroomWrap);
+      }
+
+      const toggleBtn = mobileClassroomWrap.querySelector('#ref-mobile-classroom-toggle');
+      if (toggleBtn) {
+        toggleBtn.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleClassroomMenu();
+        };
+      }
+
+      const logoutAction = mobileClassroomWrap.querySelector('#ref-action-logout');
+      if (logoutAction) {
+        logoutAction.onclick = (e) => {
+          toggleClassroomMenu(false);
+          handleQaaLogout(e);
+        };
+      }
+
+      mobileClassroomWrap.querySelectorAll('a').forEach(link => {
+        link.onclick = () => {
+          toggleClassroomMenu(false);
+        };
+      });
+
     } else {
+      if (mobileClassroomWrap) {
+        mobileClassroomWrap.remove();
+        mobileClassroomWrap = null;
+      }
       const loginIconHtml = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>';
       if (!mobileLogin) {
         mobileLogin = document.createElement('a');
@@ -378,11 +557,7 @@
         mobileLogin.setAttribute('aria-label', 'Login');
         mobileLogin.title = 'Login';
         mobileLogin.innerHTML = loginIconHtml;
-        if (oldMenuBtn) {
-          oldMenuBtn.replaceWith(mobileLogin);
-        } else {
-          header.querySelector('.ref-bar')?.append(mobileLogin);
-        }
+        header.querySelector('.ref-bar')?.append(mobileLogin);
       } else {
         mobileLogin.className = 'ref-mobile-login';
         mobileLogin.href = loginHref;
@@ -390,7 +565,6 @@
         mobileLogin.setAttribute('aria-label', 'Login');
         mobileLogin.title = 'Login';
         mobileLogin.innerHTML = loginIconHtml;
-        if (oldMenuBtn) oldMenuBtn.remove();
       }
     }
 
@@ -401,9 +575,22 @@
       programsBtn.className = 'ref-mobile-programs';
       programsBtn.setAttribute('aria-label', 'Explore Programs');
       programsBtn.innerHTML = '<span>Programs</span><svg class="ref-programs-arrow" width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5"></path></svg>';
-      mobileLogin.before(programsBtn);
-    } else if (!programsBtn.querySelector('.ref-programs-arrow')) {
-      programsBtn.innerHTML = '<span>Programs</span><svg class="ref-programs-arrow" width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5"></path></svg>';
+      if (mobileClassroomWrap) {
+        mobileClassroomWrap.before(programsBtn);
+      } else if (mobileLogin) {
+        mobileLogin.before(programsBtn);
+      } else {
+        header.querySelector('.ref-bar')?.append(programsBtn);
+      }
+    } else {
+      if (!programsBtn.querySelector('.ref-programs-arrow')) {
+        programsBtn.innerHTML = '<span>Programs</span><svg class="ref-programs-arrow" width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5"></path></svg>';
+      }
+      if (mobileClassroomWrap && programsBtn.nextSibling !== mobileClassroomWrap) {
+        mobileClassroomWrap.before(programsBtn);
+      } else if (mobileLogin && programsBtn.nextSibling !== mobileLogin) {
+        mobileLogin.before(programsBtn);
+      }
     }
 
     if (!menu.querySelector('.ref-drawer-head')) {
@@ -502,6 +689,7 @@
     }
 
     function openMobile() {
+      toggleClassroomMenu(false);
       // Ensure all accordions are collapsed so the clean main menu is shown
       menu.querySelectorAll('details').forEach(d => { d.open = false; });
       const drawerBody = menu.querySelector('.ref-drawer-body');
@@ -592,13 +780,19 @@
     }));
 
     header.addEventListener('keydown', event => {
-      if (event.key === 'Escape' && !menu.hidden) {
-        closeMobile();
-        programsBtn?.focus();
+      if (event.key === 'Escape') {
+        toggleClassroomMenu(false);
+        if (!menu.hidden) {
+          closeMobile();
+          programsBtn?.focus();
+        }
       }
     });
 
     document.addEventListener('click', event => {
+      if (mobileClassroomWrap && !mobileClassroomWrap.contains(event.target)) {
+        toggleClassroomMenu(false);
+      }
       if (!header.contains(event.target) && !menu.contains(event.target) && !backdrop.contains(event.target)) {
         closeAll();
         closeMobile();
@@ -610,6 +804,7 @@
       mq?.addEventListener?.('change', () => {
         closeAll();
         closeMobile();
+        toggleClassroomMenu(false);
       });
     }
 

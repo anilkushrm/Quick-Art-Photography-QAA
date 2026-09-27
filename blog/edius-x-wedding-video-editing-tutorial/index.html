@@ -654,12 +654,47 @@
         }
 
         /* ─── Ultra-Polished Mobile Responsiveness ─── */
-        .blog-article-body h1, 
-        .blog-article-body h2, 
-        .blog-article-body h3, 
-        .blog-article-body p {
-            overflow-wrap: break-word;
-            word-break: break-word;
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        .blog-layout-grid {
+            min-width: 0 !important;
+        }
+        .blog-article-card {
+            min-width: 0 !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        .blog-article-body {
+            min-width: 0 !important;
+            max-width: 100% !important;
+            overflow-wrap: break-word !important;
+            word-break: break-word !important;
+        }
+        .blog-breadcrumb {
+            flex-wrap: wrap !important;
+            row-gap: 6px !important;
+        }
+        .blog-article-meta-row {
+            flex-wrap: wrap !important;
+            gap: 10px 16px !important;
+        }
+
+        .edius-table-hint {
+            display: none;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #b88235;
+            background: #fdfaf4;
+            padding: 8px 14px;
+            border-bottom: 1.5px solid #ebd9be;
+            text-align: center;
+        }
+
+        @media (max-width: 1024px) {
+            .blog-layout-grid {
+                grid-template-columns: minmax(0, 1fr) !important;
+            }
         }
 
         @media (max-width: 900px) {
@@ -675,14 +710,11 @@
                 grid-template-columns: 1fr;
             }
         }
+
         @media (max-width: 768px) {
             .blog-container.blog-article-page-wrap {
                 padding-left: 12px !important;
                 padding-right: 12px !important;
-            }
-            .blog-layout-grid {
-                grid-template-columns: 1fr !important;
-                gap: 24px !important;
             }
             .blog-sidebar {
                 grid-template-columns: 1fr !important;
@@ -695,6 +727,7 @@
             .blog-article-title {
                 font-size: clamp(1.4rem, 4.8vw, 2.1rem) !important;
                 line-height: 1.25 !important;
+                margin-top: 10px !important;
             }
             .blog-tags-row {
                 gap: 6px !important;
@@ -775,7 +808,10 @@
             }
             .edius-table-wrap {
                 margin: 20px 0 24px !important;
-                border-radius: 12px !important;
+                border-radius: 14px !important;
+            }
+            .edius-table-hint {
+                display: block;
             }
             .edius-table th, .edius-table td {
                 padding: 10px 12px !important;
@@ -797,6 +833,7 @@
                 padding: 16px 14px !important;
             }
         }
+
         @media (max-width: 480px) {
             .edius-feat-grid {
                 grid-template-columns: 1fr 1fr !important;
@@ -821,31 +858,160 @@
 
     <a class="qa-skip" href="#main-content">Skip to content</a>
     <header class="ref-header" id="qaaHeader">
-        <div class="ref-bar"><a class="ref-brand" href="../../"><img src="../../home-assets/ec55a6be3747a9.webp" width="46" height="46" alt="Quick Art Photography Academy"><span>Quick <b>Art</b><small>PHOTOGRAPHY ACADEMY</small></span></a>
+        <div class="ref-bar"><a class="ref-brand" href="../../"><img src="../../home-assets/ec55a6be3747a9.webp"
+                    width="46" height="46" alt="Quick Art Photography Academy"><span>Quick <b>Art</b><small>PHOTOGRAPHY
+                        ACADEMY</small></span></a>
             <nav class="ref-nav" aria-label="Main navigation">
-                <div class="ref-dropdown"><button class="ref-toggle" type="button" aria-expanded="false" aria-controls="ref-online">Online Programs<span class="ref-chevron" aria-hidden="true"></span></button>
+                <div class="ref-dropdown"><button class="ref-toggle" type="button" aria-expanded="false"
+                        aria-controls="ref-online">Online Programs<span class="ref-chevron"
+                            aria-hidden="true"></span></button>
                     <div class="ref-mega" id="ref-online" hidden>
-                        <div class="ref-categories" role="tablist" aria-label="Online Programs" aria-orientation="vertical"><button type="button" role="tab" id="ref-online-tab-0" aria-controls="ref-online-panel-0" aria-selected="true" tabindex="0">Video Editing<span aria-hidden="true">›</span></button><button type="button" role="tab" id="ref-online-tab-1" aria-controls="ref-online-panel-1" aria-selected="false" tabindex="-1">Wedding Filmmaking<span aria-hidden="true">›</span></button><button type="button" role="tab" id="ref-online-tab-2" aria-controls="ref-online-panel-2" aria-selected="false" tabindex="-1">Design &amp; Business<span aria-hidden="true">›</span></button></div>
+                        <div class="ref-categories" role="tablist" aria-label="Online Programs"
+                            aria-orientation="vertical"><button type="button" role="tab" id="ref-online-tab-0"
+                                aria-controls="ref-online-panel-0" aria-selected="true" tabindex="0">Video Editing<span
+                                    aria-hidden="true">›</span></button><button type="button" role="tab"
+                                id="ref-online-tab-1" aria-controls="ref-online-panel-1" aria-selected="false"
+                                tabindex="-1">Wedding Filmmaking<span aria-hidden="true">›</span></button><button
+                                type="button" role="tab" id="ref-online-tab-2" aria-controls="ref-online-panel-2"
+                                aria-selected="false" tabindex="-1">Design & Business<span
+                                    aria-hidden="true">›</span></button></div>
                         <div class="ref-panels">
                             <div role="tabpanel" id="ref-online-panel-0" aria-labelledby="ref-online-tab-0">
                                 <div class="ref-panel-title">Video Editing</div>
-                                <div class="ref-card-grid"><a class="ref-course" href="../../online/premiere-pro-course/"><span class="ref-course-icon" aria-hidden="true">Pr</span><span>Adobe Premiere Pro Course</span></a><a class="ref-course" href="../../online/edius-course/"><span class="ref-course-icon" aria-hidden="true">Ed</span><span>EDIUS Course</span></a><a class="ref-course" href="../../online/davinci-resolve-course/"><span class="ref-course-icon" aria-hidden="true">Da</span><span>DaVinci Resolve Course</span></a><a class="ref-course" href="../../online/cinematic-editing-course/"><span class="ref-course-icon" aria-hidden="true">Ce</span><span>Cinematic Editing Course</span></a></div><a class="ref-all ref-all-online" href="../../online/">View all online programs →</a>
+                                <div class="ref-card-grid"><a class="ref-course"
+                                        href="../../online/premiere-pro-course/"><span class="ref-course-icon"
+                                            aria-hidden="true">Pr</span><span>Adobe Premiere Pro Course</span></a><a
+                                        class="ref-course" href="../../online/edius-course/"><span
+                                            class="ref-course-icon" aria-hidden="true">Ed</span><span>EDIUS
+                                            Course</span></a><a class="ref-course"
+                                        href="../../online/davinci-resolve-course/"><span class="ref-course-icon"
+                                            aria-hidden="true">Da</span><span>DaVinci Resolve Course</span></a><a
+                                        class="ref-course" href="../../online/cinematic-editing-course/"><span
+                                            class="ref-course-icon" aria-hidden="true">Ce</span><span>Cinematic Editing
+                                            Course</span></a></div><a class="ref-all ref-all-online"
+                                    href="../../online/">View all online programs →</a>
                             </div>
                             <div role="tabpanel" id="ref-online-panel-1" aria-labelledby="ref-online-tab-1" hidden>
                                 <div class="ref-panel-title">Wedding Filmmaking</div>
-                                <div class="ref-card-grid"><a class="ref-course" href="../../online/pre-wedding-shoot-course/"><span class="ref-course-icon" aria-hidden="true">Pw</span><span>Pre-Wedding Shoot Course</span></a></div>
+                                <div class="ref-card-grid"><a class="ref-course"
+                                        href="../../online/pre-wedding-shoot-course/"><span class="ref-course-icon"
+                                            aria-hidden="true">Pw</span><span>Pre-Wedding Shoot Course</span></a></div>
                                 <a class="ref-all ref-all-online" href="../../online/">View all online programs →</a>
                             </div>
                             <div role="tabpanel" id="ref-online-panel-2" aria-labelledby="ref-online-tab-2" hidden>
-                                <div class="ref-panel-title">Design &amp; Business</div>
-                                <div class="ref-card-grid"><a class="ref-course" href="../../online/album-design-course/"><span class="ref-course-icon" aria-hidden="true">Ad</span><span>Wedding Album Design</span></a><a class="ref-course" href="../../online/website-design-course/"><span class="ref-course-icon" aria-hidden="true">Web</span><span>Website Design Course</span></a><a class="ref-course" href="../../online/digital-marketing-course/"><span class="ref-course-icon" aria-hidden="true">Dm</span><span>Digital Marketing Course</span></a><a class="ref-course" href="../../online/automation-course/"><span class="ref-course-icon" aria-hidden="true">Au</span><span>Automation Course</span></a></div><a class="ref-all ref-all-online" href="../../online/">View all online programs →</a>
+                                <div class="ref-panel-title">Design & Business</div>
+                                <div class="ref-card-grid"><a class="ref-course"
+                                        href="../../online/album-design-course/"><span class="ref-course-icon"
+                                            aria-hidden="true">Ad</span><span>Wedding Album Design</span></a><a
+                                        class="ref-course" href="../../online/website-design-course/"><span
+                                            class="ref-course-icon" aria-hidden="true">Web</span><span>Website Design
+                                            Course</span></a><a class="ref-course"
+                                        href="../../online/digital-marketing-course/"><span class="ref-course-icon"
+                                            aria-hidden="true">Dm</span><span>Digital Marketing
+                                            Course</span></a><a class="ref-course"
+                                        href="../../online/automation-course/"><span class="ref-course-icon"
+                                            aria-hidden="true">Au</span><span>Automation Course</span></a></div><a
+                                    class="ref-all ref-all-online" href="../../online/">View all online programs →</a>
                             </div>
                         </div>
                     </div>
-                </div><a class="ref-link" href="../../courses/">On-Campus Courses</a><a class="ref-link" href="../../master-class/">14-Week Masterclass</a><a class="ref-link" href="../../about-us/">About Mentors</a><a class="ref-link" href="../">Journal &amp; Blog</a><a class="ref-link" href="../../contact-us/">Contact Us</a>
-            </nav>
-            <div class="ref-actions"><a class="ref-cta" href="../../portal/">Student Portal</a></div>
+                </div>
+                <div class="ref-dropdown"><button class="ref-toggle" type="button" aria-expanded="false"
+                        aria-controls="ref-courses">On Campus Programs<span class="ref-chevron"
+                            aria-hidden="true"></span></button>
+                    <div class="ref-mega" id="ref-courses" hidden>
+                        <div class="ref-categories" role="tablist" aria-label="On Campus Programs"
+                            aria-orientation="vertical"><button type="button" role="tab" id="ref-courses-tab-0"
+                                aria-controls="ref-courses-panel-0" aria-selected="true" tabindex="0">Filmmaking &
+                                Editing<span aria-hidden="true">›</span></button><button type="button" role="tab"
+                                id="ref-courses-tab-1" aria-controls="ref-courses-panel-1" aria-selected="false"
+                                tabindex="-1">Photo & Album Design<span aria-hidden="true">›</span></button></div>
+                        <div class="ref-panels">
+                            <div role="tabpanel" id="ref-courses-panel-0" aria-labelledby="ref-courses-tab-0">
+                                <div class="ref-panel-title">Filmmaking & Editing</div>
+                                <div class="ref-card-grid"><a class="ref-course"
+                                        href="../../courses/video-editing/"><span class="ref-course-icon"
+                                            aria-hidden="true">Ve</span><span>Video Editing</span></a><a
+                                        class="ref-course" href="../../courses/ai-wedding-filmmaking/"><span
+                                            class="ref-course-icon" aria-hidden="true">AI</span><span>AI Wedding
+                                            Filmmaking</span></a></div><a class="ref-all" href="../../courses/">View
+                                    all course topics →</a>
+                            </div>
+                            <div role="tabpanel" id="ref-courses-panel-1" aria-labelledby="ref-courses-tab-1" hidden>
+                                <div class="ref-panel-title">Photo & Album Design</div>
+                                <div class="ref-card-grid"><a class="ref-course"
+                                        href="../../courses/album-design/"><span class="ref-course-icon"
+                                            aria-hidden="true">Ad</span><span>Wedding Album Design</span></a></div><a
+                                    class="ref-all" href="../../courses/">View all course topics →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div><a href="../../master-class/">Masterclass</a>
+                <div class="ref-dropdown ref-resources"><button class="ref-toggle" type="button" aria-expanded="false"
+                        aria-controls="ref-resources">Free Resources<span class="ref-chevron"
+                            aria-hidden="true"></span></button>
+                    <div class="ref-resource-panel" id="ref-resources" hidden><a href="../../blog/">Blog</a><a
+                            href="../../downloads/course-details.pdf">Course Brochure</a><a
+                            href="https://www.youtube.com/@QuickartPhotographyAcademy/videos" target="_blank"
+                            rel="noopener noreferrer">YouTube · Free Courses</a></div>
+                </div><a href="../../about-us/">About Us</a><a href="../../contact-us/">Contact</a>
+            </nav><a class="ref-login" href="../../portal/">Login</a><button class="ref-mobile-programs" type="button"
+                aria-label="Explore Programs"><span>Programs</span><svg class="ref-programs-arrow" width="12" height="12"
+                    viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" aria-hidden="true">
+                    <path d="M5 7.5L10 12.5L15 7.5"></path>
+                </svg></button><a class="ref-mobile-login" href="../../portal/" target="_blank"
+                rel="noopener noreferrer" aria-label="Login"><svg width="17" height="17" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round" aria-hidden="true">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                    <polyline points="10 17 15 12 10 7"></polyline>
+                    <line x1="15" y1="12" x2="3" y2="12"></line>
+                </svg></a>
         </div>
+        <nav class="ref-mobile" id="ref-mobile" aria-label="Mobile navigation" hidden>
+            <details>
+                <summary>Online Programs</summary>
+                <p class="ref-mobile-group">Video Editing</p><a class="ref-course"
+                    href="../../online/premiere-pro-course/"><span class="ref-course-icon"
+                        aria-hidden="true">Pr</span><span>Adobe Premiere Pro Course</span></a><a class="ref-course"
+                    href="../../online/edius-course/"><span class="ref-course-icon" aria-hidden="true">Ed</span><span>EDIUS
+                        Course</span></a><a class="ref-course" href="../../online/davinci-resolve-course/"><span
+                        class="ref-course-icon" aria-hidden="true">Da</span><span>DaVinci Resolve Course</span></a><a
+                    class="ref-course" href="../../online/cinematic-editing-course/"><span class="ref-course-icon"
+                        aria-hidden="true">Ce</span><span>Cinematic Editing Course</span></a>
+                <p class="ref-mobile-group">Wedding Filmmaking</p><a class="ref-course"
+                    href="../../online/pre-wedding-shoot-course/"><span class="ref-course-icon"
+                        aria-hidden="true">Pw</span><span>Pre-Wedding Shoot Course</span></a>
+                <p class="ref-mobile-group">Design & Business</p><a class="ref-course"
+                    href="../../online/album-design-course/"><span class="ref-course-icon"
+                        aria-hidden="true">Ad</span><span>Wedding Album Design</span></a><a class="ref-course"
+                    href="../../online/website-design-course/"><span class="ref-course-icon"
+                        aria-hidden="true">Web</span><span>Website Design Course</span></a><a class="ref-course"
+                    href="../../online/digital-marketing-course/"><span class="ref-course-icon"
+                        aria-hidden="true">Dm</span><span>Digital Marketing Course</span></a><a class="ref-course"
+                    href="../../online/automation-course/"><span class="ref-course-icon"
+                        aria-hidden="true">Au</span><span>Automation Course</span></a>
+            </details>
+            <details>
+                <summary>On Campus Programs</summary>
+                <p class="ref-mobile-group">Filmmaking & Editing</p><a class="ref-course"
+                    href="../../courses/video-editing/"><span class="ref-course-icon" aria-hidden="true">Ve</span><span>Video
+                        Editing</span></a><a class="ref-course" href="../../courses/ai-wedding-filmmaking/"><span
+                        class="ref-course-icon" aria-hidden="true">AI</span><span>AI Wedding Filmmaking</span></a>
+                <p class="ref-mobile-group">Photo & Album Design</p><a class="ref-course"
+                    href="../../courses/album-design/"><span class="ref-course-icon" aria-hidden="true">Ad</span><span>Wedding
+                        Album Design</span></a>
+            </details><a href="../../courses/">All Course Topics</a><a href="../../master-class/">Masterclass</a>
+            <details>
+                <summary>Free Resources</summary>
+                <p class="ref-mobile-group">Learning &amp; Guides</p>
+                <a class="ref-course" href="../../blog/"><span class="ref-course-icon" aria-hidden="true">Bg</span><span>Editing Blogs &amp; Tutorials</span></a>
+                <a class="ref-course" href="../../downloads/course-details.pdf" target="_blank" rel="noopener noreferrer"><span class="ref-course-icon" aria-hidden="true">Pd</span><span>Course Brochure (PDF)</span></a>
+                <a class="ref-course" href="https://www.youtube.com/@QuickartPhotographyAcademy/videos" target="_blank" rel="noopener noreferrer"><span class="ref-course-icon" aria-hidden="true">Yt</span><span>YouTube · Free Courses</span></a>
+                <a class="ref-course" href="https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes&amp;hl=en" target="_blank" rel="noopener noreferrer"><span class="ref-course-icon" aria-hidden="true">Ap</span><span>Download Our App</span></a>
+            </details><a href="../../about-us/">About Us</a><a href="../../contact-us/">Contact</a>
+        </nav>
     </header>
 
     <main id="main-content" class="blog-wrapper">
@@ -1132,6 +1298,7 @@
                             <p>Agar aap timeline par mouse ka use kam karke shortcuts master kar lete hain, toh aapki wedding video editing ki speed 3 guna fast ho jati hai:</p>
 
                             <div class="edius-table-wrap">
+                                <div class="edius-table-hint">&#128073; Swipe horizontally to view full table &middot; &plusmn; Shortcuts</div>
                                 <table class="edius-table">
                                     <thead>
                                         <tr>

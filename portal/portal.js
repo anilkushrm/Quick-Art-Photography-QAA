@@ -18,10 +18,14 @@ function toast(msg, ok = true) {
   setTimeout(() => { t.className = 'toast'; }, 3500);
 }
 
+function getLmsApiBase() {
+  const isStaticLiveServer = ['5500', '5501', '5502', '3000', '5173'].includes(window.location.port);
+  return isStaticLiveServer ? 'http://127.0.0.1:8000/api/lms.php' : '../api/lms.php';
+}
+
 async function lmsApi(action, opts = {}) {
-  // If running on static live server (port 5500/5501/5502), connect to local PHP server on port 8000
-  const isStaticLiveServer = ['5500', '5501', '5502', '3000'].includes(window.location.port);
-  let url = isStaticLiveServer ? 'http://127.0.0.1:8000/api/lms.php?' : '../api/lms.php?';
+  const base = getLmsApiBase();
+  let url = base + (base.includes('?') ? '&' : '?');
 
   if (action.startsWith('?') || action.startsWith('&')) {
     url += action.replace(/^[?&]/, '');
@@ -1737,18 +1741,23 @@ async function downloadCertificatePNG() {
   ctx.stroke();
 
   // Gold Ribbon Banner
-  const titleGrad = ctx.createLinearGradient(460, 275, 1294, 317);
+  const certTitleText = '★  CERTIFICATE OF COMPLETION  ★';
+  ctx.font = 'bold 18px "Cinzel", Georgia, serif';
+  const titleWidth = ctx.measureText(certTitleText).width;
+  const ribbonWidth = Math.max(540, titleWidth + 80);
+  const ribbonX = 877 - (ribbonWidth / 2);
+  const titleGrad = ctx.createLinearGradient(ribbonX, 275, ribbonX + ribbonWidth, 317);
   titleGrad.addColorStop(0, '#b8843b');
   titleGrad.addColorStop(0.5, '#ecd394');
   titleGrad.addColorStop(1, '#a87224');
   ctx.fillStyle = titleGrad;
   ctx.beginPath();
-  ctx.roundRect(460, 272, 834, 42, 6);
+  ctx.roundRect(ribbonX, 272, ribbonWidth, 42, 6);
   ctx.fill();
 
   ctx.fillStyle = '#141006';
-  ctx.font = 'bold 17px "Cinzel", Georgia, serif';
-  ctx.fillText('★  CERTIFICATE OF COMPLETION & EXCELLENCE  ★', 877, 299);
+  ctx.font = 'bold 18px "Cinzel", Georgia, serif';
+  ctx.fillText(certTitleText, 877, 299);
 
   // Registration & Authenticity Code
   ctx.fillStyle = '#736750';
@@ -1758,7 +1767,7 @@ async function downloadCertificatePNG() {
   // Presented To
   ctx.fillStyle = '#585143';
   ctx.font = 'italic 19px "Playfair Display", Georgia, serif';
-  ctx.fillText('This prestigious credential is duly and officially conferred upon', 877, 372);
+  ctx.fillText('This is to certify that', 877, 372);
 
   // Student Name
   ctx.fillStyle = '#94661a';
@@ -1986,7 +1995,7 @@ async function downloadCertificatePNG() {
   ctx.fillText('Anil Sharma', 1630, 1070);
   ctx.fillStyle = '#845714';
   ctx.font = 'bold 12.5px "Plus Jakarta Sans", Arial, sans-serif';
-  ctx.fillText('Founder & Master Director', 1630, 1090);
+  ctx.fillText('Founder & Lead Instructor', 1630, 1090);
   ctx.fillStyle = '#5c584e';
   ctx.font = 'bold 11px "Plus Jakarta Sans", Arial, sans-serif';
   ctx.fillText('Quick Art Photography Academy', 1630, 1106);
@@ -2162,7 +2171,7 @@ async function openCatalogModal() {
   document.getElementById('modal-catalog').classList.add('show');
 
   try {
-    const res = await fetch('../api/lms.php?action=catalog').then(r => r.json());
+    const res = await fetch(`${getLmsApiBase()}?action=catalog`).then(r => r.json());
     const catalog = res.catalog || [];
 
     const enrolledIds = currentStudent?.enrolledCourses || [];
@@ -2271,7 +2280,7 @@ async function applyViewCoupon() {
   btn.textContent = 'Checking…';
 
   try {
-    const res = await fetch(`../api/lms.php?action=apply-coupon&code=${encodeURIComponent(code)}&courseId=${encodeURIComponent(activeCheckoutCourse.id)}&price=${activeCheckoutCourse.price}`).then(r => r.json());
+    const res = await fetch(`${getLmsApiBase()}?action=apply-coupon&code=${encodeURIComponent(code)}&courseId=${encodeURIComponent(activeCheckoutCourse.id)}&price=${activeCheckoutCourse.price}`).then(r => r.json());
     if (!res.ok) throw new Error(res.error || 'Invalid coupon code');
 
     activeAppliedCoupon = res;
@@ -2328,7 +2337,7 @@ async function openCheckoutPage(courseId) {
       course = window._catalogCache.find(c => c.id === courseId);
     }
     if (!course) {
-      const res = await fetch('../api/lms.php?action=catalog').then(r => r.json());
+      const res = await fetch(`${getLmsApiBase()}?action=catalog`).then(r => r.json());
       window._catalogCache = res.catalog || [];
       course = (res.catalog || []).find(c => c.id === courseId);
     }
@@ -2710,7 +2719,7 @@ async function launchRazorpayCheckout({ courseId, name, phone, couponCode }) {
 
   try {
     // Step 1: Create Razorpay Order
-    const orderRes = await fetch('../api/lms.php?action=create-razorpay-order', {
+    const orderRes = await fetch(`${getLmsApiBase()}?action=create-razorpay-order`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ courseId, name, phone, email: '', couponCode })
@@ -2759,7 +2768,7 @@ async function launchRazorpayCheckout({ courseId, name, phone, couponCode }) {
           `;
         }
         try {
-          const verifyRes = await fetch('../api/lms.php?action=verify-razorpay-payment', {
+          const verifyRes = await fetch(`${getLmsApiBase()}?action=verify-razorpay-payment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -2890,7 +2899,7 @@ if (modalCheckoutForm) {
     }
 
     try {
-      const orderRes = await fetch('../api/lms.php?action=create-razorpay-order', {
+      const orderRes = await fetch(`${getLmsApiBase()}?action=create-razorpay-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ courseId, name, phone, email, couponCode })
@@ -2926,7 +2935,7 @@ if (modalCheckoutForm) {
         },
         handler: async (response) => {
           try {
-            const verifyRes = await fetch('../api/lms.php?action=verify-razorpay-payment', {
+            const verifyRes = await fetch(`${getLmsApiBase()}?action=verify-razorpay-payment`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -3025,7 +3034,7 @@ async function verifyCertificateById(certId) {
   }
 
   try {
-    const res = await fetch(`../api/lms.php?action=verify-certificate&id=${encodeURIComponent(certId)}`).then(r => r.json());
+    const res = await fetch(`${getLmsApiBase()}?action=verify-certificate&id=${encodeURIComponent(certId)}`).then(r => r.json());
     if (res.ok && res.certificate && res.certificate.valid) {
       const c = res.certificate;
       populateCertificateUI(
@@ -3133,7 +3142,14 @@ async function initStudentSession() {
 
   try {
     await loadDashboard();
-    if (courseParam) {
+    const viewParam = params.get('view');
+    if (viewParam === 'certificates') {
+      openMyCertificates();
+    } else if (viewParam === 'profile') {
+      openMyProfile();
+    } else if (viewParam === 'settings') {
+      openMySettings();
+    } else if (courseParam) {
       await openCourseClassroom(courseParam);
     } else if (enrollParam) {
       if (currentStudent && Array.isArray(currentStudent.enrolledCourses) && currentStudent.enrolledCourses.includes(enrollParam)) {
@@ -3159,7 +3175,7 @@ initStudentSession();
 // Discussion / Comments System
 // ==========================================================================
 
-const LMS_API = '../api/lms.php';
+const LMS_API = getLmsApiBase();
 
 let _discussionCourseId  = null;
 let _discussionLessonId  = null;
@@ -3498,7 +3514,7 @@ async function saveProfileChanges() {
 
   try {
     const tok = localStorage.getItem('qaa_student_token') || '';
-    const res = await fetch(`../api/lms.php?action=update-profile`, {
+    const res = await fetch(`${getLmsApiBase()}?action=update-profile`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Student-Token': tok },
       body: JSON.stringify({ name, email, city })
@@ -3553,7 +3569,7 @@ async function openMyCertificates() {
 
   try {
     const tok = localStorage.getItem('qaa_student_token') || '';
-    const res = await fetch('../api/lms.php?action=my-courses', {
+    const res = await fetch(`${getLmsApiBase()}?action=my-courses`, {
       headers: { 'X-Student-Token': tok }
     });
     const data = await res.json();
@@ -3723,7 +3739,7 @@ async function submitChangePassword() {
 
   try {
     const tok = localStorage.getItem('qaa_student_token') || '';
-    const res = await fetch('../api/lms.php?action=change-password', {
+    const res = await fetch(`${getLmsApiBase()}?action=change-password`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Student-Token': tok },
       body: JSON.stringify({ password: pw1 })

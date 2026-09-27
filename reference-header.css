@@ -85,6 +85,7 @@
 .ref-menu-button,
 .ref-mobile-programs,
 .ref-mobile-login,
+.ref-mobile-classroom-wrap,
 .ref-mobile,
 .ref-header .ref-mobile,
 .ref-drawer-backdrop {
@@ -109,20 +110,30 @@
   .ref-mega .ref-course{padding:16px;min-height:74px}
 }
 
-/* ── Homepage & Masterclass Hero Top Breathing Room (No touching fixed header) ── */
+/* ── Homepage & Masterclass & About Us Hero Top Breathing Room (No touching fixed header) ── */
 .ref-header ~ main .qa-home-hero{padding-top:124px !important}
 .ref-header ~ main .qa-master-hero{padding-top:132px !important}
+.ref-header ~ main .about-hero-texture{padding-top:136px !important}
 @media(max-width:1023px){
   .ref-header ~ main .qa-master-hero{padding-top:120px !important}
+  .ref-header ~ main .about-hero-texture{padding-top:122px !important}
 }
-@media(max-width:950px){.ref-header ~ main .qa-home-hero{padding-top:112px !important}}
+@media(max-width:950px){
+  .ref-header ~ main .qa-home-hero{padding-top:112px !important}
+  .ref-header ~ main .about-hero-texture{padding-top:118px !important}
+}
 @media(max-width:760px){
   .ref-header ~ main .qa-master-hero{padding-top:118px !important;padding-top:max(118px, calc(72px + env(safe-area-inset-top, 0px) + 26px)) !important}
+  .ref-header ~ main .about-hero-texture{padding-top:112px !important;padding-top:max(112px, calc(72px + env(safe-area-inset-top, 0px) + 26px)) !important}
 }
-@media(max-width:600px){.ref-header ~ main .qa-home-hero{padding-top:108px !important}}
+@media(max-width:600px){
+  .ref-header ~ main .qa-home-hero{padding-top:108px !important}
+  .ref-header ~ main .about-hero-texture{padding-top:108px !important}
+}
 @media(max-width:480px){
   .ref-header ~ main .qa-home-hero{padding-top:106px !important}
   .ref-header ~ main .qa-master-hero{padding-top:118px !important;padding-top:max(118px, calc(68px + env(safe-area-inset-top, 0px) + 26px)) !important}
+  .ref-header ~ main .about-hero-texture{padding-top:106px !important;padding-top:max(106px, calc(68px + env(safe-area-inset-top, 0px) + 24px)) !important}
 }
 
 /* ── Mobile Navigation Drawer Backdrop ── */
@@ -601,45 +612,319 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
     filter:brightness(1.06) !important;
   }
 
-  /* Mobile Top Bar: Logged-in "My Course" Button */
-  .ref-header .ref-mobile-login.ref-mobile-mycourse-btn {
-    width: auto !important;
-    min-width: 0 !important;
-    height: 38px !important;
-    padding: 0 12px !important;
-    gap: 6px !important;
-    background: linear-gradient(110deg, #f3d695, #d8a447) !important;
-    border: 1px solid #d8a447 !important;
-    color: #17120b !important;
-    font-size: 12px !important;
-    font-weight: 750 !important;
-    letter-spacing: 0.01em !important;
-    border-radius: 8px !important;
-    box-shadow: 0 2px 10px rgba(216, 161, 83, 0.35) !important;
-    text-decoration: none !important;
-  }
-  .ref-header .ref-mobile-login.ref-mobile-mycourse-btn svg {
-    width: 14px !important;
-    height: 14px !important;
-    stroke: #17120b !important;
+  /* Mobile Top Bar: Logged-in Student Avatar Trigger (same as classroom) */
+  .ref-header .ref-mobile-classroom-wrap {
+    display: inline-flex !important;
+    position: relative !important;
+    align-items: center !important;
     flex-shrink: 0 !important;
+    margin-left: 0 !important;
   }
-  .ref-header .ref-mobile-login.ref-mobile-mycourse-btn span {
-    white-space: nowrap !important;
-    font-size: 12px !important;
-    font-weight: 750 !important;
-    color: #17120b !important;
+
+  .ref-header .ref-mobile-classroom-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    padding: 2px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1.5px solid rgba(216, 161, 83, 0.75) !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+    transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
   }
-  .ref-header .ref-mobile-login.ref-mobile-mycourse-btn:hover,
-  .ref-header .ref-mobile-login.ref-mobile-mycourse-btn:active {
-    background: #ffffff !important;
-    border-color: #ffffff !important;
-    color: #17120b !important;
+
+  .ref-header .ref-mobile-classroom-btn:hover,
+  .ref-header .ref-mobile-classroom-btn:active,
+  .ref-header .ref-mobile-classroom-btn[aria-expanded="true"] {
+    background: rgba(216, 161, 83, 0.15) !important;
+    border-color: #ffd27a !important;
+    box-shadow: 0 0 14px rgba(216, 161, 83, 0.45) !important;
     transform: translateY(-1px) !important;
   }
-  .ref-header .ref-mobile-login.ref-mobile-mycourse-btn:hover svg,
-  .ref-header .ref-mobile-login.ref-mobile-mycourse-btn:active svg {
-    stroke: #17120b !important;
+
+  .ref-header .ref-mobile-classroom-btn .nav-avatar-wrap {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    position: relative !important;
+    flex-shrink: 0 !important;
+  }
+
+  .ref-header .ref-mobile-classroom-btn .nav-avatar-initials {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #d8a153, #b8843b) !important;
+    color: #0e0f12 !important;
+    font-weight: 800 !important;
+    font-size: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
+  }
+
+  .ref-header .ref-mobile-classroom-btn .nav-avatar-img {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    position: absolute !important;
+    inset: 0 !important;
+  }
+
+  /* Mobile Classroom Dropdown Panel */
+  .ref-header .ref-mobile-classroom-menu {
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    right: 0 !important;
+    min-width: 230px !important;
+    max-width: 290px !important;
+    max-height: calc(100vh - 76px) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    background: #0f131d !important;
+    border: 1px solid rgba(216, 161, 83, 0.45) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.06) !important;
+    padding: 6px !important;
+    z-index: 1000 !important;
+    animation: refFadeSlideDown 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-sizing: border-box !important;
+  }
+
+  @keyframes refFadeSlideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .ref-header .ref-mobile-classroom-menu[hidden] {
+    display: none !important;
+  }
+
+  .ref-classroom-user-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 8px 10px 10px !important;
+  }
+
+  .ref-classroom-avatar-lg {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    position: relative !important;
+    flex-shrink: 0 !important;
+  }
+
+  .ref-avatar-initials-lg {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #d8a153, #b8843b) !important;
+    color: #0e0f12 !important;
+    font-weight: 800 !important;
+    font-size: 13.5px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .ref-avatar-img-lg {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    position: absolute !important;
+    inset: 0 !important;
+  }
+
+  .ref-classroom-user-details {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+  }
+
+  .ref-classroom-user-name {
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .ref-classroom-user-phone {
+    font-size: 11px !important;
+    color: #94a3b8 !important;
+    margin-top: 2px !important;
+    line-height: 1 !important;
+  }
+
+  .ref-classroom-section-label {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.10em !important;
+    color: #64748b !important;
+    padding: 6px 10px 3px !important;
+    text-transform: uppercase !important;
+  }
+
+  .ref-classroom-menu-items {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+  }
+
+  .ref-classroom-action {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 8px 10px !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    border: none !important;
+    text-decoration: none !important;
+    color: #e2e8f0 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
+  }
+
+  .ref-classroom-action:hover,
+  .ref-classroom-action:active {
+    background: rgba(216, 161, 83, 0.14) !important;
+    color: #fce09b !important;
+  }
+
+  .ref-action-ico {
+    font-size: 17px !important;
+    line-height: 1 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .ref-action-body {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+
+  .ref-action-title {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    line-height: 1.2 !important;
+  }
+
+  .ref-action-desc {
+    font-size: 10.5px !important;
+    color: #94a3b8 !important;
+    margin-top: 2px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .ref-classroom-action:hover .ref-action-title {
+    color: #fce09b !important;
+  }
+
+  .ref-classroom-action:hover .ref-action-desc {
+    color: #e2e8f0 !important;
+  }
+
+  .ref-action-arrow {
+    font-size: 14px !important;
+    color: #64748b !important;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+    transition: transform 0.15s ease !important;
+  }
+
+  .ref-classroom-action:hover .ref-action-arrow {
+    color: #fce09b !important;
+    transform: translateX(2px) !important;
+  }
+
+  .ref-action-ext {
+    font-size: 13px !important;
+    color: #64748b !important;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+    font-weight: 700 !important;
+    transition: transform 0.15s ease, color 0.15s ease !important;
+  }
+
+  .ref-classroom-action:hover .ref-action-ext {
+    color: #fce09b !important;
+    transform: translate(1px, -1px) !important;
+  }
+
+  .ref-classroom-sep {
+    height: 1px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    margin: 4px 6px !important;
+  }
+
+  .ref-classroom-action.ref-action-logout {
+    color: #fda4af !important;
+  }
+
+  .ref-classroom-action.ref-action-logout .ref-action-title {
+    color: #fda4af !important;
+  }
+
+  .ref-classroom-action.ref-action-logout .ref-action-desc {
+    color: #f43f5e !important;
+    opacity: 0.75 !important;
+  }
+
+  .ref-classroom-action.ref-action-logout:hover,
+  .ref-classroom-action.ref-action-logout:active {
+    background: rgba(244, 63, 94, 0.15) !important;
+    color: #ffffff !important;
+  }
+
+  .ref-classroom-action.ref-action-logout:hover .ref-action-title {
+    color: #ffffff !important;
+  }
+
+  .ref-classroom-action.ref-action-logout:hover .ref-action-desc {
+    color: #fecdd3 !important;
+    opacity: 1 !important;
+  }
+
+  @media(max-width: 380px) {
+    .ref-header .ref-mobile-programs {
+      padding: 0 8px !important;
+      font-size: 12px !important;
+      gap: 4px !important;
+    }
+    .ref-header .ref-mobile-classroom-btn {
+      padding: 0 8px !important;
+      font-size: 12px !important;
+      gap: 4px !important;
+    }
   }
 
   /* Drawer Top: Logged-in Student Account Card */
@@ -794,19 +1079,15 @@ body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
   .ref-header.ref-scrolled .ref-mobile-login:active svg {
     stroke: #ffffff !important;
   }
-  .ref-header.ref-scrolled .ref-mobile-login.ref-mobile-mycourse-btn {
-    background: linear-gradient(110deg, #f3d695, #d8a447) !important;
-    border: 1px solid #d8a447 !important;
-    color: #17120b !important;
+  .ref-header.ref-scrolled .ref-mobile-classroom-btn {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: #d8a447 !important;
   }
-  .ref-header.ref-scrolled .ref-mobile-login.ref-mobile-mycourse-btn svg {
-    stroke: #17120b !important;
-  }
-  .ref-header.ref-scrolled .ref-mobile-login.ref-mobile-mycourse-btn:hover,
-  .ref-header.ref-scrolled .ref-mobile-login.ref-mobile-mycourse-btn:active {
-    background: #ffffff !important;
-    border-color: #ffffff !important;
-    color: #17120b !important;
+  .ref-header.ref-scrolled .ref-mobile-classroom-btn:hover,
+  .ref-header.ref-scrolled .ref-mobile-classroom-btn:active,
+  .ref-header.ref-scrolled .ref-mobile-classroom-btn[aria-expanded="true"] {
+    background: rgba(216, 161, 83, 0.2) !important;
+    border-color: #ffd27a !important;
   }
 }
 

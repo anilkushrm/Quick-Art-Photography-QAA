@@ -136,6 +136,30 @@
   .ref-header ~ main .about-hero-texture{padding-top:106px !important;padding-top:max(106px, calc(68px + env(safe-area-inset-top, 0px) + 24px)) !important}
 }
 
+/* ── Blog & Article Pages Top Breathing Room Under Fixed Header ── */
+.ref-header ~ main.blog-wrapper,
+.ref-header ~ main.blog-main-content,
+.ref-header ~ main:has(.blog-breadcrumb-wrap),
+.ref-header ~ main:has(.blog-hero) {
+  padding-top: 80px !important;
+}
+@media(max-width:950px){
+  .ref-header ~ main.blog-wrapper,
+  .ref-header ~ main.blog-main-content,
+  .ref-header ~ main:has(.blog-breadcrumb-wrap),
+  .ref-header ~ main:has(.blog-hero) {
+    padding-top: 72px !important;
+  }
+}
+@media(max-width:600px){
+  .ref-header ~ main.blog-wrapper,
+  .ref-header ~ main.blog-main-content,
+  .ref-header ~ main:has(.blog-breadcrumb-wrap),
+  .ref-header ~ main:has(.blog-hero) {
+    padding-top: 68px !important;
+  }
+}
+
 /* ── Mobile Navigation Drawer Backdrop ── */
 body.ref-nav-locked{overflow:hidden !important;touch-action:none !important}
 

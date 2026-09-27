@@ -1908,4 +1908,193 @@
   }
 }
 
+/* ==========================================================================
+   Comprehensive Mobile Responsiveness for Article Pages & Media
+   ========================================================================== */
+@media (max-width: 768px) {
+  .blog-wrapper,
+  .blog-main-content {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  .blog-container {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .blog-layout-grid {
+    grid-template-columns: 100% !important;
+    gap: 24px !important;
+    margin-top: 14px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .blog-article-page-wrap {
+    padding-top: 16px !important;
+    padding-bottom: 40px !important;
+  }
+
+  .blog-article-card {
+    padding: 20px 14px !important;
+    border-radius: 14px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+  }
+
+  .blog-article-header .blog-article-title {
+    font-size: clamp(20px, 5.5vw, 28px) !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 12px !important;
+  }
+
+  .blog-article-header .blog-article-lead {
+    font-size: 14.5px !important;
+    line-height: 1.65 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .blog-article-header .blog-tags-row {
+    gap: 6px !important;
+    margin-bottom: 12px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .blog-badge {
+    font-size: 11px !important;
+    padding: 4px 10px !important;
+    white-space: normal !important;
+    text-align: left !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .blog-article-meta-row {
+    gap: 8px !important;
+    font-size: 12px !important;
+    padding-top: 12px !important;
+    flex-wrap: wrap !important;
+  }
+
+  /* Table responsiveness */
+  .blog-table-responsive,
+  .pr-table-responsive,
+  .blog-article-body > div:has(> table) {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    margin: 18px 0 !important;
+    border-radius: 12px !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  .blog-article-body table,
+  table.pr-custom-table {
+    min-width: 480px !important;
+    font-size: 13px !important;
+  }
+
+  .blog-article-body th,
+  .blog-article-body td,
+  .pr-custom-table th,
+  .pr-custom-table td {
+    padding: 10px 12px !important;
+    font-size: 12.5px !important;
+  }
+
+  /* Images & Videos */
+  .blog-article-hero-wrap,
+  .pr-hero-banner {
+    margin: 16px 0 24px !important;
+    border-radius: 12px !important;
+  }
+
+  .blog-article-body img,
+  .blog-article-hero-img,
+  .pr-hero-banner img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 10px !important;
+  }
+
+  /* Rating pill */
+  .pr-rating-pill {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    border-radius: 12px !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    gap: 6px !important;
+    line-height: 1.4 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Player Card */
+  .pr-player-card {
+    padding: 12px !important;
+    margin: 18px 0 !important;
+    border-radius: 14px !important;
+  }
+  .pr-player-card h3 {
+    font-size: 17px !important;
+    line-height: 1.35 !important;
+  }
+  .pr-player-card p {
+    font-size: 13px !important;
+  }
+
+  /* Episodes Grid */
+  .pr-ep-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    margin: 16px 0 22px !important;
+  }
+  .pr-ep-card {
+    padding: 12px !important;
+  }
+
+  /* Full-width Touch CTAs */
+  .pr-btn-yt,
+  .pr-btn-cta-gold {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 13px 16px !important;
+    font-size: 14px !important;
+    text-align: center !important;
+    justify-content: center !important;
+  }
+
+  /* TOC */
+  .blog-toc-box {
+    padding: 16px 14px !important;
+    margin: 18px 0 !important;
+    border-radius: 12px !important;
+  }
+  .blog-toc-list {
+    padding-left: 18px !important;
+    font-size: 13.5px !important;
+  }
+
+  /* FAQ Accordion */
+  .blog-faq-item summary {
+    padding: 13px 12px !important;
+    font-size: 14px !important;
+  }
+  .blog-faq-answer {
+    padding: 12px !important;
+    font-size: 13.5px !important;
+  }
+}
+
+
 

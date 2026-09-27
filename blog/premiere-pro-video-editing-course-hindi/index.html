@@ -480,6 +480,57 @@
             color: #92400e;
             margin-bottom: 16px;
         }
+    
+        /* Mobile Viewport Optimizations */
+        @media (max-width: 640px) {
+            .pr-rating-pill {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                border-radius: 12px !important;
+                padding: 8px 12px !important;
+                font-size: 12px !important;
+                gap: 6px !important;
+                line-height: 1.4 !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .pr-player-card {
+                padding: 12px !important;
+                margin: 18px 0 !important;
+                border-radius: 14px !important;
+            }
+            .pr-ep-grid {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+                margin: 16px 0 22px !important;
+            }
+            .pr-ep-card {
+                padding: 12px !important;
+            }
+            .pr-btn-yt,
+            .pr-btn-cta-gold {
+                width: 100% !important;
+                box-sizing: border-box !important;
+                padding: 13px 16px !important;
+                font-size: 14px !important;
+                text-align: center !important;
+                justify-content: center !important;
+            }
+            .blog-article-header .blog-article-title {
+                font-size: clamp(20px, 5.5vw, 27px) !important;
+                line-height: 1.25 !important;
+                word-break: break-word !important;
+            }
+            .blog-article-header .blog-article-lead {
+                font-size: 14.5px !important;
+                line-height: 1.65 !important;
+            }
+            .pr-custom-table th,
+            .pr-custom-table td {
+                padding: 9px 12px !important;
+                font-size: 12.5px !important;
+            }
+        }
     </style>
 </head>
 
@@ -641,17 +692,21 @@
         </nav>
     </header>
 
-    <main class="blog-main-content" id="main-content">
-        <div class="blog-container">
-            <!-- Breadcrumbs -->
-            <nav class="blog-breadcrumb" aria-label="Breadcrumb">
-                <a href="../../">Home</a>
-                <span class="sep">/</span>
-                <a href="../">Blog</a>
-                <span class="sep">/</span>
-                <span class="current">Premiere Pro Course in Hindi</span>
-            </nav>
+    <main id="main-content" class="blog-wrapper">
+        <!-- Breadcrumb Bar -->
+        <div class="blog-breadcrumb-wrap">
+            <div class="blog-container">
+                <nav class="blog-breadcrumb" aria-label="Breadcrumb">
+                    <a href="../../">Home</a>
+                    <span class="sep" aria-hidden="true">/</span>
+                    <a href="../">Blog</a>
+                    <span class="sep" aria-hidden="true">/</span>
+                    <span class="current">Premiere Pro Course in Hindi</span>
+                </nav>
+            </div>
+        </div>
 
+        <div class="blog-container blog-article-page-wrap">
             <div class="blog-layout-grid">
                 <!-- Article Card -->
                 <article class="blog-article-card" itemscope itemtype="https://schema.org/Article">
@@ -1085,8 +1140,8 @@
                             <div class="blog-cert-showcase">
                                 <div class="blog-cert-img-wrap">
                                     <picture>
-                                        <source srcset="../../assets/sample-certificate-demo.webp" type="image/webp">
-                                        <img src="../../assets/sample-certificate-demo.jpg" alt="Quick Art Photography Academy ISO Accredited Video Editing Certificate" width="800" height="566" loading="lazy">
+                                        <source srcset="../../assets/sample-certificate-demo.webp?v=2" type="image/webp">
+                                        <img src="../../assets/sample-certificate-demo.jpg?v=2" alt="Quick Art Photography Academy ISO Accredited Video Editing Certificate" width="800" height="566" loading="lazy">
                                     </picture>
                                     <span class="blog-cert-badge">Govt Recognized · ISO 9001:2015</span>
                                 </div>

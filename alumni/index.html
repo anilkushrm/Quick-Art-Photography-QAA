@@ -18,610 +18,788 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- Core Design System, Header & Footer CSS (Exactly like Home Page) -->
+  <link rel="stylesheet" href="../site.css?v=20260926_05">
   <link rel="stylesheet" href="../design-system.css">
-  <link rel="stylesheet" href="../header.css">
-  <link rel="stylesheet" href="alumni.css?v=20260928_01">
+  <link rel="stylesheet" href="../reference-header.css?v=3.8">
+  <link rel="stylesheet" href="../on-campus-enhancements.css?v=hero-home-6">
+  <link rel="stylesheet" href="alumni.css?v=20260928_02">
   <script defer src="../header.js?v=3.8"></script>
 </head>
 <body class="alm-body">
 
-  <!-- Universal Header -->
-  <div id="site-header-container"></div>
+  <a class="qa-skip" href="#main-content">Skip to content</a>
 
-  <!-- Hero Section with WsCubeTech Split Layout (Left: Content + Stats, Right: Vertical Marquee) -->
-  <section class="alm-hero">
-    <div class="alm-hero-bg" aria-hidden="true"></div>
-    <div class="alm-container alm-hero-container">
-      
-      <!-- Left Column: Copy & KPIs -->
-      <div class="alm-hero-left">
-        <div class="alm-hero-badge-wrap">
-          <span class="alm-live-dot"></span>
-          <span class="alm-hero-badge">HALL OF FAME • 1,800+ CERTIFIED EDITORS</span>
+  <!-- Header (Identical to Home Page with full mega-menu navigation) -->
+  <header class="ref-header" id="qaaHeader">
+    <div class="ref-bar">
+      <a class="ref-brand" href="../">
+        <img src="../home-assets/ec55a6be3747a9.webp" width="46" height="46" alt="Quick Art Photography Academy">
+        <span>Quick <b>Art</b><small>PHOTOGRAPHY ACADEMY</small></span>
+      </a>
+      <nav class="ref-nav" aria-label="Main navigation">
+        <div class="ref-dropdown">
+          <button class="ref-toggle" type="button" aria-expanded="false" aria-controls="ref-online">
+            Online Programs<span class="ref-chevron" aria-hidden="true"></span>
+          </button>
+          <div class="ref-mega" id="ref-online" hidden>
+            <div class="ref-categories" role="tablist" aria-label="Online Programs" aria-orientation="vertical">
+              <button type="button" role="tab" id="ref-online-tab-0" aria-controls="ref-online-panel-0" aria-selected="true" tabindex="0">
+                Video Editing<span aria-hidden="true">›</span>
+              </button>
+              <button type="button" role="tab" id="ref-online-tab-1" aria-controls="ref-online-panel-1" aria-selected="false" tabindex="-1">
+                Wedding Filmmaking<span aria-hidden="true">›</span>
+              </button>
+              <button type="button" role="tab" id="ref-online-tab-2" aria-controls="ref-online-panel-2" aria-selected="false" tabindex="-1">
+                Design &amp; Business<span aria-hidden="true">›</span>
+              </button>
+            </div>
+            <div class="ref-panels">
+              <div role="tabpanel" id="ref-online-panel-0" aria-labelledby="ref-online-tab-0">
+                <div class="ref-panel-title">Video Editing</div>
+                <div class="ref-card-grid">
+                  <a class="ref-course" href="../online/premiere-pro-course/"><span class="ref-course-icon" aria-hidden="true">Pr</span><span>Adobe Premiere Pro Course</span></a>
+                  <a class="ref-course" href="../online/edius-course/"><span class="ref-course-icon" aria-hidden="true">Ed</span><span>EDIUS Course</span></a>
+                  <a class="ref-course" href="../online/davinci-resolve-course/"><span class="ref-course-icon" aria-hidden="true">Da</span><span>DaVinci Resolve Course</span></a>
+                  <a class="ref-course" href="../online/cinematic-editing-course/"><span class="ref-course-icon" aria-hidden="true">Ce</span><span>Cinematic Editing Course</span></a>
+                </div>
+                <a class="ref-all ref-all-online" href="../online/">View all online programs →</a>
+              </div>
+              <div role="tabpanel" id="ref-online-panel-1" aria-labelledby="ref-online-tab-1" hidden>
+                <div class="ref-panel-title">Wedding Filmmaking</div>
+                <div class="ref-card-grid">
+                  <a class="ref-course" href="../online/pre-wedding-shoot-course/"><span class="ref-course-icon" aria-hidden="true">Pw</span><span>Pre-Wedding Shoot Course</span></a>
+                </div>
+                <a class="ref-all ref-all-online" href="../online/">View all online programs →</a>
+              </div>
+              <div role="tabpanel" id="ref-online-panel-2" aria-labelledby="ref-online-tab-2" hidden>
+                <div class="ref-panel-title">Design &amp; Business</div>
+                <div class="ref-card-grid">
+                  <a class="ref-course" href="../online/album-design-course/"><span class="ref-course-icon" aria-hidden="true">Ad</span><span>Wedding Album Design</span></a>
+                  <a class="ref-course" href="../online/website-design-course/"><span class="ref-course-icon" aria-hidden="true">Web</span><span>Website Design Course</span></a>
+                  <a class="ref-course" href="../online/digital-marketing-course/"><span class="ref-course-icon" aria-hidden="true">Dm</span><span>Digital Marketing Course</span></a>
+                  <a class="ref-course" href="../online/automation-course/"><span class="ref-course-icon" aria-hidden="true">Au</span><span>Automation Course</span></a>
+                </div>
+                <a class="ref-all ref-all-online" href="../online/">View all online programs →</a>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="ref-dropdown">
+          <button class="ref-toggle" type="button" aria-expanded="false" aria-controls="ref-courses">
+            On Campus Programs<span class="ref-chevron" aria-hidden="true"></span>
+          </button>
+          <div class="ref-mega" id="ref-courses" hidden>
+            <div class="ref-categories" role="tablist" aria-label="On Campus Programs" aria-orientation="vertical">
+              <button type="button" role="tab" id="ref-courses-tab-0" aria-controls="ref-courses-panel-0" aria-selected="true" tabindex="0">
+                Filmmaking &amp; Editing<span aria-hidden="true">›</span>
+              </button>
+              <button type="button" role="tab" id="ref-courses-tab-1" aria-controls="ref-courses-panel-1" aria-selected="false" tabindex="-1">
+                Photo &amp; Album Design<span aria-hidden="true">›</span>
+              </button>
+              <button type="button" role="tab" id="ref-courses-tab-2" aria-controls="ref-courses-panel-2" aria-selected="false" tabindex="-1">
+                AI &amp; Digital Marketing<span aria-hidden="true">›</span>
+              </button>
+            </div>
+            <div class="ref-panels">
+              <div role="tabpanel" id="ref-courses-panel-0" aria-labelledby="ref-courses-tab-0">
+                <div class="ref-panel-title">Filmmaking &amp; Editing</div>
+                <div class="ref-card-grid">
+                  <a class="ref-course" href="../courses/video-editing/"><span class="ref-course-icon" aria-hidden="true">Ve</span><span>Video Editing</span></a>
+                  <a class="ref-course" href="../courses/ai-wedding-filmmaking/"><span class="ref-course-icon" aria-hidden="true">AI</span><span>AI Wedding Filmmaking</span></a>
+                </div>
+                <a class="ref-all" href="../courses/">View all course topics →</a>
+              </div>
+              <div role="tabpanel" id="ref-courses-panel-1" aria-labelledby="ref-courses-tab-1" hidden>
+                <div class="ref-panel-title">Photo &amp; Album Design</div>
+                <div class="ref-card-grid">
+                  <a class="ref-course" href="../courses/album-design/"><span class="ref-course-icon" aria-hidden="true">Ad</span><span>Wedding Album Design</span></a>
+                </div>
+                <a class="ref-all" href="../courses/">View all course topics →</a>
+              </div>
+              <div role="tabpanel" id="ref-courses-panel-2" aria-labelledby="ref-courses-tab-2" hidden>
+                <div class="ref-panel-title">AI &amp; Digital Marketing</div>
+                <div class="ref-card-grid">
+                  <a class="ref-course" href="../courses/ai-digital-marketing/"><span class="ref-course-icon" aria-hidden="true">Mk</span><span>AI Digital Marketing</span></a>
+                </div>
+                <a class="ref-all" href="../courses/">View all course topics →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="../master-class/">Masterclass</a>
+        <div class="ref-dropdown ref-resources">
+          <button class="ref-toggle" type="button" aria-expanded="false" aria-controls="ref-resources">
+            Free Resources<span class="ref-chevron" aria-hidden="true"></span>
+          </button>
+          <div class="ref-resource-panel" id="ref-resources" hidden>
+            <a href="../blog/">Blog</a>
+            <a href="../downloads/course-details.pdf">Course Brochure</a>
+            <a href="https://www.youtube.com/@QuickartPhotographyAcademy/videos" target="_blank" rel="noopener noreferrer">YouTube · Free Courses</a>
+            <a href="./">Alumni Directory</a>
+          </div>
+        </div>
+        <a href="../about-us/">About Us</a>
+        <a href="./" class="ref-active-page" style="color: #f59e0b; font-weight: 700;">Alumni</a>
+        <a href="../contact-us/">Contact</a>
+      </nav>
+      <a class="ref-login" href="../portal/">Login</a>
+      <button class="ref-mobile-programs" type="button" aria-label="Explore Programs">
+        <span>Programs</span>
+        <svg class="ref-programs-arrow" width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 7.5L10 12.5L15 7.5"></path>
+        </svg>
+      </button>
+      <a class="ref-mobile-login" href="../portal/" target="_blank" rel="noopener noreferrer" aria-label="Login">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+          <polyline points="10 17 15 12 10 7"></polyline>
+          <line x1="15" y1="12" x2="3" y2="12"></line>
+        </svg>
+      </a>
+    </div>
+    <nav class="ref-mobile" id="ref-mobile" aria-label="Mobile navigation" hidden>
+      <details>
+        <summary>Online Programs</summary>
+        <p class="ref-mobile-group">Video Editing</p>
+        <a class="ref-course" href="../online/premiere-pro-course/"><span class="ref-course-icon" aria-hidden="true">Pr</span><span>Adobe Premiere Pro Course</span></a>
+        <a class="ref-course" href="../online/edius-course/"><span class="ref-course-icon" aria-hidden="true">Ed</span><span>EDIUS Course</span></a>
+        <a class="ref-course" href="../online/davinci-resolve-course/"><span class="ref-course-icon" aria-hidden="true">Da</span><span>DaVinci Resolve Course</span></a>
+        <a class="ref-course" href="../online/cinematic-editing-course/"><span class="ref-course-icon" aria-hidden="true">Ce</span><span>Cinematic Editing Course</span></a>
+        <p class="ref-mobile-group">Wedding Filmmaking</p>
+        <a class="ref-course" href="../online/pre-wedding-shoot-course/"><span class="ref-course-icon" aria-hidden="true">Pw</span><span>Pre-Wedding Shoot Course</span></a>
+        <p class="ref-mobile-group">Design &amp; Business</p>
+        <a class="ref-course" href="../online/album-design-course/"><span class="ref-course-icon" aria-hidden="true">Ad</span><span>Wedding Album Design</span></a>
+        <a class="ref-course" href="../online/website-design-course/"><span class="ref-course-icon" aria-hidden="true">Web</span><span>Website Design Course</span></a>
+        <a class="ref-course" href="../online/digital-marketing-course/"><span class="ref-course-icon" aria-hidden="true">Dm</span><span>Digital Marketing Course</span></a>
+        <a class="ref-course" href="../online/automation-course/"><span class="ref-course-icon" aria-hidden="true">Au</span><span>Automation Course</span></a>
+        <a class="ref-mobile-all-online" href="../online/">View all online programs →</a>
+      </details>
+      <details>
+        <summary>On Campus Programs</summary>
+        <p class="ref-mobile-group">Filmmaking &amp; Editing</p>
+        <a class="ref-course" href="../courses/video-editing/"><span class="ref-course-icon" aria-hidden="true">Ve</span><span>Video Editing</span></a>
+        <a class="ref-course" href="../courses/ai-wedding-filmmaking/"><span class="ref-course-icon" aria-hidden="true">AI</span><span>AI Wedding Filmmaking</span></a>
+        <p class="ref-mobile-group">Photo &amp; Album Design</p>
+        <a class="ref-course" href="../courses/album-design/"><span class="ref-course-icon" aria-hidden="true">Ad</span><span>Wedding Album Design</span></a>
+        <p class="ref-mobile-group">AI &amp; Digital Marketing</p>
+        <a class="ref-course" href="../courses/ai-digital-marketing/"><span class="ref-course-icon" aria-hidden="true">Mk</span><span>AI Digital Marketing</span></a>
+      </details>
+      <a href="../courses/">All Course Topics</a>
+      <a href="../master-class/">Masterclass</a>
+      <details>
+        <summary>Free Resources</summary>
+        <p class="ref-mobile-group">Learning &amp; Guides</p>
+        <a class="ref-course" href="../blog/"><span class="ref-course-icon" aria-hidden="true">Bg</span><span>Editing Blogs &amp; Tutorials</span></a>
+        <a class="ref-course" href="../downloads/course-details.pdf" target="_blank" rel="noopener noreferrer"><span class="ref-course-icon" aria-hidden="true">Pd</span><span>Course Brochure (PDF)</span></a>
+        <a class="ref-course" href="https://www.youtube.com/@QuickartPhotographyAcademy/videos" target="_blank" rel="noopener noreferrer"><span class="ref-course-icon" aria-hidden="true">Yt</span><span>YouTube · Free Courses</span></a>
+        <a class="ref-course" href="./"><span class="ref-course-icon" aria-hidden="true">Al</span><span>Alumni Directory &amp; Hall of Fame</span></a>
+        <a class="ref-course" href="https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes&amp;hl=en" target="_blank" rel="noopener noreferrer"><span class="ref-course-icon" aria-hidden="true">Ap</span><span>Download Our App</span></a>
+      </details>
+      <a href="../about-us/">About Us</a>
+      <a href="./" style="color: #f59e0b; font-weight: 700;">Alumni Hall of Fame</a>
+      <a href="../contact-us/">Contact</a>
+    </nav>
+  </header>
+
+  <main id="main-content">
+
+    <!-- Hero Section with WsCubeTech Split Layout (Left: Content + Stats, Right: Vertical Marquee) -->
+    <section class="alm-hero">
+      <div class="alm-hero-bg" aria-hidden="true"></div>
+      <div class="alm-container alm-hero-container">
         
-        <h1 class="alm-hero-h1">
-          Our Alumni Work at Leading <span class="alm-gold-text">Wedding Studios</span> Across India
-        </h1>
-        
-        <p class="alm-hero-sub">
-          From classrooms in Siwan to leading destination wedding productions across Bihar, Uttar Pradesh, and pan-India. Certified video editors, cinematic colorists, and studio entrepreneurs trained with 1-on-1 practical studio mentorship by Anil Sharma.
-        </p>
-
-        <!-- CTA Buttons -->
-        <div class="alm-hero-actions">
-          <a href="../admission/" class="alm-hero-btn-primary">
-            <span>Submit Admission Form (₹500 Fee)</span>
-            <span aria-hidden="true">→</span>
-          </a>
-          <a href="#video-testimonials" class="alm-hero-btn-secondary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="6 3 20 12 6 21 6 3"></polygon>
-            </svg>
-            <span>Watch Video Testimonials</span>
-          </a>
-        </div>
-
-        <!-- 4 Key Metrics Row -->
-        <div class="alm-stats-row">
-          <div class="alm-stat-card">
-            <strong>1,800+</strong>
-            <span>Certified Editors</span>
+        <!-- Left Column: Copy & KPIs -->
+        <div class="alm-hero-left">
+          <div class="alm-hero-badge-wrap">
+            <span class="alm-live-dot"></span>
+            <span class="alm-hero-badge">HALL OF FAME • 1,800+ CERTIFIED EDITORS</span>
           </div>
-          <div class="alm-stat-card">
-            <strong>450+</strong>
-            <span>Studios Established</span>
-          </div>
-          <div class="alm-stat-card">
-            <strong>₹50K - ₹2.5L</strong>
-            <span>Avg. Monthly Earnings</span>
-          </div>
-          <div class="alm-stat-card">
-            <strong>100%</strong>
-            <span>Verifiable ISO ID</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Column: Vertical Infinite Scrolling Alumni Cards Marquee -->
-      <div class="alm-hero-right" aria-label="Alumni showcase highlights">
-        <div class="alm-marquee-wrapper">
           
-          <!-- Column 1: Scrolls Up -->
-          <div class="alm-marquee-col alm-marquee-up">
-            <div class="alm-marquee-track">
-              
-              <!-- Card 1 -->
-              <div class="alm-mini-card">
-                <div class="alm-mini-avatar">
-                  <img src="../assets/alumni/alumni_rahul_kumar.jpg" alt="Rahul Kumar" width="56" height="56" loading="lazy">
-                </div>
-                <div class="alm-mini-info">
-                  <h4>Rahul Kumar</h4>
-                  <p class="alm-mini-studio">Sharma Digital Studio</p>
-                  <div class="alm-mini-meta">
-                    <span class="alm-mini-loc">📍 Siwan</span>
-                    <span class="alm-mini-role">Lead Colorist</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Card 2 -->
-              <div class="alm-mini-card">
-                <div class="alm-mini-avatar">
-                  <img src="../assets/alumni/alumni_vikas_singh.jpg" alt="Vikas Singh" width="56" height="56" loading="lazy">
-                </div>
-                <div class="alm-mini-info">
-                  <h4>Vikas Singh</h4>
-                  <p class="alm-mini-studio">Maa Sharda Cine Production</p>
-                  <div class="alm-mini-meta">
-                    <span class="alm-mini-loc">📍 Gopalganj</span>
-                    <span class="alm-mini-role">Cinematographer</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Card 3 -->
-              <div class="alm-mini-card">
-                <div class="alm-mini-avatar">
-                  <img src="../assets/alumni/alumni_pooja_kumari.jpg" alt="Pooja Kumari" width="56" height="56" loading="lazy">
-                </div>
-                <div class="alm-mini-info">
-                  <h4>Pooja Kumari</h4>
-                  <p class="alm-mini-studio">Creative Pixel Album Studio</p>
-                  <div class="alm-mini-meta">
-                    <span class="alm-mini-loc">📍 Patna</span>
-                    <span class="alm-mini-role">Album Designer</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Card 4 -->
-              <div class="alm-mini-card">
-                <div class="alm-mini-avatar">
-                  <img src="../assets/alumni/alumni_amit_tiwari.jpg" alt="Amit Tiwari" width="56" height="56" loading="lazy">
-                </div>
-                <div class="alm-mini-info">
-                  <h4>Amit Tiwari</h4>
-                  <p class="alm-mini-studio">Tiwari Digital Media</p>
-                  <div class="alm-mini-meta">
-                    <span class="alm-mini-loc">📍 Chapra</span>
-                    <span class="alm-mini-role">Video Editor</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Duplicate for seamless infinite loop -->
-              <div class="alm-mini-card">
-                <div class="alm-mini-avatar">
-                  <img src="../assets/alumni/alumni_rahul_kumar.jpg" alt="Rahul Kumar" width="56" height="56" loading="lazy">
-                </div>
-                <div class="alm-mini-info">
-                  <h4>Rahul Kumar</h4>
-                  <p class="alm-mini-studio">Sharma Digital Studio</p>
-                  <div class="alm-mini-meta">
-                    <span class="alm-mini-loc">📍 Siwan</span>
-                    <span class="alm-mini-role">Lead Colorist</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="alm-mini-card">
-                <div class="alm-mini-avatar">
-                  <img src="../assets/alumni/alumni_vikas_singh.jpg" alt="Vikas Singh" width="56" height="56" loading="lazy">
-                </div>
-                <div class="alm-mini-info">
-                  <h4>Vikas Singh</h4>
-                  <p class="alm-mini-studio">Maa Sharda Cine Production</p>
-                  <div class="alm-mini-meta">
-                    <span class="alm-mini-loc">📍 Gopalganj</span>
-                    <span class="alm-mini-role">Cinematographer</span>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- Column 2: Scrolls Down -->
-          <div class="alm-marquee-col alm-marquee-down">
-            <div class="alm-marquee-track">
-              
-              <!-- Card A -->
-              <div class="alm-mini-card">
-                <div class="alm-mini-avatar">
-                  <img src="../assets/alumni/alumni_manish_pandey.jpg" alt="Manish Pandey" width="56" height="56" loading="lazy">
-                </div>
-                <div class="alm-mini-info">
-                  <h4>Manish Pandey</h4>
-                  <p class="alm-mini-studio">Shree Wedding Photography</p>
-                  <div class="alm-mini-meta">
-                    <span class="alm-mini-loc">📍 Muzaffarpur</span>
-                    <span class="alm-mini-role">Studio Owner</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Card B -->
-              <div class="alm-mini-card">
-                <div class="alm-mini-avatar">
-                  <img src="../assets/alumni/alumni_rohit_verma.jpg" alt="Rohit Verma" width="56" height="56" loading="lazy">
-                </div>
-                <div class="alm-mini-info">
-                  <h4>Rohit Verma</h4>
-                  <p class="alm-mini-studio">CineCraft Digital</p>
-                  <div class="alm-mini-meta">
-                    <span class="alm-mini-loc">📍 Ballia (UP)</span>
-                    <span class="alm-mini-role">Senior Editor</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Card C -->
-              <div class="alm-mini-card">
-                <div class="alm-mini-avatar">
-                  <img src="../assets/alumni/alumni_suraj_raxaul.jpg" alt="Suraj Sharma" width="56" height="56" loading="lazy">
-                </div>
-                <div class="alm-mini-info">
-                  <h4>Suraj Sharma</h4>
-                  <p class="alm-mini-studio">Suraj Digital Cine</p>
-                  <div class="alm-mini-meta">
-                    <span class="alm-mini-loc">📍 Raxaul</span>
-                    <span class="alm-mini-role">Filmmaker</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Card D -->
-              <div class="alm-mini-card">
-                <div class="alm-mini-avatar">
-                  <img src="../assets/alumni/alumni_ravi_gaya.jpg" alt="Ravi Raj" width="56" height="56" loading="lazy">
-                </div>
-                <div class="alm-mini-info">
-                  <h4>Ravi Raj</h4>
-                  <p class="alm-mini-studio">Magadh Motion Pictures</p>
-                  <div class="alm-mini-meta">
-                    <span class="alm-mini-loc">📍 Gaya</span>
-                    <span class="alm-mini-role">DaVinci Colorist</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Duplicate for seamless loop -->
-              <div class="alm-mini-card">
-                <div class="alm-mini-avatar">
-                  <img src="../assets/alumni/alumni_manish_pandey.jpg" alt="Manish Pandey" width="56" height="56" loading="lazy">
-                </div>
-                <div class="alm-mini-info">
-                  <h4>Manish Pandey</h4>
-                  <p class="alm-mini-studio">Shree Wedding Photography</p>
-                  <div class="alm-mini-meta">
-                    <span class="alm-mini-loc">📍 Muzaffarpur</span>
-                    <span class="alm-mini-role">Studio Owner</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="alm-mini-card">
-                <div class="alm-mini-avatar">
-                  <img src="../assets/alumni/alumni_rohit_verma.jpg" alt="Rohit Verma" width="56" height="56" loading="lazy">
-                </div>
-                <div class="alm-mini-info">
-                  <h4>Rohit Verma</h4>
-                  <p class="alm-mini-studio">CineCraft Digital</p>
-                  <div class="alm-mini-meta">
-                    <span class="alm-mini-loc">📍 Ballia (UP)</span>
-                    <span class="alm-mini-role">Senior Editor</span>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Video Testimonials Section (From Home Page with Student Locations) -->
-  <section id="video-testimonials" class="alm-video-section">
-    <div class="alm-container">
-      
-      <div class="alm-section-head text-center">
-        <div class="alm-tag-pill">
-          <span class="alm-pulse-icon"></span>
-          <span>VIDEO TESTIMONIALS &amp; REAL REVIEWS</span>
-        </div>
-        <h2 class="alm-section-h2">
-          Hear Directly from <span class="alm-gold-text">Our Students</span>
-        </h2>
-        <p class="alm-section-p">
-          Watch video success stories of students who traveled from different districts across Bihar and Uttar Pradesh to learn video editing and filmmaking in Siwan.
-        </p>
-      </div>
-
-      <!-- Video Testimonials Grid -->
-      <div class="alm-video-grid">
-        
-        <!-- Video 1: Suraj from Raxaul -->
-        <div class="alm-video-card" onclick="openAlumniVideo('FKtK5dPFilg', 'Suraj from Raxaul – Student Review')">
-          <div class="alm-video-thumb-wrap">
-            <img src="../home-assets/6afdafd6fcee09.jpg" alt="Suraj from Raxaul testimonial" loading="lazy" width="480" height="360">
-            <div class="alm-video-overlay"></div>
-            <div class="alm-play-btn" aria-label="Play video">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="6 3 20 12 6 21 6 3"></polygon>
-              </svg>
-            </div>
-            <span class="alm-video-loc-badge">📍 Raxaul, Bihar</span>
-          </div>
-          <div class="alm-video-details">
-            <div class="alm-video-student">
-              <h3>Suraj</h3>
-              <span class="alm-video-origin">from Raxaul (East Champaran)</span>
-            </div>
-            <p class="alm-video-quote">“Camera aur DaVinci Resolve dono ka practical knowledge mila. Aaj apna wedding film business successfully chala rahe hain.”</p>
-            <div class="alm-video-meta">
-              <span class="alm-video-course-tag">🎬 Wedding Filmmaking</span>
-              <button class="alm-video-play-link" type="button">Watch Video ▶</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Video 2: Ravi from Gaya -->
-        <div class="alm-video-card" onclick="openAlumniVideo('MrZycOa2ltU', 'Ravi from Gaya – Student Review')">
-          <div class="alm-video-thumb-wrap">
-            <img src="../home-assets/0c3a2dde79f830.jpg" alt="Ravi from Gaya testimonial" loading="lazy" width="480" height="360">
-            <div class="alm-video-overlay"></div>
-            <div class="alm-play-btn" aria-label="Play video">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="6 3 20 12 6 21 6 3"></polygon>
-              </svg>
-            </div>
-            <span class="alm-video-loc-badge">📍 Gaya, Bihar</span>
-          </div>
-          <div class="alm-video-details">
-            <div class="alm-video-student">
-              <h3>Ravi</h3>
-              <span class="alm-video-origin">from Gaya, Bihar</span>
-            </div>
-            <p class="alm-video-quote">“Gaya se aane par hostel ki suvidha free mili. 14-week me color grading aur multi-cam timeline ka confidence aa gaya.”</p>
-            <div class="alm-video-meta">
-              <span class="alm-video-course-tag">🎨 Color Grading &amp; Editing</span>
-              <button class="alm-video-play-link" type="button">Watch Video ▶</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Video 3: Ashish from Chapra -->
-        <div class="alm-video-card" onclick="openAlumniVideo('FCjaO7LmM6o', 'Ashish from Chapra – Student Review')">
-          <div class="alm-video-thumb-wrap">
-            <img src="../home-assets/42bc8405f4fae8.jpg" alt="Ashish from Chapra testimonial" loading="lazy" width="480" height="360">
-            <div class="alm-video-overlay"></div>
-            <div class="alm-play-btn" aria-label="Play video">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="6 3 20 12 6 21 6 3"></polygon>
-              </svg>
-            </div>
-            <span class="alm-video-loc-badge">📍 Chapra, Bihar</span>
-          </div>
-          <div class="alm-video-details">
-            <div class="alm-video-student">
-              <h3>Ashish</h3>
-              <span class="alm-video-origin">from Chapra (Saran)</span>
-            </div>
-            <p class="alm-video-quote">“Lagan season me fast editing aur teaser export ka speed 5x ho gaya. Client review dekhkar khush ho jate hain.”</p>
-            <div class="alm-video-meta">
-              <span class="alm-video-course-tag">⚡ Fast Wedding Editing</span>
-              <button class="alm-video-play-link" type="button">Watch Video ▶</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Video 4: Vikash from Baliya, UP -->
-        <div class="alm-video-card" onclick="openAlumniVideo('CqMTAN3crS4', 'Vikash from Baliya, UP – Student Review')">
-          <div class="alm-video-thumb-wrap">
-            <img src="../home-assets/3f3523fbb97fb5.jpg" alt="Vikash from Baliya UP testimonial" loading="lazy" width="480" height="360">
-            <div class="alm-video-overlay"></div>
-            <div class="alm-play-btn" aria-label="Play video">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="6 3 20 12 6 21 6 3"></polygon>
-              </svg>
-            </div>
-            <span class="alm-video-loc-badge">📍 Baliya, Uttar Pradesh</span>
-          </div>
-          <div class="alm-video-details">
-            <div class="alm-video-student">
-              <h3>Vikash</h3>
-              <span class="alm-video-origin">from Baliya, Uttar Pradesh</span>
-            </div>
-            <p class="alm-video-quote">“UP se Siwan aana meri life ka best decision tha. Anil sir ne album design aur wedding cinema dono depth me sikhaya.”</p>
-            <div class="alm-video-meta">
-              <span class="alm-video-course-tag">📖 Album Design &amp; Video</span>
-              <button class="alm-video-play-link" type="button">Watch Video ▶</button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Featured Quote Card from Home Page (Raju Gupta) -->
-      <div class="alm-featured-review-box">
-        <div class="alm-review-stars">★★★★★</div>
-        <p class="alm-review-quote">
-          “Quick Art Photography Academy completely changed my approach to lighting and post-processing. The courses are incredibly detailed and the feedback from instructors is invaluable. My portfolio has never looked better and I have started booking paid high-ticket clients!”
-        </p>
-        <div class="alm-review-author">
-          <img src="../home-assets/6a62e4eb3643ad.jpeg" alt="Raju Gupta" width="52" height="52" loading="lazy">
-          <div>
-            <strong>Raju Gupta</strong>
-            <span>Portrait &amp; Lifestyle Photographer · Studio Owner (Bihar)</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Filter & Search Section (WsCubeTech Style) -->
-  <section class="alm-search-section" id="alumni-directory">
-    <div class="alm-container">
-      
-      <!-- Category Tabs (Course Filters) -->
-      <div class="alm-category-tabs" id="alm-category-tabs">
-        <button class="alm-tab-btn active" data-course="all">All Domains</button>
-        <button class="alm-tab-btn" data-course="Wedding Filmmaking">Wedding Filmmaking</button>
-        <button class="alm-tab-btn" data-course="Color Grading">Color Grading &amp; DaVinci</button>
-        <button class="alm-tab-btn" data-course="Album Design">Album Design</button>
-        <button class="alm-tab-btn" data-course="Video Editing">Commercial Video Editing</button>
-      </div>
-
-      <!-- Filter Controls: Search Input + Location Dropdown -->
-      <div class="alm-filter-bar">
-        
-        <!-- Search Input -->
-        <div class="alm-search-input-wrap">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="alm-search-icon" aria-hidden="true">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" id="alm-search-input" placeholder="Search by student name, studio name, or location...">
-        </div>
-
-        <!-- Filter Dropdown: Locations (Bihar & UP) -->
-        <div class="alm-filter-selects">
-          <select id="alm-city-filter" aria-label="Filter by Location">
-            <option value="all">📍 All Locations (Bihar &amp; UP)</option>
-            <option value="Siwan">📍 Siwan</option>
-            <option value="Patna">📍 Patna</option>
-            <option value="Gopalganj">📍 Gopalganj</option>
-            <option value="Chapra">📍 Chapra (Saran)</option>
-            <option value="Muzaffarpur">📍 Muzaffarpur</option>
-            <option value="Raxaul">📍 Raxaul</option>
-            <option value="Gaya">📍 Gaya</option>
-            <option value="Ballia">📍 Ballia (UP)</option>
-            <option value="Gorakhpur">📍 Gorakhpur (UP)</option>
-            <option value="Varanasi">📍 Varanasi (UP)</option>
-          </select>
-        </div>
-
-      </div>
-
-      <!-- Real-time Count Meta -->
-      <div class="alm-count-meta-row">
-        <div class="alm-count-meta" id="alm-count-meta">Showing verified alumni directory</div>
-        <div class="alm-badge-verified-note">
-          <span>🛡️ 100% ISO 9001:2015 Verified Credentials</span>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Alumni Grid Section -->
-  <section class="alm-grid-section">
-    <div class="alm-container">
-      <div class="alm-cards-grid" id="alm-cards-grid">
-        <!-- Rendered dynamically via alumni.js -->
-        <div class="alm-loading-card">
-          <div class="alm-spinner"></div>
-          <span>Loading verified alumni records...</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Active Alumni Locations Strip -->
-  <section class="alm-locations-strip">
-    <div class="alm-container">
-      <div class="alm-loc-strip-inner">
-        <span class="alm-loc-strip-title">🎓 Alumni Studios Operating Across:</span>
-        <div class="alm-loc-pills">
-          <span class="alm-loc-pill">Siwan</span>
-          <span class="alm-loc-pill">Patna</span>
-          <span class="alm-loc-pill">Gopalganj</span>
-          <span class="alm-loc-pill">Chapra</span>
-          <span class="alm-loc-pill">Muzaffarpur</span>
-          <span class="alm-loc-pill">Raxaul</span>
-          <span class="alm-loc-pill">Gaya</span>
-          <span class="alm-loc-pill">Motihari</span>
-          <span class="alm-loc-pill">Ballia (UP)</span>
-          <span class="alm-loc-pill">Gorakhpur (UP)</span>
-          <span class="alm-loc-pill">Varanasi</span>
-          <span class="alm-loc-pill">Deoria</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Career Transformation & Salary Growth Section (WsCubeTech Inspired) -->
-  <section class="alm-impact-section">
-    <div class="alm-container">
-      
-      <div class="alm-section-head text-center">
-        <div class="alm-tag-pill">
-          <span>CAREER TRANSFORMATION &amp; EARNINGS</span>
-        </div>
-        <h2 class="alm-section-h2">
-          The Quick Art <span class="alm-gold-text">Career Advantage</span>
-        </h2>
-        <p class="alm-section-p">
-          How our students transition from amateur beginners to high-earning wedding studio owners and commercial post-production specialists.
-        </p>
-      </div>
-
-      <div class="alm-impact-grid">
-        
-        <!-- Column 1: Before vs After -->
-        <div class="alm-impact-card">
-          <div class="alm-impact-card-head">
-            <span class="alm-impact-icon">📈</span>
-            <h3>Career &amp; Income Growth</h3>
-          </div>
-          <ul class="alm-impact-list">
-            <li>
-              <strong>Before Quick Art:</strong>
-              <p>Unorganized editing on low-spec laptops, basic phone editing, or waiting 2-3 years in studios as helpers earning ₹6,000 - ₹10,000/month.</p>
-            </li>
-            <li class="alm-impact-highlight">
-              <strong>After 14-Week Offline Masterclass:</strong>
-              <p>Full command over DaVinci Resolve color wheels, Premiere Pro multi-cam, and Canvera album design. Average monthly season earnings reach <strong>₹50,000 to ₹2,50,000+</strong>.</p>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Column 2: Studio Setup Guidance -->
-        <div class="alm-impact-card">
-          <div class="alm-impact-card-head">
-            <span class="alm-impact-icon">🏢</span>
-            <h3>Complete Studio Setup Mentorship</h3>
-          </div>
-          <ul class="alm-impact-list">
-            <li>
-              <strong>PC &amp; Monitor Architecture:</strong>
-              <p>Guidance on building calibrated 4K editing rigs with color-accurate 100% sRGB monitors and fast NVMe RAID scratch drives within your budget.</p>
-            </li>
-            <li>
-              <strong>Client Pitching &amp; High-Ticket Pricing:</strong>
-              <p>Learn how to package wedding films, charge ₹35,000 - ₹1,00,000+ per wedding shoot, and deliver cinematic teasers within 48 hours.</p>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Column 3: Lifetime Academy Network -->
-        <div class="alm-impact-card">
-          <div class="alm-impact-card-head">
-            <span class="alm-impact-icon">🛡️</span>
-            <h3>Lifetime Access &amp; Support</h3>
-          </div>
-          <ul class="alm-impact-list">
-            <li>
-              <strong>Raw 4K Practice Footages:</strong>
-              <p>Practice on actual Sony FX3, A7M4, and RED footage from live high-profile weddings shot by mentor Anil Sharma.</p>
-            </li>
-            <li>
-              <strong>Direct WhatsApp Mentor Support:</strong>
-              <p>Stuck on an edit or color grading client revision? Get direct 1-on-1 assistance from the academy faculty anytime.</p>
-            </li>
-          </ul>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- CTA Section: Apply Admission Form -->
-  <section class="alm-cta-section">
-    <div class="alm-container">
-      <div class="alm-cta-card">
-        <div class="alm-cta-content">
-          <span class="alm-cta-kicker">BECOME OUR NEXT SUCCESS STORY</span>
-          <h2>Ready to Launch Your Own Photography &amp; Video Studio?</h2>
-          <p>
-            Join our next offline batch in Siwan. Get a dedicated 4K editing workstation, 1-on-1 hands-on training with Anil Sharma, and free outstation hostel accommodation.
+          <h1 class="alm-hero-h1">
+            Our Alumni Work at Leading <span class="alm-gold-text">Wedding Studios</span> Across India
+          </h1>
+          
+          <p class="alm-hero-sub">
+            From classrooms in Siwan to leading destination wedding productions across Bihar, Uttar Pradesh, and pan-India. Certified video editors, cinematic colorists, and studio entrepreneurs trained with 1-on-1 practical studio mentorship by Anil Sharma.
           </p>
-          <div class="alm-cta-actions">
-            <a href="../admission/" class="alm-btn-primary">
+
+          <!-- CTA Buttons -->
+          <div class="alm-hero-actions">
+            <a href="../admission/" class="alm-hero-btn-primary">
               <span>Submit Admission Form (₹500 Fee)</span>
               <span aria-hidden="true">→</span>
             </a>
-            <a href="tel:+919939800780" class="alm-btn-secondary">
-              <span>📞 Call Studio Helpline: +91 9939800780</span>
+            <a href="#video-testimonials" class="alm-hero-btn-secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="6 3 20 12 6 21 6 3"></polygon>
+              </svg>
+              <span>Watch Video Testimonials</span>
             </a>
+          </div>
+
+          <!-- 4 Key Metrics Row -->
+          <div class="alm-stats-row">
+            <div class="alm-stat-card">
+              <strong>1,800+</strong>
+              <span>Certified Editors</span>
+            </div>
+            <div class="alm-stat-card">
+              <strong>450+</strong>
+              <span>Studios Established</span>
+            </div>
+            <div class="alm-stat-card">
+              <strong>₹50K - ₹2.5L</strong>
+              <span>Avg. Monthly Earnings</span>
+            </div>
+            <div class="alm-stat-card">
+              <strong>100%</strong>
+              <span>Verifiable ISO ID</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Vertical Infinite Scrolling Alumni Cards Marquee -->
+        <div class="alm-hero-right" aria-label="Alumni showcase highlights">
+          <div class="alm-marquee-wrapper">
+            
+            <!-- Column 1: Scrolls Up -->
+            <div class="alm-marquee-col alm-marquee-up">
+              <div class="alm-marquee-track">
+                
+                <!-- Card 1 -->
+                <div class="alm-mini-card">
+                  <div class="alm-mini-avatar">
+                    <img src="../assets/alumni/alumni_rahul_kumar.jpg" alt="Rahul Kumar" width="56" height="56" loading="lazy">
+                  </div>
+                  <div class="alm-mini-info">
+                    <h4>Rahul Kumar</h4>
+                    <p class="alm-mini-studio">Sharma Digital Studio</p>
+                    <div class="alm-mini-meta">
+                      <span class="alm-mini-loc">📍 Siwan</span>
+                      <span class="alm-mini-role">Lead Colorist</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="alm-mini-card">
+                  <div class="alm-mini-avatar">
+                    <img src="../assets/alumni/alumni_vikas_singh.jpg" alt="Vikas Singh" width="56" height="56" loading="lazy">
+                  </div>
+                  <div class="alm-mini-info">
+                    <h4>Vikas Singh</h4>
+                    <p class="alm-mini-studio">Maa Sharda Cine Production</p>
+                    <div class="alm-mini-meta">
+                      <span class="alm-mini-loc">📍 Gopalganj</span>
+                      <span class="alm-mini-role">Cinematographer</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="alm-mini-card">
+                  <div class="alm-mini-avatar">
+                    <img src="../assets/alumni/alumni_pooja_kumari.jpg" alt="Pooja Kumari" width="56" height="56" loading="lazy">
+                  </div>
+                  <div class="alm-mini-info">
+                    <h4>Pooja Kumari</h4>
+                    <p class="alm-mini-studio">Creative Pixel Album Studio</p>
+                    <div class="alm-mini-meta">
+                      <span class="alm-mini-loc">📍 Patna</span>
+                      <span class="alm-mini-role">Album Designer</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="alm-mini-card">
+                  <div class="alm-mini-avatar">
+                    <img src="../assets/alumni/alumni_amit_tiwari.jpg" alt="Amit Tiwari" width="56" height="56" loading="lazy">
+                  </div>
+                  <div class="alm-mini-info">
+                    <h4>Amit Tiwari</h4>
+                    <p class="alm-mini-studio">Tiwari Digital Media</p>
+                    <div class="alm-mini-meta">
+                      <span class="alm-mini-loc">📍 Chapra</span>
+                      <span class="alm-mini-role">Video Editor</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Duplicate for seamless infinite loop -->
+                <div class="alm-mini-card">
+                  <div class="alm-mini-avatar">
+                    <img src="../assets/alumni/alumni_rahul_kumar.jpg" alt="Rahul Kumar" width="56" height="56" loading="lazy">
+                  </div>
+                  <div class="alm-mini-info">
+                    <h4>Rahul Kumar</h4>
+                    <p class="alm-mini-studio">Sharma Digital Studio</p>
+                    <div class="alm-mini-meta">
+                      <span class="alm-mini-loc">📍 Siwan</span>
+                      <span class="alm-mini-role">Lead Colorist</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="alm-mini-card">
+                  <div class="alm-mini-avatar">
+                    <img src="../assets/alumni/alumni_vikas_singh.jpg" alt="Vikas Singh" width="56" height="56" loading="lazy">
+                  </div>
+                  <div class="alm-mini-info">
+                    <h4>Vikas Singh</h4>
+                    <p class="alm-mini-studio">Maa Sharda Cine Production</p>
+                    <div class="alm-mini-meta">
+                      <span class="alm-mini-loc">📍 Gopalganj</span>
+                      <span class="alm-mini-role">Cinematographer</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Column 2: Scrolls Down -->
+            <div class="alm-marquee-col alm-marquee-down">
+              <div class="alm-marquee-track">
+                
+                <!-- Card A -->
+                <div class="alm-mini-card">
+                  <div class="alm-mini-avatar">
+                    <img src="../assets/alumni/alumni_manish_pandey.jpg" alt="Manish Pandey" width="56" height="56" loading="lazy">
+                  </div>
+                  <div class="alm-mini-info">
+                    <h4>Manish Pandey</h4>
+                    <p class="alm-mini-studio">Shree Wedding Photography</p>
+                    <div class="alm-mini-meta">
+                      <span class="alm-mini-loc">📍 Muzaffarpur</span>
+                      <span class="alm-mini-role">Studio Owner</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card B -->
+                <div class="alm-mini-card">
+                  <div class="alm-mini-avatar">
+                    <img src="../assets/alumni/alumni_rohit_verma.jpg" alt="Rohit Verma" width="56" height="56" loading="lazy">
+                  </div>
+                  <div class="alm-mini-info">
+                    <h4>Rohit Verma</h4>
+                    <p class="alm-mini-studio">CineCraft Digital</p>
+                    <div class="alm-mini-meta">
+                      <span class="alm-mini-loc">📍 Ballia (UP)</span>
+                      <span class="alm-mini-role">Senior Editor</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card C -->
+                <div class="alm-mini-card">
+                  <div class="alm-mini-avatar">
+                    <img src="../assets/alumni/alumni_suraj_raxaul.jpg" alt="Suraj Sharma" width="56" height="56" loading="lazy">
+                  </div>
+                  <div class="alm-mini-info">
+                    <h4>Suraj Sharma</h4>
+                    <p class="alm-mini-studio">Suraj Digital Cine</p>
+                    <div class="alm-mini-meta">
+                      <span class="alm-mini-loc">📍 Raxaul</span>
+                      <span class="alm-mini-role">Filmmaker</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card D -->
+                <div class="alm-mini-card">
+                  <div class="alm-mini-avatar">
+                    <img src="../assets/alumni/alumni_ravi_gaya.jpg" alt="Ravi Raj" width="56" height="56" loading="lazy">
+                  </div>
+                  <div class="alm-mini-info">
+                    <h4>Ravi Raj</h4>
+                    <p class="alm-mini-studio">Magadh Motion Pictures</p>
+                    <div class="alm-mini-meta">
+                      <span class="alm-mini-loc">📍 Gaya</span>
+                      <span class="alm-mini-role">DaVinci Colorist</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Duplicate for seamless loop -->
+                <div class="alm-mini-card">
+                  <div class="alm-mini-avatar">
+                    <img src="../assets/alumni/alumni_manish_pandey.jpg" alt="Manish Pandey" width="56" height="56" loading="lazy">
+                  </div>
+                  <div class="alm-mini-info">
+                    <h4>Manish Pandey</h4>
+                    <p class="alm-mini-studio">Shree Wedding Photography</p>
+                    <div class="alm-mini-meta">
+                      <span class="alm-mini-loc">📍 Muzaffarpur</span>
+                      <span class="alm-mini-role">Studio Owner</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="alm-mini-card">
+                  <div class="alm-mini-avatar">
+                    <img src="../assets/alumni/alumni_rohit_verma.jpg" alt="Rohit Verma" width="56" height="56" loading="lazy">
+                  </div>
+                  <div class="alm-mini-info">
+                    <h4>Rohit Verma</h4>
+                    <p class="alm-mini-studio">CineCraft Digital</p>
+                    <div class="alm-mini-meta">
+                      <span class="alm-mini-loc">📍 Ballia (UP)</span>
+                      <span class="alm-mini-role">Senior Editor</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Video Testimonials Section (From Home Page with Student Locations) -->
+    <section id="video-testimonials" class="alm-video-section">
+      <div class="alm-container">
+        
+        <div class="alm-section-head text-center">
+          <div class="alm-tag-pill">
+            <span class="alm-pulse-icon"></span>
+            <span>VIDEO TESTIMONIALS &amp; REAL REVIEWS</span>
+          </div>
+          <h2 class="alm-section-h2">
+            Hear Directly from <span class="alm-gold-text">Our Students</span>
+          </h2>
+          <p class="alm-section-p">
+            Watch video success stories of students who traveled from different districts across Bihar and Uttar Pradesh to learn video editing and filmmaking in Siwan.
+          </p>
+        </div>
+
+        <!-- Video Testimonials Grid -->
+        <div class="alm-video-grid">
+          
+          <!-- Video 1: Suraj from Raxaul -->
+          <div class="alm-video-card" onclick="openAlumniVideo('FKtK5dPFilg', 'Suraj from Raxaul – Student Review')">
+            <div class="alm-video-thumb-wrap">
+              <img src="../home-assets/6afdafd6fcee09.jpg" alt="Suraj from Raxaul testimonial" loading="lazy" width="480" height="360">
+              <div class="alm-video-overlay"></div>
+              <div class="alm-play-btn" aria-label="Play video">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                </svg>
+              </div>
+              <span class="alm-video-loc-badge">📍 Raxaul, Bihar</span>
+            </div>
+            <div class="alm-video-details">
+              <div class="alm-video-student">
+                <h3>Suraj</h3>
+                <span class="alm-video-origin">from Raxaul (East Champaran)</span>
+              </div>
+              <p class="alm-video-quote">“Camera aur DaVinci Resolve dono ka practical knowledge mila. Aaj apna wedding film business successfully chala rahe hain.”</p>
+              <div class="alm-video-meta">
+                <span class="alm-video-course-tag">🎬 Wedding Filmmaking</span>
+                <button class="alm-video-play-link" type="button">Watch Video ▶</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video 2: Ravi from Gaya -->
+          <div class="alm-video-card" onclick="openAlumniVideo('MrZycOa2ltU', 'Ravi from Gaya – Student Review')">
+            <div class="alm-video-thumb-wrap">
+              <img src="../home-assets/0c3a2dde79f830.jpg" alt="Ravi from Gaya testimonial" loading="lazy" width="480" height="360">
+              <div class="alm-video-overlay"></div>
+              <div class="alm-play-btn" aria-label="Play video">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                </svg>
+              </div>
+              <span class="alm-video-loc-badge">📍 Gaya, Bihar</span>
+            </div>
+            <div class="alm-video-details">
+              <div class="alm-video-student">
+                <h3>Ravi</h3>
+                <span class="alm-video-origin">from Gaya, Bihar</span>
+              </div>
+              <p class="alm-video-quote">“Gaya se aane par hostel ki suvidha free mili. 14-week me color grading aur multi-cam timeline ka confidence aa gaya.”</p>
+              <div class="alm-video-meta">
+                <span class="alm-video-course-tag">🎨 Color Grading &amp; Editing</span>
+                <button class="alm-video-play-link" type="button">Watch Video ▶</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video 3: Ashish from Chapra -->
+          <div class="alm-video-card" onclick="openAlumniVideo('FCjaO7LmM6o', 'Ashish from Chapra – Student Review')">
+            <div class="alm-video-thumb-wrap">
+              <img src="../home-assets/42bc8405f4fae8.jpg" alt="Ashish from Chapra testimonial" loading="lazy" width="480" height="360">
+              <div class="alm-video-overlay"></div>
+              <div class="alm-play-btn" aria-label="Play video">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                </svg>
+              </div>
+              <span class="alm-video-loc-badge">📍 Chapra, Bihar</span>
+            </div>
+            <div class="alm-video-details">
+              <div class="alm-video-student">
+                <h3>Ashish</h3>
+                <span class="alm-video-origin">from Chapra (Saran)</span>
+              </div>
+              <p class="alm-video-quote">“Lagan season me fast editing aur teaser export ka speed 5x ho gaya. Client review dekhkar khush ho jate hain.”</p>
+              <div class="alm-video-meta">
+                <span class="alm-video-course-tag">⚡ Fast Wedding Editing</span>
+                <button class="alm-video-play-link" type="button">Watch Video ▶</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video 4: Vikash from Baliya, UP -->
+          <div class="alm-video-card" onclick="openAlumniVideo('CqMTAN3crS4', 'Vikash from Baliya, UP – Student Review')">
+            <div class="alm-video-thumb-wrap">
+              <img src="../home-assets/3f3523fbb97fb5.jpg" alt="Vikash from Baliya UP testimonial" loading="lazy" width="480" height="360">
+              <div class="alm-video-overlay"></div>
+              <div class="alm-play-btn" aria-label="Play video">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                </svg>
+              </div>
+              <span class="alm-video-loc-badge">📍 Baliya, Uttar Pradesh</span>
+            </div>
+            <div class="alm-video-details">
+              <div class="alm-video-student">
+                <h3>Vikash</h3>
+                <span class="alm-video-origin">from Baliya, Uttar Pradesh</span>
+              </div>
+              <p class="alm-video-quote">“UP se Siwan aana meri life ka best decision tha. Anil sir ne album design aur wedding cinema dono depth me sikhaya.”</p>
+              <div class="alm-video-meta">
+                <span class="alm-video-course-tag">📖 Album Design &amp; Video</span>
+                <button class="alm-video-play-link" type="button">Watch Video ▶</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Featured Quote Card from Home Page (Raju Gupta) -->
+        <div class="alm-featured-review-box">
+          <div class="alm-review-stars">★★★★★</div>
+          <p class="alm-review-quote">
+            “Quick Art Photography Academy completely changed my approach to lighting and post-processing. The courses are incredibly detailed and the feedback from instructors is invaluable. My portfolio has never looked better and I have started booking paid high-ticket clients!”
+          </p>
+          <div class="alm-review-author">
+            <img src="../home-assets/6a62e4eb3643ad.jpeg" alt="Raju Gupta" width="52" height="52" loading="lazy">
+            <div>
+              <strong>Raju Gupta</strong>
+              <span>Portrait &amp; Lifestyle Photographer · Studio Owner (Bihar)</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Filter & Search Section (WsCubeTech Style) -->
+    <section class="alm-search-section" id="alumni-directory">
+      <div class="alm-container">
+        
+        <!-- Category Tabs (Course Filters) -->
+        <div class="alm-category-tabs" id="alm-category-tabs">
+          <button class="alm-tab-btn active" data-course="all">All Domains</button>
+          <button class="alm-tab-btn" data-course="Wedding Filmmaking">Wedding Filmmaking</button>
+          <button class="alm-tab-btn" data-course="Color Grading">Color Grading &amp; DaVinci</button>
+          <button class="alm-tab-btn" data-course="Album Design">Album Design</button>
+          <button class="alm-tab-btn" data-course="Video Editing">Commercial Video Editing</button>
+        </div>
+
+        <!-- Filter Controls: Search Input + Location Dropdown -->
+        <div class="alm-filter-bar">
+          
+          <!-- Search Input -->
+          <div class="alm-search-input-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="alm-search-icon" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="alm-search-input" placeholder="Search by student name, studio name, or location...">
+          </div>
+
+          <!-- Filter Dropdown: Locations (Bihar & UP) -->
+          <div class="alm-filter-selects">
+            <select id="alm-city-filter" aria-label="Filter by Location">
+              <option value="all">📍 All Locations (Bihar &amp; UP)</option>
+              <option value="Siwan">📍 Siwan</option>
+              <option value="Patna">📍 Patna</option>
+              <option value="Gopalganj">📍 Gopalganj</option>
+              <option value="Chapra">📍 Chapra (Saran)</option>
+              <option value="Muzaffarpur">📍 Muzaffarpur</option>
+              <option value="Raxaul">📍 Raxaul</option>
+              <option value="Gaya">📍 Gaya</option>
+              <option value="Ballia">📍 Ballia (UP)</option>
+              <option value="Gorakhpur">📍 Gorakhpur (UP)</option>
+              <option value="Varanasi">📍 Varanasi (UP)</option>
+            </select>
+          </div>
+
+        </div>
+
+        <!-- Real-time Count Meta -->
+        <div class="alm-count-meta-row">
+          <div class="alm-count-meta" id="alm-count-meta">Showing verified alumni directory</div>
+          <div class="alm-badge-verified-note">
+            <span>🛡️ 100% ISO 9001:2015 Verified Credentials</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Alumni Grid Section -->
+    <section class="alm-grid-section">
+      <div class="alm-container">
+        <div class="alm-cards-grid" id="alm-cards-grid">
+          <!-- Rendered dynamically via alumni.js -->
+          <div class="alm-loading-card">
+            <div class="alm-spinner"></div>
+            <span>Loading verified alumni records...</span>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Universal Footer -->
+    <!-- Active Alumni Locations Strip -->
+    <section class="alm-locations-strip">
+      <div class="alm-container">
+        <div class="alm-loc-strip-inner">
+          <span class="alm-loc-strip-title">🎓 Alumni Studios Operating Across:</span>
+          <div class="alm-loc-pills">
+            <span class="alm-loc-pill">Siwan</span>
+            <span class="alm-loc-pill">Patna</span>
+            <span class="alm-loc-pill">Gopalganj</span>
+            <span class="alm-loc-pill">Chapra</span>
+            <span class="alm-loc-pill">Muzaffarpur</span>
+            <span class="alm-loc-pill">Raxaul</span>
+            <span class="alm-loc-pill">Gaya</span>
+            <span class="alm-loc-pill">Motihari</span>
+            <span class="alm-loc-pill">Ballia (UP)</span>
+            <span class="alm-loc-pill">Gorakhpur (UP)</span>
+            <span class="alm-loc-pill">Varanasi</span>
+            <span class="alm-loc-pill">Deoria</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Career Transformation & Salary Growth Section (WsCubeTech Inspired) -->
+    <section class="alm-impact-section">
+      <div class="alm-container">
+        
+        <div class="alm-section-head text-center">
+          <div class="alm-tag-pill">
+            <span>CAREER TRANSFORMATION &amp; EARNINGS</span>
+          </div>
+          <h2 class="alm-section-h2">
+            The Quick Art <span class="alm-gold-text">Career Advantage</span>
+          </h2>
+          <p class="alm-section-p">
+            How our students transition from amateur beginners to high-earning wedding studio owners and commercial post-production specialists.
+          </p>
+        </div>
+
+        <div class="alm-impact-grid">
+          
+          <!-- Column 1: Before vs After -->
+          <div class="alm-impact-card">
+            <div class="alm-impact-card-head">
+              <span class="alm-impact-icon">📈</span>
+              <h3>Career &amp; Income Growth</h3>
+            </div>
+            <ul class="alm-impact-list">
+              <li>
+                <strong>Before Quick Art:</strong>
+                <p>Unorganized editing on low-spec laptops, basic phone editing, or waiting 2-3 years in studios as helpers earning ₹6,000 - ₹10,000/month.</p>
+              </li>
+              <li class="alm-impact-highlight">
+                <strong>After 14-Week Offline Masterclass:</strong>
+                <p>Full command over DaVinci Resolve color wheels, Premiere Pro multi-cam, and Canvera album design. Average monthly season earnings reach <strong>₹50,000 to ₹2,50,000+</strong>.</p>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Column 2: Studio Setup Guidance -->
+          <div class="alm-impact-card">
+            <div class="alm-impact-card-head">
+              <span class="alm-impact-icon">🏢</span>
+              <h3>Complete Studio Setup Mentorship</h3>
+            </div>
+            <ul class="alm-impact-list">
+              <li>
+                <strong>PC &amp; Monitor Architecture:</strong>
+                <p>Guidance on building calibrated 4K editing rigs with color-accurate 100% sRGB monitors and fast NVMe RAID scratch drives within your budget.</p>
+              </li>
+              <li>
+                <strong>Client Pitching &amp; High-Ticket Pricing:</strong>
+                <p>Learn how to package wedding films, charge ₹35,000 - ₹1,00,000+ per wedding shoot, and deliver cinematic teasers within 48 hours.</p>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Lifetime Academy Network -->
+          <div class="alm-impact-card">
+            <div class="alm-impact-card-head">
+              <span class="alm-impact-icon">🛡️</span>
+              <h3>Lifetime Access &amp; Support</h3>
+            </div>
+            <ul class="alm-impact-list">
+              <li>
+                <strong>Raw 4K Practice Footages:</strong>
+                <p>Practice on actual Sony FX3, A7M4, and RED footage from live high-profile weddings shot by mentor Anil Sharma.</p>
+              </li>
+              <li>
+                <strong>Direct WhatsApp Mentor Support:</strong>
+                <p>Stuck on an edit or color grading client revision? Get direct 1-on-1 assistance from the academy faculty anytime.</p>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CTA Section: Apply Admission Form -->
+    <section class="alm-cta-section">
+      <div class="alm-container">
+        <div class="alm-cta-card">
+          <div class="alm-cta-content">
+            <span class="alm-cta-kicker">BECOME OUR NEXT SUCCESS STORY</span>
+            <h2>Ready to Launch Your Own Photography &amp; Video Studio?</h2>
+            <p>
+              Join our next offline batch in Siwan. Get a dedicated 4K editing workstation, 1-on-1 hands-on training with Anil Sharma, and free outstation hostel accommodation.
+            </p>
+            <div class="alm-cta-actions">
+              <a href="../admission/" class="alm-btn-primary">
+                <span>Submit Admission Form (₹500 Fee)</span>
+                <span aria-hidden="true">→</span>
+              </a>
+              <a href="tel:+919939800780" class="alm-btn-secondary">
+                <span>📞 Call Studio Helpline: +91 9939800780</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Universal Footer (Exactly matching Home Page) -->
   <footer role="contentinfo" class="qa-footer">
     <div class="container qa-footer-grid">
       <div class="qa-footer-brand-col">
-        <a class="qa-brand" href="https://quickartphotography.in/" aria-label="Quick Art Photography Academy Home">
+        <a class="qa-brand" href="../" aria-label="Quick Art Photography Academy Home">
           <img src="../home-assets/ec55a6be3747a9.webp" width="48" height="48" alt="Quick Art Photography Academy logo" loading="lazy">
           <span>Quick <b>Art</b><small>PHOTOGRAPHY ACADEMY</small></span>
         </a>
@@ -656,13 +834,13 @@
       <div>
         <h3 class="qa-footer-heading">On-Campus Courses</h3>
         <ul class="qa-footer-links-list">
-          <li><a href="../courses/video-editing/index.html">Video Editing Course in Siwan</a></li>
-          <li><a href="../courses/album-design/index.html">Wedding Album Design Course</a></li>
-          <li><a href="../courses/ai-wedding-filmmaking/index.html">AI Wedding Filmmaking Course</a></li>
-          <li><a href="../master-class/index.html">14-Week Master Class in Siwan</a></li>
-          <li><a href="../admission/index.html" class="qa-footer-highlight-link" style="color: #f59e0b; font-weight: 700;">Apply Admission Form</a></li>
-          <li><a href="../courses/index.html">All On-Campus Courses Overview</a></li>
-          <li><a href="../contact-us/index.html" class="qa-footer-highlight-link">Book Free 1-on-1 Demo Class</a></li>
+          <li><a href="../courses/video-editing/">Video Editing Course in Siwan</a></li>
+          <li><a href="../courses/album-design/">Wedding Album Design Course</a></li>
+          <li><a href="../courses/ai-wedding-filmmaking/">AI Wedding Filmmaking Course</a></li>
+          <li><a href="../master-class/">14-Week Master Class in Siwan</a></li>
+          <li><a href="../admission/" class="qa-footer-highlight-link" style="color: #f59e0b; font-weight: 700;">Apply Admission Form</a></li>
+          <li><a href="../courses/">All On-Campus Courses Overview</a></li>
+          <li><a href="../contact-us/" class="qa-footer-highlight-link">Book Free 1-on-1 Demo Class</a></li>
           <li><a href="../downloads/course-details.pdf" target="_blank" rel="noopener noreferrer">Download Syllabus (PDF)</a></li>
         </ul>
       </div>
@@ -670,32 +848,32 @@
       <div>
         <h3 class="qa-footer-heading">Popular Online Courses</h3>
         <ul class="qa-footer-links-list">
-          <li><a href="../online/premiere-pro-course/index.html">Adobe Premiere Pro Course in Hindi</a></li>
-          <li><a href="../online/davinci-resolve-course/index.html">DaVinci Resolve Course in Hindi</a></li>
-          <li><a href="../online/edius-course/index.html">EDIUS Fast Wedding Editing Course</a></li>
-          <li><a href="../online/cinematic-editing-course/index.html">Cinematic Wedding Video Editing Course</a></li>
-          <li><a href="../online/pre-wedding-shoot-course/index.html">Pre-Wedding Shoot Course in Hindi</a></li>
-          <li><a href="../online/album-design-course/index.html">Album Designing Course Online in Hindi</a></li>
-          <li><a href="../online/website-design-course/index.html">Website Design Course in Hindi</a></li>
-          <li><a href="../online/digital-marketing-course/index.html">Digital Marketing Course in Hindi</a></li>
-          <li><a href="../online/automation-course/index.html">Studio Automation &amp; AI CRM</a></li>
-          <li><a href="../online/index.html">All Online Video Editing Courses</a></li>
+          <li><a href="../online/premiere-pro-course/">Adobe Premiere Pro Course in Hindi</a></li>
+          <li><a href="../online/davinci-resolve-course/">DaVinci Resolve Course in Hindi</a></li>
+          <li><a href="../online/edius-course/">EDIUS Fast Wedding Editing Course</a></li>
+          <li><a href="../online/cinematic-editing-course/">Cinematic Wedding Video Editing Course</a></li>
+          <li><a href="../online/pre-wedding-shoot-course/">Pre-Wedding Shoot Course in Hindi</a></li>
+          <li><a href="../online/album-design-course/">Album Designing Course Online in Hindi</a></li>
+          <li><a href="../online/website-design-course/">Website Design Course in Hindi</a></li>
+          <li><a href="../online/digital-marketing-course/">Digital Marketing Course in Hindi</a></li>
+          <li><a href="../online/automation-course/">Studio Automation &amp; AI CRM</a></li>
+          <li><a href="../online/">All Online Video Editing Courses</a></li>
         </ul>
       </div>
 
       <div>
         <h3 class="qa-footer-heading">Student &amp; Academy</h3>
         <ul class="qa-footer-links-list">
-          <li><a href="../admission/index.html" class="qa-footer-highlight-link" style="color: #f59e0b; font-weight: 700;">Apply Admission Form</a></li>
-          <li><a href="../alumni/index.html">Alumni Directory &amp; Hall of Fame</a></li>
-          <li><a href="../portal/index.html" class="qa-footer-highlight-link">Student Portal Login</a></li>
-          <li><a href="../online/index.html">Online Course Catalog</a></li>
-          <li><a href="../about-us/index.html">About Anil Sharma &amp; Mentors</a></li>
-          <li><a href="../contact-us/index.html">Contact Us &amp; Campus Visit</a></li>
-          <li><a href="../blog/index.html">Editing Blogs &amp; Tutorials</a></li>
-          <li><a href="../blog/best-video-editing-software-in-2026/index.html">Best Video Editing Software in 2026</a></li>
-          <li><a href="../blog/freelance-video-editor-earn-in-bihar/index.html">Freelance Video Editor in Bihar</a></li>
-          <li><a href="../blog/how-ai-is-changing-wedding-filmmaking-2026/index.html">AI in Wedding Filmmaking 2026</a></li>
+          <li><a href="../admission/" class="qa-footer-highlight-link" style="color: #f59e0b; font-weight: 700;">Apply Admission Form</a></li>
+          <li><a href="./">Alumni Directory &amp; Hall of Fame</a></li>
+          <li><a href="../portal/" class="qa-footer-highlight-link">Student Portal Login</a></li>
+          <li><a href="../online/">Online Course Catalog</a></li>
+          <li><a href="../about-us/">About Anil Sharma &amp; Mentors</a></li>
+          <li><a href="../contact-us/">Contact Us &amp; Campus Visit</a></li>
+          <li><a href="../blog/">Editing Blogs &amp; Tutorials</a></li>
+          <li><a href="../blog/best-video-editing-software-in-2026/">Best Video Editing Software in 2026</a></li>
+          <li><a href="../blog/freelance-video-editor-earn-in-bihar/">Freelance Video Editor in Bihar</a></li>
+          <li><a href="../blog/how-ai-is-changing-wedding-filmmaking-2026/">AI in Wedding Filmmaking 2026</a></li>
           <li><a href="../sitemap.html">Complete Website Sitemap</a></li>
         </ul>
       </div>
@@ -707,10 +885,10 @@
           <li><a href="https://www.instagram.com/quick.art.photography.academy/" target="_blank" rel="noopener noreferrer me">Instagram Profile</a></li>
           <li><a href="https://www.facebook.com/Quick.art.Photography.Academy" target="_blank" rel="noopener noreferrer me">Facebook Page</a></li>
           <li><a href="https://wa.me/919939800780" target="_blank" rel="noopener noreferrer">WhatsApp Helpdesk</a></li>
-          <li><a href="../privacy-policy/index.html">Privacy Policy</a></li>
-          <li><a href="../terms-and-conditions/index.html">Terms &amp; Conditions</a></li>
-          <li><a href="../refund-policy/index.html">Refund Policy</a></li>
-          <li><a href="../shipping-policy/index.html">Shipping Policy</a></li>
+          <li><a href="../privacy-policy/">Privacy Policy</a></li>
+          <li><a href="../terms-and-conditions/">Terms &amp; Conditions</a></li>
+          <li><a href="../refund-policy/">Refund Policy</a></li>
+          <li><a href="../shipping-policy/">Shipping Policy</a></li>
         </ul>
       </div>
     </div>
@@ -722,15 +900,15 @@
     <div class="container qa-footer-base">
       <div>© <span data-year>2026</span> Quick Art Photography Academy. All Rights Reserved. | Managed by Anil Sharma</div>
       <div class="qa-footer-base-links">
-        <a href="../portal/index.html">Student Login</a> ·
-        <a href="../about-us/index.html">About</a> ·
-        <a href="../courses/index.html">Courses</a> ·
-        <a href="../online/index.html">Online Courses</a> ·
-        <a href="../contact-us/index.html">Contact</a> ·
-        <a href="../privacy-policy/index.html">Privacy</a> ·
-        <a href="../terms-and-conditions/index.html">Terms</a> ·
-        <a href="../refund-policy/index.html">Refunds</a> ·
-        <a href="../shipping-policy/index.html">Shipping</a> ·
+        <a href="../portal/">Student Login</a> ·
+        <a href="../about-us/">About</a> ·
+        <a href="../courses/">Courses</a> ·
+        <a href="../online/">Online Courses</a> ·
+        <a href="../contact-us/">Contact</a> ·
+        <a href="../privacy-policy/">Privacy</a> ·
+        <a href="../terms-and-conditions/">Terms</a> ·
+        <a href="../refund-policy/">Refunds</a> ·
+        <a href="../shipping-policy/">Shipping</a> ·
         <a href="../sitemap.html">Sitemap</a>
       </div>
     </div>
@@ -751,6 +929,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="alumni.js?v=20260928_01"></script>
+  <script defer src="../site.js?v=20260926_05"></script>
+  <script src="alumni.js?v=20260928_02"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 [
     {
         "id": "course-premiere-pro",
-        "title": "Adobe Premiere Pro Masterclass",
+        "title": "Advance Video Editing Course",
         "category": "Video Editing",
         "duration": "65 Hours",
         "level": "All Levels",
@@ -825,7 +825,7 @@
     {
         "id": "course-album-design",
         "slug": "album-design-course",
-        "title": "Wedding Album Design Masterclass",
+        "title": "Album Design Course",
         "subtitle": "High-End Photo Retouching, AI Automation & Luxury Album Printing",
         "category": "Photo & Design",
         "level": "All Levels",
@@ -1071,7 +1071,7 @@
     {
         "id": "course-cinematic-wedding",
         "slug": "cinematic-editing-course",
-        "title": "Cinematic Wedding Filmmaking & Teasers",
+        "title": "Wedding Film-making Course",
         "subtitle": "Storytelling Direction, Sound Design, Viral Reels & Hollywood Grading",
         "category": "Filmmaking",
         "level": "Intermediate to Pro",
@@ -1391,7 +1391,7 @@
     {
         "id": "course-digital-marketing",
         "slug": "digital-marketing-course",
-        "title": "Digital Marketing for Photographers & Studios",
+        "title": "Complate Studio Filmmaking & Marketing Course",
         "subtitle": "High-Ticket Wedding Packaging, Client Contracts & Meta Ads",
         "category": "Marketing & Growth",
         "level": "All Levels",

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Official Student ID Verification | Quick Art Photography Academy</title>
+  <meta name="description" content="Official student credential verification portal of Quick Art Photography Academy Siwan. Verify student identity, offline course enrollment, and ISO certification status.">
+  <link rel="icon" href="../home-assets/ec55a6be3747a9.webp" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../design-system.css">
+  <style>
+    :root {
+      --bg: #07090e;
+      --card-bg: #0f1420;
+      --gold: #f59e0b;
+      --gold-light: #fbbf24;
+      --emerald: #10b981;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-image: radial-gradient(circle at 50% 20%, rgba(245, 158, 11, 0.12) 0%, transparent 60%);
+    }
+    .verify-box {
+      width: 90%;
+      max-width: 520px;
+      margin: 30px auto;
+      background: linear-gradient(180deg, #131927 0%, #0a0d14 100%);
+      border: 1.5px solid rgba(245, 158, 11, 0.3);
+      border-radius: 24px;
+      padding: 32px 28px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 40px rgba(245, 158, 11, 0.1);
+      box-sizing: border-box;
+      text-align: center;
+      position: relative;
+    }
+    .verify-badge-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+    .verify-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+    }
+    .verify-logo-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .verify-logo-row img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      background: transparent;
+      border: none;
+      padding: 0;
+      box-shadow: none;
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+    }
+    .verify-academy-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 850;
+      color: #ffffff;
+      text-align: left;
+      line-height: 1.25;
+    }
+    .verify-academy-sub {
+      font-size: 11px;
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+    .verify-photo-wrap {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 16px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 3px solid var(--gold);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      background: #1e293b;
+    }
+    .verify-photo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .verify-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0 0 6px;
+    }
+    .verify-course {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin: 0 0 24px;
+    }
+    .verify-table {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: left;
+      margin-bottom: 24px;
+    }
+    .verify-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 13px;
+    }
+    .verify-row:last-child {
+      border-bottom: none;
+    }
+    .verify-row span {
+      color: #94a3b8;
+    }
+    .verify-row strong {
+      color: #ffffff;
+      font-weight: 700;
+      text-align: right;
+    }
+    .verify-stamp {
+      display: inline-block;
+      border: 2px dashed #10b981;
+      color: #10b981;
+      padding: 8px 20px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+      background: rgba(16, 185, 129, 0.06);
+    }
+    .verify-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .verify-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .verify-btn-primary {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #0b0d14;
+    }
+    .verify-btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="verify-box">
+    <div class="verify-badge-top">
+      <span class="verify-dot"></span>
+      <span>OFFICIAL CREDENTIAL VERIFIED</span>
+    </div>
+
+    <div class="verify-logo-row">
+      <img src="../assets/quick-art-logo.png" alt="Quick Art Academy Logo" width="52" height="52">
+      <div>
+        <div class="verify-academy-title">QUICK ART PHOTOGRAPHY ACADEMY</div>
+        <div class="verify-academy-sub">Govt. Regd. • ISO 9001:2015 Verifiable Registry</div>
+      </div>
+    </div>
+
+    <div class="verify-photo-wrap">
+      <img id="v-photo" src="../assets/anil-sharma.webp" alt="Student Photo">
+    </div>
+
+    <h1 class="verify-name" id="v-name">Verified Student</h1>
+    <div class="verify-course" id="v-course">Wedding Film-making Course</div>
+
+    <div class="verify-stamp">
+      ✓ AUTHENTIC ADMISSION CONFIRMED
+    </div>
+
+    <div class="verify-table">
+      <div class="verify-row">
+        <span>Student ID / Enrollment No.:</span>
+        <strong id="v-id">QAA-OFF-2026</strong>
+      </div>
+      <div class="verify-row">
+        <span>Blood Group:</span>
+        <strong id="v-blood" style="color: #f87171;">B+</strong>
+      </div>
+      <div class="verify-row">
+        <span>Training Lab:</span>
+        <strong>4K Workstation Suite (Siwan)</strong>
+      </div>
+      <div class="verify-row">
+        <span>Studio / Work:</span>
+        <strong id="v-studio">Creative Studio</strong>
+      </div>
+      <div class="verify-row">
+        <span>Student Location:</span>
+        <strong id="v-city">Bihar</strong>
+      </div>
+      <div class="verify-row">
+        <span>Mentor &amp; Director:</span>
+        <strong>Anil Sharma (Founder &amp; Director)</strong>
+      </div>
+      <div class="verify-row">
+        <span>Security Verification Token:</span>
+        <strong id="v-hash">SHA256-AUTHENTIC</strong>
+      </div>
+    </div>
+
+    <div class="verify-actions">
+      <a href="../admission/" class="verify-btn verify-btn-primary">📝 Apply for Admission</a>
+      <a href="../" class="verify-btn verify-btn-secondary">🏠 Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var id = params.get('id') || 'QAA-OFF-2026-LIVE';
+      var name = params.get('name') || 'Registered Student';
+      var course = params.get('course') || 'Wedding Film-making Course';
+      var studio = params.get('studio') || 'Digital Studio';
+      var city = params.get('city') || 'Siwan, Bihar';
+      var blood = params.get('blood') || 'B+';
+
+      document.getElementById('v-id').textContent = id;
+      document.getElementById('v-name').textContent = name;
+      document.getElementById('v-course').textContent = course;
+      document.getElementById('v-studio').textContent = studio;
+      document.getElementById('v-city').textContent = city;
+      var vBlood = document.getElementById('v-blood');
+      if (vBlood) vBlood.textContent = blood;
+      document.getElementById('v-hash').textContent = 'QAA-AUTH-' + Math.abs(id.split('').reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0)).toString(16).toUpperCase();
+    })();
+  </script>
+</body>
+</html>

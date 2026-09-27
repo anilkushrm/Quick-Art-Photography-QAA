@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Official Student ID Card Preview - Quick Art Photography Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../design-system.css">
+  <link rel="stylesheet" href="admission.css">
+  <style>
+    body {
+      background: #06080d;
+      margin: 0;
+      padding: 40px 20px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #ffffff;
+      background-image: radial-gradient(circle at 50% 20%, rgba(245, 158, 11, 0.15) 0%, transparent 60%);
+    }
+    .preview-wrapper {
+      max-width: 860px;
+      width: 100%;
+      text-align: center;
+    }
+    .preview-heading {
+      margin-bottom: 24px;
+    }
+    .preview-pill {
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      padding: 4px 14px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .preview-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 26px;
+      font-weight: 850;
+      color: #ffffff;
+      margin: 0 0 8px 0;
+    }
+    .preview-sub {
+      color: #94a3b8;
+      font-size: 14px;
+      margin: 0;
+    }
+    .preview-card-holder {
+      margin: 28px auto;
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="preview-wrapper">
+    <div class="preview-heading">
+      <span class="preview-pill">OFFICIAL ADMISSION 2026</span>
+      <h1 class="preview-title">Student Identity Card Preview</h1>
+      <p class="preview-sub">Quick Art Photography Academy • Govt. Regd. &amp; ISO 9001:2015 Certified</p>
+    </div>
+
+    <div class="preview-card-holder">
+      <div class="adm-issued-card-wrapper">
+        
+        <!-- ==================== FRONT SIDE ==================== -->
+        <div class="adm-card-unit">
+          <span class="adm-card-side-label">🔹 Front Side (मुख पृष्ठ)</span>
+          
+          <div id="issued-id-card-front" class="adm-issued-id-card">
+            <!-- Glossy PVC Plastic Sheen Reflection -->
+            <div class="adm-card-sheen" aria-hidden="true"></div>
+
+            <!-- Authentic Physical Badge Lanyard Hole Cutout -->
+            <div class="adm-card-lanyard-slot" aria-hidden="true"></div>
+
+            <!-- Security Watermark Background -->
+            <div class="adm-card-security-watermark" aria-hidden="true">
+              <img src="../assets/quick-art-logo.png" alt="QAA Watermark">
+            </div>
+
+            <!-- Institutional Header (Clean Logo - No Box!) -->
+            <div class="adm-card-header-bar">
+              <img src="../assets/quick-art-logo.png" alt="Quick Art Photography Academy Logo" width="48" height="48" class="adm-card-clean-logo">
+              <div>
+                <div class="adm-card-inst-title">QUICK ART PHOTOGRAPHY ACADEMY</div>
+                <div class="adm-card-inst-sub">OFFICIAL STUDENT IDENTITY BADGE</div>
+                <div class="adm-card-inst-iso">Govt. Regd. • ISO 9001:2015 Certified Film Institute</div>
+              </div>
+            </div>
+
+            <!-- Student Photo Frame with Institutional Green Ribbon -->
+            <div class="adm-card-photo-wrapper">
+              <img id="issued-id-photo" src="../assets/anil-sharma.webp" alt="Student Photo">
+              <div class="adm-card-photo-ribbon">STUDENT</div>
+            </div>
+
+            <!-- Student Name & Course -->
+            <h3 id="modal-student-name" class="adm-card-student-name">Rahul Kumar Sharma</h3>
+            <div id="modal-student-course" class="adm-card-course-pill">Wedding Film-making Course</div>
+
+            <!-- Structured Details Grid (NO FEES) -->
+            <div class="adm-card-table-grid">
+              <div class="adm-card-table-row">
+                <span>STUDENT ID / ENROLL NO.</span>
+                <strong id="modal-app-id" style="color:#38bdf8;">QAA-OFF-2026-8842</strong>
+              </div>
+              <div class="adm-card-table-row">
+                <span>MOBILE NO</span>
+                <strong id="modal-student-phone">+91 9939800780</strong>
+              </div>
+              <div class="adm-card-table-row">
+                <span>STUDIO NAME</span>
+                <strong id="modal-student-studio">Royal Cine Studio</strong>
+              </div>
+              <div class="adm-card-table-row">
+                <span>LOCATION</span>
+                <strong id="modal-student-city">Siwan, Bihar</strong>
+              </div>
+              <div class="adm-card-table-row">
+                <span>BLOOD GROUP</span>
+                <strong id="modal-student-blood" style="color:#f87171;">B+</strong>
+              </div>
+              <div class="adm-card-table-row">
+                <span>ACADEMIC SESSION</span>
+                <strong style="color:#fbbf24;">2026 – 2027</strong>
+              </div>
+            </div>
+
+            <!-- Bottom Row: High-Contrast QR Code, Gold Hologram, Signature -->
+            <div class="adm-card-footer-strip">
+              <div class="adm-card-qr-block">
+                <img id="issued-id-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=1&data=https%3A%2F%2Fquickartphotography.in%2Fadmission%2Fverify.html%3Fid%3DQAA-OFF-2026-8842%26name%3DRahul%2520Kumar%2520Sharma%26course%3DWedding%2520Film-making%2520Course%26city%3DSiwan%2C%2520Bihar%26blood%3DB%2B" alt="Scan to Verify Student ID" class="adm-card-qr-img" crossorigin="anonymous">
+                <div>
+                  <div class="adm-card-qr-badge">📷 SCAN TO VERIFY</div>
+                  <div class="adm-card-qr-hint">Official Online Registry</div>
+                </div>
+              </div>
+
+              <!-- Genuine Gold Multi-Color Foil Hologram Security Seal -->
+              <div class="adm-card-hologram" title="Original Hologram Security Seal">
+                <div class="adm-card-hologram-inner">
+                  <span>★ QAA ★</span>
+                  <span>GENUINE</span>
+                  <span>SECURITY</span>
+                </div>
+              </div>
+
+              <!-- Lead Mentor & Authorized Signatory -->
+              <div class="adm-card-signatory">
+                <div class="adm-card-sign-cursive">Anil Sharma</div>
+                <div class="adm-card-sign-lead">Founder &amp; Director</div>
+                <div class="adm-card-sign-session">Quick Art Photography Academy</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== BACK SIDE ==================== -->
+        <div class="adm-card-unit">
+          <span class="adm-card-side-label">🔸 Back Side (पृष्ठ भाग)</span>
+          
+          <div id="issued-id-card-back" class="adm-issued-id-card adm-card-back-side">
+            <!-- Glossy PVC Plastic Sheen Reflection -->
+            <div class="adm-card-sheen" aria-hidden="true"></div>
+
+            <!-- Authentic Physical Badge Lanyard Hole Cutout -->
+            <div class="adm-card-lanyard-slot" aria-hidden="true"></div>
+
+            <!-- Security Watermark Background -->
+            <div class="adm-card-security-watermark" aria-hidden="true">
+              <img src="../assets/quick-art-logo.png" alt="QAA Watermark">
+            </div>
+
+            <!-- Back Header -->
+            <div class="adm-card-back-header">
+              <div class="adm-card-back-title-wrap">
+                <img src="../assets/quick-art-logo.png" alt="Logo" class="adm-card-back-logo">
+                <div class="adm-card-back-head-text">
+                  <strong>QUICK ART PHOTOGRAPHY ACADEMY</strong>
+                  <span>Student Guidelines &amp; Institutional Terms</span>
+                </div>
+              </div>
+              <span class="adm-card-active-pill">ACTIVE</span>
+            </div>
+
+            <!-- Terms of Identification -->
+            <div class="adm-card-rules-box">
+              <div class="adm-card-rules-heading">
+                <span>📜</span>
+                <span>TERMS OF IDENTIFICATION &amp; USAGE</span>
+              </div>
+              <ol class="adm-card-rules-list">
+                <li>This identity badge is non-transferable and remains official property of Quick Art Photography Academy.</li>
+                <li>Student must visibly wear this badge at all times inside campus labs, editing suites &amp; outdoor shoot sessions.</li>
+                <li>Access to 4K editing workstations, cinema cameras &amp; studio gear is granted solely upon badge presentation.</li>
+                <li>Loss or damage must be reported immediately to academy admin desk. Duplicate fee applies.</li>
+                <li>Misuse or unauthorized duplication shall lead to disciplinary action and cancellation of admission.</li>
+              </ol>
+            </div>
+
+            <!-- Emergency Helpline Row -->
+            <div class="adm-card-emergency-row">
+              <div>
+                <span>EMERGENCY HELPLINE</span>
+                <strong>+91 9939800780</strong>
+              </div>
+              <div>
+                <span>BLOOD GROUP</span>
+                <strong id="modal-back-blood" style="color:#fbbf24;">B+ (Positive)</strong>
+              </div>
+            </div>
+
+            <!-- Campus Address & Contacts -->
+            <div class="adm-card-campus-box">
+              <div class="adm-card-campus-heading">
+                <span>🏛️</span>
+                <span>CAMPUS LOCATION &amp; CONTACT</span>
+              </div>
+              <div class="adm-card-campus-detail">
+                <strong>Campus:</strong> Quick Art Photography Academy, Ayodhya Puri, Near Lalit Bus Stand, Siwan, Bihar - 841226
+              </div>
+              <div class="adm-card-campus-detail">
+                <strong>Official Web:</strong> quickartphotography.in &bull; <strong>Email:</strong> support@quickartphotography.in
+              </div>
+            </div>
+
+            <!-- Barcode & Return Instructions -->
+            <div class="adm-card-barcode-area">
+              <div class="adm-card-barcode-graphic" id="modal-back-barcode">*QAA-OFF-2026-8842*</div>
+              <div id="modal-back-id-text" style="font-size: 8.5px; letter-spacing: 2px; color: #cbd5e1; font-weight: 700; margin-bottom: 4px;">QAA-OFF-2026-8842</div>
+              <p class="adm-card-return-notice">
+                If found, please return to Quick Art Photography Academy, Ayodhya Puri, Near Lalit Bus Stand, Siwan, Bihar - 841226.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="adm-id-actions" style="margin-top: 24px; max-width: 760px; width: 100%;">
+      <button type="button" class="adm-btn-download" onclick="downloadIssuedIdCard('front')">
+        <span>📥 Download Front Side (PNG)</span>
+      </button>
+      <button type="button" class="adm-btn-download" onclick="downloadIssuedIdCard('back')">
+        <span>📥 Download Back Side (PNG)</span>
+      </button>
+      <button type="button" class="adm-btn-print" onclick="window.print()">
+        <span>🖨️ Print ID Card (Front &amp; Back)</span>
+      </button>
+      <a href="../portal/" class="adm-btn-portal" style="text-decoration:none;">
+        <span>Go to Student Portal →</span>
+      </a>
+    </div>
+  </div>
+
+  <script src="html2canvas.min.js"></script>
+  <script src="admission.js"></script>
+</body>
+</html>

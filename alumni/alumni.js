@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (data.ok && Array.isArray(data.alumni) && data.alumni.length > 0) {
           currentAlumniList = data.alumni;
           renderAlumni();
+          renderHeroMarquee(currentAlumniList);
         } else {
           loadFallbackAlumni();
         }
@@ -40,10 +41,12 @@ document.addEventListener('DOMContentLoaded', function () {
           currentAlumniList = getDefaultAlumniList();
         }
         renderAlumni();
+        renderHeroMarquee(currentAlumniList);
       })
       .catch(function () {
         currentAlumniList = getDefaultAlumniList();
         renderAlumni();
+        renderHeroMarquee(currentAlumniList);
       });
   }
 
@@ -148,6 +151,55 @@ document.addEventListener('DOMContentLoaded', function () {
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  // Dynamically populate Hero Section 3-column marquee from live alumni data
+  function renderHeroMarquee(list) {
+    var col1Track = document.getElementById('alm-hero-track-1');
+    var col2Track = document.getElementById('alm-hero-track-2');
+    var col3Track = document.getElementById('alm-hero-track-3');
+    if (!col1Track || !col2Track || !col3Track || !list || list.length === 0) return;
+
+    var c1 = [], c2 = [], c3 = [];
+    list.forEach(function (alm, idx) {
+      if (idx % 3 === 0) c1.push(alm);
+      else if (idx % 3 === 1) c2.push(alm);
+      else c3.push(alm);
+    });
+
+    function createCardHtml(alm, isAccent) {
+      var photo = alm.photo || '../assets/alumni/alumni_rahul_kumar.jpg';
+      var name = escapeHtml(alm.name || 'Alumnus');
+      var studio = escapeHtml(alm.studioName || 'Creative Studio');
+      var loc = escapeHtml(alm.city || 'Bihar');
+      return '<div class="alm-hero-card' + (isAccent ? ' alm-hero-card-accent' : '') + '">' +
+               '<span class="alm-hero-card-name">' + name + '</span>' +
+               '<div class="alm-hero-card-img-wrap">' +
+                 '<img src="' + photo + '" alt="' + name + '" width="116" height="116" loading="lazy" onerror="this.src=\'../home-assets/6a62e4eb3643ad.jpeg\'">' +
+               '</div>' +
+               '<div class="alm-hero-card-footer">' +
+                 '<span class="alm-hero-card-studio">' + studio + '</span>' +
+                 '<span class="alm-hero-card-loc">📍 ' + loc + '</span>' +
+               '</div>' +
+             '</div>';
+    }
+
+    function buildTrack(items, isAccent) {
+      if (!items || items.length === 0) return '';
+      var expanded = items.slice();
+      while (expanded.length < 4) {
+        expanded = expanded.concat(items);
+      }
+      var cardsHtml = expanded.map(function(item) {
+        return createCardHtml(item, isAccent);
+      }).join('');
+      // Duplicate set for seamless continuous marquee loop (0% to -50%)
+      return cardsHtml + cardsHtml;
+    }
+
+    col1Track.innerHTML = buildTrack(c1, false);
+    col2Track.innerHTML = buildTrack(c2, true);
+    col3Track.innerHTML = buildTrack(c3, false);
   }
 
   // Category Tabs click listeners

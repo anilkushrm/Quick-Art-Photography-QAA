@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var inputPhoto = document.getElementById('adm-photo');
   var inputAadhaar = document.getElementById('adm-aadhaar');
   var inputCert = document.getElementById('adm-cert');
+  var inputBlood = document.getElementById('adm-bloodgroup');
 
   if (inputName && badgeName) {
     inputName.addEventListener('input', function () {
@@ -32,6 +33,13 @@ document.addEventListener('DOMContentLoaded', function () {
   if (inputRole && badgeRole) {
     inputRole.addEventListener('change', function () {
       badgeRole.textContent = this.value || 'Offline Masterclass Student';
+    });
+  }
+
+  var badgeBlood = document.getElementById('id-badge-blood');
+  if (inputBlood && badgeBlood) {
+    inputBlood.addEventListener('change', function () {
+      badgeBlood.textContent = this.value || 'B+';
     });
   }
 
@@ -52,16 +60,24 @@ document.addEventListener('DOMContentLoaded', function () {
   if (inputCity) inputCity.addEventListener('input', updateCityPreview);
   if (inputWorkCity) inputWorkCity.addEventListener('input', updateCityPreview);
 
-  // Photo file preview
+  // Photo file preview with 500 KB size limit
+  var MAX_PHOTO_BYTES = 500 * 1024; // 500 KB
+
   if (inputPhoto) {
     inputPhoto.addEventListener('change', function () {
       if (this.files && this.files[0]) {
+        var file = this.files[0];
+        if (file.size > MAX_PHOTO_BYTES) {
+          alert('Photo ka size 500 KB se adhik hai (' + Math.round(file.size / 1024) + ' KB)। Kripya 500 KB se chhota photo select karein.');
+          this.value = '';
+          return;
+        }
         var reader = new FileReader();
         reader.onload = function (e) {
           if (previewImg) previewImg.src = e.target.result;
           if (badgePhoto) badgePhoto.src = e.target.result;
         };
-        reader.readAsDataURL(this.files[0]);
+        reader.readAsDataURL(file);
       }
     });
   }
@@ -87,6 +103,15 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!form.checkValidity()) {
         form.reportValidity();
         return;
+      }
+
+      // Check photo size before submitting
+      if (inputPhoto && inputPhoto.files && inputPhoto.files[0]) {
+        if (inputPhoto.files[0].size > MAX_PHOTO_BYTES) {
+          showStatus('Photo ka size 500 KB se adhik hai (' + Math.round(inputPhoto.files[0].size / 1024) + ' KB)। Kripya 500 KB se chhota photo upload karein.', 'error');
+          inputPhoto.focus();
+          return;
+        }
       }
 
       showStatus('Submitting your admission form & documents...', 'info');
@@ -191,19 +216,109 @@ document.addEventListener('DOMContentLoaded', function () {
     var modal = document.getElementById('adm-success-modal');
     if (!modal) return;
 
+    var sName = data.fullName || (inputName ? inputName.value.trim() : '') || 'Student';
+    var sId = data.admissionId || 'QAA-OFF-2026-LIVE';
+    var sPhone = data.phone || (inputPhone ? inputPhone.value.trim() : '');
+    var sCourse = (document.getElementById('adm-course') ? document.getElementById('adm-course').value : '') || 'Wedding Film-making Course';
+    var sStudio = (inputStudio ? inputStudio.value.trim() : '') || 'Independent Studio';
+    var sCity = (inputCity ? inputCity.value.trim() : '') || 'Siwan, Bihar';
+
+    var sBlood = data.bloodGroup || (inputBlood ? inputBlood.value : '') || 'B+';
+
     var idEl = document.getElementById('modal-app-id');
     var nameEl = document.getElementById('modal-student-name');
-    var feeEl = document.getElementById('modal-fee-status');
+    var courseEl = document.getElementById('modal-student-course');
+    var phoneEl = document.getElementById('modal-student-phone');
+    var studioEl = document.getElementById('modal-student-studio');
+    var cityEl = document.getElementById('modal-student-city');
+    var bloodEl = document.getElementById('modal-student-blood');
+    var backBloodEl = document.getElementById('modal-back-blood');
+    var backCityEl = document.getElementById('modal-back-city');
+    var backBarcodeEl = document.getElementById('modal-back-barcode');
+    var backIdTextEl = document.getElementById('modal-back-id-text');
+    var issuedPhoto = document.getElementById('issued-id-photo');
+    var qrImg = document.getElementById('issued-id-qr');
 
-    if (idEl) idEl.textContent = data.admissionId || 'QAA-OFF-2026';
-    if (nameEl) nameEl.textContent = data.fullName || 'Student';
-    if (feeEl) {
-      feeEl.textContent = isPaid ? '₹500 (Paid Online ✓)' : '₹500 (Pay Cash at Siwan Campus)';
-      feeEl.style.color = isPaid ? '#16a34a' : '#d97706';
+    if (idEl) idEl.textContent = sId;
+    if (nameEl) nameEl.textContent = sName;
+    if (courseEl) courseEl.textContent = sCourse;
+    if (phoneEl) phoneEl.textContent = sPhone ? '+91 ' + sPhone : '+91 9939800780';
+    if (studioEl) studioEl.textContent = sStudio;
+    if (cityEl) cityEl.textContent = sCity;
+    if (bloodEl) bloodEl.textContent = sBlood;
+    if (backBloodEl) backBloodEl.textContent = sBlood + ' (Positive)';
+    if (backCityEl) backCityEl.textContent = sCity + ' (IN)';
+    if (backBarcodeEl) backBarcodeEl.textContent = '*' + sId.replace(/[^a-zA-Z0-9-]/g, '') + '*';
+    if (backIdTextEl) backIdTextEl.textContent = sId;
+
+    // Set student photo on the issued ID Card
+    if (issuedPhoto) {
+      if (previewImg && previewImg.src && previewImg.src.indexOf('anil-sharma') === -1) {
+        issuedPhoto.src = previewImg.src;
+      } else if (badgePhoto && badgePhoto.src) {
+        issuedPhoto.src = badgePhoto.src;
+      }
+    }
+
+    // Generate Verification URL & Scannable QR Code
+    var verifyUrl = 'https://quickartphotography.in/admission/verify.html?id=' + encodeURIComponent(sId) +
+                    '&name=' + encodeURIComponent(sName) +
+                    '&course=' + encodeURIComponent(sCourse) +
+                    '&studio=' + encodeURIComponent(sStudio) +
+                    '&city=' + encodeURIComponent(sCity) +
+                    '&blood=' + encodeURIComponent(sBlood);
+
+    if (qrImg) {
+      var qrApi = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=1&data=' + encodeURIComponent(verifyUrl);
+      qrImg.src = qrApi;
     }
 
     modal.style.display = 'flex';
   }
+
+  // 📥 Download Issued ID Card as High-Res PNG (Front or Back)
+  window.downloadIssuedIdCard = function (side) {
+    side = side || 'front';
+    var targetId = side === 'back' ? 'issued-id-card-back' : 'issued-id-card-front';
+    var card = document.getElementById(targetId) || document.getElementById('issued-id-card-to-download');
+    if (!card) return;
+
+    var sId = (document.getElementById('modal-app-id') ? document.getElementById('modal-app-id').textContent.trim() : '') || 'QAA-STUDENT-ID';
+    var btn = side === 'back' ? document.getElementById('btn-dl-back') : document.getElementById('btn-dl-front');
+    if (btn) btn.innerHTML = '⏳ Generating High-Res ' + side.toUpperCase() + '...';
+
+    if (window.html2canvas) {
+      window.html2canvas(card, {
+        scale: 3, // 300 DPI high resolution
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: '#0a0d14'
+      }).then(function (canvas) {
+        var a = document.createElement('a');
+        a.download = 'QAA_Student_ID_' + sId.replace(/[^a-zA-Z0-9_-]/g, '_') + '_' + side.toUpperCase() + '.png';
+        a.href = canvas.toDataURL('image/png');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        if (btn) btn.innerHTML = '✓ ' + side.toUpperCase() + ' Downloaded! 📥';
+        setTimeout(function () {
+          if (btn) btn.innerHTML = '<span>📥 Download ' + (side === 'front' ? 'Front' : 'Back') + ' Side (PNG)</span>';
+        }, 3000);
+      }).catch(function (err) {
+        console.error('html2canvas error:', err);
+        window.print();
+        if (btn) btn.innerHTML = '<span>📥 Download ' + (side === 'front' ? 'Front' : 'Back') + ' Side (PNG)</span>';
+      });
+    } else {
+      window.print();
+    }
+  };
+
+  // 🖨️ Print ID Card
+  window.printIssuedIdCard = function () {
+    window.print();
+  };
 
   window.closeAdmissionModal = function () {
     var modal = document.getElementById('adm-success-modal');

@@ -743,7 +743,15 @@ body.adm-body {
 }
 
 .adm-id-logo {
-  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
 }
 
 .adm-id-academy-name {
@@ -1053,6 +1061,672 @@ body.adm-body {
 
 .adm-modal-close:hover {
   background: #e2e8f0;
+}
+
+/* ==========================================================================
+   Issued Professional Student ID Card (Modal & Download)
+   ========================================================================== */
+.adm-modal-id-container {
+  background: linear-gradient(180deg, #101522 0%, #080a0f 100%) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.45) !important;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.9), 0 0 50px rgba(245, 158, 11, 0.15) !important;
+  max-width: 860px !important;
+  padding: 28px 24px 24px !important;
+  color: #ffffff !important;
+}
+
+.adm-modal-top-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 5px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.adm-modal-title {
+  color: #ffffff !important;
+  font-size: 22px !important;
+  margin: 0 0 6px !important;
+}
+
+.adm-issued-card-wrapper {
+  margin: 18px auto 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 26px;
+  width: 100%;
+}
+
+.adm-card-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.adm-card-side-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11.5px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 4px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Authentic Standard CR80 PVC Institutional Identity Badge */
+.adm-issued-id-card {
+  width: 360px;
+  height: 570px;
+  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.12) 0%, transparent 60%),
+              linear-gradient(180deg, #131722 0%, #0a0c13 100%);
+  border: 1.5px solid rgba(245, 158, 11, 0.45);
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(245, 158, 11, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 16px 20px 14px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  color: #ffffff;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+
+/* Real PVC Plastic Card Sheen */
+.adm-card-sheen {
+  position: absolute;
+  top: -100px;
+  left: -100px;
+  right: -100px;
+  height: 250px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 60%);
+  transform: rotate(-15deg);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Authentic Lanyard Hole Slot */
+.adm-card-lanyard-slot {
+  width: 48px;
+  height: 8px;
+  background: #05070a;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  margin: 0 auto 10px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 2;
+}
+
+/* Card Header */
+.adm-card-header-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1.5px solid rgba(245, 158, 11, 0.35);
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+
+/* Clean Logo - NO BOX! Completely transparent & crisp */
+.adm-card-clean-logo,
+.adm-card-logo {
+  width: 48px !important;
+  height: 48px !important;
+  object-fit: contain !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+}
+
+.adm-card-inst-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11.5px;
+  font-weight: 850;
+  color: #fbbf24;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+}
+
+.adm-card-inst-sub {
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #e2e8f0;
+  letter-spacing: 0.08em;
+}
+
+.adm-card-inst-iso {
+  font-size: 7.5px;
+  color: #94a3b8;
+}
+
+/* Student Photo Frame with Ribbon */
+.adm-card-photo-wrapper {
+  position: relative;
+  width: 105px;
+  height: 125px;
+  margin: 0 auto 10px;
+  border-radius: 14px;
+  padding: 3px;
+  background: linear-gradient(135deg, #f59e0b, #b45309);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+
+.adm-card-photo-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 11px;
+  display: block;
+}
+
+.adm-card-photo-ribbon {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: #042f2c;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1.5px solid #064e3b;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.5);
+  white-space: nowrap;
+}
+
+/* Student Name & Course */
+.adm-card-student-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 19px;
+  font-weight: 850;
+  color: #ffffff;
+  margin: 10px 0 3px;
+  letter-spacing: -0.01em;
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adm-card-course-pill {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 3px 12px;
+  border-radius: 999px;
+  margin: 0 auto 12px;
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90%;
+}
+
+/* Tabular Details Grid */
+.adm-card-table-grid {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  text-align: left;
+  font-size: 10.5px;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px 10px;
+}
+
+.adm-card-table-row span {
+  color: #94a3b8;
+  font-size: 8.5px;
+  font-weight: 600;
+  display: block;
+}
+
+.adm-card-table-row strong {
+  color: #ffffff;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+/* Bottom Bar: QR Code, Hologram, Signature */
+.adm-card-footer-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+  margin-top: auto;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+
+.adm-card-qr-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adm-card-qr-img {
+  width: 58px;
+  height: 58px;
+  background: #ffffff;
+  padding: 2px;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  flex-shrink: 0;
+  display: block;
+}
+
+.adm-card-qr-badge {
+  font-size: 8.5px;
+  color: #fbbf24;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.adm-card-qr-hint {
+  font-size: 7px;
+  color: #94a3b8;
+}
+
+/* Genuine Gold Rainbow Hologram Security Seal */
+.adm-card-hologram {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #f59e0b, #fbbf24, #10b981, #3b82f6, #ec4899, #f59e0b);
+  padding: 1.5px;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adm-card-hologram-inner {
+  width: 100%;
+  height: 100%;
+  background: #0c0f17;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 6px;
+  font-weight: 900;
+  color: #fbbf24;
+  line-height: 1;
+  text-align: center;
+}
+
+/* Signatory Block */
+.adm-card-signatory {
+  text-align: right;
+}
+
+.adm-card-sign-cursive {
+  font-family: 'Great Vibes', 'Brush Script MT', cursive;
+  font-size: 19px;
+  color: #fbbf24;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.adm-card-sign-lead {
+  font-size: 7.5px;
+  color: #cbd5e1;
+  font-weight: 700;
+}
+
+.adm-card-sign-session {
+  font-size: 7px;
+  color: #64748b;
+}
+
+/* Security Watermark Background */
+.adm-card-security-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+  width: 250px;
+  height: 250px;
+  opacity: 0.045;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.adm-card-security-watermark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(100%) brightness(300%);
+}
+
+/* ==========================================================================
+   BACK SIDE SPECIFIC STYLING
+   ========================================================================== */
+.adm-issued-id-card.adm-card-back-side {
+  text-align: left;
+  padding: 16px 20px 14px;
+}
+
+.adm-card-back-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1.5px solid rgba(245, 158, 11, 0.35);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-back-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adm-card-back-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.adm-card-back-head-text strong {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 850;
+  color: #fbbf24;
+  display: block;
+  letter-spacing: 0.04em;
+}
+
+.adm-card-back-head-text span {
+  font-size: 7.5px;
+  color: #94a3b8;
+  display: block;
+}
+
+.adm-card-active-pill {
+  font-size: 8px;
+  color: #10b981;
+  font-weight: 850;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.12);
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+
+/* Guidelines / Terms Container */
+.adm-card-rules-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-rules-heading {
+  font-size: 9.5px;
+  font-weight: 850;
+  color: #fbbf24;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.04em;
+}
+
+.adm-card-rules-list {
+  margin: 0;
+  padding: 0 0 0 14px;
+  font-size: 8.5px;
+  color: #cbd5e1;
+  line-height: 1.45;
+}
+
+.adm-card-rules-list li {
+  margin-bottom: 4px;
+}
+
+/* Emergency Contact Row */
+.adm-card-emergency-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 2;
+  font-size: 8.5px;
+}
+
+.adm-card-emergency-row span {
+  color: #94a3b8;
+  display: block;
+  font-size: 7.5px;
+}
+
+.adm-card-emergency-row strong {
+  color: #fbbf24;
+  font-size: 9.5px;
+}
+
+/* Campus Address & Contacts Container */
+.adm-card-campus-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-campus-heading {
+  font-size: 9.5px;
+  font-weight: 850;
+  color: #38bdf8;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.04em;
+}
+
+.adm-card-campus-detail {
+  font-size: 8.5px;
+  color: #94a3b8;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.adm-card-campus-detail strong {
+  color: #ffffff;
+}
+
+/* Barcode & Return Instructions */
+.adm-card-barcode-area {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-barcode-graphic {
+  font-family: monospace, cursive;
+  font-size: 15px;
+  color: #ffffff;
+  letter-spacing: 5px;
+  line-height: 1;
+  margin-bottom: 4px;
+  font-weight: 900;
+}
+
+.adm-card-return-notice {
+  font-size: 7px;
+  color: #64748b;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.adm-id-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.adm-btn-download {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #0b0d14;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 850;
+  border-radius: 12px;
+  padding: 13px 16px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adm-btn-download:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.adm-btn-print {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 750;
+  border-radius: 12px;
+  padding: 13px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adm-btn-print:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(245, 158, 11, 0.5);
+}
+
+.adm-btn-portal {
+  grid-column: 1 / -1;
+  background: #1e293b;
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  border-radius: 12px;
+  padding: 13px 16px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.adm-btn-portal:hover {
+  background: rgba(245, 158, 11, 0.15);
+}
+
+.adm-btn-dismiss {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 12.5px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 6px;
+}
+
+.adm-btn-dismiss:hover {
+  color: #ffffff;
+}
+
+/* Print Styles: isolates ID Card cleanly for printing */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #issued-id-card-to-download, #issued-id-card-to-download * {
+    visibility: visible;
+  }
+  #issued-id-card-to-download {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 380px !important;
+    background: #0f1420 !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }
 
 /* ==========================================================================

@@ -454,6 +454,10 @@ async function loadDashboard() {
 
     const courses = coursesRes.courses || [];
     window._allMyCourses = courses;
+    window._offlinePending = coursesRes.offlinePending || null;
+
+    // Render Offline Pending Banner if offline admission is pending ₹500 fee
+    renderOfflinePendingBanner();
 
     // Compute KPIs
     const enrolledCount = courses.length;
@@ -500,8 +504,13 @@ async function loadDashboard() {
     // Check & Render Live Masterclasses & Sessions
     loadStudentLiveClasses();
 
-    // Check & Render Offline Studio Hub (Tasks, Recordings & Exam)
-    loadOfflineStudioHub();
+    // Check & Render Offline Studio Hub (Tasks, Recordings & Exam) - strictly for active enrolled students
+    if (enrolledCount > 0) {
+      loadOfflineStudioHub();
+    } else {
+      const hub = document.getElementById('offline-studio-hub');
+      if (hub) hub.style.display = 'none';
+    }
 
   } catch (err) {
     if (err.message.includes('login') || err.message.includes('expired')) {
@@ -510,6 +519,40 @@ async function loadDashboard() {
       grid.innerHTML = `<div class="card" style="padding: 24px; color: var(--red);">Failed to load courses: ${err.message}</div>`;
     }
   }
+}
+
+// ── Render Offline Pending Admission Fee Banner ──
+function renderOfflinePendingBanner() {
+  const slot = document.getElementById('offline-pending-banner-slot');
+  if (!slot) return;
+
+  const pending = window._offlinePending;
+  if (!pending || !pending.appliedCourse) {
+    slot.style.display = 'none';
+    slot.innerHTML = '';
+    return;
+  }
+
+  const courseTitle = escapeHtml(pending.appliedCourse);
+  const admId = escapeHtml(pending.admissionId || 'QAA-OFF-2026');
+
+  slot.style.display = 'block';
+  slot.innerHTML = `
+    <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(15, 20, 32, 0.95) 100%); border: 1.5px solid rgba(245, 158, 11, 0.4); border-radius: 18px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="font-size: 30px; background: rgba(245, 158, 11, 0.15); width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 1.5px solid rgba(245, 158, 11, 0.35); flex-shrink: 0;">🏛️</div>
+        <div>
+          <div style="font-size: 11px; font-weight: 850; letter-spacing: 0.08em; color: #fbbf24; text-transform: uppercase;">Offline On-Campus Batch • Seat Reserved</div>
+          <h3 style="margin: 4px 0 3px; font-size: 17.5px; font-weight: 800; color: #ffffff;">${courseTitle}</h3>
+          <p style="margin: 0; font-size: 12.5px; color: #94a3b8;">Application ID: <strong style="color: #ffffff;">${admId}</strong> • Siwan 4K Suite • <span style="color: #f59e0b; font-weight: 700;">₹500 Seat Registration Fee Pending</span></p>
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <a href="../admission/" class="btn btn-gold" style="padding: 10px 18px; font-size: 13px; font-weight: 800; text-decoration: none;">⚡ Pay ₹500 &amp; Unlock Course →</a>
+        <span style="font-size: 12px; color: #64748b;">ya Siwan campus aakar cash/UPI pay karein</span>
+      </div>
+    </div>
+  `;
 }
 
 // ── Render Spotlight "Continue Watching" Banner ──
@@ -582,17 +625,36 @@ function renderMyCoursesGrid() {
   // Empty state
   if (filtered.length === 0) {
     if (window._allMyCourses.length === 0) {
-      grid.innerHTML = `
-        <div class="card" style="grid-column: 1/-1; padding: 48px 24px; text-align: center; background: #111520; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px;">
-          <div style="font-size: 40px; margin-bottom: 12px;">🎓</div>
-          <h3 style="font-size: 20px; font-weight: 700; color: #fff;">No courses assigned yet</h3>
-          <p class="muted" style="margin: 8px auto 24px; max-width: 440px;">Your enrollment is being activated. Contact academy support or explore available masterclasses.</p>
-          <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-            <a href="../online/" class="btn btn-gold">🌟 Browse All Masterclasses →</a>
-            <a href="https://wa.me/919939800780" target="_blank" class="btn btn-outline">WhatsApp Support 💬</a>
+      if (window._offlinePending && window._offlinePending.appliedCourse) {
+        grid.innerHTML = `
+          <div class="card" style="grid-column: 1/-1; padding: 48px 24px; text-align: center; background: #111520; border: 1.5px solid rgba(245,158,11,0.35); border-radius: 20px;">
+            <div style="font-size: 42px; margin-bottom: 12px;">🔒</div>
+            <div style="font-size: 11px; font-weight: 850; letter-spacing: 0.08em; color: #fbbf24; text-transform: uppercase; margin-bottom: 6px;">Offline Course Reservation Pending</div>
+            <h3 style="font-size: 21px; font-weight: 800; color: #fff;">${escapeHtml(window._offlinePending.appliedCourse)}</h3>
+            <p class="muted" style="margin: 10px auto 24px; max-width: 500px; line-height: 1.6; font-size: 14px;">
+              Aapka offline course reservation register ho chuka hai (ID: <strong style="color:#fff;">${escapeHtml(window._offlinePending.admissionId || '')}</strong>)। Classroom video lessons aur daily workstation tasks access pane ke liye ₹500 Seat Registration Fee confirm karein.
+            </p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+              <a href="../admission/" class="btn btn-gold">⚡ Pay ₹500 &amp; Unlock Course →</a>
+              <a href="https://wa.me/919939800780" target="_blank" class="btn btn-outline">WhatsApp Support 💬</a>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      } else {
+        grid.innerHTML = `
+          <div class="card" style="grid-column: 1/-1; padding: 48px 24px; text-align: center; background: #111520; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px;">
+            <div style="font-size: 42px; margin-bottom: 12px;">📚</div>
+            <h3 style="font-size: 20px; font-weight: 700; color: #fff;">Koi Active Course Nahi Hai</h3>
+            <p class="muted" style="margin: 8px auto 24px; max-width: 480px; line-height: 1.6;">
+              Aapke account me abhi koi course enrolled nahi hai. Naya online course seekhne ke liye hamara catalog dekhein ya offline batch me admission lein.
+            </p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+              <a href="../online/" class="btn btn-gold">🎬 Explore Online Courses →</a>
+              <a href="../admission/" class="btn btn-outline">🏛️ Apply for Offline Lab Batch</a>
+            </div>
+          </div>
+        `;
+      }
     } else {
       grid.innerHTML = `
         <div class="card" style="grid-column: 1/-1; padding: 40px 20px; text-align: center; background: #111520; border: 1px dashed rgba(255,255,255,0.12); border-radius: 18px;">
@@ -1286,6 +1348,12 @@ function getCourseCode(courseId) {
 
 function generateCertificateId(courseId, phone) {
   const code = getCourseCode(courseId);
+  const enroll = (currentStudent && (currentStudent.offlineAdmissionId || currentStudent.enrollmentNo));
+  if (enroll) {
+    const parts = enroll.split('-');
+    const suffix = parts[parts.length - 1];
+    return `QAA-2026-${code}-${suffix}`;
+  }
   const suffix = (phone || (currentStudent ? currentStudent.phone : '0780')).slice(-4);
   return `QAA-2026-${code}-${suffix}`;
 }
@@ -1375,6 +1443,12 @@ function populateCertificateUI(studentName, courseTitle, courseId, duration, cer
   if (dateElem) dateElem.textContent = today;
   if (idElem) idElem.textContent = `ID: ${cId}`;
   if (durElem) durElem.textContent = '';
+
+  const enrollCodeElem = document.getElementById('cert-enroll-code');
+  if (enrollCodeElem) {
+    const enrollNo = (currentStudent && (currentStudent.offlineAdmissionId || currentStudent.enrollmentNo)) || ('QAA-2026-' + (currentStudent && currentStudent.phone ? currentStudent.phone.slice(-4) : '8842'));
+    enrollCodeElem.textContent = enrollNo;
+  }
 
   // Update Live Academic Verification Ledger
   const ledgerName = document.getElementById('ledger-student-name');
@@ -4477,6 +4551,33 @@ function switchOfflineTab(tabName) {
 async function loadOfflineStudioHub() {
   const hub = document.getElementById('offline-studio-hub');
   if (!hub) return;
+
+  // RULE: If student has NO active courses, HIDE THIS HUB COMPLETELY!
+  const hasActiveCourses = window._allMyCourses && window._allMyCourses.length > 0;
+  if (!hasActiveCourses) {
+    hub.style.display = 'none';
+    return;
+  }
+
+  // Only show for active students who have an active course unlocked
+  const isOfflineBatchStudent = currentStudent && (
+    currentStudent.isPaid500 ||
+    currentStudent.paymentStatus === 'paid' ||
+    currentStudent.isOfflineStudent ||
+    (window._allMyCourses && window._allMyCourses.some(c => 
+      c.id === 'course-cinematic-wedding' || 
+      c.id === 'course-premiere-pro' || 
+      c.id === 'course-album-design' || 
+      c.id === 'course-digital-marketing'
+    ))
+  );
+
+  if (!isOfflineBatchStudent) {
+    hub.style.display = 'none';
+    return;
+  }
+
+  hub.style.display = 'block';
 
   try {
     const [tasksRes, recRes] = await Promise.all([

@@ -1055,6 +1055,35 @@ if ($action === 'approve-offline-admission' && $method === 'POST') {
             if ($markPaid) {
                 $adm['paymentStatus'] = 'paid';
                 $adm['paidAt'] = date('c');
+
+                // Map and unlock course in students.json for this paid student
+                $cTitle = strtolower(trim($adm['courseTitle'] ?? ''));
+                $cId = 'course-cinematic-wedding';
+                if (strpos($cTitle, 'advance video') !== false || strpos($cTitle, 'video editing') !== false) {
+                    $cId = 'course-premiere-pro';
+                } elseif (strpos($cTitle, 'album') !== false) {
+                    $cId = 'course-album-design';
+                } elseif (strpos($cTitle, 'marketing') !== false || strpos($cTitle, 'filmmaking & marketing') !== false || strpos($cTitle, 'studio') !== false) {
+                    $cId = 'course-digital-marketing';
+                }
+
+                $students = get_all_students();
+                foreach ($students as &$stu) {
+                    if (($stu['phone'] ?? '') === ($adm['phone'] ?? '')) {
+                        if (!isset($stu['enrolledCourses']) || !is_array($stu['enrolledCourses'])) {
+                            $stu['enrolledCourses'] = [];
+                        }
+                        if (!in_array($cId, $stu['enrolledCourses'])) {
+                            $stu['enrolledCourses'][] = $cId;
+                        }
+                        $stu['isPaid500'] = true;
+                        $stu['paymentStatus'] = 'paid';
+                        $stu['appliedCourse'] = $adm['courseTitle'] ?? '';
+                        break;
+                    }
+                }
+                unset($stu);
+                save_all_students($students);
             }
             $found = true;
             break;

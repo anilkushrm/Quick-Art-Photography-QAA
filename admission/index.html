@@ -15,16 +15,40 @@
 
   <!-- Preconnect & Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../design-system.css">
   <link rel="stylesheet" href="../header.css">
   <link rel="stylesheet" href="admission.css?v=20260927_01">
   <script defer src="../header.js?v=3.8"></script>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H6DKT8Y659"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-H6DKT8Y659');
+  </script>
+  <script id="qaa-gtm">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WNW4XH72');</script>
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '28399880462937454');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" alt="" aria-hidden="true" src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1" /></noscript>
+  <script defer src="/meta-events.js"></script>
 </head>
 <body class="adm-body">
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WNW4XH72" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- Universal Header -->
   <div id="site-header-container"></div>
@@ -110,7 +134,7 @@
                     <span>📷 Upload Passport Size Photo *</span>
                     <input type="file" id="adm-photo" name="photo_file" accept="image/png, image/jpeg, image/webp" required>
                   </label>
-                  <span class="adm-field-hint">JPG, PNG or WEBP (Max 5MB). Professional formal picture recommended.</span>
+                  <span class="adm-field-hint">JPG, PNG or WEBP (Max 500 KB). Professional formal picture recommended.</span>
                 </div>
               </div>
 
@@ -135,7 +159,7 @@
                   <input type="email" id="adm-email" name="email" placeholder="student@gmail.com" required>
                 </div>
 
-                <div class="adm-row-split">
+                <div class="adm-row-3">
                   <div class="adm-field">
                     <label for="adm-dob">Date of Birth <span class="adm-req">*</span></label>
                     <input type="date" id="adm-dob" name="dob" required>
@@ -146,6 +170,19 @@
                       <option value="Male" selected>Male</option>
                       <option value="Female">Female</option>
                       <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div class="adm-field">
+                    <label for="adm-bloodgroup">Blood Group <span class="adm-req">*</span></label>
+                    <select id="adm-bloodgroup" name="bloodGroup" required>
+                      <option value="B+" selected>B+</option>
+                      <option value="O+">O+</option>
+                      <option value="A+">A+</option>
+                      <option value="AB+">AB+</option>
+                      <option value="B-">B-</option>
+                      <option value="O-">O-</option>
+                      <option value="A-">A-</option>
+                      <option value="AB-">AB-</option>
                     </select>
                   </div>
                 </div>
@@ -276,12 +313,12 @@
 
               <div class="adm-row-2">
                 <div class="adm-field">
-                  <label for="adm-course">Select Offline On-Campus Program <span class="adm-req">*</span></label>
+                  <label for="adm-course">Select Course <span class="adm-req">*</span></label>
                   <select id="adm-course" name="courseTitle">
-                    <option value="14-Week Master Class (Offline Lab)" selected>14-Week Master Class (Video Editing + Color Grading + Album + AI)</option>
-                    <option value="Cinematic Video Editing &amp; DaVinci Resolve Lab">Cinematic Video Editing &amp; DaVinci Resolve Lab</option>
-                    <option value="Karizma &amp; Canvera Wedding Album Designing">Karizma &amp; Canvera Wedding Album Designing</option>
-                    <option value="Complete Studio Filmmaking &amp; Marketing Lab">Complete Studio Filmmaking &amp; Marketing Lab</option>
+                    <option value="Wedding Film-making Course" selected>Wedding Film-making Course</option>
+                    <option value="Advance Video Editing Course">Advance Video Editing Course</option>
+                    <option value="Album Design Course">Album Design Course</option>
+                    <option value="Complate Studio Filmmaking & Marketing Course">Complate Studio Filmmaking & Marketing Course</option>
                   </select>
                 </div>
 
@@ -364,7 +401,7 @@
           <div class="adm-id-card">
             <div class="adm-id-header">
               <div class="adm-id-logo-row">
-                <img src="../home-assets/ec55a6be3747a9.webp" alt="QAA" width="36" height="36" class="adm-id-logo">
+                <img src="../assets/quick-art-logo.png" alt="Quick Art Academy Logo" width="42" height="42" class="adm-id-logo">
                 <div>
                   <div class="adm-id-academy-name">QUICK ART PHOTOGRAPHY ACADEMY</div>
                   <div class="adm-id-sub">OFFICIAL STUDENT IDENTITY BADGE</div>
@@ -387,12 +424,12 @@
 
             <div class="adm-id-footer">
               <div>
-                <span class="adm-id-lbl">APPLICATION ID</span>
+                <span class="adm-id-lbl">STUDENT ID / ENROLL NO.</span>
                 <strong id="id-badge-code">QAA-OFF-2026-PREVIEW</strong>
               </div>
               <div>
-                <span class="adm-id-lbl">CAMPUS LAB</span>
-                <strong>4K Suite Siwan</strong>
+                <span class="adm-id-lbl">BLOOD GROUP</span>
+                <strong id="id-badge-blood" style="color:#f87171;">B+</strong>
               </div>
             </div>
           </div>
@@ -443,45 +480,219 @@
     </div>
   </section>
 
-  <!-- Success Modal -->
+  <!-- Success Modal: Official Issued Student ID Card -->
   <div id="adm-success-modal" class="adm-modal" style="display:none;" role="dialog" aria-modal="true">
-    <div class="adm-modal-backdrop"></div>
-    <div class="adm-modal-content">
-      <div class="adm-modal-icon">🎉</div>
-      <h3>Admission Application Submitted!</h3>
-      <p class="adm-modal-sub">Aapka offline on-campus admission successfully register ho gaya hai.</p>
+    <div class="adm-modal-backdrop" onclick="closeAdmissionModal()"></div>
+    <div class="adm-modal-content adm-modal-id-container">
+      <div class="adm-modal-top-tag">
+        <span class="adm-live-dot"></span>
+        <span>OFFICIALLY ISSUED • VERIFIED ADMISSION 2026</span>
+      </div>
+      <h3 class="adm-modal-title">Official Student ID Card Issued!</h3>
+      <p class="adm-modal-sub">Aapka admission register ho gaya hai. Niche aapka verifiable QR Scanner ID Card issue kar diya gaya hai:</p>
       
-      <div class="adm-modal-slip">
-        <div class="adm-slip-row">
-          <span>Application ID:</span>
-          <strong id="modal-app-id">QAA-OFF-2026-XXXX</strong>
+      <!-- The Printable/Downloadable ID Card Component (Standard CR80 Vertical PVC Badge - Front & Back) -->
+      <div class="adm-issued-card-wrapper">
+        
+        <!-- ==================== FRONT SIDE ==================== -->
+        <div class="adm-card-unit">
+          <span class="adm-card-side-label">🔹 Front Side (मुख पृष्ठ)</span>
+          
+          <div id="issued-id-card-front" class="adm-issued-id-card">
+            <!-- Glossy PVC Plastic Sheen Reflection -->
+            <div class="adm-card-sheen" aria-hidden="true"></div>
+
+            <!-- Authentic Physical Badge Lanyard Hole Cutout -->
+            <div class="adm-card-lanyard-slot" aria-hidden="true"></div>
+
+            <!-- Security Watermark Background -->
+            <div class="adm-card-security-watermark" aria-hidden="true">
+              <img src="../assets/quick-art-logo.png" alt="QAA Watermark">
+            </div>
+
+            <!-- Institutional Header (Clean Logo - No Box!) -->
+            <div class="adm-card-header-bar">
+              <img src="../assets/quick-art-logo.png" alt="Quick Art Photography Academy Logo" width="48" height="48" class="adm-card-clean-logo">
+              <div>
+                <div class="adm-card-inst-title">QUICK ART PHOTOGRAPHY ACADEMY</div>
+                <div class="adm-card-inst-sub">OFFICIAL STUDENT IDENTITY BADGE</div>
+                <div class="adm-card-inst-iso">Govt. Regd. • ISO 9001:2015 Certified Film Institute</div>
+              </div>
+            </div>
+
+            <!-- Student Photo Frame with Institutional Green Ribbon -->
+            <div class="adm-card-photo-wrapper">
+              <img id="issued-id-photo" src="../assets/anil-sharma.webp" alt="Student Photo">
+              <div class="adm-card-photo-ribbon">STUDENT</div>
+            </div>
+
+            <!-- Student Name & Course -->
+            <h3 id="modal-student-name" class="adm-card-student-name">Rahul Kumar Sharma</h3>
+            <div id="modal-student-course" class="adm-card-course-pill">Wedding Film-making Course</div>
+
+            <!-- Structured Details Grid (NO FEES DISPLAYED) -->
+            <div class="adm-card-table-grid">
+              <div class="adm-card-table-row">
+                <span>STUDENT ID / ENROLL NO.</span>
+                <strong id="modal-app-id" style="color:#38bdf8;">QAA-OFF-2026-XXXX</strong>
+              </div>
+              <div class="adm-card-table-row">
+                <span>MOBILE NO</span>
+                <strong id="modal-student-phone">+91 9939800780</strong>
+              </div>
+              <div class="adm-card-table-row">
+                <span>STUDIO NAME</span>
+                <strong id="modal-student-studio">Studio Name</strong>
+              </div>
+              <div class="adm-card-table-row">
+                <span>LOCATION</span>
+                <strong id="modal-student-city">Siwan, Bihar</strong>
+              </div>
+              <div class="adm-card-table-row">
+                <span>BLOOD GROUP</span>
+                <strong id="modal-student-blood" style="color:#f87171;">B+</strong>
+              </div>
+              <div class="adm-card-table-row">
+                <span>ACADEMIC SESSION</span>
+                <strong style="color:#fbbf24;">2026 – 2027</strong>
+              </div>
+            </div>
+
+            <!-- Bottom Row: High-Contrast QR Code, Gold Hologram, Signature -->
+            <div class="adm-card-footer-strip">
+              <div class="adm-card-qr-block">
+                <img id="issued-id-qr" src="" alt="Scan to Verify Student ID" class="adm-card-qr-img" crossorigin="anonymous">
+                <div>
+                  <div class="adm-card-qr-badge">📷 SCAN TO VERIFY</div>
+                  <div class="adm-card-qr-hint">Official Online Registry</div>
+                </div>
+              </div>
+
+              <!-- Genuine Gold Multi-Color Foil Hologram Security Seal -->
+              <div class="adm-card-hologram" title="Original Hologram Security Seal">
+                <div class="adm-card-hologram-inner">
+                  <span>★ QAA ★</span>
+                  <span>GENUINE</span>
+                  <span>SECURITY</span>
+                </div>
+              </div>
+
+              <!-- Lead Mentor & Authorized Signatory -->
+              <div class="adm-card-signatory">
+                <div class="adm-card-sign-cursive">Anil Sharma</div>
+                <div class="adm-card-sign-lead">Founder &amp; Director</div>
+                <div class="adm-card-sign-session">Quick Art Photography Academy</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="adm-slip-row">
-          <span>Student Name:</span>
-          <strong id="modal-student-name">Name</strong>
+
+        <!-- ==================== BACK SIDE ==================== -->
+        <div class="adm-card-unit">
+          <span class="adm-card-side-label">🔸 Back Side (पृष्ठ भाग)</span>
+          
+          <div id="issued-id-card-back" class="adm-issued-id-card adm-card-back-side">
+            <!-- Glossy PVC Plastic Sheen Reflection -->
+            <div class="adm-card-sheen" aria-hidden="true"></div>
+
+            <!-- Authentic Physical Badge Lanyard Hole Cutout -->
+            <div class="adm-card-lanyard-slot" aria-hidden="true"></div>
+
+            <!-- Security Watermark Background -->
+            <div class="adm-card-security-watermark" aria-hidden="true">
+              <img src="../assets/quick-art-logo.png" alt="QAA Watermark">
+            </div>
+
+            <!-- Back Header -->
+            <div class="adm-card-back-header">
+              <div class="adm-card-back-title-wrap">
+                <img src="../assets/quick-art-logo.png" alt="Logo" class="adm-card-back-logo">
+                <div class="adm-card-back-head-text">
+                  <strong>QUICK ART PHOTOGRAPHY ACADEMY</strong>
+                  <span>Student Guidelines &amp; Institutional Terms</span>
+                </div>
+              </div>
+              <span class="adm-card-active-pill">ACTIVE</span>
+            </div>
+
+            <!-- Terms of Identification -->
+            <div class="adm-card-rules-box">
+              <div class="adm-card-rules-heading">
+                <span>📜</span>
+                <span>TERMS OF IDENTIFICATION &amp; USAGE</span>
+              </div>
+              <ol class="adm-card-rules-list">
+                <li>This identity badge is non-transferable and remains official property of Quick Art Photography Academy.</li>
+                <li>Student must visibly wear this badge at all times inside campus labs, editing suites &amp; outdoor shoot sessions.</li>
+                <li>Access to 4K editing workstations, cinema cameras &amp; studio gear is granted solely upon badge presentation.</li>
+                <li>Loss or damage must be reported immediately to academy admin desk. Duplicate fee applies.</li>
+                <li>Misuse or unauthorized duplication shall lead to disciplinary action and cancellation of admission.</li>
+              </ol>
+            </div>
+
+            <!-- Emergency Helpline Row -->
+            <div class="adm-card-emergency-row">
+              <div>
+                <span>EMERGENCY HELPLINE</span>
+                <strong>+91 9939800780</strong>
+              </div>
+              <div>
+                <span>BLOOD GROUP</span>
+                <strong id="modal-back-blood" style="color:#fbbf24;">B+ (Positive)</strong>
+              </div>
+            </div>
+
+            <!-- Campus Address & Contacts -->
+            <div class="adm-card-campus-box">
+              <div class="adm-card-campus-heading">
+                <span>🏛️</span>
+                <span>CAMPUS LOCATION &amp; CONTACT</span>
+              </div>
+              <div class="adm-card-campus-detail">
+                <strong>Campus:</strong> Quick Art Photography Academy, Ayodhya Puri, Near Lalit Bus Stand, Siwan, Bihar - 841226
+              </div>
+              <div class="adm-card-campus-detail">
+                <strong>Official Web:</strong> quickartphotography.in &bull; <strong>Email:</strong> support@quickartphotography.in
+              </div>
+            </div>
+
+            <!-- Barcode & Return Instructions -->
+            <div class="adm-card-barcode-area">
+              <div class="adm-card-barcode-graphic" id="modal-back-barcode">*QAA-OFF-2026-XXXX*</div>
+              <div id="modal-back-id-text" style="font-size: 8.5px; letter-spacing: 2px; color: #cbd5e1; font-weight: 700; margin-bottom: 4px;">QAA-OFF-2026-XXXX</div>
+              <p class="adm-card-return-notice">
+                If found, please return to Quick Art Photography Academy, Ayodhya Puri, Near Lalit Bus Stand, Siwan, Bihar - 841226.
+              </p>
+            </div>
+          </div>
         </div>
-        <div class="adm-slip-row">
-          <span>Registration Fee:</span>
-          <strong id="modal-fee-status">₹500 (Paid / Cash at Campus)</strong>
-        </div>
-        <div class="adm-slip-row">
-          <span>Campus Lab:</span>
-          <strong>Quick Art Academy, Siwan (Bihar)</strong>
-        </div>
+
       </div>
 
-      <div class="adm-modal-actions">
-        <a href="../portal/" class="adm-modal-btn adm-modal-portal">
-          🚀 Go to Student Portal (My Course) →
-        </a>
-        <button type="button" class="adm-modal-btn adm-modal-close" onclick="closeAdmissionModal()">
-          Close
+      <!-- Action Buttons -->
+      <div class="adm-id-actions" style="margin-top: 18px;">
+        <button type="button" id="btn-dl-front" class="adm-btn-download" onclick="downloadIssuedIdCard('front')">
+          <span>📥 Download Front Side (PNG)</span>
         </button>
+        <button type="button" id="btn-dl-back" class="adm-btn-download" onclick="downloadIssuedIdCard('back')">
+          <span>📥 Download Back Side (PNG)</span>
+        </button>
+        <button type="button" class="adm-btn-print" onclick="printIssuedIdCard()">
+          <span>🖨️ Print ID Card (Front &amp; Back)</span>
+        </button>
+        <a href="../portal/" class="adm-btn-portal">
+          <span>🚀 Go to Student Portal →</span>
+        </a>
+      </div>
+      
+      <div style="margin-top: 14px;">
+        <button type="button" class="adm-btn-dismiss" onclick="closeAdmissionModal()">Close &amp; Go to Portal</button>
       </div>
     </div>
   </div>
 
   <!-- Scripts -->
-  <script src="admission.js?v=20260927_01"></script>
+  <script src="html2canvas.min.js"></script>
+  <script src="admission.js?v=20260928_01"></script>
 </body>
 </html>

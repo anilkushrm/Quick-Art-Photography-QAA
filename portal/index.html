@@ -602,7 +602,7 @@ fbq('track', 'PageView');
         </div>
 
         <!-- Offline On-Campus Studio Hub (Daily Tasks, Recordings & Certification Exam) -->
-        <div id="offline-studio-hub" class="offline-hub-container">
+        <div id="offline-studio-hub" class="offline-hub-container" style="display:none;">
           <div class="offline-hub-header">
             <div class="offline-hub-top-row">
               <span class="offline-hub-pill">🏛️ SIWAN ON-CAMPUS STUDIO LAB</span>
@@ -697,6 +697,9 @@ fbq('track', 'PageView');
             <span class="student-perk-chip">✓ WhatsApp Mentor Support</span>
           </div>
         </div>
+
+        <!-- Offline Admission Pending Fee Banner Slot -->
+        <div id="offline-pending-banner-slot" style="display:none; margin-bottom: 24px;"></div>
 
         <!-- Grid of Courses -->
         <div id="courses-grid" class="courses-grid">
@@ -1166,7 +1169,7 @@ fbq('track', 'PageView');
                 <span>CERTIFICATE OF COMPLETION</span>
                 <span class="cert-badge-star">★</span>
               </div>
-              <div class="cert-reg-code">Registration No: QAA/ISO-2026/0842 &bull; Authenticity Verified</div>
+              <div class="cert-reg-code" id="cert-reg-code">Enrollment No: <strong id="cert-enroll-code" style="color:#d8a153;font-family:monospace;letter-spacing:0.5px;">QAA-OFF-2026-8842</strong> &bull; ISO-9001 Authenticity Verified</div>
             </div>
 
             <!-- Recipient Block -->

@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="../design-system.css">
   <link rel="stylesheet" href="../reference-header.css?v=3.8">
   <link rel="stylesheet" href="../on-campus-enhancements.css?v=hero-home-6">
-  <link rel="stylesheet" href="alumni.css?v=20260928_02">
+  <link rel="stylesheet" href="alumni.css?v=20260928_04">
   <script defer src="../header.js?v=3.8"></script>
 </head>
 <body class="alm-body">
@@ -259,196 +259,304 @@
           </div>
         </div>
 
-        <!-- Right Column: Vertical Infinite Scrolling Alumni Cards Marquee -->
+        <!-- Right Column: Vertical Infinite Scrolling Alumni Cards (WsCubeTech Match) -->
         <div class="alm-hero-right" aria-label="Alumni showcase highlights">
-          <div class="alm-marquee-wrapper">
+          <div class="alm-marquee-wrapper alm-marquee-3cols">
             
             <!-- Column 1: Scrolls Up -->
             <div class="alm-marquee-col alm-marquee-up">
-              <div class="alm-marquee-track">
+              <div class="alm-marquee-track" id="alm-hero-track-1">
                 
                 <!-- Card 1 -->
-                <div class="alm-mini-card">
-                  <div class="alm-mini-avatar">
-                    <img src="../assets/alumni/alumni_rahul_kumar.jpg" alt="Rahul Kumar" width="56" height="56" loading="lazy">
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Rahul Kumar</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_rahul_kumar.jpg" alt="Rahul Kumar" width="116" height="116" loading="lazy">
                   </div>
-                  <div class="alm-mini-info">
-                    <h4>Rahul Kumar</h4>
-                    <p class="alm-mini-studio">Sharma Digital Studio</p>
-                    <div class="alm-mini-meta">
-                      <span class="alm-mini-loc">📍 Siwan</span>
-                      <span class="alm-mini-role">Lead Colorist</span>
-                    </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Sharma Digital Studio</span>
+                    <span class="alm-hero-card-loc">📍 Siwan</span>
                   </div>
                 </div>
 
                 <!-- Card 2 -->
-                <div class="alm-mini-card">
-                  <div class="alm-mini-avatar">
-                    <img src="../assets/alumni/alumni_vikas_singh.jpg" alt="Vikas Singh" width="56" height="56" loading="lazy">
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Amit Tiwari</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_amit_tiwari.jpg" alt="Amit Tiwari" width="116" height="116" loading="lazy">
                   </div>
-                  <div class="alm-mini-info">
-                    <h4>Vikas Singh</h4>
-                    <p class="alm-mini-studio">Maa Sharda Cine Production</p>
-                    <div class="alm-mini-meta">
-                      <span class="alm-mini-loc">📍 Gopalganj</span>
-                      <span class="alm-mini-role">Cinematographer</span>
-                    </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Tiwari Digital Media</span>
+                    <span class="alm-hero-card-loc">📍 Chapra</span>
                   </div>
                 </div>
 
                 <!-- Card 3 -->
-                <div class="alm-mini-card">
-                  <div class="alm-mini-avatar">
-                    <img src="../assets/alumni/alumni_pooja_kumari.jpg" alt="Pooja Kumari" width="56" height="56" loading="lazy">
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Suraj Sharma</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_suraj_raxaul.jpg" alt="Suraj Sharma" width="116" height="116" loading="lazy">
                   </div>
-                  <div class="alm-mini-info">
-                    <h4>Pooja Kumari</h4>
-                    <p class="alm-mini-studio">Creative Pixel Album Studio</p>
-                    <div class="alm-mini-meta">
-                      <span class="alm-mini-loc">📍 Patna</span>
-                      <span class="alm-mini-role">Album Designer</span>
-                    </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Suraj Cine World</span>
+                    <span class="alm-hero-card-loc">📍 Raxaul</span>
                   </div>
                 </div>
 
                 <!-- Card 4 -->
-                <div class="alm-mini-card">
-                  <div class="alm-mini-avatar">
-                    <img src="../assets/alumni/alumni_amit_tiwari.jpg" alt="Amit Tiwari" width="56" height="56" loading="lazy">
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Manish Pandey</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_manish_pandey.jpg" alt="Manish Pandey" width="116" height="116" loading="lazy">
                   </div>
-                  <div class="alm-mini-info">
-                    <h4>Amit Tiwari</h4>
-                    <p class="alm-mini-studio">Tiwari Digital Media</p>
-                    <div class="alm-mini-meta">
-                      <span class="alm-mini-loc">📍 Chapra</span>
-                      <span class="alm-mini-role">Video Editor</span>
-                    </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Shree Wedding Film</span>
+                    <span class="alm-hero-card-loc">📍 Muzaffarpur</span>
                   </div>
                 </div>
 
                 <!-- Duplicate for seamless infinite loop -->
-                <div class="alm-mini-card">
-                  <div class="alm-mini-avatar">
-                    <img src="../assets/alumni/alumni_rahul_kumar.jpg" alt="Rahul Kumar" width="56" height="56" loading="lazy">
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Rahul Kumar</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_rahul_kumar.jpg" alt="Rahul Kumar" width="116" height="116" loading="lazy">
                   </div>
-                  <div class="alm-mini-info">
-                    <h4>Rahul Kumar</h4>
-                    <p class="alm-mini-studio">Sharma Digital Studio</p>
-                    <div class="alm-mini-meta">
-                      <span class="alm-mini-loc">📍 Siwan</span>
-                      <span class="alm-mini-role">Lead Colorist</span>
-                    </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Sharma Digital Studio</span>
+                    <span class="alm-hero-card-loc">📍 Siwan</span>
                   </div>
                 </div>
 
-                <div class="alm-mini-card">
-                  <div class="alm-mini-avatar">
-                    <img src="../assets/alumni/alumni_vikas_singh.jpg" alt="Vikas Singh" width="56" height="56" loading="lazy">
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Amit Tiwari</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_amit_tiwari.jpg" alt="Amit Tiwari" width="116" height="116" loading="lazy">
                   </div>
-                  <div class="alm-mini-info">
-                    <h4>Vikas Singh</h4>
-                    <p class="alm-mini-studio">Maa Sharda Cine Production</p>
-                    <div class="alm-mini-meta">
-                      <span class="alm-mini-loc">📍 Gopalganj</span>
-                      <span class="alm-mini-role">Cinematographer</span>
-                    </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Tiwari Digital Media</span>
+                    <span class="alm-hero-card-loc">📍 Chapra</span>
+                  </div>
+                </div>
+
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Suraj Sharma</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_suraj_raxaul.jpg" alt="Suraj Sharma" width="116" height="116" loading="lazy">
+                  </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Suraj Cine World</span>
+                    <span class="alm-hero-card-loc">📍 Raxaul</span>
+                  </div>
+                </div>
+
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Manish Pandey</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_manish_pandey.jpg" alt="Manish Pandey" width="116" height="116" loading="lazy">
+                  </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Shree Wedding Film</span>
+                    <span class="alm-hero-card-loc">📍 Muzaffarpur</span>
                   </div>
                 </div>
 
               </div>
             </div>
 
-            <!-- Column 2: Scrolls Down -->
+            <!-- Column 2: Scrolls Down (Accented Center Column like WsCubeTech) -->
             <div class="alm-marquee-col alm-marquee-down">
-              <div class="alm-marquee-track">
+              <div class="alm-marquee-track" id="alm-hero-track-2">
                 
-                <!-- Card A -->
-                <div class="alm-mini-card">
-                  <div class="alm-mini-avatar">
-                    <img src="../assets/alumni/alumni_manish_pandey.jpg" alt="Manish Pandey" width="56" height="56" loading="lazy">
+                <!-- Card B1 -->
+                <div class="alm-hero-card alm-hero-card-accent">
+                  <span class="alm-hero-card-name">Vikas Singh</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_vikas_singh.jpg" alt="Vikas Singh" width="116" height="116" loading="lazy">
                   </div>
-                  <div class="alm-mini-info">
-                    <h4>Manish Pandey</h4>
-                    <p class="alm-mini-studio">Shree Wedding Photography</p>
-                    <div class="alm-mini-meta">
-                      <span class="alm-mini-loc">📍 Muzaffarpur</span>
-                      <span class="alm-mini-role">Studio Owner</span>
-                    </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Maa Sharda Cine</span>
+                    <span class="alm-hero-card-loc">📍 Gopalganj</span>
                   </div>
                 </div>
 
-                <!-- Card B -->
-                <div class="alm-mini-card">
-                  <div class="alm-mini-avatar">
-                    <img src="../assets/alumni/alumni_rohit_verma.jpg" alt="Rohit Verma" width="56" height="56" loading="lazy">
+                <!-- Card B2 -->
+                <div class="alm-hero-card alm-hero-card-accent">
+                  <span class="alm-hero-card-name">Pooja Kumari</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_pooja_kumari.jpg" alt="Pooja Kumari" width="116" height="116" loading="lazy">
                   </div>
-                  <div class="alm-mini-info">
-                    <h4>Rohit Verma</h4>
-                    <p class="alm-mini-studio">CineCraft Digital</p>
-                    <div class="alm-mini-meta">
-                      <span class="alm-mini-loc">📍 Ballia (UP)</span>
-                      <span class="alm-mini-role">Senior Editor</span>
-                    </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Creative Pixel Studio</span>
+                    <span class="alm-hero-card-loc">📍 Patna</span>
                   </div>
                 </div>
 
-                <!-- Card C -->
-                <div class="alm-mini-card">
-                  <div class="alm-mini-avatar">
-                    <img src="../assets/alumni/alumni_suraj_raxaul.jpg" alt="Suraj Sharma" width="56" height="56" loading="lazy">
+                <!-- Card B3 -->
+                <div class="alm-hero-card alm-hero-card-accent">
+                  <span class="alm-hero-card-name">Ravi Raj</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_ravi_gaya.jpg" alt="Ravi Raj" width="116" height="116" loading="lazy">
                   </div>
-                  <div class="alm-mini-info">
-                    <h4>Suraj Sharma</h4>
-                    <p class="alm-mini-studio">Suraj Digital Cine</p>
-                    <div class="alm-mini-meta">
-                      <span class="alm-mini-loc">📍 Raxaul</span>
-                      <span class="alm-mini-role">Filmmaker</span>
-                    </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Magadh Motion Pictures</span>
+                    <span class="alm-hero-card-loc">📍 Gaya</span>
                   </div>
                 </div>
 
-                <!-- Card D -->
-                <div class="alm-mini-card">
-                  <div class="alm-mini-avatar">
-                    <img src="../assets/alumni/alumni_ravi_gaya.jpg" alt="Ravi Raj" width="56" height="56" loading="lazy">
+                <!-- Card B4 -->
+                <div class="alm-hero-card alm-hero-card-accent">
+                  <span class="alm-hero-card-name">Rohit Verma</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_rohit_verma.jpg" alt="Rohit Verma" width="116" height="116" loading="lazy">
                   </div>
-                  <div class="alm-mini-info">
-                    <h4>Ravi Raj</h4>
-                    <p class="alm-mini-studio">Magadh Motion Pictures</p>
-                    <div class="alm-mini-meta">
-                      <span class="alm-mini-loc">📍 Gaya</span>
-                      <span class="alm-mini-role">DaVinci Colorist</span>
-                    </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">CineCraft Digital</span>
+                    <span class="alm-hero-card-loc">📍 Ballia (UP)</span>
                   </div>
                 </div>
 
                 <!-- Duplicate for seamless loop -->
-                <div class="alm-mini-card">
-                  <div class="alm-mini-avatar">
-                    <img src="../assets/alumni/alumni_manish_pandey.jpg" alt="Manish Pandey" width="56" height="56" loading="lazy">
+                <div class="alm-hero-card alm-hero-card-accent">
+                  <span class="alm-hero-card-name">Vikas Singh</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_vikas_singh.jpg" alt="Vikas Singh" width="116" height="116" loading="lazy">
                   </div>
-                  <div class="alm-mini-info">
-                    <h4>Manish Pandey</h4>
-                    <p class="alm-mini-studio">Shree Wedding Photography</p>
-                    <div class="alm-mini-meta">
-                      <span class="alm-mini-loc">📍 Muzaffarpur</span>
-                      <span class="alm-mini-role">Studio Owner</span>
-                    </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Maa Sharda Cine</span>
+                    <span class="alm-hero-card-loc">📍 Gopalganj</span>
                   </div>
                 </div>
 
-                <div class="alm-mini-card">
-                  <div class="alm-mini-avatar">
-                    <img src="../assets/alumni/alumni_rohit_verma.jpg" alt="Rohit Verma" width="56" height="56" loading="lazy">
+                <div class="alm-hero-card alm-hero-card-accent">
+                  <span class="alm-hero-card-name">Pooja Kumari</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_pooja_kumari.jpg" alt="Pooja Kumari" width="116" height="116" loading="lazy">
                   </div>
-                  <div class="alm-mini-info">
-                    <h4>Rohit Verma</h4>
-                    <p class="alm-mini-studio">CineCraft Digital</p>
-                    <div class="alm-mini-meta">
-                      <span class="alm-mini-loc">📍 Ballia (UP)</span>
-                      <span class="alm-mini-role">Senior Editor</span>
-                    </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Creative Pixel Studio</span>
+                    <span class="alm-hero-card-loc">📍 Patna</span>
+                  </div>
+                </div>
+
+                <div class="alm-hero-card alm-hero-card-accent">
+                  <span class="alm-hero-card-name">Ravi Raj</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_ravi_gaya.jpg" alt="Ravi Raj" width="116" height="116" loading="lazy">
+                  </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Magadh Motion Pictures</span>
+                    <span class="alm-hero-card-loc">📍 Gaya</span>
+                  </div>
+                </div>
+
+                <div class="alm-hero-card alm-hero-card-accent">
+                  <span class="alm-hero-card-name">Rohit Verma</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../assets/alumni/alumni_rohit_verma.jpg" alt="Rohit Verma" width="116" height="116" loading="lazy">
+                  </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">CineCraft Digital</span>
+                    <span class="alm-hero-card-loc">📍 Ballia (UP)</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Column 3: Scrolls Up -->
+            <div class="alm-marquee-col alm-marquee-up alm-col-3">
+              <div class="alm-marquee-track" id="alm-hero-track-3">
+                
+                <!-- Card C1 -->
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Raju Gupta</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../home-assets/6a62e4eb3643ad.jpeg" alt="Raju Gupta" width="116" height="116" loading="lazy">
+                  </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Gupta Photo Studio</span>
+                    <span class="alm-hero-card-loc">📍 Siwan</span>
+                  </div>
+                </div>
+
+                <!-- Card C2 -->
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Ashish</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../home-assets/42bc8405f4fae8.jpg" alt="Ashish" width="116" height="116" loading="lazy">
+                  </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Saran Video Works</span>
+                    <span class="alm-hero-card-loc">📍 Chapra</span>
+                  </div>
+                </div>
+
+                <!-- Card C3 -->
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Vikash</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../home-assets/3f3523fbb97fb5.jpg" alt="Vikash" width="116" height="116" loading="lazy">
+                  </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Baliya 4K Production</span>
+                    <span class="alm-hero-card-loc">📍 Ballia (UP)</span>
+                  </div>
+                </div>
+
+                <!-- Card C4 -->
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Suraj</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../home-assets/6afdafd6fcee09.jpg" alt="Suraj" width="116" height="116" loading="lazy">
+                  </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Border Cine Films</span>
+                    <span class="alm-hero-card-loc">📍 Raxaul</span>
+                  </div>
+                </div>
+
+                <!-- Duplicate for seamless loop -->
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Raju Gupta</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../home-assets/6a62e4eb3643ad.jpeg" alt="Raju Gupta" width="116" height="116" loading="lazy">
+                  </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Gupta Photo Studio</span>
+                    <span class="alm-hero-card-loc">📍 Siwan</span>
+                  </div>
+                </div>
+
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Ashish</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../home-assets/42bc8405f4fae8.jpg" alt="Ashish" width="116" height="116" loading="lazy">
+                  </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Saran Video Works</span>
+                    <span class="alm-hero-card-loc">📍 Chapra</span>
+                  </div>
+                </div>
+
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Vikash</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../home-assets/3f3523fbb97fb5.jpg" alt="Vikash" width="116" height="116" loading="lazy">
+                  </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Baliya 4K Production</span>
+                    <span class="alm-hero-card-loc">📍 Ballia (UP)</span>
+                  </div>
+                </div>
+
+                <div class="alm-hero-card">
+                  <span class="alm-hero-card-name">Suraj</span>
+                  <div class="alm-hero-card-img-wrap">
+                    <img src="../home-assets/6afdafd6fcee09.jpg" alt="Suraj" width="116" height="116" loading="lazy">
+                  </div>
+                  <div class="alm-hero-card-footer">
+                    <span class="alm-hero-card-studio">Border Cine Films</span>
+                    <span class="alm-hero-card-loc">📍 Raxaul</span>
                   </div>
                 </div>
 
@@ -930,6 +1038,6 @@
 
   <!-- Scripts -->
   <script defer src="../site.js?v=20260926_05"></script>
-  <script src="alumni.js?v=20260928_02"></script>
+  <script src="alumni.js?v=20260928_03"></script>
 </body>
 </html>

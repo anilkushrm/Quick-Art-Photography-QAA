@@ -5467,13 +5467,15 @@ main>section.qa-master-hero .qa-countdown-grid strong {
   }
 }
 
-/* One-card form treatment: keep the outer panel, remove the nested white box. */
+/* One-card form treatment: sleek studio console card */
 main>section.qa-master-hero .qa-master-hero-grid>div:last-child>div {
   background: #ffffff !important;
-  border-radius: 20px !important;
-  padding: 20px 22px !important;
-  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(226, 232, 240, 0.9) !important;
-  border: 1px solid rgba(217, 119, 6, 0.15) !important;
+  border-radius: 22px !important;
+  padding: 0 !important;
+  box-shadow: 0 25px 65px -12px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(255, 255, 255, 0.2), 0 10px 30px -8px rgba(217, 119, 6, 0.2) !important;
+  border: 1px solid rgba(245, 158, 11, 0.28) !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
 main>section.qa-master-hero .qa-master-hero-grid>div:last-child form.qa-enquiry {

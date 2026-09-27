@@ -1,4 +1,5 @@
 // admission/admission.js — Offline Admission Form Script
+// 28-Sep-2026: Facebook + Google conversion tracking (qaTrackAdmission) add kiya + inputPhone fix
 
 document.addEventListener('DOMContentLoaded', function () {
   var form = document.getElementById('offline-admission-form');
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var inputAadhaar = document.getElementById('adm-aadhaar');
   var inputCert = document.getElementById('adm-cert');
   var inputBlood = document.getElementById('adm-bloodgroup');
+  var inputPhone = document.getElementById('adm-phone');
 
   if (inputName && badgeName) {
     inputName.addEventListener('input', function () {
@@ -212,7 +214,64 @@ document.addEventListener('DOMContentLoaded', function () {
     statusBox.style.display = 'block';
   }
 
+  // ===== Conversion tracking (Facebook + Google) =====
+  // Admission successful hone par ek virtual "thank-you" page view bhejta hai:
+  // - Facebook custom conversion "Website Lead - Thank You Page" (URL contains "thank-you") isse count karega
+  // - GA4 generate_lead (page_location contains "/thank-you/") -> Google Ads "Website Lead - Thank You Page" count karega
+  // Student ka flow bilkul same rehta hai (ID card popup + portal). Ek admission sirf ek baar count hota hai.
+  function qaTrackAdmission(data, isPaid) {
+    try {
+      var admId = (data && data.admissionId) || ('adm_' + Date.now());
+      try {
+        var key = 'qa_adm_tracked_' + admId;
+        if (localStorage.getItem(key)) return;
+        localStorage.setItem(key, '1');
+      } catch (e) { }
+
+      var origin = window.location.origin;
+      var virtualPath = '/admission/thank-you/';
+      var virtualUrl = origin + virtualPath + '?type=offline-admission' + (isPaid ? '&fee=paid' : '&fee=cash');
+
+      // Page reload kiye bina URL thodi der ke liye virtual thank-you URL par
+      var originalUrl = window.location.href;
+      try { history.replaceState(history.state, '', virtualPath + '?type=offline-admission'); } catch (e) { }
+
+      // Facebook Pixel
+      if (typeof fbq === 'function') {
+        fbq('track', 'PageView');
+        fbq('track', 'Lead', {
+          content_name: 'Offline Admission Form',
+          content_category: 'Offline',
+          currency: 'INR',
+          value: 0
+        }, { eventID: 'adm_' + admId });
+      }
+
+      // Google Analytics 4 (G-H6DKT8Y659)
+      if (typeof gtag === 'function') {
+        gtag('event', 'page_view', {
+          page_location: virtualUrl,
+          page_path: virtualPath,
+          page_title: 'Admission Thank You'
+        });
+      }
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'offline_admission_submit', admission_id: admId, fee_paid: !!isPaid });
+
+      // Address bar wapas original URL par (refresh karne par form hi khule)
+      setTimeout(function () {
+        try { history.replaceState(history.state, '', originalUrl); } catch (e) { }
+      }, 1500);
+    } catch (err) {
+      // Tracking kabhi bhi admission ko nahi rokega
+      if (window.console) console.warn('Admission tracking error', err);
+    }
+  }
+
   function showSuccessModal(data, isPaid) {
+    qaTrackAdmission(data, isPaid);
+
     var modal = document.getElementById('adm-success-modal');
     if (!modal) return;
 

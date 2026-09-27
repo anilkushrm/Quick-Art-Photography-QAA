@@ -190,47 +190,438 @@
     font-family: 'Outfit', sans-serif;
   }
 
-  /* Navigation Tabs */
-  .tabs {
+  /* ============================================================
+     EXECUTIVE VERTICAL SIDEBAR LAYOUT (SAAS CONSOLE)
+     ============================================================ */
+  .qa-admin-app {
     display: flex;
-    background: rgba(12, 19, 34, 0.96);
-    padding: 6px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    gap: 6px;
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    box-shadow: 0 10px 32px rgba(0,0,0,0.4);
-    overflow-x: auto;
-    scrollbar-width: thin;
+    min-height: 100vh;
+    background: radial-gradient(circle at 50% -10%, #15223e 0%, #080d18 55%, #050811 100%);
+    position: relative;
+    width: 100%;
   }
+
+  /* Left Fixed Vertical Sidebar */
+  .qa-sidebar {
+    width: 280px;
+    min-width: 280px;
+    max-width: 280px;
+    background: linear-gradient(180deg, #090e1c 0%, #060913 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    box-shadow: 4px 0 30px rgba(0, 0, 0, 0.6);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .qa-sidebar-brand {
+    padding: 20px 20px 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.015);
+  }
+  .qa-sidebar-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    box-shadow: 0 0 16px rgba(216, 161, 83, 0.35);
+    flex-shrink: 0;
+    object-fit: cover;
+  }
+  .qa-sidebar-brand-text {
+    line-height: 1.25;
+    overflow: hidden;
+  }
+  .qa-sidebar-title {
+    font-size: 15px;
+    font-weight: 800;
+    font-family: 'Outfit', sans-serif;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.01em;
+  }
+  .qa-sidebar-sub {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--gold);
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  /* Status Bar */
+  .qa-sidebar-status {
+    padding: 10px 18px;
+    background: rgba(16, 185, 129, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11.5px;
+  }
+  .qa-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #34d399;
+    font-weight: 600;
+  }
+  .qa-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+    animation: qaPulse 2s infinite;
+  }
+  @keyframes qaPulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+  .qa-status-version {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    background: rgba(255, 255, 255, 0.06);
+    padding: 2px 7px;
+    border-radius: 6px;
+  }
+
+  /* Navigation Links in Sidebar */
+  .qa-sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 10px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  }
+  .qa-sidebar-nav::-webkit-scrollbar {
+    width: 5px;
+  }
+  .qa-sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+  }
+
+  .qa-nav-group-title {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(148, 163, 184, 0.55);
+    padding: 16px 12px 6px 12px;
+    font-family: 'Outfit', sans-serif;
+  }
+
   .tab {
-    padding: 10px 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10.5px 14px;
     border-radius: 12px;
     border: 1px solid transparent;
     background: transparent;
-    cursor: pointer;
-    font-weight: 600;
+    color: #94a3b8;
     font-size: 13px;
-    color: var(--muted);
+    font-weight: 600;
     font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    text-align: left;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-bottom: 3px;
+    position: relative;
+    box-sizing: border-box;
     white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
   }
   .tab:hover {
     color: #fff;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.08);
+    transform: translateX(3px);
   }
   .tab.active {
-    background: linear-gradient(135deg, #fde68a 0%, #d8a153 50%, #b8843b 100%);
+    background: linear-gradient(135deg, rgba(216, 161, 83, 0.22) 0%, rgba(216, 161, 83, 0.06) 100%) !important;
+    color: #fde68a !important;
+    font-weight: 700 !important;
+    border-color: rgba(216, 161, 83, 0.35) !important;
+    border-left: 3.5px solid var(--gold) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 0 14px rgba(216, 161, 83, 0.12) !important;
+  }
+  .qa-tab-icon {
+    font-size: 15px;
+    width: 22px;
+    text-align: center;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .qa-tab-label {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .qa-live-pulse-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #ef4444;
+    box-shadow: 0 0 8px #ef4444;
+    display: inline-block;
+  }
+
+  /* Sidebar Footer */
+  .qa-sidebar-footer {
+    padding: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(5, 8, 17, 0.85);
+  }
+  .qa-sidebar-quick-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .qa-quick-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.15s;
+    font-family: 'Outfit', sans-serif;
+  }
+  .qa-quick-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+  .qa-arrow-icon { font-size: 11px; opacity: 0.6; }
+
+  .qa-admin-user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+  }
+  .qa-admin-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
     color: #000;
+    font-weight: 800;
+    font-size: 12.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .qa-admin-user-info {
+    flex: 1;
+    overflow: hidden;
+    line-height: 1.2;
+  }
+  .qa-admin-user-name {
+    font-size: 12.5px;
     font-weight: 700;
-    box-shadow: 0 4px 18px var(--gold-glow);
-    border-color: rgba(253, 230, 138, 0.4);
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .qa-admin-user-role {
+    font-size: 10px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .qa-admin-logout-btn {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: var(--red-light);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .qa-admin-logout-btn:hover {
+    background: var(--red);
+    color: #fff;
+  }
+
+  /* Main Wrapper */
+  .qa-main-wrapper {
+    margin-left: 280px;
+    flex: 1;
+    min-width: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 280px);
+  }
+
+  /* Top Sticky Bar */
+  .qa-topbar {
+    height: 64px;
+    background: rgba(10, 16, 30, 0.90);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    position: sticky;
+    top: 0;
+    z-index: 80;
+  }
+  .qa-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .qa-menu-toggle-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+  }
+  .qa-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-family: 'Outfit', sans-serif;
+  }
+  .qa-bc-root {
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .qa-bc-sep {
+    color: rgba(255, 255, 255, 0.2);
+  }
+  .qa-bc-current {
+    color: #fff;
+    font-weight: 700;
+  }
+  .qa-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Content Body */
+  .qa-content-body {
+    padding: 28px 32px 60px 32px;
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 1600px;
+  }
+  .qa-page-title-box {
+    margin-bottom: 24px;
+  }
+  .qa-page-h1 {
+    margin: 0 0 6px 0;
+    font-size: 28px;
+    font-weight: 800;
+    font-family: 'Outfit', sans-serif;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  .qa-page-sub {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+
+  /* Mobile Backdrop */
+  .qa-sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 95;
+  }
+
+  /* Responsive Rules */
+  @media (max-width: 1024px) {
+    .qa-sidebar {
+      transform: translateX(-100%);
+    }
+    .qa-sidebar.open {
+      transform: translateX(0);
+    }
+    .qa-sidebar-backdrop.show {
+      display: block;
+    }
+    .qa-main-wrapper {
+      margin-left: 0;
+      width: 100%;
+    }
+    .qa-menu-toggle-btn {
+      display: inline-flex;
+    }
+    .qa-content-body {
+      padding: 18px 16px 40px 16px;
+    }
+    .qa-topbar {
+      padding: 0 16px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .qa-topbar-right a {
+      display: none !important;
+    }
+    .qa-breadcrumb .qa-bc-root,
+    .qa-breadcrumb .qa-bc-sep {
+      display: none;
+    }
+    .qa-bc-current {
+      font-size: 14px;
+      max-width: 160px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .qa-topbar {
+      height: 56px;
+    }
   }
 
   /* Switch Toggle */
@@ -559,76 +950,186 @@ fbq('track', 'PageView');
 </div>
 
 <!-- ================ DASHBOARD ================ -->
-<div id="dashboard" class="hidden">
-  <div class="header">
-    <div class="container header-row">
-      <div class="logo">
-        <img src="home-assets/ec55a6be3747a9.webp" alt="Quick Art Photography Academy" />
-        <div class="logo-text">
-          <div class="logo-name">Quick Art Photography Academy</div>
-          <div class="logo-sub">Executive Admin Console &amp; Studio</div>
+<div id="dashboard" class="hidden qa-admin-app">
+  <!-- 1. LEFT VERTICAL SIDEBAR -->
+  <aside class="qa-sidebar" id="qaSidebar">
+    <!-- Brand / Logo Header -->
+    <div class="qa-sidebar-brand">
+      <img src="home-assets/ec55a6be3747a9.webp" alt="Quick Art Academy" class="qa-sidebar-logo" />
+      <div class="qa-sidebar-brand-text">
+        <div class="qa-sidebar-title">Quick Art Academy</div>
+        <div class="qa-sidebar-sub">Executive Console</div>
+      </div>
+    </div>
+
+    <!-- Live Server Status Badge -->
+    <div class="qa-sidebar-status">
+      <span class="qa-status-pill">
+        <span class="qa-status-dot"></span> Hostinger VPS Online
+      </span>
+      <span class="qa-status-version">v4.2</span>
+    </div>
+
+    <!-- Navigation List (Vertical Tabs) -->
+    <nav class="qa-sidebar-nav" aria-label="Admin Navigation">
+      <!-- Section: CRM & Enrollments -->
+      <div class="qa-nav-group-title">CRM &amp; Admissions</div>
+      <button type="button" class="tab active" data-tab="leads">
+        <span class="qa-tab-icon">📋</span>
+        <span class="qa-tab-label">Leads &amp; Enquiries</span>
+      </button>
+      <button type="button" class="tab" data-tab="offline-admissions" style="border-left-color:#f59e0b;">
+        <span class="qa-tab-icon">🏛️</span>
+        <span class="qa-tab-label">Offline Admissions &amp; Alumni</span>
+      </button>
+      <button type="button" class="tab" data-tab="lms-transactions">
+        <span class="qa-tab-icon">💰</span>
+        <span class="qa-tab-label">Orders &amp; Revenue</span>
+      </button>
+
+      <!-- Section: Classroom & LMS -->
+      <div class="qa-nav-group-title">LMS &amp; Classroom</div>
+      <button type="button" class="tab" data-tab="lms-courses">
+        <span class="qa-tab-icon">📚</span>
+        <span class="qa-tab-label">Course Studio (LMS)</span>
+      </button>
+      <button type="button" class="tab" data-tab="lms-students">
+        <span class="qa-tab-icon">🎓</span>
+        <span class="qa-tab-label">Students Directory</span>
+      </button>
+      <button type="button" class="tab" data-tab="lms-coupons">
+        <span class="qa-tab-icon">🎟️</span>
+        <span class="qa-tab-label">Coupons &amp; Offers</span>
+      </button>
+      <button type="button" class="tab" data-tab="lms-live" style="border-left-color:#ef4444;">
+        <span class="qa-tab-icon"><span class="qa-live-pulse-dot"></span></span>
+        <span class="qa-tab-label">Live Studio &amp; Masterclasses</span>
+      </button>
+
+      <!-- Section: Gateways & Settings -->
+      <div class="qa-nav-group-title">Gateways &amp; Integrations</div>
+      <button type="button" class="tab" data-tab="lms-razorpay">
+        <span class="qa-tab-icon">💳</span>
+        <span class="qa-tab-label">Razorpay Gateway</span>
+      </button>
+      <button type="button" class="tab" data-tab="lms-whatsapp" style="border-left-color:#25d366;">
+        <span class="qa-tab-icon">💬</span>
+        <span class="qa-tab-label">WhatsApp OTP (AIbotflow)</span>
+      </button>
+      <button type="button" class="tab" data-tab="lms-email" style="border-left-color:#3b82f6;">
+        <span class="qa-tab-icon">✉️</span>
+        <span class="qa-tab-label">Email OTP (Supabase)</span>
+      </button>
+      <button type="button" class="tab" data-tab="lms-settings">
+        <span class="qa-tab-icon">🎥</span>
+        <span class="qa-tab-label">Bunny.net Video CDN</span>
+      </button>
+      <button type="button" class="tab" data-tab="settings">
+        <span class="qa-tab-icon">⚙️</span>
+        <span class="qa-tab-label">Webhook &amp; Admin</span>
+      </button>
+    </nav>
+
+    <!-- Bottom Profile & Shortcuts -->
+    <div class="qa-sidebar-footer">
+      <div class="qa-sidebar-quick-links">
+        <a href="/portal/" target="_blank" class="qa-quick-link" title="Open Student Portal">
+          <span>🎓 Portal</span> <span class="qa-arrow-icon">↗</span>
+        </a>
+        <a href="/" target="_blank" class="qa-quick-link" title="Open Live Website">
+          <span>🌐 Site</span> <span class="qa-arrow-icon">↗</span>
+        </a>
+      </div>
+
+      <div class="qa-admin-user-card">
+        <div class="qa-admin-avatar">AS</div>
+        <div class="qa-admin-user-info">
+          <div class="qa-admin-user-name">Anil Sharma</div>
+          <div class="qa-admin-user-role">Founder &amp; Director</div>
+        </div>
+        <button type="button" onclick="logout()" class="qa-admin-logout-btn" title="Sign Out">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- SIDEBAR MOBILE BACKDROP -->
+  <div class="qa-sidebar-backdrop" id="qaSidebarBackdrop" onclick="toggleAdminSidebar(false)"></div>
+
+  <!-- 2. MAIN CONTENT WRAPPER -->
+  <div class="qa-main-wrapper">
+    <!-- Top Sticky Header Bar -->
+    <header class="qa-topbar">
+      <div class="qa-topbar-left">
+        <button type="button" class="qa-menu-toggle-btn" id="qaMenuToggle" onclick="toggleAdminSidebar()" aria-label="Toggle Navigation Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="qa-breadcrumb">
+          <span class="qa-bc-root">Executive Console</span>
+          <span class="qa-bc-sep">/</span>
+          <span class="qa-bc-current" id="topbar-current-tab">Leads &amp; Enquiries</span>
         </div>
       </div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:9999px;font-size:11.5px;font-weight:600;background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.25)">
-          <span style="width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981"></span> Hostinger VPS Online
-        </span>
-        <a href="/portal/" target="_blank" class="btn btn-outline" style="font-size:12px;padding:8px 14px;color:var(--gold);border-color:rgba(216,161,83,0.3)">🎓 Student Portal ↗</a>
-        <a href="/" target="_blank" class="btn btn-outline" style="font-size:12px;padding:8px 14px">🌐 View Site ↗</a>
-        <button onclick="logout()" class="btn btn-outline" style="font-size:12px;padding:8px 14px;color:var(--red-light)">Sign out</button>
-      </div>
-    </div>
-  </div>
 
-  <div class="container">
-    <div style="margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px">
-      <div>
-        <h1 style="margin:0 0 4px 0">Academy Command Center</h1>
-        <p class="muted" style="margin:0;font-size:13.5px">Real-time overview of leads, course revenue, student classroom access, and video streams.</p>
+      <div class="qa-topbar-right">
+        <button type="button" class="btn btn-sm btn-outline" onclick="refresh()" title="Refresh Dashboard Data">
+          <span>🔄</span> <span>Refresh</span>
+        </button>
+        <a href="/portal/" target="_blank" class="btn btn-sm btn-outline" style="color:var(--gold);border-color:rgba(216,161,83,0.3)">
+          🎓 Student Portal ↗
+        </a>
+        <a href="/" target="_blank" class="btn btn-sm btn-outline">
+          🌐 View Site ↗
+        </a>
+        <button type="button" onclick="logout()" class="btn btn-sm btn-outline" style="color:var(--red-light);border-color:rgba(239,68,68,0.25)">
+          Sign out
+        </button>
       </div>
-    </div>
+    </header>
 
-    <!-- LEADS / GENERAL KPI STATS ROW -->
-    <div class="stats" id="stats"></div>
+    <!-- Scrollable Content Body -->
+    <main class="qa-content-body">
+      <!-- Title & Kicker -->
+      <div class="qa-page-title-box">
+        <h1 class="qa-page-h1">Academy Command Center</h1>
+        <p class="qa-page-sub">Real-time overview of leads, course revenue, student classroom access, and video streams.</p>
+      </div>
 
-    <!-- LMS KPI STATS ROW (Dynamic overview of academy LMS performance) -->
-    <div id="lmsKpiRow" class="stats hidden" style="margin-top:16px">
-      <div class="card stat" style="border-top:3px solid var(--gold)">
-        <div class="stat-value" id="kpiLmsStudents" style="color:var(--gold)">0</div>
-        <div class="stat-label">🎓 Enrolled Students</div>
-      </div>
-      <div class="card stat" style="border-top:3px solid #10b981">
-        <div class="stat-value" id="kpiLmsRevenue" style="color:#34d399">₹0</div>
-        <div class="stat-label">💰 Total LMS Revenue</div>
-      </div>
-      <div class="card stat" style="border-top:3px solid #818cf8">
-        <div class="stat-value" id="kpiLmsCourses" style="color:#818cf8">0</div>
-        <div class="stat-label">📚 Active Masterclasses</div>
-      </div>
-      <div class="card stat" style="border-top:3px solid #f472b6">
-        <div class="stat-value" id="kpiLmsCoupons" style="color:#f472b6">0</div>
-        <div class="stat-label">🎟️ Active Promo Coupons</div>
-      </div>
-      <div class="card stat" style="border-top:3px solid #ef4444">
-        <div class="stat-value" id="kpiLmsLive" style="color:#f87171">0</div>
-        <div class="stat-label">🔴 Live / Upcoming Sessions</div>
-      </div>
-    </div>
+      <!-- LEADS / GENERAL KPI STATS ROW -->
+      <div class="stats" id="stats"></div>
 
-    <div class="tabs" style="flex-wrap:wrap;gap:4px;margin-bottom:18px">
-      <button class="tab active" data-tab="leads">📋 Leads &amp; CRM</button>
-      <button class="tab" data-tab="lms-courses">📚 Course Studio (LMS)</button>
-      <button class="tab" data-tab="lms-students">🎓 Students (LMS)</button>
-      <button class="tab" data-tab="offline-admissions" style="border:1px solid rgba(245,158,11,0.55);color:#fcd34d;font-weight:700">🏛️ Offline Admissions &amp; Alumni</button>
-      <button class="tab" data-tab="lms-coupons">🎟️ Coupons &amp; Offers</button>
-      <button class="tab" data-tab="lms-transactions">💰 Orders / Revenue</button>
-      <button class="tab" data-tab="lms-live" style="border:1px solid rgba(239,68,68,0.55);color:#fca5a5;font-weight:700">🔴 Live Studio &amp; Masterclasses</button>
-      <button class="tab" data-tab="lms-razorpay">💳 Razorpay Gateway</button>
-      <button class="tab" data-tab="lms-whatsapp" style="border:1px solid rgba(37,211,102,0.45);color:#86efac;font-weight:700">💬 WhatsApp OTP (AIbotflow)</button>
-      <button class="tab" data-tab="lms-email" style="border:1px solid rgba(59,130,246,0.45);color:#93c5fd;font-weight:700">✉️ Email OTP (Supabase)</button>
-      <button class="tab" data-tab="lms-settings">🎥 Bunny.net &amp; Video</button>
-      <button class="tab" data-tab="settings">⚙️ Webhook &amp; Admin</button>
-    </div>
+      <!-- LMS KPI STATS ROW (Dynamic overview of academy LMS performance) -->
+      <div id="lmsKpiRow" class="stats hidden" style="margin-top:16px">
+        <div class="card stat" style="border-top:3px solid var(--gold)">
+          <div class="stat-value" id="kpiLmsStudents" style="color:var(--gold)">0</div>
+          <div class="stat-label">🎓 Enrolled Students</div>
+        </div>
+        <div class="card stat" style="border-top:3px solid #10b981">
+          <div class="stat-value" id="kpiLmsRevenue" style="color:#34d399">₹0</div>
+          <div class="stat-label">💰 Total LMS Revenue</div>
+        </div>
+        <div class="card stat" style="border-top:3px solid #818cf8">
+          <div class="stat-value" id="kpiLmsCourses" style="color:#818cf8">0</div>
+          <div class="stat-label">📚 Active Masterclasses</div>
+        </div>
+        <div class="card stat" style="border-top:3px solid #f472b6">
+          <div class="stat-value" id="kpiLmsCoupons" style="color:#f472b6">0</div>
+          <div class="stat-label">🎟️ Active Promo Coupons</div>
+        </div>
+        <div class="card stat" style="border-top:3px solid #ef4444">
+          <div class="stat-value" id="kpiLmsLive" style="color:#f87171">0</div>
+          <div class="stat-label">🔴 Live / Upcoming Sessions</div>
+        </div>
+      </div>
 
     <!-- LEADS TAB -->
     <div id="tab-leads" class="tab-content" style="margin-top:16px">
@@ -1700,8 +2201,6 @@ fbq('track', 'PageView');
 }</pre>
       </div>
     </div>
-  </div>
-</div>
 
 <!-- OFFLINE ADMISSIONS & ALUMNI TAB -->
 <div id="tab-offline-admissions" class="tab-content hidden" style="margin-top:16px">
@@ -1760,6 +2259,9 @@ fbq('track', 'PageView');
         </tbody>
       </table>
     </div>
+  </div>
+</div>
+    </main>
   </div>
 </div>
 
@@ -2738,7 +3240,32 @@ function exportCSV(){
   a.click();
 }
 
-// ---------- TABS ----------
+// ---------- TABS & SIDEBAR ----------
+function toggleAdminSidebar(force) {
+  const sidebar = document.getElementById('qaSidebar');
+  const backdrop = document.getElementById('qaSidebarBackdrop');
+  if (!sidebar) return;
+  const isCurrentlyOpen = sidebar.classList.contains('open');
+  const shouldOpen = typeof force === 'boolean' ? force : !isCurrentlyOpen;
+  if (shouldOpen) {
+    sidebar.classList.add('open');
+    if (backdrop) backdrop.classList.add('show');
+    if (window.innerWidth <= 1024) document.body.style.overflow = 'hidden';
+  } else {
+    sidebar.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+}
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 1024) {
+    const backdrop = document.getElementById('qaSidebarBackdrop');
+    if (backdrop) backdrop.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+});
+
 function switchAdminTab(tabName) {
   const btn = document.querySelector(`.tab[data-tab="${tabName}"]`);
   if (btn) btn.click();
@@ -2753,6 +3280,18 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) =
   const tabName = btn.dataset.tab;
   const targetTab = document.getElementById('tab-' + tabName);
   if (targetTab) targetTab.classList.remove('hidden');
+
+  // Update topbar breadcrumb with tab title
+  const labelEl = btn.querySelector('.qa-tab-label');
+  const topbarTitle = document.getElementById('topbar-current-tab');
+  if (topbarTitle && labelEl) {
+    topbarTitle.textContent = labelEl.textContent.trim();
+  }
+
+  // Close mobile sidebar drawer automatically on selection
+  if (window.innerWidth <= 1024) {
+    toggleAdminSidebar(false);
+  }
 
   const isLmsTab = ['lms-courses', 'lms-students', 'lms-coupons', 'lms-transactions', 'lms-live', 'lms-razorpay', 'lms-whatsapp', 'lms-email', 'lms-settings'].includes(tabName);
   const lmsKpiRow = document.getElementById('lmsKpiRow');

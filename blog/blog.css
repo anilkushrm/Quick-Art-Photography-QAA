@@ -1816,6 +1816,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
+.blog-faq-item h3,
 .blog-faq-item h4 {
   font-family: var(--font-heading, "Outfit", sans-serif);
   font-size: 17px;

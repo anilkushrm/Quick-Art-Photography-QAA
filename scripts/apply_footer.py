@@ -42,6 +42,7 @@ def generate_footer(prefix):
                     <li><a href="{prefix}courses/album-design/index.html">Wedding Album Design Course</a></li>
                     <li><a href="{prefix}courses/ai-wedding-filmmaking/index.html">AI Wedding Filmmaking Course</a></li>
                     <li><a href="{prefix}master-class/index.html">14-Week Master Class in Siwan</a></li>
+                    <li><a href="{prefix}admission/index.html" class="qa-footer-highlight-link" style="color: #f59e0b; font-weight: 700;">Apply Admission Form</a></li>
                     <li><a href="{prefix}courses/index.html">All On-Campus Courses Overview</a></li>
                     <li><a href="{prefix}contact-us/index.html" class="qa-footer-highlight-link">Book Free 1-on-1 Demo Class</a></li>
                     <li><a href="{prefix}downloads/course-details.pdf" target="_blank" rel="noopener noreferrer">Download Syllabus (PDF)</a></li>
@@ -65,6 +66,8 @@ def generate_footer(prefix):
             <div>
                 <h3 class="qa-footer-heading">Student &amp; Academy</h3>
                 <ul class="qa-footer-links-list">
+                    <li><a href="{prefix}admission/index.html" class="qa-footer-highlight-link" style="color: #f59e0b; font-weight: 700;">Apply Admission Form</a></li>
+                    <li><a href="{prefix}alumni/index.html">Alumni Directory &amp; Hall of Fame</a></li>
                     <li><a href="{prefix}portal/index.html" class="qa-footer-highlight-link">Student Portal Login</a></li>
                     <li><a href="{prefix}online/index.html">Online Course Catalog</a></li>
                     <li><a href="{prefix}about-us/index.html">About Anil Sharma &amp; Mentors</a></li>

@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
           showStatus(err.message, 'error');
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '🎓 Submit Admission Form &amp; Book Seat (₹500) →';
+            submitBtn.innerHTML = 'Submit Admission Form <span aria-hidden="true">→</span>';
           }
         });
     });

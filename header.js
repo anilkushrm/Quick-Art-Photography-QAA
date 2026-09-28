@@ -221,6 +221,19 @@
      });
    }
 
+   // Ensure Free Resources dropdown also has Course Curriculum (14-Weeks)
+   if (freeResPanel && !freeResPanel.querySelector('a[href*="curriculum"]')) {
+     const currDropA = document.createElement('a');
+     currDropA.href = `${navPrefix}curriculum/`;
+     currDropA.textContent = 'Course Curriculum (14-Weeks)';
+     const brochureA = freeResPanel.querySelector('a[href*="course-details.pdf"]');
+     if (brochureA) {
+       freeResPanel.insertBefore(currDropA, brochureA.nextSibling);
+     } else {
+       freeResPanel.append(currDropA);
+     }
+   }
+
    // Ensure Free Resources dropdown also has Alumni Directory
    if (freeResPanel && !freeResPanel.querySelector('a[href*="alumni"]')) {
      const alumniDropA = document.createElement('a');
@@ -248,6 +261,20 @@
        mobileResources.insertBefore(mobAboutA, firstCourseInRes);
      } else {
        mobileResources.append(mobAboutA);
+     }
+   }
+
+
+   if (mobileResources && !mobileResources.querySelector('a[href*="curriculum"]')) {
+     const mobCurrA = document.createElement('a');
+     mobCurrA.className = 'ref-course';
+     mobCurrA.href = `${navPrefix}curriculum/`;
+     mobCurrA.innerHTML = '<span class="ref-course-icon" aria-hidden="true">Cu</span><span>Course Curriculum (14-Weeks)</span>';
+     const brochureMobA = mobileResources.querySelector('a[href*="course-details.pdf"]');
+     if (brochureMobA) {
+       mobileResources.insertBefore(mobCurrA, brochureMobA.nextSibling);
+     } else {
+       mobileResources.append(mobCurrA);
      }
    }
 

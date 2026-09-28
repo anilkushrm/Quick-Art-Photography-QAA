@@ -1377,6 +1377,10 @@ body.alm-body {
 }
 
 @media (max-width: 900px) {
+  .alm-hero,
+  main > section.alm-hero {
+    padding-top: 130px !important;
+  }
   .alm-hero-container {
     grid-template-columns: 1fr;
     gap: 36px;
@@ -1405,8 +1409,14 @@ body.alm-body {
 }
 
 @media (max-width: 640px) {
-  .alm-hero {
-    padding: 115px 0 40px;
+  .alm-hero,
+  main > section.alm-hero {
+    padding-top: 125px !important;
+    padding-bottom: 40px !important;
+  }
+  .alm-hero-badge-wrap {
+    margin-top: 6px;
+    margin-bottom: 18px;
   }
   .alm-hero-right {
     height: 380px;

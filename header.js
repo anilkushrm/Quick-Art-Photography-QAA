@@ -171,7 +171,13 @@
  }
 
  const desktopNav = header.querySelector('.ref-nav');
- if (desktopNav && !desktopNav.querySelector('a[href*="alumni"]')) {
+ const existingAlumniLinks = desktopNav ? Array.from(desktopNav.querySelectorAll('a')).filter(a => {
+   const h = (a.getAttribute('href') || '').toLowerCase();
+   const t = a.textContent.trim().toLowerCase();
+   return h.includes('alumni') || t === 'alumni' || t === 'alumni directory';
+ }) : [];
+
+ if (desktopNav && existingAlumniLinks.length === 0) {
    const aboutLink = desktopNav.querySelector('a[href*="about-us"]');
    const freeResEl = desktopNav.querySelector('.ref-resources') || desktopNav.querySelector('.ref-dropdown:last-of-type');
    const alumniA = document.createElement('a');
@@ -186,6 +192,25 @@
    } else {
      desktopNav.append(alumniA);
    }
+ } else if (existingAlumniLinks.length > 1) {
+   // Keep only one (prefer the active link or the first one)
+   const activeLink = existingAlumniLinks.find(a => a.classList.contains('ref-active-page') || a.style.color === '#f59e0b') || existingAlumniLinks[0];
+   existingAlumniLinks.forEach(a => {
+     if (a !== activeLink) a.remove();
+   });
+ }
+
+ // Highlight Alumni link if currently on Alumni page
+ if (desktopNav && (window.location.pathname.includes('/alumni') || window.location.href.includes('/alumni'))) {
+   desktopNav.querySelectorAll('a').forEach(a => {
+     const h = (a.getAttribute('href') || '').toLowerCase();
+     const t = a.textContent.trim().toLowerCase();
+     if (h.includes('alumni') || t === 'alumni') {
+       a.classList.add('ref-active-page');
+       a.style.color = '#f59e0b';
+       a.style.fontWeight = '700';
+     }
+   });
  }
 
  // Also in Free Resources dropdown panel, ensure Alumni Directory is accessible
@@ -197,16 +222,28 @@
    freeResPanel.append(alumniDropA);
  }
 
- if (mobileNav && !mobileNav.querySelector('a[href*="alumni"]')) {
-   const mobAbout = mobileNav.querySelector('a[href*="about-us"]');
-   const mobAlumniA = document.createElement('a');
-   mobAlumniA.href = `${navPrefix}alumni/`;
-   mobAlumniA.innerHTML = '👥 Alumni Hall of Fame';
+ if (mobileNav) {
+   const existingMobAlumni = Array.from(mobileNav.querySelectorAll('a')).filter(a => {
+     const h = (a.getAttribute('href') || '').toLowerCase();
+     const t = a.textContent.toLowerCase();
+     return h.includes('alumni') || t.includes('alumni');
+   });
 
-   if (mobAbout) {
-     mobAbout.after(mobAlumniA);
-   } else {
-     mobileNav.append(mobAlumniA);
+   if (existingMobAlumni.length === 0) {
+     const mobAbout = mobileNav.querySelector('a[href*="about-us"]');
+     const mobAlumniA = document.createElement('a');
+     mobAlumniA.href = `${navPrefix}alumni/`;
+     mobAlumniA.innerHTML = '👥 Alumni Hall of Fame';
+
+     if (mobAbout) {
+       mobAbout.after(mobAlumniA);
+     } else {
+       mobileNav.append(mobAlumniA);
+     }
+   } else if (existingMobAlumni.length > 1) {
+     for (let i = 1; i < existingMobAlumni.length; i++) {
+       existingMobAlumni[i].remove();
+     }
    }
  }
 

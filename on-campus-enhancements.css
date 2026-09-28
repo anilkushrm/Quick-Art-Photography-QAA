@@ -1268,7 +1268,7 @@ a[class*="bg-white\/10"]:hover {
 
 @media (max-width: 768px) {
     /* Section Pacing & Breathing Room */
-    main > section,
+    main > section:not(.alm-hero),
     section.qa-section,
     section.qa-section#curriculum,
     section.qa-section.qa-light,

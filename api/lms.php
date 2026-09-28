@@ -160,11 +160,11 @@ function map_offline_course_id($courseTitle) {
     if (strpos($t, 'album') !== false) {
         return 'course-album-design';
     }
-    if (strpos($t, 'marketing') !== false || strpos($t, 'filmmaking & marketing') !== false || strpos($t, 'studio') !== false) {
-        return 'course-digital-marketing';
-    }
-    if (strpos($t, 'wedding') !== false || strpos($t, 'cinematic') !== false) {
+    if (strpos($t, 'filmmaking') !== false || strpos($t, 'post-production') !== false || strpos($t, 'wedding') !== false || strpos($t, 'cinematic') !== false) {
         return 'course-cinematic-wedding';
+    }
+    if (strpos($t, 'marketing') !== false || strpos($t, 'studio') !== false) {
+        return 'course-digital-marketing';
     }
 
     // 3. Check for any internal admission course

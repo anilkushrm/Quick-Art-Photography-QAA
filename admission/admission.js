@@ -558,7 +558,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var sName = data.fullName || (inputName ? inputName.value.trim() : '') || 'Student';
     var sId = data.admissionId || 'QAA-OFF-2026-LIVE';
     var sPhone = data.phone || (inputPhone ? inputPhone.value.trim() : '');
-    var sCourse = (document.getElementById('adm-course') ? document.getElementById('adm-course').value : '') || 'Wedding Film-making Course';
+    var sCourse = (document.getElementById('adm-course') ? document.getElementById('adm-course').value : '') || 'Wedding Filmmaking & Post-Production Course';
     var sStudio = (inputStudio ? inputStudio.value.trim() : '') || 'Independent Studio';
     var sCity = (inputCity ? inputCity.value.trim() : '') || 'Siwan, Bihar';
 

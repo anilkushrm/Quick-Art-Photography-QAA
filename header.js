@@ -221,17 +221,21 @@
      });
    }
 
-   // Ensure Free Resources dropdown also has Course Curriculum (14-Weeks)
-   if (freeResPanel && !freeResPanel.querySelector('a[href*="curriculum"]')) {
-     const currDropA = document.createElement('a');
-     currDropA.href = `${navPrefix}curriculum/`;
-     currDropA.textContent = 'Course Curriculum (14-Weeks)';
-     const brochureA = freeResPanel.querySelector('a[href*="course-details.pdf"]');
-     if (brochureA) {
-       freeResPanel.insertBefore(currDropA, brochureA.nextSibling);
-     } else {
-       freeResPanel.append(currDropA);
-     }
+   // Ensure single consolidated "Download Course Details PDF" link in Free Resources dropdown
+   freeResPanel.querySelectorAll('a[href*="curriculum"]').forEach(a => a.remove());
+   const brochureA = freeResPanel.querySelector('a[href*="course-details.pdf"]');
+   if (brochureA) {
+     brochureA.textContent = 'Download Course Details PDF';
+     brochureA.href = `${navPrefix}downloads/course-details.pdf`;
+     brochureA.setAttribute('target', '_blank');
+     brochureA.setAttribute('rel', 'noopener noreferrer');
+   } else {
+     const pdfA = document.createElement('a');
+     pdfA.href = `${navPrefix}downloads/course-details.pdf`;
+     pdfA.textContent = 'Download Course Details PDF';
+     pdfA.setAttribute('target', '_blank');
+     pdfA.setAttribute('rel', 'noopener noreferrer');
+     freeResPanel.append(pdfA);
    }
 
    // Ensure Free Resources dropdown also has Alumni Directory
@@ -264,18 +268,23 @@
      }
    }
 
-
-   if (mobileResources && !mobileResources.querySelector('a[href*="curriculum"]')) {
-     const mobCurrA = document.createElement('a');
-     mobCurrA.className = 'ref-course';
-     mobCurrA.href = `${navPrefix}curriculum/`;
-     mobCurrA.innerHTML = '<span class="ref-course-icon" aria-hidden="true">Cu</span><span>Course Curriculum (14-Weeks)</span>';
-     const brochureMobA = mobileResources.querySelector('a[href*="course-details.pdf"]');
-     if (brochureMobA) {
-       mobileResources.insertBefore(mobCurrA, brochureMobA.nextSibling);
-     } else {
-       mobileResources.append(mobCurrA);
-     }
+   // Ensure single consolidated "Download Course Details (PDF)" in mobile Free Resources
+   mobileResources.querySelectorAll('a[href*="curriculum"]').forEach(a => a.remove());
+   const brochureMobA = mobileResources.querySelector('a[href*="course-details.pdf"]');
+   if (brochureMobA) {
+     const labelSpan = brochureMobA.querySelector('span:last-child');
+     if (labelSpan) labelSpan.textContent = 'Download Course Details (PDF)';
+     brochureMobA.href = `${navPrefix}downloads/course-details.pdf`;
+     brochureMobA.setAttribute('target', '_blank');
+     brochureMobA.setAttribute('rel', 'noopener noreferrer');
+   } else {
+     const mobPdfA = document.createElement('a');
+     mobPdfA.className = 'ref-course';
+     mobPdfA.href = `${navPrefix}downloads/course-details.pdf`;
+     mobPdfA.setAttribute('target', '_blank');
+     mobPdfA.setAttribute('rel', 'noopener noreferrer');
+     mobPdfA.innerHTML = '<span class="ref-course-icon" aria-hidden="true">Pd</span><span>Download Course Details (PDF)</span>';
+     mobileResources.append(mobPdfA);
    }
 
    const topLevelMobAlumni = Array.from(mobileNav.children).filter(el => {

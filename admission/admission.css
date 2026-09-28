@@ -28,6 +28,15 @@ body.adm-body {
   padding: 0 20px;
 }
 
+/* Ensure navbar on admission page has solid obsidian background with zero bleed */
+.ref-header,
+.ref-header.ref-scrolled {
+  background: #090b10 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
 /* ==========================================================================
    Hero Section
    ========================================================================== */
@@ -377,6 +386,14 @@ body.adm-body {
   gap: 12px;
 }
 
+/* Mobile-persistent 2-column grid row */
+.adm-row-mobile-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
 .adm-field {
   display: flex;
   flex-direction: column;
@@ -385,15 +402,21 @@ body.adm-body {
 }
 
 .adm-field label {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 700;
   color: #334155;
   letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
 }
 
 .adm-req {
   color: #d97706;
   font-weight: 800;
+  display: inline-block;
+  line-height: 1;
 }
 
 .adm-field input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
@@ -441,42 +464,243 @@ body.adm-body {
 
 /* Phone input group */
 .adm-phone-input {
-  display: flex;
-  align-items: stretch;
-  height: 42px;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 10px;
-  background: #f8fafc;
-  overflow: hidden;
-  transition: all 0.2s ease;
+  display: flex !important;
+  align-items: center !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 11px !important;
+  background: #ffffff !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease !important;
 }
 
 .adm-phone-input:focus-within {
-  border-color: #f59e0b;
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.16);
+  border-color: #d97706 !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 3.5px rgba(217, 119, 6, 0.16) !important;
 }
 
 .adm-phone-prefix {
-  height: 100%;
-  padding: 0 11px;
-  background: #edf2f7;
-  border-right: 1.5px solid #cbd5e1;
-  font-size: 12.5px;
-  font-weight: 700;
-  color: #334155;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  height: 100% !important;
+  padding: 0 13px !important;
+  background: #f1f5f9 !important;
+  border-right: 1.5px solid #cbd5e1 !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #334155 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  user-select: none !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+  line-height: 1 !important;
 }
 
 .adm-phone-input input {
   height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
   border: none !important;
+  border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
-  padding: 0 12px !important;
+  outline: none !important;
+  padding: 0 14px !important;
+  margin: 0 !important;
+  font-size: 15.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  color: #0f172a !important;
+  display: flex !important;
+  align-items: center !important;
+  line-height: normal !important;
+  vertical-align: middle !important;
+  box-sizing: border-box !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+/* Verification UI & Badges */
+.adm-field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.adm-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #10b981;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.adm-verify-input-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.adm-verify-input-wrap .adm-phone-input,
+.adm-verify-input-wrap input {
+  flex: 1;
+  min-width: 0;
+}
+
+.adm-btn-verify-action {
+  flex-shrink: 0;
+  padding: 0 16px;
+  height: 48px;
+  min-height: 48px;
+  background: #0f172a;
+  color: #fbbf24;
+  border: 1.5px solid #d97706;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.adm-btn-verify-action:hover:not(:disabled) {
+  background: #f59e0b;
+  color: #0f172a;
+  border-color: #f59e0b;
+}
+
+.adm-btn-verify-action:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.adm-btn-verify-action.is-verified {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #059669;
+  cursor: default;
+}
+
+/* Inline OTP Box */
+.adm-inline-otp-box {
+  margin-top: 8px;
+  padding: 12px 14px;
+  background: #fffbeb;
+  border: 1.5px dashed #f59e0b;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: slideDown 0.25s ease-out;
+}
+
+.adm-otp-prompt {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #92400e;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.adm-dev-otp-pill {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 10.5px;
+}
+
+.adm-otp-inputs-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.adm-otp-input {
+  flex: 1;
+  letter-spacing: 4px;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  text-align: center;
+  background: #ffffff !important;
+  border-color: #f59e0b !important;
+  height: 38px !important;
+}
+
+.adm-btn-otp-submit {
+  padding: 0 14px;
+  height: 38px;
+  background: #d97706;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.adm-btn-otp-submit:hover:not(:disabled) {
+  background: #b45309;
+}
+
+.adm-btn-otp-resend {
+  padding: 0 10px;
+  height: 38px;
+  background: transparent;
+  color: #78350f;
+  border: 1px solid #d97706;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.adm-btn-otp-resend:hover:not(:disabled) {
+  background: #fde68a;
+}
+
+.adm-otp-msg {
+  font-size: 11.5px;
+  font-weight: 600;
+  min-height: 14px;
+}
+.adm-otp-msg.is-error {
+  color: #dc2626;
+}
+.adm-otp-msg.is-success {
+  color: #059669;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* File Box */
@@ -695,11 +919,60 @@ body.adm-body {
 }
 
 /* ==========================================================================
-   Right Column: Live Student ID Badge
+   Executive Academy Credentials & Trust Badges Bar
+   ========================================================================== */
+.adm-trust-badges-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 30px;
+}
+
+.adm-trust-badge-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adm-trust-icon {
+  font-size: 22px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.adm-trust-badge-item strong {
+  display: block;
+  font-size: 12.5px;
+  color: #0f172a;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.adm-trust-badge-item span {
+  display: block;
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.2;
+}
+
+@media (max-width: 640px) {
+  .adm-trust-badges-bar {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+}
+
+/* ==========================================================================
+   Right Column: Guidelines & Academy Info
    ========================================================================== */
 .adm-side-col {
   position: sticky;
-  top: 90px;
+  top: 105px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -1730,37 +2003,514 @@ body.adm-body {
 }
 
 /* ==========================================================================
-   Responsive Breakpoints
+   Comprehensive Professional PC & Mobile Responsive Tuning
+   ========================================================================== */
+
+/* Universal Form Controls: Touch-friendly & High-Precision */
+.adm-field input,
+.adm-field select,
+.adm-field textarea {
+  font-family: inherit;
+  font-size: 15px;
+  min-height: 48px;
+  padding: 12px 14px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 11px;
+  color: #0f172a;
+  box-sizing: border-box;
+  transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+  outline: none;
+}
+
+.adm-field input::placeholder,
+.adm-field textarea::placeholder {
+  color: #94a3b8;
+  font-weight: 450;
+}
+
+.adm-field input:focus,
+.adm-field select:focus,
+.adm-field textarea:focus {
+  border-color: #d97706;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3.5px rgba(217, 119, 6, 0.16);
+  outline: none;
+}
+
+.adm-phone-input {
+  display: flex !important;
+  align-items: center !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 11px !important;
+  background: #ffffff !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.adm-phone-input:focus-within {
+  border-color: #d97706 !important;
+  box-shadow: 0 0 0 3.5px rgba(217, 119, 6, 0.16) !important;
+}
+
+.adm-phone-prefix {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  background: #f1f5f9 !important;
+  border-right: 1.5px solid #cbd5e1 !important;
+  padding: 0 13px !important;
+  height: 100% !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #334155 !important;
+  user-select: none !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+  line-height: 1 !important;
+}
+
+.adm-phone-input input {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background: transparent !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  padding: 0 14px !important;
+  margin: 0 !important;
+  font-size: 15.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  color: #0f172a !important;
+  display: flex !important;
+  align-items: center !important;
+  line-height: normal !important;
+  vertical-align: middle !important;
+  box-sizing: border-box !important;
+}
+
+.adm-upload-btn {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 11px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.adm-upload-box {
+  border: 1.5px dashed #cbd5e1;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.adm-upload-box:hover {
+  border-color: #d97706;
+  background: #fefce8;
+}
+
+.adm-submit-btn {
+  min-height: 52px;
+  border-radius: 13px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16.5px;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 12px 28px -4px rgba(217, 119, 6, 0.42);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.adm-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px -4px rgba(217, 119, 6, 0.52);
+  filter: brightness(1.04);
+}
+
+.adm-submit-btn:active {
+  transform: translateY(1px);
+}
+
+/* ==========================================================================
+   Desktop / PC (min-width: 1025px)
+   ========================================================================== */
+@media (min-width: 1025px) {
+  .adm-hero {
+    padding: 135px 0 55px;
+  }
+  .adm-grid {
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 36px;
+    align-items: start;
+  }
+  .adm-form-card {
+    padding: 42px 46px;
+    border-radius: 24px;
+  }
+  .adm-side-col {
+    position: sticky;
+    top: 105px;
+  }
+  .adm-trust-badges-bar {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ==========================================================================
+   Tablets (max-width: 1024px) and (min-width: 769px)
    ========================================================================== */
 @media (max-width: 1024px) {
   .adm-grid {
     grid-template-columns: 1fr;
+    gap: 32px;
   }
   .adm-side-col {
     position: static;
   }
-}
-
-@media (max-width: 768px) {
-  .adm-hero {
-    padding: 110px 0 40px;
-  }
-  .adm-form-card {
-    padding: 24px 20px;
-  }
-  .adm-form-header {
-    flex-direction: column;
-  }
-  .adm-fee-badge {
-    text-align: left;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .adm-row-2,
-  .adm-row-3,
-  .adm-row-split,
-  .adm-pay-options {
-    grid-template-columns: 1fr;
+  .adm-trust-badges-bar {
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
+  .adm-form-card {
+    padding: 34px 30px;
+  }
 }
+
+/* ==========================================================================
+   Mobile Devices (max-width: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .adm-hero {
+    padding: 95px 16px 34px;
+  }
+  .adm-hero-badge-wrap {
+    padding: 5px 12px;
+    margin-bottom: 12px;
+    max-width: 95%;
+  }
+  .adm-hero-badge {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+  .adm-hero-h1 {
+    font-size: clamp(24px, 6.8vw, 32px);
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .adm-hero-sub {
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin-bottom: 22px;
+    padding: 0 4px;
+  }
+
+  /* 2x2 Clean Grid for Benefit Pills */
+  .adm-pills-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+  .adm-pill {
+    padding: 7px 10px;
+    font-size: 11.5px;
+    justify-content: center;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .adm-pill-icon {
+    font-size: 14px;
+  }
+
+  /* Form Container & Padding */
+  .adm-form-section {
+    padding: 24px 0 50px;
+  }
+  .adm-container {
+    padding: 0 14px;
+  }
+  .adm-form-card {
+    padding: 22px 16px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Header & Fee Badge */
+  .adm-form-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+  }
+  .adm-kicker {
+    font-size: 10px;
+  }
+  .adm-form-title {
+    font-size: 21px;
+    line-height: 1.25;
+  }
+  .adm-form-desc {
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+  .adm-fee-badge {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 12px;
+  }
+  .adm-fee-label {
+    font-size: 10.5px;
+  }
+  .adm-fee-val {
+    font-size: 21px;
+  }
+
+  /* Trust strip on mobile: 2x2 grid */
+  .adm-trust-badges-bar {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 12px 10px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+  }
+  .adm-trust-badge-item {
+    gap: 8px;
+  }
+  .adm-trust-icon {
+    font-size: 18px;
+  }
+  .adm-trust-badge-item strong {
+    font-size: 11.5px;
+  }
+  .adm-trust-badge-item span {
+    font-size: 10px;
+  }
+
+  /* Form Blocks & Steps */
+  .adm-form-block {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+  }
+  .adm-block-title {
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .adm-step-num {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+  .adm-block-title h3 {
+    font-size: 16.5px;
+  }
+  .adm-block-title small {
+    font-size: 11.5px;
+  }
+
+  /* Photo Upload Row */
+  .adm-photo-upload-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+    padding: 14px 10px;
+  }
+  .adm-photo-preview {
+    width: 72px;
+    height: 72px;
+  }
+  .adm-photo-meta {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .adm-upload-btn {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  /* Prevent auto-zoom in iOS (Safari) */
+  .adm-field input,
+  .adm-field select,
+  .adm-field textarea {
+    font-size: 16px !important;
+    min-height: 48px;
+    padding: 11px 13px;
+  }
+  .adm-phone-input input {
+    font-size: 16px !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    padding: 0 14px !important;
+  }
+
+  /* Stack standard rows on mobile */
+  .adm-row-2:not(.adm-row-mobile-2),
+  .adm-row-3:not(.adm-row-mobile-2),
+  .adm-row-split,
+  .adm-pay-options {
+    grid-template-columns: 1fr !important;
+    gap: 14px;
+  }
+
+  /* Keep paired 2-in-1 rows side-by-side on mobile */
+  .adm-row-mobile-2 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    margin-bottom: 14px !important;
+  }
+  .adm-row-mobile-2 .adm-field {
+    min-width: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  .adm-row-mobile-2 label {
+    font-size: 11.5px !important;
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .adm-row-mobile-2 select,
+  .adm-row-mobile-2 input {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    font-size: 16px !important;
+    padding-left: 10px !important;
+    padding-right: 28px !important;
+  }
+
+  /* Payment Selection Options */
+  .adm-pay-option-card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+  .adm-fee-summary-card {
+    padding: 16px 14px;
+  }
+
+  /* CTA Submit Button */
+  .adm-submit-btn {
+    min-height: 52px;
+    font-size: 16px;
+    border-radius: 12px;
+  }
+
+  /* Modal on Mobile */
+  .adm-modal-content {
+    width: 96% !important;
+    max-height: 94vh !important;
+    padding: 18px 12px !important;
+    border-radius: 20px;
+  }
+  .adm-modal-title {
+    font-size: 19px !important;
+  }
+  .adm-modal-sub {
+    font-size: 12px !important;
+    margin-bottom: 16px !important;
+  }
+  .adm-issued-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+  }
+  .adm-card-unit {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .adm-issued-id-card {
+    max-width: 100% !important;
+    width: min(320px, calc(100vw - 36px)) !important;
+    height: auto !important;
+    min-height: 510px !important;
+    box-sizing: border-box;
+    padding: 14px 12px 10px !important;
+  }
+  .adm-id-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+  .adm-btn-download,
+  .adm-btn-print,
+  .adm-btn-portal {
+    width: 100% !important;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 48px;
+    font-size: 14px;
+  }
+}
+
+/* ==========================================================================
+   Small Mobile Devices (max-width: 420px)
+   ========================================================================== */
+@media (max-width: 420px) {
+  .adm-form-card {
+    padding: 18px 12px;
+  }
+  .adm-trust-badges-bar {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 10px;
+  }
+  .adm-pills-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .adm-step-num {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+  }
+  .adm-block-title h3 {
+    font-size: 15.5px;
+  }
+  .adm-fee-summary-card {
+    padding: 14px 10px;
+  }
+  .adm-issued-id-card {
+    width: 295px !important;
+  }
+}
+

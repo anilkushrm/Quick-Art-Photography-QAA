@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="portal.css?v=20260927_05" />
+  <link rel="stylesheet" href="portal.css?v=20260928_03" />
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -115,6 +115,10 @@ fbq('track', 'PageView');
 
           <!-- Section: Account -->
           <div class="dropdown-section-label">ACCOUNT</div>
+          <button class="dropdown-item" onclick="openMyIdCardModal(); closeUserMenu();" role="menuitem">
+            <span class="dropdown-item-icon">🪪</span>
+            <span>My Student ID Card</span>
+          </button>
           <button class="dropdown-item" onclick="openMyProfile(); closeUserMenu();" role="menuitem">
             <span class="dropdown-item-icon">👤</span>
             <span>My Profile</span>
@@ -743,11 +747,32 @@ fbq('track', 'PageView');
             
             <!-- Video Container -->
             <div class="video-wrapper">
-              <div class="video-container" id="video-box">
+              <div class="video-container" id="video-box" oncontextmenu="return false;">
                 <!-- Watermark Layer (Disabled for Clean Video Playback) -->
                 <div id="watermark-overlay" class="watermark-overlay" style="display: none !important;" aria-hidden="true">
                   <span id="watermark-text" class="watermark-tag" style="display: none !important;"></span>
                 </div>
+
+                <!-- Invisible Anti-Leak Click Shield (Top bar: blocks title, channel link, share, watch later) -->
+                <div id="course-click-shield" class="course-click-shield" oncontextmenu="return false;" title="Quick Art Academy Player" onclick="toggleCourseVideoPlayPause()"></div>
+
+                <!-- Invisible Anti-Leak Corner Shield (Bottom-right: blocks YouTube logo link) -->
+                <div id="course-click-shield-corner" class="course-click-shield-corner" oncontextmenu="return false;" title="Quick Art Academy Player" onclick="toggleCourseVideoPlayPause()"></div>
+
+                <!-- Pause State Click Shield & Custom Resume Overlay -->
+                <div id="course-pause-shield" class="course-pause-shield" onclick="toggleCourseVideoPlayPause()" title="Click to Resume Video">
+                  <div class="course-pause-btn">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                  </div>
+                  <span class="course-pause-txt">Click to Resume Lesson</span>
+                </div>
+
+                <!-- Floating Video Overlay Fullscreen Button -->
+                <button type="button" class="course-video-overlay-fs live-fs-btn" onclick="toggleCourseCinemaFullscreen()" title="Fullscreen Mode (Press F)">
+                  ⛶
+                </button>
 
                 <!-- Video Element or Iframe will be injected here -->
                 <div id="video-mount"></div>
@@ -795,6 +820,7 @@ fbq('track', 'PageView');
               <button class="lesson-tab" data-ltab="notes">Lesson Notes</button>
               <button class="lesson-tab" data-ltab="resources">Practice Files &amp; LUTs</button>
               <button class="lesson-tab" data-ltab="quiz">Module Quiz</button>
+              <button class="lesson-tab" data-ltab="assignments">📋 Assignments</button>
               <button class="lesson-tab" data-ltab="support">Ask Mentor (WhatsApp)</button>
             </div>
 
@@ -856,6 +882,22 @@ fbq('track', 'PageView');
                   Submit Answers &amp; Check Score ✓
                 </button>
                 <div id="quiz-result-banner" class="quiz-result-banner hidden"></div>
+              </div>
+            </div>
+
+            <!-- Assignments & Practical Tasks Tab -->
+            <div id="ltab-assignments" class="lesson-tab-content hidden">
+              <div class="assignments-card" id="assignments-container">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:12px;">
+                  <div>
+                    <h4 style="margin:0;font-size:17px;color:#38bdf8;">📋 Course Projects &amp; Practical Assignments</h4>
+                    <p class="muted" style="margin:4px 0 0;font-size:12.5px;">Practice raw footage download karein, edit complete karein aur mentor review ke liye link submit karein.</p>
+                  </div>
+                  <span class="badge" style="background:rgba(56,189,248,0.15);color:#38bdf8;font-size:11px;font-weight:700;">Mentor Review</span>
+                </div>
+                <div id="assignments-list-wrap">
+                  <p class="muted">Loading course assignments…</p>
+                </div>
               </div>
             </div>
 
@@ -1510,7 +1552,7 @@ fbq('track', 'PageView');
   <script src="qrcode.min.js"></script>
   <script src="html2canvas.min.js"></script>
   <script src="/qa-purchase-tracking.js"></script>
-  <script src="portal.js?v=20260921_05"></script>
+  <script src="portal.js?v=20260928_03"></script>
 <script defer src="/meta-events.js"></script>
 </body>
 </html>

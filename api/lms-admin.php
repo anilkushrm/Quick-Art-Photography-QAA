@@ -72,6 +72,43 @@ function save_all_coupons($coupons) {
     file_put_contents(LMS_COUPONS_FILE, json_encode($coupons, JSON_PRETTY_PRINT), LOCK_EX);
 }
 
+// Helper to map offline admission program to LMS Course ID (respects internal admission courses)
+function map_offline_course_id($courseTitle) {
+    $t = strtolower(trim((string)$courseTitle));
+    if (!$t) return 'course-cinematic-wedding';
+
+    // 1. Direct ID or exact title match in courses.json
+    $courses = get_all_courses();
+    foreach ($courses as $c) {
+        if ($c['id'] === $courseTitle || strtolower($c['title'] ?? '') === $t) {
+            return $c['id'];
+        }
+    }
+
+    // 2. Program keywords mapping
+    if (strpos($t, 'advance video') !== false || strpos($t, 'video editing') !== false || strpos($t, 'premiere') !== false) {
+        return 'course-premiere-pro';
+    }
+    if (strpos($t, 'album') !== false) {
+        return 'course-album-design';
+    }
+    if (strpos($t, 'marketing') !== false || strpos($t, 'filmmaking & marketing') !== false || strpos($t, 'studio') !== false) {
+        return 'course-digital-marketing';
+    }
+    if (strpos($t, 'wedding') !== false || strpos($t, 'cinematic') !== false) {
+        return 'course-cinematic-wedding';
+    }
+
+    // 3. Check for any internal admission course
+    foreach ($courses as $c) {
+        if (!empty($c['isInternalOnly']) || !empty($c['isAdmissionCourse'])) {
+            return $c['id'];
+        }
+    }
+
+    return 'course-cinematic-wedding';
+}
+
 // 1. Get Courses List
 if ($action === 'get-courses' && $method === 'GET') {
     json_ok(['courses' => get_all_courses()]);
@@ -134,20 +171,119 @@ if ($action === 'get-students' && $method === 'GET') {
         $courseMap[$c['id']] = $c['title'];
     }
 
-    // Augment students with progress metrics
+    // Load offline admissions data for cross-referencing
+    $admFile = DATA_DIR . '/offline-admissions.json';
+    $allAdms = file_exists($admFile) ? json_decode(file_get_contents($admFile), true) ?: [] : [];
+    $admByPhone = [];
+    $admById = [];
+    foreach ($allAdms as $adm) {
+        $p = preg_replace('/[^0-9]/', '', (string)($adm['phone'] ?? ''));
+        if ($p) $admByPhone[$p] = $adm;
+        if (!empty($adm['id'])) $admById[$adm['id']] = $adm;
+    }
+
+    $existingPhones = [];
+
+    // Augment students with progress metrics & offline application data
     foreach ($students as &$stu) {
+        $pClean = preg_replace('/[^0-9]/', '', (string)($stu['phone'] ?? ''));
+        if ($pClean) $existingPhones[$pClean] = true;
+
         $enrolledNames = [];
         foreach ($stu['enrolledCourses'] ?? [] as $cid) {
             if (isset($courseMap[$cid])) $enrolledNames[] = $courseMap[$cid];
         }
         $stu['enrolledCourseNames'] = $enrolledNames;
+
         $totalCompleted = 0;
         foreach ($stu['completedLessons'] ?? [] as $lesList) {
             $totalCompleted += count($lesList);
         }
         $stu['totalCompletedLessons'] = $totalCompleted;
+
+        // Cross-reference with offline admission records
+        $admRec = $admByPhone[$pClean] ?? ($admById[$stu['offlineAdmissionId'] ?? ''] ?? null);
+        if ($admRec) {
+            $stu['isOfflineStudent'] = true;
+            $stu['offlineAdmissionId'] = $admRec['id'] ?? ($stu['offlineAdmissionId'] ?? '');
+            $stu['offlineData'] = $admRec;
+            if (empty($stu['appliedCourse'])) $stu['appliedCourse'] = $admRec['courseTitle'] ?? ($admRec['courseName'] ?? '');
+            if (empty($stu['studioName'])) $stu['studioName'] = $admRec['studioName'] ?? '';
+            if (empty($stu['workCity'])) $stu['workCity'] = $admRec['workCity'] ?? ($admRec['city'] ?? '');
+            if (empty($stu['bloodGroup'])) $stu['bloodGroup'] = $admRec['bloodGroup'] ?? '';
+            if (empty($stu['fatherName'])) $stu['fatherName'] = $admRec['fatherName'] ?? '';
+            if (empty($stu['address'])) $stu['address'] = $admRec['address'] ?? ($admRec['permanentAddress'] ?? '');
+            if (isset($admRec['hostelNeeded'])) $stu['hostelNeeded'] = $admRec['hostelNeeded'];
+            if (!empty($admRec['photoUrl'])) $stu['photoUrl'] = $admRec['photoUrl'];
+            if (!empty($admRec['aadhaarUrl'])) $stu['aadhaarUrl'] = $admRec['aadhaarUrl'];
+            if (!empty($admRec['certUrl'])) $stu['certUrl'] = $admRec['certUrl'];
+            if (!empty($admRec['paymentMode'])) $stu['paymentMode'] = $admRec['paymentMode'];
+            if (!empty($admRec['feeAmount'])) $stu['feeAmount'] = $admRec['feeAmount'];
+            if (($admRec['paymentStatus'] ?? '') === 'paid') {
+                $stu['isPaid500'] = true;
+                $stu['paymentStatus'] = 'paid';
+            }
+            if (($admRec['status'] ?? '') === 'approved') {
+                $stu['isApproved'] = true;
+            }
+            if (!empty($admRec['alumniApproved']) || ($admRec['status'] ?? '') === 'approved_alumni') {
+                $stu['alumniApproved'] = true;
+            }
+            if (empty($stu['status']) || $stu['status'] === 'pending_payment') {
+                $stu['status'] = $admRec['status'] ?? ($stu['status'] ?? 'pending_approval');
+            }
+        }
     }
     unset($stu);
+
+    // If any offline applicant is not yet present in students array, synthesize them so admin sees every applicant
+    foreach ($allAdms as $adm) {
+        $p = preg_replace('/[^0-9]/', '', (string)($adm['phone'] ?? ''));
+        if ($p && empty($existingPhones[$p])) {
+            $existingPhones[$p] = true;
+            $isPaid = ($adm['paymentStatus'] ?? '') === 'paid';
+            $isAppr = ($adm['status'] ?? '') === 'approved';
+            $cId = map_offline_course_id($adm['courseTitle'] ?? '');
+            $enrolledCourses = ($isPaid && $cId) ? [$cId] : [];
+            $enrolledNames = [];
+            foreach ($enrolledCourses as $cid) {
+                if (isset($courseMap[$cid])) $enrolledNames[] = $courseMap[$cid];
+            }
+            $students[] = [
+                'id' => 'stu_' . substr(md5(uniqid($p, true)), 0, 8),
+                'phone' => $p,
+                'name' => $adm['fullName'] ?? 'Offline Student',
+                'email' => $adm['email'] ?? '',
+                'city' => $adm['city'] ?? '',
+                'enrolledAt' => $adm['createdAt'] ?? date('c'),
+                'enrolledCourses' => $enrolledCourses,
+                'enrolledCourseNames' => $enrolledNames,
+                'completedLessons' => [],
+                'totalCompletedLessons' => 0,
+                'lastActive' => $adm['createdAt'] ?? date('c'),
+                'isOfflineStudent' => true,
+                'offlineAdmissionId' => $adm['id'] ?? '',
+                'appliedCourse' => $adm['courseTitle'] ?? '',
+                'studioName' => $adm['studioName'] ?? '',
+                'workCity' => $adm['workCity'] ?? '',
+                'bloodGroup' => $adm['bloodGroup'] ?? '',
+                'fatherName' => $adm['fatherName'] ?? '',
+                'address' => $adm['address'] ?? '',
+                'hostelNeeded' => $adm['hostelNeeded'] ?? false,
+                'photoUrl' => $adm['photoUrl'] ?? '',
+                'aadhaarUrl' => $adm['aadhaarUrl'] ?? '',
+                'certUrl' => $adm['certUrl'] ?? '',
+                'paymentMode' => $adm['paymentMode'] ?? 'cash',
+                'feeAmount' => $adm['feeAmount'] ?? 500,
+                'paymentStatus' => $adm['paymentStatus'] ?? 'pending_campus',
+                'isPaid500' => $isPaid,
+                'isApproved' => $isAppr,
+                'alumniApproved' => !empty($adm['alumniApproved']) || ($adm['status'] ?? '') === 'approved_alumni',
+                'status' => $adm['status'] ?? ($isPaid ? 'active' : 'pending_approval'),
+                'offlineData' => $adm
+            ];
+        }
+    }
 
     json_ok(['students' => $students, 'courses' => $courses]);
 }
@@ -1052,39 +1188,37 @@ if ($action === 'approve-offline-admission' && $method === 'POST') {
     foreach ($admissions as &$adm) {
         if ($adm['id'] === $admissionId) {
             $adm['status'] = 'approved';
+            $adm['isApproved'] = true;
             if ($markPaid) {
                 $adm['paymentStatus'] = 'paid';
                 $adm['paidAt'] = date('c');
+            }
 
-                // Map and unlock course in students.json for this paid student
-                $cTitle = strtolower(trim($adm['courseTitle'] ?? ''));
-                $cId = 'course-cinematic-wedding';
-                if (strpos($cTitle, 'advance video') !== false || strpos($cTitle, 'video editing') !== false) {
-                    $cId = 'course-premiere-pro';
-                } elseif (strpos($cTitle, 'album') !== false) {
-                    $cId = 'course-album-design';
-                } elseif (strpos($cTitle, 'marketing') !== false || strpos($cTitle, 'filmmaking & marketing') !== false || strpos($cTitle, 'studio') !== false) {
-                    $cId = 'course-digital-marketing';
-                }
-
-                $students = get_all_students();
-                foreach ($students as &$stu) {
-                    if (($stu['phone'] ?? '') === ($adm['phone'] ?? '')) {
-                        if (!isset($stu['enrolledCourses']) || !is_array($stu['enrolledCourses'])) {
-                            $stu['enrolledCourses'] = [];
-                        }
-                        if (!in_array($cId, $stu['enrolledCourses'])) {
-                            $stu['enrolledCourses'][] = $cId;
-                        }
+            // Update student record in students.json
+            $students = get_all_students();
+            foreach ($students as &$stu) {
+                if (($stu['phone'] ?? '') === ($adm['phone'] ?? '')) {
+                    $stu['status'] = $markPaid ? 'active' : 'approved';
+                    $stu['isApproved'] = true;
+                    if ($markPaid) {
                         $stu['isPaid500'] = true;
                         $stu['paymentStatus'] = 'paid';
                         $stu['appliedCourse'] = $adm['courseTitle'] ?? '';
-                        break;
+
+                        $cId = map_offline_course_id($adm['courseTitle'] ?? '');
+                        if (!isset($stu['enrolledCourses']) || !is_array($stu['enrolledCourses'])) {
+                            $stu['enrolledCourses'] = [];
+                        }
+                        if ($cId && !in_array($cId, $stu['enrolledCourses'])) {
+                            $stu['enrolledCourses'][] = $cId;
+                        }
                     }
+                    break;
                 }
-                unset($stu);
-                save_all_students($students);
             }
+            unset($stu);
+            save_all_students($students);
+
             $found = true;
             break;
         }
@@ -1114,6 +1248,35 @@ if ($action === 'approve-to-alumni' && $method === 'POST') {
         }
     }
     unset($s);
+
+    if (!$targetStudent) {
+        // Fallback check in offline-admissions.json
+        $offFile = DATA_DIR . '/offline-admissions.json';
+        $offList = file_exists($offFile) ? json_decode(file_get_contents($offFile), true) : [];
+        if (is_array($offList)) {
+            foreach ($offList as &$adm) {
+                $pClean = preg_replace('/[^0-9]/', '', (string)($adm['phone'] ?? ''));
+                if ($pClean === preg_replace('/[^0-9]/', '', $studentPhone) || ($adm['id'] ?? '') === $studentPhone) {
+                    $adm['alumniApproved'] = true;
+                    $adm['status'] = 'approved';
+                    $targetStudent = [
+                        'phone' => $pClean,
+                        'name' => $adm['fullName'] ?? 'Alumnus',
+                        'studioName' => $adm['studioName'] ?? 'Creative Studio',
+                        'currentRole' => $adm['currentRole'] ?? ($adm['currentWork'] ?? 'Senior Video Editor'),
+                        'workCity' => $adm['workCity'] ?? ($adm['city'] ?? 'Siwan'),
+                        'avatar' => $adm['photoUrl'] ?? '',
+                        'certId' => 'QAA-' . date('Y') . '-ALM'
+                    ];
+                    break;
+                }
+            }
+            unset($adm);
+            if ($targetStudent) {
+                file_put_contents($offFile, json_encode($offList, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+            }
+        }
+    }
 
     if (!$targetStudent) {
         json_err('Student record not found', 404);

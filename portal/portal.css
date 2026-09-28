@@ -4528,21 +4528,147 @@ video::-webkit-media-controls-download-button {
   border-radius: inherit;
 }
 
-/* Unobstructed Clean Video Player (No Disturbing Overlays, Badges, or Watermarks) */
-.yt-shield-top,
-.yt-shield-content,
-.yt-shield-badge,
-.yt-shield-dot,
-.yt-shield-share-blocker,
-.yt-shield-corner,
-.watermark-overlay,
-.watermark-tag {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  width: 0 !important;
-  height: 0 !important;
+/* ── Course Video Anti-Leak Protection Shields ── */
+.course-click-shield {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 72px; /* Shields top bar: title, channel avatar, share, watch later */
+  z-index: 12;
+  background: transparent;
+  cursor: pointer;
+}
+
+.course-click-shield-corner {
+  position: absolute;
+  bottom: 0;
+  right: 48px; /* Leaves the native/overlay fullscreen button accessible */
+  width: 82px;  /* Shields bottom-right YouTube logo and Watch on YouTube button */
+  height: 48px;
+  z-index: 12;
+  background: transparent;
+  cursor: pointer;
+}
+
+.course-pause-shield {
+  position: absolute;
+  top: 72px;
+  left: 0;
+  right: 0;
+  bottom: 48px;
+  z-index: 14;
+  background: rgba(7, 11, 20, 0.55);
+  backdrop-filter: blur(3px);
+  display: none; /* Active only when video is paused */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+
+.course-pause-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d8a153 0%, #b88636 100%);
+  color: #070b14;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(216, 161, 83, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.course-pause-shield:hover .course-pause-btn {
+  transform: scale(1.1);
+  box-shadow: 0 14px 36px rgba(216, 161, 83, 0.65);
+}
+
+.course-pause-btn svg {
+  margin-left: 4px;
+}
+
+.course-pause-txt {
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #fcd34d;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+}
+
+/* Floating Fullscreen button on course video */
+.course-video-overlay-fs {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 16;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(13, 21, 39, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+}
+
+.video-container:hover .course-video-overlay-fs {
+  opacity: 1;
+}
+
+.course-video-overlay-fs:hover {
+  background: rgba(216, 161, 83, 0.35) !important;
+  border-color: #d8a153 !important;
+  color: #fff !important;
+  transform: scale(1.1) !important;
+}
+
+/* Enhanced HTML5 Fullscreen for Course Video Container */
+.video-container:fullscreen,
+.video-container:-webkit-full-screen,
+.video-container:-moz-full-screen,
+.video-container:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  padding-top: 0 !important;
+  background: #000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 0 !important;
+}
+
+.video-container:fullscreen #video-mount,
+.video-container:-webkit-full-screen #video-mount,
+.video-container:-moz-full-screen #video-mount,
+.video-container:-ms-fullscreen #video-mount {
+  width: 100vw !important;
+  height: 100vh !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+.video-container:fullscreen iframe,
+.video-container:-webkit-full-screen iframe,
+.video-container:-moz-full-screen iframe,
+.video-container:-ms-fullscreen iframe {
+  width: 100vw !important;
+  height: 100vh !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
 }
 
 
@@ -8167,5 +8293,607 @@ video::-webkit-media-controls-download-button {
   }
 }
 
+/* ==========================================================================
+   OFFICIAL STUDENT IDENTITY BADGE (CR80 PVC) — PORTAL & MY PROFILE
+   ========================================================================== */
+.idcard-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 14px;
+  overflow-y: auto;
+}
 
+.idcard-modal-card {
+  background: #0f1420;
+  border: 1px solid rgba(216, 161, 83, 0.4);
+  border-radius: 24px;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95);
+  max-width: 820px;
+  width: 100%;
+  padding: 26px 28px;
+  color: #fff;
+  position: relative;
+  max-height: 92vh;
+  overflow-y: auto;
+}
 
+.idcard-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+}
+
+.idcard-modal-title {
+  margin: 0;
+  font-size: 20px;
+  font-family: 'Outfit', sans-serif;
+  color: var(--gold, #d8a153);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.idcard-cards-grid {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+/* Authentic Standard CR80 PVC Institutional Identity Badge */
+.adm-issued-id-card {
+  width: 350px;
+  height: 560px;
+  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.12) 0%, transparent 60%),
+              linear-gradient(180deg, #131722 0%, #0a0c13 100%);
+  border: 1.5px solid rgba(245, 158, 11, 0.45);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(245, 158, 11, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 16px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  color: #ffffff;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+
+.adm-card-sheen {
+  position: absolute;
+  top: -100px;
+  left: -100px;
+  right: -100px;
+  height: 250px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 60%);
+  transform: rotate(-15deg);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.adm-card-lanyard-slot {
+  width: 48px;
+  height: 8px;
+  background: #05070a;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  margin: 0 auto 10px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-header-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1.5px solid rgba(245, 158, 11, 0.35);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+
+.adm-card-clean-logo {
+  width: 44px !important;
+  height: 44px !important;
+  object-fit: contain !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+
+.adm-card-inst-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 850;
+  color: #fbbf24;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+}
+
+.adm-card-inst-sub {
+  font-size: 8px;
+  font-weight: 700;
+  color: #e2e8f0;
+  letter-spacing: 0.08em;
+}
+
+.adm-card-inst-iso {
+  font-size: 7px;
+  color: #94a3b8;
+}
+
+.adm-card-photo-wrapper {
+  position: relative;
+  width: 100px;
+  height: 120px;
+  margin: 0 auto 8px;
+  border-radius: 14px;
+  padding: 3px;
+  background: linear-gradient(135deg, #f59e0b, #b45309);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+
+.adm-card-photo-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 11px;
+  display: block;
+}
+
+.adm-card-photo-ribbon {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: #042f2c;
+  font-size: 8.5px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1.5px solid #064e3b;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.5);
+  white-space: nowrap;
+}
+
+.adm-card-student-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 850;
+  color: #ffffff;
+  margin: 8px 0 2px;
+  letter-spacing: -0.01em;
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adm-card-course-pill {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin: 0 auto 10px;
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90%;
+}
+
+.adm-card-table-grid {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 7px 10px;
+  margin-bottom: 10px;
+  text-align: left;
+  font-size: 10px;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 8px;
+}
+
+.adm-card-table-row span {
+  color: #94a3b8;
+  font-size: 8px;
+  font-weight: 600;
+  display: block;
+}
+
+.adm-card-table-row strong {
+  color: #ffffff;
+  font-size: 10.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.adm-card-footer-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+  margin-top: auto;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+
+.adm-card-qr-block {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.adm-card-qr-img {
+  width: 52px;
+  height: 52px;
+  background: #ffffff;
+  padding: 2px;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  flex-shrink: 0;
+  display: block;
+}
+
+.adm-card-qr-badge {
+  font-size: 8px;
+  color: #fbbf24;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.adm-card-qr-hint {
+  font-size: 6.5px;
+  color: #94a3b8;
+}
+
+.adm-card-hologram {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #f59e0b, #fbbf24, #10b981, #3b82f6, #ec4899, #f59e0b);
+  padding: 1.5px;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adm-card-hologram-inner {
+  width: 100%;
+  height: 100%;
+  background: #0c0f17;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 5.5px;
+  font-weight: 900;
+  color: #fbbf24;
+  line-height: 1;
+  text-align: center;
+}
+
+.adm-card-signatory {
+  text-align: right;
+}
+
+.adm-card-sign-cursive {
+  font-family: 'Great Vibes', 'Brush Script MT', cursive;
+  font-size: 18px;
+  color: #fbbf24;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.adm-card-sign-lead {
+  font-size: 7px;
+  color: #cbd5e1;
+  font-weight: 700;
+}
+
+.adm-card-sign-session {
+  font-size: 6.5px;
+  color: #64748b;
+}
+
+.adm-card-security-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+  width: 240px;
+  height: 240px;
+  opacity: 0.045;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.adm-card-security-watermark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(100%) brightness(300%);
+}
+
+/* Back Side */
+.adm-issued-id-card.adm-card-back-side {
+  text-align: left;
+  padding: 16px 18px 14px;
+}
+
+.adm-card-back-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1.5px solid rgba(245, 158, 11, 0.35);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-back-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adm-card-back-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.adm-card-back-head-text strong {
+  font-family: 'Outfit', sans-serif;
+  font-size: 9.5px;
+  font-weight: 850;
+  color: #fbbf24;
+  display: block;
+}
+
+.adm-card-back-head-text span {
+  font-size: 7px;
+  color: #94a3b8;
+  display: block;
+}
+
+.adm-card-active-pill {
+  font-size: 8px;
+  color: #10b981;
+  font-weight: 850;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.12);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.adm-card-rules-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-rules-heading {
+  font-size: 9px;
+  font-weight: 850;
+  color: #fbbf24;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.adm-card-rules-list {
+  margin: 0;
+  padding: 0 0 0 12px;
+  font-size: 8px;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+.adm-card-rules-list li {
+  margin-bottom: 3px;
+}
+
+.adm-card-emergency-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 8px;
+  padding: 6px 8px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+  font-size: 8px;
+}
+
+.adm-card-emergency-row span {
+  color: #94a3b8;
+  display: block;
+  font-size: 7px;
+}
+
+.adm-card-emergency-row strong {
+  color: #fbbf24;
+  font-size: 9px;
+}
+
+.adm-card-campus-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-campus-heading {
+  font-size: 9px;
+  font-weight: 850;
+  color: #38bdf8;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.adm-card-campus-detail {
+  font-size: 8px;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+
+.adm-card-campus-detail strong {
+  color: #ffffff;
+}
+
+.adm-card-barcode-box {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-barcode-graphic {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 15px;
+  letter-spacing: 5px;
+  color: #ffffff;
+  opacity: 0.9;
+  line-height: 1;
+}
+
+.adm-card-return-notice {
+  font-size: 7px;
+  color: #64748b;
+  margin: 4px 0 0;
+  line-height: 1.3;
+}
+
+.idcard-actions-bar {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 18px;
+}
+
+/* ==========================================================================
+   ASSIGNMENTS TAB STYLING
+   ========================================================================== */
+.assignments-card {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 22px;
+}
+
+.asg-item-card {
+  background: #090e18;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.asg-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.asg-item-title {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+}
+
+.asg-status-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.asg-status-badge.pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.asg-status-badge.submitted {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.asg-desc-box {
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 10px 14px;
+  border-radius: 8px;
+  border-left: 3px solid #38bdf8;
+}
+
+.asg-submission-box {
+  background: #0c121e;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 10px;
+}

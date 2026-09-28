@@ -121,6 +121,17 @@ function save_students($students) {
     file_put_contents(LMS_STUDENTS_FILE, json_encode($students, JSON_PRETTY_PRINT), LOCK_EX);
 }
 
+if (!function_exists('get_all_students')) {
+    function get_all_students() {
+        return load_students();
+    }
+}
+if (!function_exists('save_all_students')) {
+    function save_all_students($students) {
+        return save_students($students);
+    }
+}
+
 function clean_phone($p) {
     $num = preg_replace('/[^0-9]/', '', (string)$p);
     if (strlen($num) === 12 && substr($num, 0, 2) === '91') {
@@ -132,7 +143,18 @@ function clean_phone($p) {
 // Helper to map offline admission program to LMS Course ID
 function map_offline_course_id($courseTitle) {
     $t = strtolower(trim((string)$courseTitle));
-    if (strpos($t, 'advance video') !== false || strpos($t, 'video editing') !== false) {
+    if (!$t) return 'course-cinematic-wedding';
+
+    // 1. Direct ID or exact title match in courses.json
+    $courses = load_courses();
+    foreach ($courses as $c) {
+        if ($c['id'] === $courseTitle || strtolower($c['title'] ?? '') === $t) {
+            return $c['id'];
+        }
+    }
+
+    // 2. Program keywords mapping
+    if (strpos($t, 'advance video') !== false || strpos($t, 'video editing') !== false || strpos($t, 'premiere') !== false) {
         return 'course-premiere-pro';
     }
     if (strpos($t, 'album') !== false) {
@@ -141,6 +163,17 @@ function map_offline_course_id($courseTitle) {
     if (strpos($t, 'marketing') !== false || strpos($t, 'filmmaking & marketing') !== false || strpos($t, 'studio') !== false) {
         return 'course-digital-marketing';
     }
+    if (strpos($t, 'wedding') !== false || strpos($t, 'cinematic') !== false) {
+        return 'course-cinematic-wedding';
+    }
+
+    // 3. Check for any internal admission course
+    foreach ($courses as $c) {
+        if (!empty($c['isInternalOnly']) || !empty($c['isAdmissionCourse'])) {
+            return $c['id'];
+        }
+    }
+
     return 'course-cinematic-wedding';
 }
 
@@ -368,11 +401,53 @@ if ($action === 'verify-otp' && $method === 'POST') {
     ]);
 }
 
-// 2.5 Send Email OTP (Registration & Forgot Password)
+// 2.2 Verify Phone OTP (Without Login, for Admission Form Verification)
+if ($action === 'verify-phone-otp' && $method === 'POST') {
+    $body = read_json_body();
+    $rawPhone = $body['phone'] ?? '';
+    $phone = clean_phone($rawPhone);
+    $userOtp = trim($body['otp'] ?? '');
+
+    if (empty($phone) || empty($userOtp)) {
+        json_err('Mobile number aur OTP enter karna mandatory hai', 400);
+    }
+
+    $otps = file_exists(LMS_OTPS_FILE) ? json_decode(file_get_contents(LMS_OTPS_FILE), true) : [];
+    $record = $otps[$phone] ?? null;
+
+    $settings = load_lms_settings();
+    $clientIp = $_SERVER['REMOTE_ADDR'] ?? '';
+    $serverName = $_SERVER['SERVER_NAME'] ?? '';
+    $isLocal = in_array($clientIp, ['127.0.0.1', '::1']) || in_array($serverName, ['localhost', '127.0.0.1']);
+    $isDemoMatch = ((!empty($settings['otpDemoMode']) || $isLocal) && $userOtp === ($settings['defaultOtp'] ?? '123456'));
+
+    if (!$isDemoMatch && (!$record || $record['expiresAt'] < time() || $record['otp'] !== $userOtp)) {
+        json_err('Galat ya expired OTP code enter kiya hai. Kripya naya OTP mangwayein.', 401);
+    }
+
+    // Mark verified for admission verification (valid for 1 hour)
+    $verifiedFile = DATA_DIR . '/verified-admissions.json';
+    $verifiedList = file_exists($verifiedFile) ? json_decode(file_get_contents($verifiedFile), true) : [];
+    if (!is_array($verifiedList)) $verifiedList = [];
+    if (!isset($verifiedList['phones']) || !is_array($verifiedList['phones'])) $verifiedList['phones'] = [];
+    $verifiedList['phones'][$phone] = [
+        'verifiedAt' => time(),
+        'expiresAt'  => time() + 3600
+    ];
+    file_put_contents($verifiedFile, json_encode($verifiedList, JSON_PRETTY_PRINT), LOCK_EX);
+
+    json_ok([
+        'verified' => true,
+        'phone'    => $phone,
+        'message'  => 'WhatsApp number successfully verified!'
+    ]);
+}
+
+// 2.5 Send Email OTP (Registration, Admission & Forgot Password)
 if ($action === 'send-email-otp' && $method === 'POST') {
     $body = read_json_body();
     $email = strtolower(trim($body['email'] ?? ''));
-    $purpose = trim($body['purpose'] ?? 'register'); // 'register' or 'forgot-password'
+    $purpose = trim($body['purpose'] ?? 'register'); // 'register', 'admission', or 'forgot-password'
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         json_err('Valid email address darj karein', 400);
@@ -403,10 +478,16 @@ if ($action === 'send-email-otp' && $method === 'POST') {
         json_err($sendRes['error'] ?? 'Email OTP bhejne me error aaya', 500);
     }
 
+    $clientIp = $_SERVER['REMOTE_ADDR'] ?? '';
+    $serverName = $_SERVER['SERVER_NAME'] ?? '';
+    $isLocal = in_array($clientIp, ['127.0.0.1', '::1']) || in_array($serverName, ['localhost', '127.0.0.1']);
+    $demoMode = !empty($settings['otpDemoMode']);
+
     json_ok([
         'message' => 'OTP aapke email address par bhej diya gaya hai.',
-        'email' => $email,
-        'purpose' => $purpose
+        'email'   => $email,
+        'purpose' => $purpose,
+        'devOtp'  => ($demoMode || $isLocal) ? $otp : null
     ]);
 }
 
@@ -418,10 +499,26 @@ if ($action === 'verify-email-otp' && $method === 'POST') {
     $purpose = trim($body['purpose'] ?? '');
     $settings = load_lms_settings();
 
+    $clientIp = $_SERVER['REMOTE_ADDR'] ?? '';
+    $serverName = $_SERVER['SERVER_NAME'] ?? '';
+    $isLocal = in_array($clientIp, ['127.0.0.1', '::1']) || in_array($serverName, ['localhost', '127.0.0.1']);
+    $isDemoMatch = ((!empty($settings['otpDemoMode']) || $isLocal) && $otp === ($settings['defaultOtp'] ?? '123456'));
+
     $v = verify_email_otp($email, $otp, $purpose, $settings);
-    if (!$v['ok']) {
+    if (!$v['ok'] && !$isDemoMatch) {
         json_err($v['error'], 400);
     }
+
+    // Mark email verified in verified-admissions.json as well
+    $verifiedFile = DATA_DIR . '/verified-admissions.json';
+    $verifiedList = file_exists($verifiedFile) ? json_decode(file_get_contents($verifiedFile), true) : [];
+    if (!is_array($verifiedList)) $verifiedList = [];
+    if (!isset($verifiedList['emails']) || !is_array($verifiedList['emails'])) $verifiedList['emails'] = [];
+    $verifiedList['emails'][$email] = [
+        'verifiedAt' => time(),
+        'expiresAt'  => time() + 3600
+    ];
+    file_put_contents($verifiedFile, json_encode($verifiedList, JSON_PRETTY_PRINT), LOCK_EX);
 
     json_ok(['verified' => true, 'message' => 'Email successfully verified!']);
 }
@@ -744,6 +841,31 @@ if ($action === 'email-login' && $method === 'POST') {
 // 4. Current Student Info
 if ($action === 'me' && $method === 'GET') {
     $student = require_student();
+
+    // Cross-reference offline admissions to enrich student profile and ID card details
+    $admFile = DATA_DIR . '/offline-admissions.json';
+    if (file_exists($admFile)) {
+        $allAdms = json_decode(file_get_contents($admFile), true) ?: [];
+        $pClean = clean_phone($student['phone'] ?? '');
+        foreach ($allAdms as $a) {
+            if (clean_phone($a['phone'] ?? '') === $pClean) {
+                if (empty($student['offlineAdmissionId'])) $student['offlineAdmissionId'] = $a['id'] ?? '';
+                if (empty($student['enrollmentNo'])) $student['enrollmentNo'] = $a['id'] ?? '';
+                if (empty($student['bloodGroup'])) $student['bloodGroup'] = $a['bloodGroup'] ?? 'B+';
+                if (empty($student['studioName'])) $student['studioName'] = $a['studioName'] ?? '';
+                if (empty($student['workCity'])) $student['workCity'] = $a['workCity'] ?? ($a['city'] ?? '');
+                if (empty($student['city'])) $student['city'] = $a['city'] ?? ($a['workCity'] ?? '');
+                if (empty($student['appliedCourse'])) $student['appliedCourse'] = $a['courseTitle'] ?? '';
+                if (empty($student['avatar']) && !empty($a['photoUrl'])) $student['avatar'] = $a['photoUrl'];
+                if (($a['paymentStatus'] ?? '') === 'paid') {
+                    $student['isPaid500'] = true;
+                    $student['paymentStatus'] = 'paid';
+                }
+                break;
+            }
+        }
+    }
+
     if (empty($student['enrollmentNo'])) {
         $student['enrollmentNo'] = $student['offlineAdmissionId'] ?? ('QAA-' . date('Y') . '-' . substr(preg_replace('/[^0-9]/', '', $student['phone'] ?? '9999'), -4));
     }
@@ -2134,6 +2256,34 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
     if (!$fullName || strlen($phone) < 10) {
         json_err('Full Name aur valid 10-digit mobile number mandatory hai.', 400);
     }
+    if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        json_err('Valid email address enter karna mandatory hai.', 400);
+    }
+
+    // Server-side check: Verify phone & email were OTP-verified
+    $verifiedFile = DATA_DIR . '/verified-admissions.json';
+    $verifiedList = file_exists($verifiedFile) ? json_decode(file_get_contents($verifiedFile), true) : [];
+    $isPhoneVerified = !empty($verifiedList['phones'][$phone]) && $verifiedList['phones'][$phone]['expiresAt'] >= time();
+    $isEmailVerified = !empty($verifiedList['emails'][strtolower($email)]) && $verifiedList['emails'][strtolower($email)]['expiresAt'] >= time();
+
+    // Fallback to email-otps.json if present
+    if (!$isEmailVerified && function_exists('load_email_otps')) {
+        $eOtps = load_email_otps();
+        if (!empty($eOtps[strtolower($email)]['verified'])) {
+            $isEmailVerified = true;
+        }
+    }
+
+    $clientIp = $_SERVER['REMOTE_ADDR'] ?? '';
+    $serverName = $_SERVER['SERVER_NAME'] ?? '';
+    $isLocal = in_array($clientIp, ['127.0.0.1', '::1']) || in_array($serverName, ['localhost', '127.0.0.1']);
+
+    if (!$isPhoneVerified) {
+        json_err('WhatsApp Number ko pehle OTP se verify karein.', 400);
+    }
+    if (!$isEmailVerified) {
+        json_err('Email Address ko pehle OTP se verify karein.', 400);
+    }
 
     // Helper to upload files safely with size validation
     $saveUploadedDoc = function($fieldKey, $prefix, $maxBytes = 0) use ($uploadDir) {
@@ -2160,8 +2310,8 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
     };
 
     $photoUrl = $saveUploadedDoc('photo_file', 'photo', 500 * 1024); // Exactly 500 KB max limit
-    $aadhaarUrl = $saveUploadedDoc('aadhaar_file', 'aadhaar', 2 * 1024 * 1024);
-    $certUrl = $saveUploadedDoc('cert_file', 'cert', 5 * 1024 * 1024);
+    $aadhaarUrl = $saveUploadedDoc('aadhaar_file', 'aadhaar', 1024 * 1024); // Exactly 1 MB max limit
+    $certUrl = $saveUploadedDoc('cert_file', 'cert', 1024 * 1024); // Exactly 1 MB max limit
 
     $admissionsFile = DATA_DIR . '/offline-admissions.json';
     $admissions = file_exists($admissionsFile) ? json_decode(file_get_contents($admissionsFile), true) : [];
@@ -2196,7 +2346,10 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         'paymentMode'   => $paymentMode,
         'feeAmount'     => $admissionFee,
         'paymentStatus' => ($paymentMode === 'cash') ? 'pending_campus' : 'awaiting_online_payment',
-        'status'        => 'submitted',
+        'status'        => ($paymentMode === 'cash') ? 'pending_approval' : 'submitted',
+        'isApproved'    => false,
+        'phoneVerified' => true,
+        'emailVerified' => true,
         'createdAt'     => date('c')
     ];
 
@@ -2282,6 +2435,8 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         if (empty($existingStudent['isPaid500'])) {
             $existingStudent['paymentStatus'] = ($paymentMode === 'cash') ? 'pay_at_campus' : 'unpaid';
             $existingStudent['isPaid500'] = false;
+            $existingStudent['isApproved'] = false;
+            $existingStudent['status'] = ($paymentMode === 'cash') ? 'pending_approval' : 'pending_payment';
         }
     } else {
         $students[] = [
@@ -2290,12 +2445,14 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
             'phone'              => $phone,
             'email'              => $email,
             'avatar'             => $photoUrl,
-            'enrolledCourses'    => [], // Clean! Strictly empty until ₹500 is paid
+            'enrolledCourses'    => [], // Clean! Strictly empty until Admin approves
             'isOfflineStudent'   => true,
             'offlineAdmissionId' => $admissionId,
             'appliedCourse'      => $courseTitle,
             'paymentStatus'      => ($paymentMode === 'cash') ? 'pay_at_campus' : 'unpaid',
             'isPaid500'          => false,
+            'isApproved'         => false,
+            'status'             => ($paymentMode === 'cash') ? 'pending_approval' : 'pending_payment',
             'studioName'         => $studioName,
             'currentRole'        => $currentRole,
             'workCity'           => $workCity,
@@ -2707,6 +2864,72 @@ if ($action === 'submit-course-exam' && $method === 'POST') {
     ]);
 }
 
+// 26. Submit Student Assignment (Project / Link / Notes)
+if ($action === 'submit-assignment' && $method === 'POST') {
+    $student = require_student();
+    $body = read_json_body() ?: $_POST;
+    $courseId = trim($body['courseId'] ?? '');
+    $assignmentId = trim($body['assignmentId'] ?? '');
+    $projectUrl = trim($body['projectUrl'] ?? '');
+    $notes = trim($body['notes'] ?? '');
+
+    if (!$courseId || !$assignmentId) {
+        json_err('Course ID aur Assignment ID mandatory hain.', 400);
+    }
+    if (!$projectUrl && !$notes) {
+        json_err('Kripya apna project Google Drive/YouTube link ya submission details enter karein.', 400);
+    }
+
+    $assignFile = DATA_DIR . '/assignments.json';
+    $assignments = file_exists($assignFile) ? json_decode(file_get_contents($assignFile), true) : [];
+    if (!is_array($assignments)) $assignments = [];
+
+    $stuId = $student['id'] ?? $student['phone'];
+    $subKey = $stuId . '_' . $courseId . '_' . $assignmentId;
+    $submission = [
+        'id'           => 'sub_' . time() . '_' . substr(md5(uniqid()), 0, 4),
+        'studentId'    => $stuId,
+        'studentName'  => $student['name'] ?? 'Student',
+        'studentPhone' => $student['phone'] ?? '',
+        'courseId'     => $courseId,
+        'assignmentId' => $assignmentId,
+        'projectUrl'   => $projectUrl,
+        'notes'        => $notes,
+        'status'       => 'submitted',
+        'submittedAt'  => date('c')
+    ];
+    $assignments[$subKey] = $submission;
+    if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+    file_put_contents($assignFile, json_encode($assignments, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+    json_ok([
+        'message' => '🎉 Assignment successfully submit ho gaya hai! Mentor jald hi aapka project review karenge.',
+        'submission' => $submission
+    ]);
+}
+
+// 27. Get Student Assignment Submissions
+if ($action === 'get-my-assignments' && $method === 'GET') {
+    $student = require_student();
+    $courseId = trim($_GET['courseId'] ?? '');
+
+    $assignFile = DATA_DIR . '/assignments.json';
+    $assignments = file_exists($assignFile) ? json_decode(file_get_contents($assignFile), true) : [];
+    if (!is_array($assignments)) $assignments = [];
+
+    $stuId = $student['id'] ?? '';
+    $stuPhone = $student['phone'] ?? '';
+    $mySubs = [];
+    foreach ($assignments as $sub) {
+        if (($sub['studentId'] === $stuId || $sub['studentPhone'] === $stuPhone) && (!$courseId || $sub['courseId'] === $courseId)) {
+            $mySubs[$sub['assignmentId']] = $sub;
+        }
+    }
+
+    json_ok(['submissions' => $mySubs]);
+}
+
 json_err('Unknown LMS action', 404);
+
 
 

@@ -160,7 +160,7 @@
  // ── Remove Admission from header (moved to footer as "Apply Admission Form") ──
  header.querySelectorAll('a[href*="admission"]').forEach(a => a.remove());
 
- // ── Seamless Alumni & About Us in Navigation ──
+ // ── Seamless Alumni & About Us Navigation ──
  const sampleNav = header.querySelector('.ref-nav a[href*="about-us"], .ref-nav a[href*="master-class"], .ref-nav a[href*="contact-us"]');
  let navPrefix = '';
  if (sampleNav) {
@@ -171,80 +171,140 @@
  }
 
  const desktopNav = header.querySelector('.ref-nav');
- const existingAlumniLinks = desktopNav ? Array.from(desktopNav.querySelectorAll('a')).filter(a => {
-   const h = (a.getAttribute('href') || '').toLowerCase();
-   const t = a.textContent.trim().toLowerCase();
-   return h.includes('alumni') || t === 'alumni' || t === 'alumni directory';
- }) : [];
+ const freeResPanel = header.querySelector('#ref-resources');
 
- if (desktopNav && existingAlumniLinks.length === 0) {
-   const aboutLink = desktopNav.querySelector('a[href*="about-us"]');
-   const freeResEl = desktopNav.querySelector('.ref-resources') || desktopNav.querySelector('.ref-dropdown:last-of-type');
-   const alumniA = document.createElement('a');
-   alumniA.href = `${navPrefix}alumni/`;
-   alumniA.className = 'ref-alumni-nav-link';
-   alumniA.textContent = 'Alumni';
-
-   if (aboutLink) {
-     aboutLink.after(alumniA);
-   } else if (freeResEl && freeResEl.nextSibling) {
-     desktopNav.insertBefore(alumniA, freeResEl.nextSibling);
-   } else {
-     desktopNav.append(alumniA);
-   }
- } else if (existingAlumniLinks.length > 1) {
-   // Keep only one (prefer the active link or the first one)
-   const activeLink = existingAlumniLinks.find(a => a.classList.contains('ref-active-page') || a.style.color === '#f59e0b') || existingAlumniLinks[0];
-   existingAlumniLinks.forEach(a => {
-     if (a !== activeLink) a.remove();
+ // 1. Move "About Us" into "Free Resources" dropdown (remove from main top-level navbar)
+ if (desktopNav) {
+   const topAboutLinks = Array.from(desktopNav.children).filter(el => {
+     return el.tagName === 'A' && (el.getAttribute('href') || '').toLowerCase().includes('about-us');
    });
+   topAboutLinks.forEach(a => a.remove());
+
+   if (freeResPanel && !freeResPanel.querySelector('a[href*="about-us"]')) {
+     const aboutDropA = document.createElement('a');
+     aboutDropA.href = `${navPrefix}about-us/`;
+     aboutDropA.textContent = 'About Us';
+     if (freeResPanel.firstChild) {
+       freeResPanel.insertBefore(aboutDropA, freeResPanel.firstChild);
+     } else {
+       freeResPanel.append(aboutDropA);
+     }
+   }
+
+   // 2. Ensure "Alumni" is present on the main top-level navbar
+   const topLevelAlumni = Array.from(desktopNav.children).filter(el => {
+     if (el.tagName !== 'A') return false;
+     const h = (el.getAttribute('href') || '').toLowerCase();
+     const t = el.textContent.trim().toLowerCase();
+     return h.includes('alumni') || t === 'alumni';
+   });
+
+   if (topLevelAlumni.length === 0) {
+     const contactLink = Array.from(desktopNav.children).find(el => el.tagName === 'A' && (el.getAttribute('href') || '').includes('contact-us'));
+     const freeResEl = desktopNav.querySelector('.ref-resources') || desktopNav.querySelector('.ref-dropdown:last-of-type');
+     const alumniA = document.createElement('a');
+     alumniA.href = `${navPrefix}alumni/`;
+     alumniA.className = 'ref-alumni-nav-link';
+     alumniA.textContent = 'Alumni';
+
+     if (contactLink) {
+       desktopNav.insertBefore(alumniA, contactLink);
+     } else if (freeResEl && freeResEl.nextSibling) {
+       desktopNav.insertBefore(alumniA, freeResEl.nextSibling);
+     } else {
+       desktopNav.append(alumniA);
+     }
+   } else if (topLevelAlumni.length > 1) {
+     const activeLink = topLevelAlumni.find(a => a.classList.contains('ref-active-page') || a.style.color === '#f59e0b') || topLevelAlumni[0];
+     topLevelAlumni.forEach(a => {
+       if (a !== activeLink) a.remove();
+     });
+   }
+
+   // Ensure Free Resources dropdown also has Alumni Directory
+   if (freeResPanel && !freeResPanel.querySelector('a[href*="alumni"]')) {
+     const alumniDropA = document.createElement('a');
+     alumniDropA.href = `${navPrefix}alumni/`;
+     alumniDropA.textContent = 'Alumni Directory & Hall of Fame';
+     freeResPanel.append(alumniDropA);
+   }
  }
 
- // Highlight Alumni link if currently on Alumni page
- if (desktopNav && (window.location.pathname.includes('/alumni') || window.location.href.includes('/alumni'))) {
-   desktopNav.querySelectorAll('a').forEach(a => {
+ // 3. Mobile Navigation: Move About Us into Free Resources accordion, ensure Alumni in main list
+ if (mobileNav) {
+   const mobTopAbout = Array.from(mobileNav.children).filter(el => {
+     return el.tagName === 'A' && (el.getAttribute('href') || '').toLowerCase().includes('about-us');
+   });
+   mobTopAbout.forEach(a => a.remove());
+
+   const mobileResources = [...mobileNav.querySelectorAll('details')].find(detail => detail.querySelector('summary')?.textContent.trim() === 'Free Resources');
+   if (mobileResources && !mobileResources.querySelector('a[href*="about-us"]')) {
+     const mobAboutA = document.createElement('a');
+     mobAboutA.className = 'ref-course';
+     mobAboutA.href = `${navPrefix}about-us/`;
+     mobAboutA.innerHTML = '<span class="ref-course-icon" aria-hidden="true">Ab</span><span>About Us &amp; Mentors</span>';
+     const firstCourseInRes = mobileResources.querySelector('.ref-course');
+     if (firstCourseInRes) {
+       mobileResources.insertBefore(mobAboutA, firstCourseInRes);
+     } else {
+       mobileResources.append(mobAboutA);
+     }
+   }
+
+   const topLevelMobAlumni = Array.from(mobileNav.children).filter(el => {
+     if (el.tagName !== 'A') return false;
+     const h = (el.getAttribute('href') || '').toLowerCase();
+     const t = el.textContent.toLowerCase();
+     return h.includes('alumni') || t.includes('alumni');
+   });
+
+   if (topLevelMobAlumni.length === 0) {
+     const mobContact = Array.from(mobileNav.children).find(el => el.tagName === 'A' && (el.getAttribute('href') || '').includes('contact-us'));
+     const mobAlumniA = document.createElement('a');
+     mobAlumniA.href = `${navPrefix}alumni/`;
+     mobAlumniA.textContent = 'Alumni Hall of Fame';
+
+     if (mobContact) {
+       mobileNav.insertBefore(mobAlumniA, mobContact);
+     } else {
+       mobileNav.append(mobAlumniA);
+     }
+   } else if (topLevelMobAlumni.length > 1) {
+     for (let i = 1; i < topLevelMobAlumni.length; i++) {
+       topLevelMobAlumni[i].remove();
+     }
+   }
+
+   if (mobileResources && !mobileResources.querySelector('a[href*="alumni"]')) {
+     const mobAlumniCourse = document.createElement('a');
+     mobAlumniCourse.className = 'ref-course';
+     mobAlumniCourse.href = `${navPrefix}alumni/`;
+     mobAlumniCourse.innerHTML = '<span class="ref-course-icon" aria-hidden="true">Al</span><span>Alumni Directory &amp; Hall of Fame</span>';
+     const appLink = mobileResources.querySelector('a[href*="play.google.com"]');
+     if (appLink) {
+       mobileResources.insertBefore(mobAlumniCourse, appLink);
+     } else {
+       mobileResources.append(mobAlumniCourse);
+     }
+   }
+ }
+
+ // 4. Highlight Active Page
+ const currentPath = window.location.pathname.toLowerCase();
+ const currentHref = window.location.href.toLowerCase();
+ if (currentPath.includes('/alumni') || currentHref.includes('/alumni')) {
+   header.querySelectorAll('a').forEach(a => {
      const h = (a.getAttribute('href') || '').toLowerCase();
      const t = a.textContent.trim().toLowerCase();
-     if (h.includes('alumni') || t === 'alumni') {
+     if ((h.includes('alumni') || t === 'alumni' || t === 'alumni hall of fame') && !a.closest('#ref-resources') && !a.closest('details')) {
        a.classList.add('ref-active-page');
        a.style.color = '#f59e0b';
        a.style.fontWeight = '700';
      }
    });
- }
-
- // Also in Free Resources dropdown panel, ensure Alumni Directory is accessible
- const freeResPanel = header.querySelector('#ref-resources');
- if (freeResPanel && !freeResPanel.querySelector('a[href*="alumni"]')) {
-   const alumniDropA = document.createElement('a');
-   alumniDropA.href = `${navPrefix}alumni/`;
-   alumniDropA.textContent = 'Alumni Directory & Hall of Fame';
-   freeResPanel.append(alumniDropA);
- }
-
- if (mobileNav) {
-   const existingMobAlumni = Array.from(mobileNav.querySelectorAll('a')).filter(a => {
-     const h = (a.getAttribute('href') || '').toLowerCase();
-     const t = a.textContent.toLowerCase();
-     return h.includes('alumni') || t.includes('alumni');
-   });
-
-   if (existingMobAlumni.length === 0) {
-     const mobAbout = mobileNav.querySelector('a[href*="about-us"]');
-     const mobAlumniA = document.createElement('a');
-     mobAlumniA.href = `${navPrefix}alumni/`;
-     mobAlumniA.innerHTML = '👥 Alumni Hall of Fame';
-
-     if (mobAbout) {
-       mobAbout.after(mobAlumniA);
-     } else {
-       mobileNav.append(mobAlumniA);
-     }
-   } else if (existingMobAlumni.length > 1) {
-     for (let i = 1; i < existingMobAlumni.length; i++) {
-       existingMobAlumni[i].remove();
-     }
-   }
+ } else if (currentPath.includes('/about-us') || currentHref.includes('/about-us')) {
+   const freeResToggle = header.querySelector('.ref-resources .ref-toggle');
+   if (freeResToggle) freeResToggle.style.color = '#f59e0b';
  }
 
 

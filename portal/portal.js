@@ -854,7 +854,7 @@ async function loadLesson(courseId, lessonId) {
     document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
     const discTab = document.querySelector('.lesson-tab[data-ltab="discussion"]');
     if (discTab) discTab.classList.add('active');
-    ['notes','resources','quiz','discussion','support'].forEach(t => {
+    ['notes','resources','quiz','assignments','discussion','support'].forEach(t => {
       const el = document.getElementById(`ltab-${t}`);
       if (el) el.classList.toggle('hidden', t !== 'discussion');
     });
@@ -878,19 +878,34 @@ async function loadLesson(courseId, lessonId) {
       window._currentYtPlayer = null;
     }
 
-    if (currentLesson.videoType === 'youtube') {
+    // YouTube ID detection & Anti-Leak Shield control
+    let ytId = currentLesson.youtubeId;
+    if (!ytId && currentLesson.streamUrl) {
+      const match = (currentLesson.streamUrl || '').match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+      if (match) ytId = match[1];
+    }
+    const isYt = (currentLesson.videoType === 'youtube' || !!ytId);
+
+    const courseTopShield = document.getElementById('course-click-shield');
+    const courseCornerShield = document.getElementById('course-click-shield-corner');
+    const coursePauseShield = document.getElementById('course-pause-shield');
+
+    if (isYt && ytId) {
+      // Activate Anti-Leak Shields (blocks clicking Title, Channel, Share, Watch later, and YouTube Logo)
+      if (courseTopShield) courseTopShield.style.display = 'block';
+      if (courseCornerShield) courseCornerShield.style.display = 'block';
+      if (coursePauseShield) coursePauseShield.style.display = 'none';
+
       // ── Custom Disguised YouTube Academy Player ──
       const ytTarget = document.createElement('div');
       ytTarget.id = 'yt-player-target';
       videoMount.appendChild(ytTarget);
 
-      // Unobstructed cinema-grade player target (No overlay text or disturbing blockers)
-
       // Load and mount via YouTube Iframe API
       loadYouTubeIframeApi(() => {
         try {
           window._currentYtPlayer = new YT.Player('yt-player-target', {
-            videoId: currentLesson.youtubeId,
+            videoId: ytId,
             width: '100%',
             height: '100%',
             playerVars: {
@@ -911,18 +926,35 @@ async function loadLesson(courseId, lessonId) {
                 }
               },
               onStateChange: (e) => {
-                if (e.data === YT.PlayerState.ENDED) {
+                const ps = document.getElementById('course-pause-shield');
+                if (e.data === YT.PlayerState.PAUSED) {
+                  if (ps) ps.style.display = 'flex';
+                } else if (e.data === YT.PlayerState.PLAYING) {
+                  if (ps) ps.style.display = 'none';
+                } else if (e.data === YT.PlayerState.ENDED) {
+                  if (ps) ps.style.display = 'none';
                   handleVideoEnded();
                 }
               }
             }
           });
         } catch (err) {
-          console.error('YouTube player init error:', err);
+          console.error('YouTube player init error, fallback to secure iframe:', err);
+          const iframe = document.createElement('iframe');
+          iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(ytId)}?autoplay=0&controls=1&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&playsinline=1&enablejsapi=1`;
+          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+          iframe.allowFullscreen = true;
+          videoMount.innerHTML = '';
+          videoMount.appendChild(iframe);
         }
       });
 
-    } else if (currentLesson.videoType === 'bunny_stream') {
+    } else {
+      if (courseTopShield) courseTopShield.style.display = 'none';
+      if (courseCornerShield) courseCornerShield.style.display = 'none';
+      if (coursePauseShield) coursePauseShield.style.display = 'none';
+
+      if (currentLesson.videoType === 'bunny_stream') {
       // Bunny.net Stream Iframe embed
       const iframe = document.createElement('iframe');
       // Force fresh load (fix replay issue: add timestamp param)
@@ -966,6 +998,7 @@ async function loadLesson(courseId, lessonId) {
       // Auto-next on video end
       video.addEventListener('ended', handleVideoEnded);
     }
+  }
 
     // Clean Video Playback: Permanently hide watermark login number
     const watermarkEl = document.getElementById('watermark-overlay');
@@ -2167,6 +2200,63 @@ function skipVideo(delta) {
   }
 }
 
+function toggleCourseVideoPlayPause() {
+  const pauseShield = document.getElementById('course-pause-shield');
+  if (window._currentYtPlayer && typeof window._currentYtPlayer.getPlayerState === 'function') {
+    try {
+      const state = window._currentYtPlayer.getPlayerState();
+      if (state === YT.PlayerState.PLAYING) {
+        window._currentYtPlayer.pauseVideo();
+        if (pauseShield) pauseShield.style.display = 'flex';
+      } else {
+        window._currentYtPlayer.playVideo();
+        if (pauseShield) pauseShield.style.display = 'none';
+      }
+      return;
+    } catch (_) {}
+  }
+
+  const video = document.querySelector('#video-mount video');
+  if (video) {
+    if (video.paused) {
+      video.play();
+      if (pauseShield) pauseShield.style.display = 'none';
+    } else {
+      video.pause();
+      if (pauseShield) pauseShield.style.display = 'flex';
+    }
+  }
+}
+
+function toggleCourseCinemaFullscreen() {
+  const box = document.getElementById('video-box');
+  if (!box) return;
+
+  const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+
+  if (!isFullscreen) {
+    if (box.requestFullscreen) {
+      box.requestFullscreen().catch(err => console.warn('Fullscreen request failed:', err));
+    } else if (box.webkitRequestFullscreen) {
+      box.webkitRequestFullscreen();
+    } else if (box.mozRequestFullScreen) {
+      box.mozRequestFullScreen();
+    } else if (box.msRequestFullscreen) {
+      box.msRequestFullscreen();
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen().catch(err => console.warn('Exit fullscreen failed:', err));
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  }
+}
+
 // ---------- Module Quiz Logic ----------
 
 function renderQuiz(course) {
@@ -2237,6 +2327,128 @@ function submitQuiz() {
   } else {
     banner.className = 'quiz-result-banner fail';
     banner.innerHTML = `You scored ${correctCount}/${total} (${scorePct}%). Review the lessons and try again.`;
+  }
+}
+
+// ---------- Practical Assignments & Projects Logic ----------
+
+async function renderAssignments(course) {
+  const container = document.getElementById('assignments-list-wrap');
+  if (!container) return;
+
+  const assignments = course.assignments || [];
+  if (!assignments.length) {
+    container.innerHTML = `
+      <div style="text-align:center; padding:32px 14px; color:#94a3b8;">
+        <div style="font-size:38px; margin-bottom:10px;">📋</div>
+        <h5 style="color:#ffffff; font-size:16px; margin:0 0 6px; font-family:'Outfit',sans-serif;">Koi Practical Project Pending Nahi Hai</h5>
+        <p style="font-size:13px; max-width:440px; margin:0 auto; line-height:1.5;">
+          Iss module ke sabhi lessons aur practice raw footage lessons me directly available hain. Kisi specific assignment doubt ke liye mentor support use karein!
+        </p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = '<div style="text-align:center; padding:20px; color:#94a3b8;">Loading assignments status…</div>';
+
+  let mySubs = {};
+  try {
+    const res = await lmsApi(`get-my-assignments&courseId=${encodeURIComponent(course.id)}`);
+    if (res && res.submissions) {
+      mySubs = res.submissions;
+    }
+  } catch (err) {
+    console.warn('Could not load assignment submissions:', err);
+  }
+
+  container.innerHTML = assignments.map((asg, idx) => {
+    const sub = mySubs[asg.id];
+    const isSubmitted = !!sub;
+
+    return `
+      <div class="asg-item-card" id="asg-card-${asg.id}">
+        <div class="asg-item-header">
+          <div class="asg-item-title">${idx + 1}. ${escapeHtml(asg.title || 'Practical Assignment')}</div>
+          <span class="asg-status-badge ${isSubmitted ? 'submitted' : 'pending'}">
+            ${isSubmitted ? `✓ Submitted (${new Date(sub.submittedAt).toLocaleDateString()})` : '⏳ Pending Submission'}
+          </span>
+        </div>
+
+        ${(asg.description || asg.instructions) ? `<div class="asg-desc-box">${escapeHtml(asg.description || asg.instructions)}</div>` : ''}
+
+        ${(asg.driveUrl || asg.resourceLink || asg.link) ? `
+          <div style="margin-bottom:14px;">
+            <a href="${escapeHtml(asg.driveUrl || asg.resourceLink || asg.link)}" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="font-size:12.5px; padding:6px 14px; display:inline-flex; align-items:center; gap:6px; color:#38bdf8; border-color:rgba(56,189,248,0.4);">
+              <span>📥 Download Practice Raw Files / Footage</span>
+            </a>
+          </div>
+        ` : ''}
+
+        <div class="asg-submission-box">
+          <div style="font-size:12.5px; font-weight:700; color:#fbbf24; margin-bottom:8px;">
+            ${isSubmitted ? '📝 Aapka Submitted Project Link / Details (Update Kar Sakte Hain):' : '📤 Project Submission Form:'}
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div>
+              <label style="font-size:11.5px; color:#94a3b8; display:block; margin-bottom:4px;">Google Drive / YouTube / Vimeo / WeTransfer Link:</label>
+              <input type="url" id="asg-url-${asg.id}" class="form-input" style="width:100%; box-sizing:border-box; background:#050811; border:1px solid rgba(255,255,255,0.14); border-radius:6px; padding:8px 12px; color:#fff; font-size:13px;" placeholder="https://drive.google.com/... ya YouTube Unlisted video link" value="${sub ? escapeHtml(sub.projectUrl || '') : ''}" />
+            </div>
+            <div>
+              <label style="font-size:11.5px; color:#94a3b8; display:block; margin-bottom:4px;">Notes / Editing Description (Optional):</label>
+              <textarea id="asg-notes-${asg.id}" class="form-input" rows="2" style="width:100%; box-sizing:border-box; background:#050811; border:1px solid rgba(255,255,255,0.14); border-radius:6px; padding:8px 12px; color:#fff; font-size:12.5px; resize:vertical;" placeholder="Aapne kya technique use ki, grading kaisi ki, ya mentor se koi specific advice chahiye...">${sub ? escapeHtml(sub.notes || '') : ''}</textarea>
+            </div>
+            <div style="display:flex; justify-content:flex-end; margin-top:4px;">
+              <button type="button" class="btn btn-gold" style="font-size:12.5px; padding:7px 18px;" onclick="submitAssignmentProject('${escapeHtml(course.id)}', '${escapeHtml(asg.id)}')">
+                ${isSubmitted ? '🔄 Update Submission' : '🚀 Submit Project for Review'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function submitAssignmentProject(courseId, assignmentId) {
+  const urlEl = document.getElementById(`asg-url-${assignmentId}`);
+  const notesEl = document.getElementById(`asg-notes-${assignmentId}`);
+  const projectUrl = (urlEl?.value || '').trim();
+  const notes = (notesEl?.value || '').trim();
+
+  if (!projectUrl && !notes) {
+    toast('Kripya apna project URL ya submission notes darj karein', false);
+    return;
+  }
+
+  const tok = localStorage.getItem('qaa_student_token') || localStorage.getItem('qa_student_token') || '';
+  if (!tok) {
+    toast('Session expired. Please login again.', false);
+    return;
+  }
+
+  try {
+    const res = await fetch(`${getLmsApiBase()}?action=submit-assignment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Student-Token': tok
+      },
+      body: JSON.stringify({
+        courseId,
+        assignmentId,
+        projectUrl,
+        notes
+      })
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Submission failed');
+
+    toast(data.message || '🎉 Assignment successfully submit ho gaya hai!');
+    if (currentCourse && currentCourse.id === courseId) {
+      renderAssignments(currentCourse);
+    }
+  } catch (err) {
+    toast(`Error: ${err.message}`, false);
   }
 }
 
@@ -3065,12 +3277,15 @@ document.querySelectorAll('.lesson-tab').forEach(tab => {
     document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
     e.target.classList.add('active');
     const target = e.target.dataset.ltab;
-    ['notes', 'resources', 'quiz', 'discussion', 'support'].forEach(t => {
+    ['notes', 'resources', 'quiz', 'assignments', 'discussion', 'support'].forEach(t => {
       const el = document.getElementById(`ltab-${t}`);
       if (el) el.classList.toggle('hidden', t !== target);
     });
     if (target === 'quiz' && currentCourse) {
       renderQuiz(currentCourse);
+    }
+    if (target === 'assignments' && currentCourse) {
+      renderAssignments(currentCourse);
     }
     if (target === 'discussion') {
       loadDiscussionComments();
@@ -3529,6 +3744,20 @@ function openMyProfile() {
         </div>
       </div>
 
+      <!-- ID Card Access Card inside My Profile -->
+      <div class="profile-idcard-promo-card" style="margin:16px 0; background:linear-gradient(135deg, rgba(245,158,11,0.12) 0%, rgba(15,20,32,0.85) 100%); border:1.5px solid rgba(245,158,11,0.35); border-radius:14px; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:40px; height:40px; border-radius:10px; background:rgba(245,158,11,0.15); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">🪪</div>
+          <div style="text-align:left;">
+            <div style="font-weight:700; color:#ffffff; font-size:13.5px; font-family:'Outfit',sans-serif;">Official Student ID Card (PVC)</div>
+            <div style="color:#94a3b8; font-size:11.5px;">Institutional Identity Badge with QR verification</div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-outline-gold" style="font-size:12px; padding:7px 14px; white-space:nowrap; flex-shrink:0;" onclick="closeProfileModal(); openMyIdCardModal();">
+          View &amp; Download 🪪
+        </button>
+      </div>
+
       <button class="btn btn-gold btn-block profile-save-btn" onclick="saveProfileChanges()">
         💾 Save Changes
       </button>
@@ -3546,6 +3775,307 @@ function openMyProfile() {
 function closeProfileModal() {
   const modal = document.getElementById('profile-modal-overlay');
   if (modal) modal.remove();
+}
+
+// ==========================================================================
+// Official Student ID Card (CR80 PVC) Modal & Download
+// ==========================================================================
+
+function openMyIdCardModal() {
+  const existing = document.getElementById('idcard-modal-overlay');
+  if (existing) existing.remove();
+
+  const stu = window._currentStudent || {};
+  const stuId = stu.offlineAdmissionId || stu.id || ('QAA-2026-' + (stu.phone ? String(stu.phone).slice(-4) : 'ADM'));
+  const stuName = stu.name || 'Verified Student';
+  const stuPhone = stu.phone ? ('+91 ' + stu.phone) : '+91 99398 00780';
+  const stuCourse = stu.appliedCourse || 'Master Photography & Filmmaking Diploma';
+  const stuStudio = stu.studioName || 'Quick Art Photography';
+  const stuCity = stu.workCity || stu.city || 'Patna, Bihar';
+  const stuBlood = stu.bloodGroup || 'O+';
+  const stuAvatar = stu.avatarUrl || localStorage.getItem('qaa_avatar_' + stu.id) || '../assets/anil-sharma.webp';
+  const verifyUrl = `https://quickartphotography.com/verify/?id=${encodeURIComponent(stuId)}&phone=${encodeURIComponent(stu.phone || '')}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(verifyUrl)}`;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'idcard-modal-overlay';
+  overlay.className = 'idcard-modal-overlay';
+  overlay.innerHTML = `
+    <div class="idcard-modal-card" role="dialog" aria-modal="true" aria-label="Official Student ID Card">
+      <div class="idcard-modal-header">
+        <h2 class="idcard-modal-title">🪪 Official Student Identity Card (CR80 PVC)</h2>
+        <button class="profile-modal-close" onclick="closeIdCardModal()" aria-label="Close">✕</button>
+      </div>
+
+      <div class="idcard-cards-grid">
+        <!-- FRONT SIDE -->
+        <div class="adm-issued-id-card" id="portal-idcard-front">
+          <div class="adm-card-sheen"></div>
+          <div class="adm-card-lanyard-slot"></div>
+
+          <div class="adm-card-header-bar">
+            <img src="../assets/quick-art-logo.png" alt="Quick Art Academy" class="adm-card-clean-logo" />
+            <div>
+              <div class="adm-card-inst-title">QUICK ART PHOTOGRAPHY ACADEMY</div>
+              <div class="adm-card-inst-sub">CINEMATOGRAPHY &amp; VISUAL ARTS</div>
+              <div class="adm-card-inst-iso">Govt. Regd. • ISO 9001:2015 Certified</div>
+            </div>
+          </div>
+
+          <div class="adm-card-photo-wrapper">
+            <img src="${stuAvatar}" alt="${escapeHtml(stuName)}" onerror="this.src='../assets/anil-sharma.webp'" />
+            <div class="adm-card-photo-ribbon">VERIFIED STUDENT</div>
+          </div>
+
+          <div class="adm-card-student-name">${escapeHtml(stuName)}</div>
+          <div class="adm-card-course-pill">${escapeHtml(stuCourse)}</div>
+
+          <div class="adm-card-table-grid">
+            <div class="adm-card-table-row">
+              <span>STUDENT ID</span>
+              <strong>${escapeHtml(stuId)}</strong>
+            </div>
+            <div class="adm-card-table-row">
+              <span>MOBILE NO</span>
+              <strong>${escapeHtml(stuPhone)}</strong>
+            </div>
+            <div class="adm-card-table-row">
+              <span>STUDIO / LAB</span>
+              <strong>${escapeHtml(stuStudio)}</strong>
+            </div>
+            <div class="adm-card-table-row">
+              <span>WORK CITY</span>
+              <strong>${escapeHtml(stuCity)}</strong>
+            </div>
+            <div class="adm-card-table-row">
+              <span>BLOOD GROUP</span>
+              <strong style="color:#ef4444;">${escapeHtml(stuBlood)}</strong>
+            </div>
+            <div class="adm-card-table-row">
+              <span>VALID TILL</span>
+              <strong style="color:#10b981;">LIFETIME ACCESS</strong>
+            </div>
+          </div>
+
+          <div class="adm-card-footer-strip">
+            <div class="adm-card-qr-block">
+              <img src="${qrUrl}" alt="Verify QR" class="adm-card-qr-img" />
+              <div>
+                <div class="adm-card-qr-badge">SCAN TO VERIFY</div>
+                <div class="adm-card-qr-hint">Official Digital Badge</div>
+              </div>
+            </div>
+
+            <div class="adm-card-hologram">
+              <div class="adm-card-hologram-inner">
+                <span>★ QAA ★</span>
+                <span style="font-size:4.5px;">ORIGINAL</span>
+              </div>
+            </div>
+
+            <div class="adm-card-signatory">
+              <div class="adm-card-sign-cursive">Anil Sharma</div>
+              <div class="adm-card-sign-lead">Director &amp; Mentor</div>
+              <div class="adm-card-sign-session">Session 2026-27</div>
+            </div>
+          </div>
+
+          <div class="adm-card-security-watermark">
+            <img src="../assets/quick-art-logo.png" alt="" />
+          </div>
+        </div>
+
+        <!-- BACK SIDE -->
+        <div class="adm-issued-id-card adm-card-back-side" id="portal-idcard-back">
+          <div class="adm-card-sheen"></div>
+          <div class="adm-card-lanyard-slot"></div>
+
+          <div class="adm-card-back-header">
+            <div class="adm-card-back-title-wrap">
+              <img src="../assets/quick-art-logo.png" alt="QAA" class="adm-card-back-logo" />
+              <div class="adm-card-back-head-text">
+                <strong>QUICK ART ACADEMY CAMPUS PASS</strong>
+                <span>Student Terms &amp; Identification Rules</span>
+              </div>
+            </div>
+            <span class="adm-card-active-pill">ACTIVE</span>
+          </div>
+
+          <div class="adm-card-rules-box">
+            <div class="adm-card-rules-heading">📜 Cardholder Guidelines:</div>
+            <ul class="adm-card-rules-list">
+              <li>This card is non-transferable and remains property of Quick Art Academy.</li>
+              <li>Mandatory for campus workshops, editing labs and live shoot events.</li>
+              <li>Scan the front QR code for authentic credential verification anytime.</li>
+              <li>Entitles holder to official alumni gear discounts &amp; job placement assistance.</li>
+            </ul>
+          </div>
+
+          <div class="adm-card-emergency-row">
+            <div>
+              <span>DIRECT HELPLINE</span>
+              <strong>+91 99398 00780</strong>
+            </div>
+            <div>
+              <span>OFFICIAL EMAIL</span>
+              <strong style="font-size:7.5px; word-break:break-all;">quickartacademy@gmail.com</strong>
+            </div>
+          </div>
+
+          <div class="adm-card-campus-box">
+            <div class="adm-card-campus-heading">📍 Academy HQ &amp; Master Studio:</div>
+            <div class="adm-card-campus-detail">
+              <strong>Quick Art Photography Academy</strong><br>
+              Opp. High School, Main Market Road, Bihar, India.<br>
+              Online Campus: <strong>quickartphotography.com</strong>
+            </div>
+          </div>
+
+          <div class="adm-card-barcode-box">
+            <div class="adm-card-barcode-graphic">||| | ||||| || |||| |||| |||</div>
+            <p class="adm-card-return-notice">
+              If found, please return to Quick Art Photography Academy or drop into any local post box.
+            </p>
+          </div>
+
+          <div class="adm-card-security-watermark">
+            <img src="../assets/quick-art-logo.png" alt="" />
+          </div>
+        </div>
+      </div>
+
+      <div class="idcard-actions-bar">
+        <button type="button" class="btn btn-gold" onclick="downloadPortalIdCard('front')">
+          📥 Download Front (HD PVC)
+        </button>
+        <button type="button" class="btn btn-gold" onclick="downloadPortalIdCard('back')">
+          📥 Download Back (HD PVC)
+        </button>
+        <button type="button" class="btn btn-outline" onclick="printPortalIdCard()">
+          🖨️ Print ID Card (Both Sides)
+        </button>
+        <button type="button" class="btn btn-outline" onclick="closeIdCardModal()">
+          ✕ Close
+        </button>
+      </div>
+    </div>
+  `;
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeIdCardModal();
+  });
+  document.body.appendChild(overlay);
+}
+
+function closeIdCardModal() {
+  const modal = document.getElementById('idcard-modal-overlay');
+  if (modal) modal.remove();
+}
+
+async function downloadPortalIdCard(side = 'front') {
+  const targetId = `portal-idcard-${side}`;
+  const el = document.getElementById(targetId);
+  if (!el) {
+    toast('ID card element not found', false);
+    return;
+  }
+
+  const stu = window._currentStudent || {};
+  const cleanName = (stu.name || 'Student').replace(/[^a-zA-Z0-9]/g, '_');
+  const filename = `QAA_ID_Card_${side.toUpperCase()}_${cleanName}.png`;
+
+  toast(`Generating High-Resolution ${side.toUpperCase()} ID Card…`);
+
+  if (typeof html2canvas === 'function') {
+    try {
+      const canvas = await html2canvas(el, {
+        scale: 3, // 300 DPI high-definition PVC print quality
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#0a0c13',
+        logging: false
+      });
+      const dataUrl = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      toast(`✅ ${side.toUpperCase()} ID Card downloaded successfully!`);
+      return;
+    } catch (err) {
+      console.warn('html2canvas download error:', err);
+    }
+  }
+
+  toast('Direct printing available via "Print ID Card" button', false);
+}
+
+function printPortalIdCard() {
+  const front = document.getElementById('portal-idcard-front');
+  const back = document.getElementById('portal-idcard-back');
+  if (!front || !back) return;
+
+  const printWin = window.open('', '_blank', 'width=880,height=750');
+  if (!printWin) {
+    toast('Please allow popups to print ID card', false);
+    return;
+  }
+
+  printWin.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Quick Art Photography Academy - Student ID Card</title>
+        <link rel="stylesheet" href="portal.css">
+        <style>
+          body {
+            background: #ffffff;
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-family: 'Outfit', sans-serif;
+          }
+          .print-sheet {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            align-items: center;
+          }
+          @media print {
+            body { padding: 0; background: none; }
+            .no-print { display: none !important; }
+            .adm-issued-id-card {
+              box-shadow: none !important;
+              page-break-inside: avoid;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="no-print" style="margin-bottom:20px; text-align:center;">
+          <h2 style="margin:0 0 8px;">Official Student ID Card (Front &amp; Back)</h2>
+          <p style="color:#666; margin:0 0 12px; font-size:13px;">Standard PVC CR80 Dimensions • 300 DPI High Definition</p>
+          <button onclick="window.print()" style="padding:10px 22px; background:#d4a017; color:#000; font-weight:700; border:none; border-radius:6px; cursor:pointer;">
+            🖨️ Print Now / Save as PDF
+          </button>
+        </div>
+        <div class="print-sheet">
+          ${front.outerHTML}
+          ${back.outerHTML}
+        </div>
+      </body>
+    </html>
+  `);
+  printWin.document.close();
+}
+
+if (typeof window.showToast === 'undefined') {
+  window.showToast = toast;
 }
 
 /** Handle profile picture selection — store as base64 in localStorage */
@@ -4314,18 +4844,26 @@ function stopLiveAttendeesCounter() {
   }
 }
 
-// Global hotkeys inside Live Studio (F = Fullscreen, T = Cinema Mode)
+// Global hotkeys inside Classroom & Live Studio (F = Fullscreen, T = Cinema Mode)
 document.addEventListener('keydown', (e) => {
-  const liveStudio = document.getElementById('view-live-studio');
-  if (!liveStudio || liveStudio.classList.contains('hidden')) return;
   if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
 
+  const liveStudio = document.getElementById('view-live-studio');
+  const classroom = document.getElementById('view-classroom');
+
   if (e.key === 'f' || e.key === 'F') {
-    e.preventDefault();
-    toggleLiveCinemaFullscreen();
+    if (liveStudio && !liveStudio.classList.contains('hidden')) {
+      e.preventDefault();
+      toggleLiveCinemaFullscreen();
+    } else if (classroom && !classroom.classList.contains('hidden')) {
+      e.preventDefault();
+      toggleCourseCinemaFullscreen();
+    }
   } else if (e.key === 't' || e.key === 'T') {
-    e.preventDefault();
-    toggleLiveTheaterMode();
+    if (liveStudio && !liveStudio.classList.contains('hidden')) {
+      e.preventDefault();
+      toggleLiveTheaterMode();
+    }
   }
 });
 

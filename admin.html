@@ -972,15 +972,15 @@ fbq('track', 'PageView');
 
     <!-- Navigation List (Vertical Tabs) -->
     <nav class="qa-sidebar-nav" aria-label="Admin Navigation">
-      <!-- Section: CRM & Enrollments -->
+      <!-- Section: CRM & Admissions -->
       <div class="qa-nav-group-title">CRM &amp; Admissions</div>
       <button type="button" class="tab active" data-tab="leads">
         <span class="qa-tab-icon">📋</span>
         <span class="qa-tab-label">Leads &amp; Enquiries</span>
       </button>
-      <button type="button" class="tab" data-tab="offline-admissions" style="border-left-color:#f59e0b;">
-        <span class="qa-tab-icon">🏛️</span>
-        <span class="qa-tab-label">Offline Admissions &amp; Alumni</span>
+      <button type="button" class="tab" data-tab="lms-students">
+        <span class="qa-tab-icon">🎓</span>
+        <span class="qa-tab-label">Enrolled Students (Online &amp; Offline)</span>
       </button>
       <button type="button" class="tab" data-tab="lms-transactions">
         <span class="qa-tab-icon">💰</span>
@@ -993,10 +993,6 @@ fbq('track', 'PageView');
         <span class="qa-tab-icon">📚</span>
         <span class="qa-tab-label">Course Studio (LMS)</span>
       </button>
-      <button type="button" class="tab" data-tab="lms-students">
-        <span class="qa-tab-icon">🎓</span>
-        <span class="qa-tab-label">Students Directory</span>
-      </button>
       <button type="button" class="tab" data-tab="lms-coupons">
         <span class="qa-tab-icon">🎟️</span>
         <span class="qa-tab-label">Coupons &amp; Offers</span>
@@ -1007,7 +1003,7 @@ fbq('track', 'PageView');
       </button>
 
       <!-- Section: Gateways & Settings -->
-      <div class="qa-nav-group-title">Gateways &amp; Integrations</div>
+      <div class="qa-nav-group-title">Gateways &amp; Settings</div>
       <button type="button" class="tab" data-tab="lms-razorpay">
         <span class="qa-tab-icon">💳</span>
         <span class="qa-tab-label">Razorpay Gateway</span>
@@ -1022,24 +1018,16 @@ fbq('track', 'PageView');
       </button>
       <button type="button" class="tab" data-tab="lms-settings">
         <span class="qa-tab-icon">🎥</span>
-        <span class="qa-tab-label">Bunny.net Video CDN</span>
+        <span class="qa-tab-label">Bunny.net Video Stream</span>
       </button>
       <button type="button" class="tab" data-tab="settings">
         <span class="qa-tab-icon">⚙️</span>
-        <span class="qa-tab-label">Webhook &amp; Admin</span>
+        <span class="qa-tab-label">Webhook &amp; Security</span>
       </button>
     </nav>
 
     <!-- Bottom Profile & Shortcuts -->
     <div class="qa-sidebar-footer">
-      <div class="qa-sidebar-quick-links">
-        <a href="/portal/" target="_blank" class="qa-quick-link" title="Open Student Portal">
-          <span>🎓 Portal</span> <span class="qa-arrow-icon">↗</span>
-        </a>
-        <a href="/" target="_blank" class="qa-quick-link" title="Open Live Website">
-          <span>🌐 Site</span> <span class="qa-arrow-icon">↗</span>
-        </a>
-      </div>
 
       <div class="qa-admin-user-card">
         <div class="qa-admin-avatar">AS</div>
@@ -1149,7 +1137,6 @@ fbq('track', 'PageView');
           <input type="checkbox" id="dueFilter" style="width:auto"/> Due today only
         </label>
         <button onclick="exportCSV()" class="btn btn-outline">⬇ CSV</button>
-        <button onclick="refresh()" class="btn btn-primary">Refresh</button>
       </div>
       <div class="card" style="padding:0;overflow-x:auto">
         <table id="leadsTable">
@@ -1230,6 +1217,7 @@ fbq('track', 'PageView');
           <button type="button" onclick="scrollToStudioSection('sec-curriculum')" class="btn-sm btn-outline" style="font-size:12px;padding:6px 14px">2. 🎬 Curriculum &amp; Lessons</button>
           <button type="button" onclick="scrollToStudioSection('sec-practice-files')" class="btn-sm btn-outline" style="font-size:12px;padding:6px 14px;color:#34d399;border-color:rgba(52,211,153,0.4)">3. 📁 Practice Files</button>
           <button type="button" onclick="scrollToStudioSection('sec-quiz-builder')" class="btn-sm btn-gold" style="font-size:12px;padding:6px 18px;font-weight:800;box-shadow:0 0 16px rgba(216,161,83,0.45);border:1px solid #facc15">4. 📝 Quiz &amp; Test Builder 🔥</button>
+          <button type="button" onclick="scrollToStudioSection('sec-assignment-builder')" class="btn-sm btn-outline" style="font-size:12px;padding:6px 14px;color:#38bdf8;border-color:rgba(56,189,248,0.4)">5. 📋 Assignments Builder</button>
         </div>
 
         <!-- Studio Form Layout -->
@@ -1325,6 +1313,15 @@ fbq('track', 'PageView');
               <label>Course Subtitle &amp; Highlights</label>
               <textarea id="courseDescInput" rows="2" placeholder="Comprehensive practical training for high-paying studio work, industry shortcuts, and client delivery workflows."></textarea>
             </div>
+
+            <!-- Internal Course / Admission Special Toggle -->
+            <div style="margin-top:16px;background:rgba(216,161,83,0.06);border:1px dashed rgba(216,161,83,0.35);border-radius:12px;padding:14px 16px;">
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin:0;font-weight:700;color:var(--gold);">
+                <input type="checkbox" id="courseIsInternalInput" style="width:18px;height:18px;accent-color:#d8a153;cursor:pointer;" />
+                <span>🔒 Internal / Admission Course (₹500 Admission Special — No Public Landing Page)</span>
+              </label>
+              <p class="muted" style="margin:6px 0 0 28px;font-size:12px;">Is option ko tick karne par is course ka koi public landing page nahi rahega. Admission form submit hone aur ₹500 payment confirmation ke baad yeh course student ke "My Courses" portal me automatically access hone lagega.</p>
+            </div>
           </div>
 
           <!-- Curriculum Studio Architecture Card -->
@@ -1398,6 +1395,25 @@ fbq('track', 'PageView');
             <div id="studioQuizContainer" style="display:flex;flex-direction:column;gap:16px"></div>
           </div>
 
+          <!-- 5. Course Assignments & Tasks Builder Card -->
+          <div class="card" id="sec-assignment-builder" style="padding:24px;border:2px solid rgba(56,189,248,0.4);background:#0b1424;border-radius:16px;box-shadow:0 8px 32px rgba(56,189,248,0.1)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:14px;flex-wrap:wrap;gap:10px">
+              <div>
+                <div style="display:inline-flex;align-items:center;gap:6px">
+                  <span class="badge" style="background:#38bdf8;color:#000;font-weight:800;font-size:11px">SECTION 5</span>
+                  <h3 style="margin:0;font-size:18px;font-family:'Outfit',sans-serif;color:#38bdf8">📋 Course Assignments &amp; Practical Projects (प्रोजेक्ट और असाइनमेंट्स)</h3>
+                </div>
+                <p class="muted" style="margin:4px 0 0;font-size:12.5px">Students ko practical editing/shooting assignments dein. Students apna Google Drive/YouTube video link portal pe submit karenge.</p>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button type="button" onclick="addSampleStudioAssignment()" class="btn-sm btn-outline" style="font-size:11.5px;color:#38bdf8;border-color:rgba(56,189,248,0.4)">⚡ Add Sample Assignment</button>
+                <button type="button" onclick="addStudioAssignment()" class="btn-sm btn-gold" style="font-size:12px;padding:7px 16px;font-weight:700">+ Add Assignment</button>
+              </div>
+            </div>
+
+            <div id="studioAssignmentsContainer" style="display:flex;flex-direction:column;gap:16px"></div>
+          </div>
+
           <!-- Bottom Studio Action Footer -->
           <div class="card" style="padding:18px 24px;background:#131d33;border:1px solid rgba(216,161,83,0.3);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
             <button type="button" onclick="closeCourseStudio()" class="btn btn-outline">← Cancel &amp; Back to Catalog</button>
@@ -1412,10 +1428,30 @@ fbq('track', 'PageView');
 
     <!-- LMS STUDENTS TAB -->
     <div id="tab-lms-students" class="tab-content hidden" style="margin-top:16px">
+      <!-- Student Overview KPIs -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:16px">
+        <div class="card" style="padding:14px;background:#0d1527;border:1px solid rgba(245,158,11,0.25)">
+          <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Total Enrolled / Registered</div>
+          <div id="kpi-students-total" style="font-size:24px;font-weight:800;color:#fcd34d;margin-top:4px">0</div>
+        </div>
+        <div class="card" style="padding:14px;background:#0d1527;border:1px solid rgba(59,130,246,0.25)">
+          <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px">🌐 Online Course Students</div>
+          <div id="kpi-students-online" style="font-size:24px;font-weight:800;color:#60a5fa;margin-top:4px">0</div>
+        </div>
+        <div class="card" style="padding:14px;background:#0d1527;border:1px solid rgba(16,185,129,0.25)">
+          <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px">🏛️ Offline Lab (₹500 Paid)</div>
+          <div id="kpi-students-offline-paid" style="font-size:24px;font-weight:800;color:#34d399;margin-top:4px">0</div>
+        </div>
+        <div class="card" style="padding:14px;background:#0d1527;border:1px solid rgba(245,158,11,0.25)">
+          <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px">⏳ Offline (Pay at Campus)</div>
+          <div id="kpi-students-offline-cash" style="font-size:24px;font-weight:800;color:#fbbf24;margin-top:4px">0</div>
+        </div>
+      </div>
+
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
         <div>
-          <h2 style="margin:0;font-size:18px">Enrolled Students &amp; Progress</h2>
-          <p class="muted" style="margin:4px 0 0">Grant instant course access, track lesson completion, send WhatsApp logins, and verify certificates.</p>
+          <h2 style="margin:0;font-size:18px">Enrolled Students &amp; Admission Registry</h2>
+          <p class="muted" style="margin:4px 0 0">Online course learners + Offline on-campus admission applicants. Track payments, courses, and documents.</p>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button onclick="exportStudentsCSV()" class="btn btn-outline">📥 Export Students CSV</button>
@@ -1423,18 +1459,31 @@ fbq('track', 'PageView');
         </div>
       </div>
 
-      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap">
-        <input type="text" id="studentSearch" oninput="filterLmsStudents()" placeholder="Search student by name, phone, city..." style="flex:1;min-width:200px" />
+      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap">
+        <input type="text" id="studentSearch" oninput="filterLmsStudents()" placeholder="Search by student name, phone, city, course, studio..." style="flex:1;min-width:220px" />
+        <select id="studentTypeFilter" onchange="filterLmsStudents()" style="width:auto;min-width:180px">
+          <option value="">All Student Types</option>
+          <option value="offline_paid">🏛️ Offline Lab (₹500 Paid)</option>
+          <option value="offline_cash">⏳ Offline (Pay at Campus)</option>
+          <option value="online">🌐 Online Course Enrolled</option>
+          <option value="alumni">🌟 Featured in Alumni Directory</option>
+        </select>
         <select id="studentCourseFilter" onchange="filterLmsStudents()" style="width:auto;min-width:180px">
           <option value="">All Courses</option>
         </select>
-        <button onclick="loadLmsStudents()" class="btn btn-outline" style="padding:10px 14px">🔄 Refresh</button>
       </div>
 
-      <div class="card" style="padding:0;overflow-x:auto">
+      <div class="card" style="padding:0;overflow-x:auto;border:1px solid rgba(255,255,255,0.08)">
         <table>
           <thead>
-            <tr><th>Student Name</th><th>Mobile (Login)</th><th>Enrolled Courses</th><th>Progress</th><th>Enrolled On</th><th>Action</th></tr>
+            <tr style="background:#080d18">
+              <th>Student Name &amp; Profile</th>
+              <th>Mobile (Login)</th>
+              <th>Type &amp; Enrolled / Applied Course</th>
+              <th>Status / Payment</th>
+              <th>Registration Date</th>
+              <th style="text-align:right">Action</th>
+            </tr>
           </thead>
           <tbody id="lmsStudentsTbody">
             <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">Loading students…</td></tr>
@@ -1614,17 +1663,6 @@ fbq('track', 'PageView');
             <input type="checkbox" id="watermarkEnabled" style="width:auto;cursor:pointer" checked />
             Floating Watermark On Video (Displays student mobile number randomly to stop piracy)
           </label>
-        </div>
-
-        <!-- QUICK LINK TO DEDICATED WHATSAPP OTP TAB -->
-        <div style="margin-top:20px;padding:16px 20px;background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.25);border-radius:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-          <div>
-            <div style="font-weight:700;color:#86efac;font-size:14px">💬 WhatsApp OTP Gateway (AIbotflow)</div>
-            <p style="margin:4px 0 0;font-size:12px;color:var(--muted)">AIbotflow WhatsApp API Key, Template setup, aur Live Test OTP ke liye dedicated tab banaya gaya hai.</p>
-          </div>
-          <button type="button" onclick="switchAdminTab('lms-whatsapp')" class="btn" style="background:#25d366;color:#000;font-weight:700;font-size:12px;padding:8px 18px">
-            💬 Open WhatsApp Tab →
-          </button>
         </div>
 
         <div style="margin-top:24px">
@@ -2203,64 +2241,6 @@ fbq('track', 'PageView');
     </div>
 
 <!-- OFFLINE ADMISSIONS & ALUMNI TAB -->
-<div id="tab-offline-admissions" class="tab-content hidden" style="margin-top:16px">
-  <!-- Top KPIs -->
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px">
-    <div class="card" style="padding:14px;background:#0d1527;border:1px solid rgba(245,158,11,0.25)">
-      <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Total Offline Applicants</div>
-      <div id="kpi-offline-total" style="font-size:24px;font-weight:800;color:#fcd34d;margin-top:4px">0</div>
-    </div>
-    <div class="card" style="padding:14px;background:#0d1527;border:1px solid rgba(16,185,129,0.25)">
-      <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Seat Fee Paid (₹500 Online)</div>
-      <div id="kpi-offline-paid" style="font-size:24px;font-weight:800;color:#34d399;margin-top:4px">0</div>
-    </div>
-    <div class="card" style="padding:14px;background:#0d1527;border:1px solid rgba(59,130,246,0.25)">
-      <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Pay at Campus / Office</div>
-      <div id="kpi-offline-cash" style="font-size:24px;font-weight:800;color:#60a5fa;margin-top:4px">0</div>
-    </div>
-    <div class="card" style="padding:14px;background:#0d1527;border:1px solid rgba(236,72,153,0.25)">
-      <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Alumni Featured / Ready</div>
-      <div id="kpi-offline-alumni" style="font-size:24px;font-weight:800;color:#f472b6;margin-top:4px">0</div>
-    </div>
-  </div>
-
-  <!-- Filter Bar -->
-  <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap">
-    <input type="text" id="offlineSearch" placeholder="Search applicant by name, phone, city, studio name..." style="flex:1;min-width:220px" oninput="renderOfflineAdmissionsTable()" />
-    <select id="offlineStatusFilter" style="width:auto;min-width:180px" onchange="renderOfflineAdmissionsTable()">
-      <option value="">All Applications</option>
-      <option value="paid">Seat Fee Paid (₹500)</option>
-      <option value="campus_payment">Pay At Campus</option>
-      <option value="approved">Approved &amp; Enrolled</option>
-      <option value="alumni_pending">Ready for Alumni Directory</option>
-    </select>
-    <button class="btn btn-outline" onclick="loadOfflineAdmissionsAdmin()" style="font-size:12px;padding:8px 14px">
-      🔄 Refresh
-    </button>
-  </div>
-
-  <!-- Admissions Table -->
-  <div class="card" style="padding:0;overflow:hidden;border:1px solid rgba(255,255,255,0.08)">
-    <div style="overflow-x:auto">
-      <table id="offlineAdmissionsTable" style="margin:0">
-        <thead>
-          <tr style="background:#080d18">
-            <th style="width:50px">Photo</th>
-            <th>Student &amp; Contact</th>
-            <th>Course &amp; Batch</th>
-            <th>Documents (Aadhaar / Cert)</th>
-            <th>Studio &amp; Career Details</th>
-            <th>Seat Fee (₹500)</th>
-            <th style="text-align:right">Action</th>
-          </tr>
-        </thead>
-        <tbody id="offlineAdmissionsTbody">
-          <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">Loading offline applicants…</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
     </main>
   </div>
 </div>
@@ -2384,6 +2364,33 @@ fbq('track', 'PageView');
     <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding:0 24px 24px">
       <button onclick="closeSetPasswordModal()" class="btn btn-outline">Cancel</button>
       <button onclick="saveStudentPassword()" class="btn btn-gold" id="btnSaveStudentPw" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;border:none">🔑 Set Password &amp; Activate</button>
+    </div>
+  </div>
+</div>
+
+<!-- Offline Student Application Details Modal -->
+<div id="offlineStudentDetailModal" class="modal" onclick="if(event.target.id==='offlineStudentDetailModal')closeOfflineDetailModal()">
+  <div class="modal-inner" style="max-width:780px;border-radius:20px;background:#0d1527;border:1px solid rgba(245,158,11,0.3);box-shadow:0 30px 90px rgba(0,0,0,0.9)">
+    <div class="modal-hdr" style="background:#080d1a;border-bottom:1px solid rgba(255,255,255,0.08);padding:18px 24px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);display:flex;align-items:center;justify-content:center;font-size:20px">🏛️</div>
+        <div>
+          <h2 id="admDetailModalTitle" style="margin:0;font-size:18px;color:#fff;font-weight:700">Offline Admission Application</h2>
+          <div id="admDetailModalSub" class="muted" style="font-size:12px;margin-top:2px">Application Dossier &amp; Verification Details</div>
+        </div>
+      </div>
+      <button onclick="closeOfflineDetailModal()" class="icon-btn" style="color:#94a3b8;font-size:18px">✕</button>
+    </div>
+
+    <div class="modal-body" style="padding:22px 24px;max-height:75vh;overflow-y:auto">
+      <div id="offlineDetailModalBody">
+        <div style="text-align:center;padding:30px;color:var(--muted)">Loading student application details…</div>
+      </div>
+    </div>
+
+    <div class="modal-ftr" id="offlineDetailModalFtr" style="padding:16px 24px;background:#080d1a;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <button onclick="closeOfflineDetailModal()" class="btn btn-outline" style="font-size:12px;padding:8px 16px">Close</button>
+      <div id="offlineDetailActionBtns" style="display:flex;gap:8px;flex-wrap:wrap"></div>
     </div>
   </div>
 </div>
@@ -2535,7 +2542,11 @@ fbq('track', 'PageView');
       <button onclick="closeBunnyPreviewModal()" class="icon-btn" style="color:#fff;background:rgba(255,255,255,0.1)">✕</button>
     </div>
     <div class="modal-body" style="padding:16px">
-      <div style="position:relative;padding-top:56.25%;width:100%;border-radius:12px;overflow:hidden;background:#000;border:1px solid #1e293b">
+      <div style="position:relative;padding-top:56.25%;width:100%;border-radius:12px;overflow:hidden;background:#000;border:1px solid #1e293b" oncontextmenu="return false;">
+        <!-- Invisible Anti-Leak Click Shield (Top bar) -->
+        <div style="position:absolute;top:0;left:0;right:0;height:70px;z-index:10;background:transparent;cursor:default" oncontextmenu="return false;" title="Quick Art Academy Player"></div>
+        <!-- Invisible Anti-Leak Corner Shield (Bottom-right YouTube logo) -->
+        <div style="position:absolute;bottom:0;right:48px;width:80px;height:48px;z-index:10;background:transparent;cursor:default" oncontextmenu="return false;" title="Quick Art Academy Player"></div>
         <iframe id="bunnyPreviewIframe" src="" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:12px;color:#94a3b8;flex-wrap:wrap;gap:8px">
@@ -3293,7 +3304,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) =
     toggleAdminSidebar(false);
   }
 
-  const isLmsTab = ['lms-courses', 'lms-students', 'lms-coupons', 'lms-transactions', 'lms-live', 'lms-razorpay', 'lms-whatsapp', 'lms-email', 'lms-settings'].includes(tabName);
+  const isLmsTab = ['lms-courses', 'lms-transactions', 'lms-live', 'lms-coupons'].includes(tabName);
   const lmsKpiRow = document.getElementById('lmsKpiRow');
   if (lmsKpiRow) {
     if (isLmsTab) {
@@ -3306,7 +3317,6 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', (e) =
 
   if (tabName === 'lms-courses') loadLmsCourses();
   if (tabName === 'lms-students') loadLmsStudents();
-  if (tabName === 'offline-admissions') loadOfflineAdmissionsAdmin();
   if (tabName === 'lms-coupons') loadLmsCoupons();
   if (tabName === 'lms-transactions') loadLmsTransactions();
   if (tabName === 'lms-live') loadLiveClassesAdmin();
@@ -3609,12 +3619,13 @@ function renderLmsCourses() {
         </td>
         <td>
           ${badgeHtml}
+          ${(c.isInternalOnly || c.isAdmissionCourse) ? `<div style="margin-top:3px"><span class="badge" style="background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);font-size:10.5px">🔒 Admission Only (No Public Page)</span></div>` : ''}
           <div style="font-size:11.5px;color:var(--muted);margin-top:2px">${escapeHtml(c.level || 'All Levels')}</div>
         </td>
         <td style="text-align:right">
           <div style="display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
             <button onclick="openCourseStudio('${c.id}')" class="btn btn-gold" style="padding:6px 14px;font-size:11.5px;box-shadow:0 2px 10px rgba(216,161,83,0.3)">⚡ Open in Studio</button>
-            ${c.slug ? `<a href="/online/${c.slug}/" target="_blank" class="btn btn-outline" style="padding:6px 12px;font-size:11.5px;color:#86efac;border-color:rgba(134,239,172,0.35);background:rgba(134,239,172,0.07)" title="View Landing Page">🌐 Landing Page</a>` : ''}
+            ${(!c.isInternalOnly && !c.isAdmissionCourse && c.slug) ? `<a href="/online/${c.slug}/" target="_blank" class="btn btn-outline" style="padding:6px 12px;font-size:11.5px;color:#86efac;border-color:rgba(134,239,172,0.35);background:rgba(134,239,172,0.07)" title="View Landing Page">🌐 Landing Page</a>` : ''}
             <a href="/portal/" target="_blank" class="btn btn-outline" style="padding:6px 10px;font-size:11.5px" title="Student Classroom View">👁️ Portal</a>
             <button onclick="deleteCourse('${c.id}')" class="btn btn-danger" style="padding:6px 10px;font-size:11.5px" title="Delete Course">🗑</button>
           </div>
@@ -3651,10 +3662,14 @@ function openCourseStudio(courseId) {
     document.getElementById('courseOrigPriceInput').value = course.originalPrice || 9999;
     document.getElementById('courseThumbInput').value = course.thumbnail || 'assets/premiere-pro-hero-640.webp';
     document.getElementById('courseDescInput').value = course.description || course.subtitle || '';
+    if (document.getElementById('courseIsInternalInput')) {
+      document.getElementById('courseIsInternalInput').checked = !!(course.isInternalOnly || course.isAdmissionCourse);
+    }
     document.getElementById('courseModulesJson').value = JSON.stringify(course.modules || [], null, 2);
     currentEditingModules = JSON.parse(JSON.stringify(course.modules || []));
     currentEditingQuiz = JSON.parse(JSON.stringify(course.quiz || []));
     currentEditingResources = JSON.parse(JSON.stringify(course.resources || course.practiceFiles || []));
+    currentEditingAssignments = JSON.parse(JSON.stringify(course.assignments || []));
   } else {
     document.getElementById('studioHeaderTitle').textContent = 'Studio: Create New Course';
     document.getElementById('editCourseId').value = '';
@@ -3667,8 +3682,12 @@ function openCourseStudio(courseId) {
     document.getElementById('courseOrigPriceInput').value = 9999;
     document.getElementById('courseThumbInput').value = 'assets/premiere-pro-hero-640.webp';
     document.getElementById('courseDescInput').value = 'Professional comprehensive masterclass with real studio footage, sound design, and client-ready workflows.';
+    if (document.getElementById('courseIsInternalInput')) {
+      document.getElementById('courseIsInternalInput').checked = false;
+    }
     currentEditingQuiz = [];
     currentEditingResources = [];
+    currentEditingAssignments = [];
     loadStarterCurriculumTemplate(false);
   }
 
@@ -3676,6 +3695,7 @@ function openCourseStudio(courseId) {
   switchCurriculumTab('visual');
   renderStudioResources();
   renderStudioQuiz();
+  renderStudioAssignments();
   catView.style.display = 'none';
   stuView.style.display = 'block';
   stuView.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -3790,6 +3810,7 @@ let currentCurriculumMode = 'visual';
 let currentEditingModules = [];
 let currentEditingQuiz = [];
 let currentEditingResources = [];
+let currentEditingAssignments = [];
 
 function switchCurriculumTab(mode) {
   currentCurriculumMode = mode;
@@ -4199,6 +4220,81 @@ function scrollToQuizBuilder() {
   scrollToStudioSection('sec-quiz-builder');
 }
 
+// Course Assignments & Tasks Builder
+function renderStudioAssignments() {
+  const container = document.getElementById('studioAssignmentsContainer');
+  if (!container) return;
+
+  if (!currentEditingAssignments.length) {
+    container.innerHTML = `
+      <div style="padding:22px;text-align:center;color:var(--muted);background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.1);border-radius:12px;font-size:13px">
+        No practical assignments added yet. Add tasks for students to practice editing, color grading, or wedding shoot projects and submit their project links!
+        <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
+          <button type="button" onclick="addStudioAssignment()" class="btn btn-gold" style="font-size:12px">+ Add First Assignment</button>
+          <button type="button" onclick="addSampleStudioAssignment()" class="btn btn-outline" style="font-size:12px;color:#38bdf8;border-color:rgba(56,189,248,0.4)">⚡ Add Sample Assignment</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = currentEditingAssignments.map((a, aIdx) => `
+    <div style="background:#090d16;padding:16px 18px;border:1px solid rgba(56,189,248,0.25);border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.25)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:12px;font-weight:800;color:#38bdf8;background:rgba(56,189,248,0.15);padding:4px 10px;border-radius:6px;font-family:'Outfit',sans-serif">ASSIGNMENT ${aIdx + 1}</span>
+          <span style="font-size:11.5px;color:var(--muted)">Max Marks: ${a.maxMarks || 100}</span>
+        </div>
+        <button type="button" onclick="removeStudioAssignment(${aIdx})" class="icon-btn danger" style="font-size:13px" title="Delete Assignment">🗑</button>
+      </div>
+
+      <div class="grid" style="grid-template-columns:2fr 1fr;gap:12px;margin-bottom:10px">
+        <div>
+          <label style="font-size:11.5px;color:#cbd5e1">Assignment Title *</label>
+          <input type="text" value="${escapeHtml(a.title || '')}" onchange="currentEditingAssignments[${aIdx}].title = this.value" placeholder="e.g. Haldi Teaser Editing &amp; Sound Sync Project" style="width:100%;font-size:13.5px;font-weight:600;padding:8px 12px;background:#0b111e" />
+        </div>
+        <div>
+          <label style="font-size:11.5px;color:#cbd5e1">Reference / Practice Assets URL</label>
+          <input type="text" value="${escapeHtml(a.resourceLink || a.driveUrl || '')}" onchange="currentEditingAssignments[${aIdx}].resourceLink = this.value; currentEditingAssignments[${aIdx}].driveUrl = this.value" placeholder="https://drive.google.com/... or footage link" style="width:100%;font-size:12.5px;padding:8px 12px;background:#0b111e" />
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size:11.5px;color:#cbd5e1">Task Instructions &amp; Submission Guidelines</label>
+        <textarea rows="2" onchange="currentEditingAssignments[${aIdx}].instructions = this.value; currentEditingAssignments[${aIdx}].description = this.value" placeholder="Instructions: Raw footage download karein, 60 second teaser edit karein, beat sync aur color correction karke apna Google Drive ya YouTube unlisted link portal par submit karein." style="width:100%;font-size:12.5px;padding:8px 12px;background:#0b111e;border-color:rgba(255,255,255,0.1)">${escapeHtml(a.instructions || a.description || '')}</textarea>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addStudioAssignment() {
+  currentEditingAssignments.push({
+    id: 'asg_' + Date.now().toString(36),
+    title: '',
+    instructions: '',
+    resourceLink: '',
+    maxMarks: 100
+  });
+  renderStudioAssignments();
+}
+
+function removeStudioAssignment(idx) {
+  currentEditingAssignments.splice(idx, 1);
+  renderStudioAssignments();
+}
+
+function addSampleStudioAssignment() {
+  currentEditingAssignments.push({
+    id: 'asg_haldi_' + Date.now().toString(36),
+    title: 'Practical Project: 60-Second Cinematic Haldi Teaser',
+    instructions: 'Module 2 ke practice footage se 60 second ka energetic Haldi teaser edit karein. Speed ramp, beat drop music sync aur skin-tone color grading apply karein. Apne project ko Google Drive ya YouTube unlisted par upload karke link submit karein.',
+    resourceLink: 'downloads/course-details.pdf',
+    maxMarks: 100
+  });
+  renderStudioAssignments();
+  toast('⚡ Sample Assignment added!');
+}
+
 function quickAddModuleQuizQuestion(mIdx) {
   const modTitle = (currentEditingModules[mIdx] && currentEditingModules[mIdx].title) || `Module ${mIdx + 1}`;
   currentEditingQuiz.push({
@@ -4389,9 +4485,11 @@ async function saveCourseFromStudio() {
     thumbnail: document.getElementById('courseThumbInput').value.trim() || 'assets/premiere-pro-hero-640.webp',
     description: document.getElementById('courseDescInput').value.trim(),
     subtitle: document.getElementById('courseDescInput').value.trim(),
+    isInternalOnly: document.getElementById('courseIsInternalInput')?.checked || false,
     modules,
     resources: currentEditingResources,
-    quiz: currentEditingQuiz
+    quiz: currentEditingQuiz,
+    assignments: currentEditingAssignments
   };
 
   // Always sync to browser localStorage so changes reflect immediately on landing pages
@@ -4417,8 +4515,11 @@ async function saveCourseFromStudio() {
     const finalSlug = savedCourse.slug || slug;
     const finalLandingUrl = `/online/${finalSlug}/`;
 
-    // Show success toast with clickable landing page link
-    toastHtml(`✅ Course saved! Landing page updated: <a href="${finalLandingUrl}" target="_blank" style="color:#bbf7d0;text-decoration:underline;font-weight:700">🌐 View Landing Page →</a>`, true, 8000);
+    if (courseData.isInternalOnly) {
+      toastHtml(`✅ Internal Admission Course saved! Iska koi public page nahi rahega — form submit aur ₹500 fee confirm hone par students ke "My Courses" me automatically show hoga.`, true, 8000);
+    } else {
+      toastHtml(`✅ Course saved! Landing page updated: <a href="${finalLandingUrl}" target="_blank" style="color:#bbf7d0;text-decoration:underline;font-weight:700">🌐 View Landing Page →</a>`, true, 8000);
+    }
     loadLmsCourses();
     closeCourseStudio();
   } catch (err) {
@@ -4478,73 +4579,207 @@ function populateStudentCourseFilter() {
   if (currVal) sel.value = currVal;
 }
 
+function resolveMediaUrl(url) {
+  if (!url) return '';
+  url = String(url).trim();
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url;
+  if (url.startsWith('../')) url = url.replace(/^\.\.\//, '');
+  if (url.startsWith('/')) url = url.slice(1);
+  return url;
+}
+
 function filterLmsStudents() {
   renderLmsStudents();
 }
 
 function renderLmsStudents() {
   const tbody = document.getElementById('lmsStudentsTbody');
+  if (!tbody) return;
+
+  // Calculate student type KPIs
+  const total = allLmsStudents.length;
+  const onlineCount = allLmsStudents.filter(s => !s.isOfflineStudent || (s.enrolledCourses && s.enrolledCourses.length && s.paymentStatus !== 'pending_campus')).length;
+  const offlinePaidCount = allLmsStudents.filter(s => s.isOfflineStudent && (s.isPaid500 || s.paymentStatus === 'paid')).length;
+  const offlineCashCount = allLmsStudents.filter(s => s.isOfflineStudent && !s.isPaid500 && s.paymentStatus !== 'paid').length;
+
+  if (document.getElementById('kpi-students-total')) document.getElementById('kpi-students-total').textContent = total;
+  if (document.getElementById('kpi-students-online')) document.getElementById('kpi-students-online').textContent = onlineCount;
+  if (document.getElementById('kpi-students-offline-paid')) document.getElementById('kpi-students-offline-paid').textContent = offlinePaidCount;
+  if (document.getElementById('kpi-students-offline-cash')) document.getElementById('kpi-students-offline-cash').textContent = offlineCashCount;
+
   if (!allLmsStudents.length) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">No students enrolled yet. Click "+ Enroll Student" to add one.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted)">No students enrolled or registered yet. Click "+ Enroll Student" or check Offline Admissions.</td></tr>';
     return;
   }
 
   const query = (document.getElementById('studentSearch')?.value || '').trim().toLowerCase();
+  const filterType = document.getElementById('studentTypeFilter')?.value || '';
   const filterCourseId = document.getElementById('studentCourseFilter')?.value || '';
 
   const filtered = allLmsStudents.filter(s => {
+    // Type filter
+    if (filterType === 'offline_paid' && (!s.isOfflineStudent || (!s.isPaid500 && s.paymentStatus !== 'paid'))) return false;
+    if (filterType === 'offline_cash' && (!s.isOfflineStudent || s.isPaid500 || s.paymentStatus === 'paid')) return false;
+    if (filterType === 'online' && (s.isOfflineStudent && !s.enrolledCourses?.length)) return false;
+    if (filterType === 'alumni' && !s.alumniApproved && !s.isAlumni) return false;
+
+    // Course filter
     if (filterCourseId && !(s.enrolledCourses || []).includes(filterCourseId)) return false;
+
     if (!query) return true;
     const nameMatch = (s.name || '').toLowerCase().includes(query);
     const phoneMatch = (s.phone || '').includes(query);
-    const cityMatch = (s.city || '').toLowerCase().includes(query);
-    const courseMatch = (s.enrolledCourseNames || []).some(cn => cn.toLowerCase().includes(query));
-    return nameMatch || phoneMatch || cityMatch || courseMatch;
+    const cityMatch = (s.city || '').toLowerCase().includes(query) || (s.workCity || '').toLowerCase().includes(query);
+    const studioMatch = (s.studioName || '').toLowerCase().includes(query);
+    const appMatch = (s.offlineAdmissionId || '').toLowerCase().includes(query);
+    const courseMatch = (s.enrolledCourseNames || []).some(cn => cn.toLowerCase().includes(query)) ||
+                        (s.appliedCourse || '').toLowerCase().includes(query);
+    return nameMatch || phoneMatch || cityMatch || studioMatch || appMatch || courseMatch;
   });
 
   if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">No students found matching your search.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted)">No students found matching your filters.</td></tr>';
     return;
   }
 
   tbody.innerHTML = filtered.map(s => {
-    const coursesList = (s.enrolledCourseNames || []).length
-      ? s.enrolledCourseNames.map(cn => `<span class="badge" style="margin:2px;background:rgba(216,161,83,0.12);color:#fde68a;border:1px solid rgba(216,161,83,0.28)">${escapeHtml(cn)}</span>`).join('')
-      : '<span class="muted" style="font-size:11px">No courses assigned</span>';
-
-    const completed = s.totalCompletedLessons || 0;
+    const isOffline = !!s.isOfflineStudent || !!s.offlineAdmissionId;
+    const isPaid = !!s.isPaid500 || s.paymentStatus === 'paid';
+    const isApproved = !!s.isApproved || s.status === 'active' || s.status === 'approved';
+    const photoUrl = resolveMediaUrl(s.photoUrl || (s.offlineData && s.offlineData.photoUrl) || '');
     const certCode = `QAA-PR-${s.phone.slice(-4)}`;
 
+    // Type Badge
+    let typeBadge = '';
+    if (isOffline) {
+      if (isPaid) {
+        typeBadge = `<span class="badge" style="background:rgba(16,185,129,0.18);color:#34d399;border:1px solid rgba(16,185,129,0.4);font-weight:700;font-size:10.5px">🏛️ OFFLINE (₹500 PAID)</span>`;
+      } else {
+        typeBadge = `<span class="badge" style="background:rgba(245,158,11,0.18);color:#fbbf24;border:1px solid rgba(245,158,11,0.4);font-weight:700;font-size:10.5px">⏳ OFFLINE (PAY AT CAMPUS)</span>`;
+      }
+    } else {
+      typeBadge = `<span class="badge" style="background:rgba(59,130,246,0.18);color:#60a5fa;border:1px solid rgba(59,130,246,0.4);font-weight:700;font-size:10.5px">🌐 ONLINE COURSE</span>`;
+    }
+
+    // Courses Info Markup
+    let courseInfo = '';
+    if (isOffline) {
+      courseInfo = `
+        <div style="font-weight:700;color:#fde68a;font-size:13px;display:flex;align-items:center;gap:6px">
+          <span>🎬</span><span>${escapeHtml(s.appliedCourse || '14-Week Offline Master Class')}</span>
+        </div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:3px;display:flex;gap:8px;flex-wrap:wrap">
+          ${s.offlineAdmissionId ? `<span>App ID: <code style="color:#38bdf8">${escapeHtml(s.offlineAdmissionId)}</code></span>` : ''}
+          ${s.hostelNeeded ? `<span style="color:#34d399;font-weight:600">🏨 Hostel: Yes (Siwan)</span>` : `<span style="color:#64748b">🏠 Day Scholar</span>`}
+        </div>
+      `;
+      if (s.enrolledCourseNames && s.enrolledCourseNames.length) {
+        courseInfo += `
+          <div style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap">
+            <span style="font-size:10.5px;color:#cbd5e1">LMS Access:</span>
+            ${s.enrolledCourseNames.map(cn => `<span class="badge" style="background:rgba(216,161,83,0.12);color:#fde68a;border:1px solid rgba(216,161,83,0.28);font-size:10px">${escapeHtml(cn)}</span>`).join('')}
+          </div>
+        `;
+      }
+    } else {
+      if (s.enrolledCourseNames && s.enrolledCourseNames.length) {
+        courseInfo = s.enrolledCourseNames.map(cn => `
+          <span class="badge" style="margin:2px;background:rgba(59,130,246,0.15);color:#93c5fd;border:1px solid rgba(59,130,246,0.35);font-size:11px;font-weight:600">
+            🌐 ${escapeHtml(cn)}
+          </span>
+        `).join('');
+      } else {
+        courseInfo = '<span class="muted" style="font-size:11px">No courses assigned yet</span>';
+      }
+    }
+
+    // Status & Payment Markup
+    let statusMarkup = '';
+    if (isOffline) {
+      if (isApproved && isPaid) {
+        statusMarkup = `
+          <div style="color:#34d399;font-weight:700;font-size:12px;display:flex;align-items:center;gap:4px">
+            <span>✓</span><span>Active &amp; Enrolled</span>
+          </div>
+          <div style="font-size:10.5px;color:#6ee7b7">₹500 Verified</div>
+        `;
+      } else if (!isPaid) {
+        statusMarkup = `
+          <div style="color:#fbbf24;font-weight:700;font-size:12px;display:flex;align-items:center;gap:4px">
+            <span>⏳</span><span>₹500 Due at Campus</span>
+          </div>
+          <div style="font-size:10.5px;color:#94a3b8">Pending Admin Approval</div>
+        `;
+      } else {
+        statusMarkup = `
+          <div style="color:#60a5fa;font-weight:700;font-size:12px;display:flex;align-items:center;gap:4px">
+            <span>💳</span><span>Paid ₹500 (Verify)</span>
+          </div>
+        `;
+      }
+      if (s.totalCompletedLessons > 0) {
+        statusMarkup += `<div style="font-size:10.5px;color:#94a3b8;margin-top:3px"><b>${s.totalCompletedLessons}</b> lessons done</div>`;
+      }
+    } else {
+      const completed = s.totalCompletedLessons || 0;
+      statusMarkup = `
+        <div style="font-size:12px;font-weight:600"><b>${completed}</b> lessons done</div>
+        <div style="width:90px;height:6px;background:rgba(255,255,255,0.08);border-radius:99px;margin-top:4px;overflow:hidden">
+          <div style="width:${Math.min(100, completed * 10)}%;height:100%;background:#10b981"></div>
+        </div>
+      `;
+    }
+
+    // Action Buttons
+    let actionsHtml = `<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end">`;
+    if (isOffline) {
+      actionsHtml += `
+        <button onclick="viewOfflineStudentModal('${s.phone}')" class="btn btn-outline" style="padding:5px 9px;font-size:11px;color:#38bdf8;border-color:rgba(56,189,248,0.4);background:rgba(56,189,248,0.12)" title="View Full Application & Uploaded Documents">
+          📋 Details
+        </button>
+      `;
+      if (!isPaid || !isApproved) {
+        actionsHtml += `
+          <button onclick="quickApproveOfflineStudent('${s.offlineAdmissionId || ''}', '${s.phone}')" class="btn btn-gold" style="padding:5px 9px;font-size:11px" title="Mark ₹500 Paid &amp; Approve">
+            💰 Mark Paid
+          </button>
+        `;
+      }
+    }
+    actionsHtml += `
+      <button onclick="openStudentWhatsApp('${s.phone}', '${escapeHtml(s.name || '')}')" class="btn btn-outline" style="padding:5px 9px;font-size:11px;color:#34d399;border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.12)" title="Send WhatsApp Message">💬</button>
+      <a href="tel:+91${s.phone}" class="btn btn-outline" style="padding:5px 9px;font-size:11px;color:#93c5fd;border-color:rgba(59,130,246,0.3);background:rgba(59,130,246,0.12)" title="Call Student">📞</a>
+      <a href="portal/?verify=${encodeURIComponent(certCode)}" target="_blank" class="btn btn-outline" style="padding:5px 9px;font-size:11px;color:#fde68a;border-color:rgba(216,161,83,0.3);background:rgba(216,161,83,0.12)" title="Verify Certificate">🎓</a>
+      <button onclick="openSetPasswordModal('${s.phone}', '${escapeHtml(s.email || '')}')" class="btn btn-outline" style="padding:5px 9px;font-size:11px;color:#c4b5fd;border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.12)" title="Set Email/Password Login">🔑</button>
+      <button onclick="openEditStudentModal('${s.phone}')" class="btn btn-outline" style="padding:5px 8px;font-size:11px" title="Edit Student">✏️</button>
+      <button onclick="deleteStudent('${s.phone}')" class="btn btn-danger" style="padding:5px 8px;font-size:11px" title="Remove Student">✕</button>
+    </div>`;
+
     return `
-      <tr>
-        <td>
-          <div style="font-weight:700;font-size:13.5px;color:#fff">${escapeHtml(s.name || 'Student')}</div>
-          ${s.city ? `<span class="muted" style="font-size:11px">📍 ${escapeHtml(s.city)}</span>` : ''}
-          ${s.email ? `<span class="muted" style="font-size:11px;margin-left:6px">✉️ ${escapeHtml(s.email)}</span>` : ''}
-        </td>
-        <td>
-          <div style="display:flex;align-items:center;gap:6px">
-            <a href="tel:+91${s.phone}" style="font-family:monospace;font-weight:700;color:var(--gold)">+91 ${escapeHtml(s.phone)}</a>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06)">
+        <td style="max-width:240px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <img src="${photoUrl || '../assets/anil-sharma.webp'}" alt="${escapeHtml(s.name || '')}" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(245,158,11,0.5);flex-shrink:0" onerror="this.src='../assets/anil-sharma.webp'" />
+            <div style="overflow:hidden">
+              <div style="font-weight:700;font-size:13.5px;color:#fff">${escapeHtml(s.name || 'Student')}</div>
+              <div style="margin-top:2px">${typeBadge}</div>
+              <div style="font-size:11px;color:#94a3b8;margin-top:2px">
+                ${s.city ? `<span>📍 ${escapeHtml(s.city)}</span>` : ''}
+                ${s.email ? `<span style="margin-left:6px">✉️ ${escapeHtml(s.email)}</span>` : ''}
+              </div>
+              ${s.studioName ? `<div style="font-size:10.5px;color:#fcd34d;margin-top:1px">🎥 ${escapeHtml(s.studioName)}</div>` : ''}
+            </div>
           </div>
         </td>
-        <td style="max-width:240px">${coursesList}</td>
         <td>
-          <div style="font-size:12px;font-weight:600"><b>${completed}</b> lessons done</div>
-          <div style="width:90px;height:6px;background:rgba(255,255,255,0.08);border-radius:99px;margin-top:4px;overflow:hidden">
-            <div style="width:${Math.min(100, completed * 10)}%;height:100%;background:#10b981"></div>
+          <div style="font-family:monospace;font-weight:700;color:var(--gold);font-size:13px">
+            <a href="tel:+91${s.phone}" style="color:var(--gold);text-decoration:none">+91 ${escapeHtml(s.phone)}</a>
           </div>
         </td>
+        <td style="max-width:260px">${courseInfo}</td>
+        <td>${statusMarkup}</td>
         <td style="font-size:11px;color:var(--muted)">${s.enrolledAt ? new Date(s.enrolledAt).toLocaleDateString() : '—'}</td>
-        <td>
-          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-            <button onclick="openStudentWhatsApp('${s.phone}', '${escapeHtml(s.name || '')}')" class="btn btn-outline" style="padding:5px 10px;font-size:11px;color:#34d399;border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.12)" title="Send WhatsApp login &amp; course info">💬 WhatsApp</button>
-            <a href="tel:+91${s.phone}" class="btn btn-outline" style="padding:5px 10px;font-size:11px;color:#93c5fd;border-color:rgba(59,130,246,0.3);background:rgba(59,130,246,0.12)" title="Call Student">📞 Call</a>
-            <a href="portal/?verify=${encodeURIComponent(certCode)}" target="_blank" class="btn btn-outline" style="padding:5px 10px;font-size:11px;color:#fde68a;border-color:rgba(216,161,83,0.3);background:rgba(216,161,83,0.12)" title="Verify Certificate">🎓 Cert</a>
-            <button onclick="openSetPasswordModal('${s.phone}', '${escapeHtml(s.email || '')}')" class="btn btn-outline" style="padding:5px 10px;font-size:11px;color:#c4b5fd;border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.12)" title="Set Email &amp; Password Login">🔑 Password</button>
-            <button onclick="openEditStudentModal('${s.phone}')" class="btn btn-outline" style="padding:5px 9px;font-size:11px">✏️</button>
-            <button onclick="deleteStudent('${s.phone}')" class="btn btn-danger" style="padding:5px 9px;font-size:11px" title="Remove Student">✕</button>
-          </div>
-        </td>
+        <td style="text-align:right">${actionsHtml}</td>
       </tr>
     `;
   }).join('');
@@ -4559,24 +4794,265 @@ function openStudentWhatsApp(phone, name) {
 
 function exportStudentsCSV() {
   if (!allLmsStudents.length) { toast('No students to export', false); return; }
-  const cols = ['Name', 'Mobile', 'Email', 'City', 'Enrolled Courses', 'Completed Lessons', 'Enrolled Date'];
+  const cols = ['Name', 'Mobile', 'Email', 'City', 'Student Type', 'Offline App ID', 'Applied/Enrolled Courses', 'Seat Fee Status', 'Payment Mode', 'Studio', 'Hostel Needed', 'Completed Lessons', 'Registration Date'];
   const rows = [
     cols.join(','),
-    ...allLmsStudents.map(s => [
-      `"${String(s.name || '').replace(/"/g, '""')}"`,
-      `"${String(s.phone || '').replace(/"/g, '""')}"`,
-      `"${String(s.email || '').replace(/"/g, '""')}"`,
-      `"${String(s.city || '').replace(/"/g, '""')}"`,
-      `"${(s.enrolledCourseNames || []).join('; ').replace(/"/g, '""')}"`,
-      `"${s.totalCompletedLessons || 0}"`,
-      `"${s.enrolledAt ? new Date(s.enrolledAt).toLocaleDateString() : ''}"`
-    ].join(','))
+    ...allLmsStudents.map(s => {
+      const isOff = !!s.isOfflineStudent || !!s.offlineAdmissionId;
+      const isPaid = !!s.isPaid500 || s.paymentStatus === 'paid';
+      const typeStr = isOff ? (isPaid ? 'Offline Lab (₹500 Paid)' : 'Offline Lab (Pay at Campus)') : 'Online Course';
+      const feeStatus = isOff ? (isPaid ? 'Paid (₹500)' : 'Pending Campus Payment (₹500 Due)') : 'Online Enrolled';
+      const coursesStr = isOff ? (s.appliedCourse || '14-Week Offline Master Class') : (s.enrolledCourseNames || []).join('; ');
+      return [
+        `"${String(s.name || '').replace(/"/g, '""')}"`,
+        `"${String(s.phone || '').replace(/"/g, '""')}"`,
+        `"${String(s.email || '').replace(/"/g, '""')}"`,
+        `"${String(s.city || '').replace(/"/g, '""')}"`,
+        `"${typeStr}"`,
+        `"${String(s.offlineAdmissionId || '').replace(/"/g, '""')}"`,
+        `"${String(coursesStr).replace(/"/g, '""')}"`,
+        `"${feeStatus}"`,
+        `"${String(s.paymentMode || (isOff ? 'cash' : 'online')).replace(/"/g, '""')}"`,
+        `"${String(s.studioName || '').replace(/"/g, '""')}"`,
+        `"${s.hostelNeeded ? 'Yes (Siwan)' : 'No'}"`,
+        `"${s.totalCompletedLessons || 0}"`,
+        `"${s.enrolledAt ? new Date(s.enrolledAt).toLocaleDateString() : ''}"`
+      ].join(',');
+    })
   ];
   const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'students-' + Date.now() + '.csv';
+  a.download = 'qaa-students-registry-' + Date.now() + '.csv';
   a.click();
+}
+
+// 🏛️ Offline Student Application Dossier Modal Controller
+function viewOfflineStudentModal(phoneOrId) {
+  const pClean = String(phoneOrId || '').replace(/[^0-9]/g, '');
+  const idClean = String(phoneOrId || '').trim();
+
+  // Find record in offline admissions or LMS students
+  let adm = allOfflineAdmissions.find(a => (idClean && a.id === idClean) || (pClean && a.phone && String(a.phone).replace(/[^0-9]/g, '') === pClean));
+  if (!adm) {
+    const stu = allLmsStudents.find(s => (pClean && s.phone && String(s.phone).replace(/[^0-9]/g, '') === pClean) || (idClean && s.offlineAdmissionId === idClean));
+    if (stu) {
+      adm = stu.offlineData || stu;
+    }
+  }
+
+  if (!adm) {
+    alert('Student offline admission application record nahi mila.');
+    return;
+  }
+
+  const isPaid = (adm.paymentStatus === 'paid') || (adm.isPaid500 === true);
+  const isApproved = (adm.status === 'approved') || (adm.isApproved === true);
+  const photoSrc = resolveMediaUrl(adm.photoUrl || '');
+  const aadhaarSrc = resolveMediaUrl(adm.aadhaarUrl || adm.aadhaarDocUrl || '');
+  const certSrc = resolveMediaUrl(adm.certUrl || adm.prevCertUrl || '');
+  const courseTitle = adm.courseTitle || adm.courseName || adm.appliedCourse || 'Offline 14-Week Master Class';
+  const phone = adm.phone || '';
+  const fullName = adm.fullName || adm.name || 'Student';
+  const admId = adm.id || adm.offlineAdmissionId || 'QAA-OFF-2026-LIVE';
+
+  const modalTitle = document.getElementById('admDetailModalTitle');
+  const modalSub = document.getElementById('admDetailModalSub');
+  if (modalTitle) modalTitle.textContent = fullName + ' – Admission Dossier';
+  if (modalSub) modalSub.textContent = `Application ID: ${admId} • Registered: ${adm.createdAt ? new Date(adm.createdAt).toLocaleString() : 'Recent'}`;
+
+  const bodyEl = document.getElementById('offlineDetailModalBody');
+  if (bodyEl) {
+    bodyEl.innerHTML = `
+      <!-- Top Hero Strip -->
+      <div style="display:flex;align-items:center;gap:16px;background:#131d33;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:18px">
+        <div style="position:relative">
+          <img src="${photoSrc || '../assets/anil-sharma.webp'}" alt="${escapeHtml(fullName)}" style="width:68px;height:68px;border-radius:50%;object-fit:cover;border:3px solid #f59e0b;box-shadow:0 6px 16px rgba(0,0,0,0.4)" onerror="this.src='../assets/anil-sharma.webp'" />
+        </div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <h3 style="margin:0;font-size:18px;color:#fff;font-weight:700">${escapeHtml(fullName)}</h3>
+            ${isPaid ? `
+              <span class="badge" style="background:rgba(16,185,129,0.2);color:#34d399;border:1px solid rgba(16,185,129,0.4);font-weight:700;font-size:11px">
+                ✓ ₹500 SEAT FEE PAID
+              </span>
+            ` : `
+              <span class="badge" style="background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.4);font-weight:700;font-size:11px">
+                🏛️ PAY AT CAMPUS (₹500 DUE)
+              </span>
+            `}
+            ${isApproved ? `
+              <span class="badge" style="background:rgba(59,130,246,0.2);color:#60a5fa;border:1px solid rgba(59,130,246,0.4);font-weight:700;font-size:11px">
+                ✓ APPROVED &amp; ACTIVE
+              </span>
+            ` : `
+              <span class="badge" style="background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.4);font-weight:700;font-size:11px">
+                ⏳ PENDING ADMIN APPROVAL
+              </span>
+            `}
+          </div>
+          <div style="font-size:12.5px;color:#cbd5e1;margin-top:6px;display:flex;gap:14px;flex-wrap:wrap">
+            <span>📱 <strong style="color:var(--gold)">+91 ${escapeHtml(phone)}</strong></span>
+            ${adm.email ? `<span>✉️ ${escapeHtml(adm.email)}</span>` : ''}
+            <span>🏛️ App ID: <code style="color:#38bdf8">${escapeHtml(admId)}</code></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 Columns Info Grids -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:18px">
+        <!-- Personal & Contact -->
+        <div style="background:#080d1a;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px">
+          <h4 style="margin:0 0 10px;font-size:12px;color:#fcd34d;text-transform:uppercase;letter-spacing:0.5px">👤 Personal &amp; Family Info</h4>
+          <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;color:#cbd5e1">
+            <div><span style="color:#94a3b8">Father's Name:</span> <strong>${escapeHtml(adm.fatherName || '—')}</strong></div>
+            <div><span style="color:#94a3b8">Blood Group:</span> <strong style="color:#f87171">${escapeHtml(adm.bloodGroup || 'B+')}</strong></div>
+            <div><span style="color:#94a3b8">Gender / DOB:</span> <strong>${escapeHtml(adm.gender || 'Male')} ${adm.dob ? `(${escapeHtml(adm.dob)})` : ''}</strong></div>
+            <div><span style="color:#94a3b8">Verification:</span> <span style="color:#34d399">✓ Phone &amp; Email OTP Verified</span></div>
+          </div>
+        </div>
+
+        <!-- Course & Accommodation -->
+        <div style="background:#080d1a;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px">
+          <h4 style="margin:0 0 10px;font-size:12px;color:#fcd34d;text-transform:uppercase;letter-spacing:0.5px">🎬 Course &amp; Campus Stay</h4>
+          <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;color:#cbd5e1">
+            <div><span style="color:#94a3b8">Applied Course:</span> <strong style="color:#fde68a">${escapeHtml(courseTitle)}</strong></div>
+            <div><span style="color:#94a3b8">Hostel Facility:</span> ${adm.hostelNeeded ? '<strong style="color:#34d399">🏨 YES - Outstation Student (Needs Hostel in Siwan)</strong>' : '<strong style="color:#94a3b8">🏠 Day Scholar (Local)</strong>'}</div>
+            <div><span style="color:#94a3b8">Payment Mode:</span> <strong>${adm.paymentMode === 'online' ? 'Online Gateway (Razorpay/UPI)' : '🏛️ Pay at Siwan Campus (Cash on Arrival)'}</strong></div>
+            <div><span style="color:#94a3b8">Seat Fee Status:</span> ${isPaid ? '<strong style="color:#34d399">✓ ₹500 Confirmed</strong>' : '<strong style="color:#fbbf24">⏳ ₹500 Pending at Campus</strong>'}</div>
+          </div>
+        </div>
+
+        <!-- Address & Residence -->
+        <div style="background:#080d1a;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px">
+          <h4 style="margin:0 0 10px;font-size:12px;color:#fcd34d;text-transform:uppercase;letter-spacing:0.5px">📍 Permanent Address</h4>
+          <div style="font-size:12px;color:#cbd5e1;line-height:1.5">
+            ${escapeHtml(adm.address || adm.permanentAddress || 'Address not specified')}<br>
+            <strong>${escapeHtml(adm.city || 'Siwan')}, ${escapeHtml(adm.state || 'Bihar')} ${adm.pincode ? `- ${escapeHtml(adm.pincode)}` : ''}</strong>
+          </div>
+        </div>
+
+        <!-- Studio & Experience -->
+        <div style="background:#080d1a;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px">
+          <h4 style="margin:0 0 10px;font-size:12px;color:#fcd34d;text-transform:uppercase;letter-spacing:0.5px">🎥 Studio &amp; Background</h4>
+          <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;color:#cbd5e1">
+            <div><span style="color:#94a3b8">Studio Name:</span> <strong>${escapeHtml(adm.studioName || 'Self / Independent')}</strong></div>
+            <div><span style="color:#94a3b8">Role / Profession:</span> <strong>${escapeHtml(adm.currentRole || adm.currentWork || 'Student / Photographer')}</strong></div>
+            <div><span style="color:#94a3b8">Working City:</span> <strong>${escapeHtml(adm.workCity || adm.city || 'Siwan')}</strong></div>
+            ${(adm.instagram || adm.portfolioUrl) ? `
+              <div><span style="color:#94a3b8">Instagram:</span> <a href="${escapeHtml(adm.instagram || adm.portfolioUrl)}" target="_blank" style="color:#60a5fa;text-decoration:underline">View Portfolio →</a></div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+
+      <!-- Official Documents Verification Box -->
+      <div style="background:#080d1a;border:1px solid rgba(245,158,11,0.25);border-radius:14px;padding:16px;margin-bottom:12px">
+        <h4 style="margin:0 0 12px;font-size:12px;color:#fcd34d;text-transform:uppercase;letter-spacing:0.5px">📄 Uploaded Verification Documents (Strict &le; 1 MB)</h4>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px">
+          
+          <!-- Aadhaar Card Document -->
+          <div style="background:#131d33;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:18px">🪪</span>
+              <strong style="font-size:12px;color:#fff">Aadhaar Card (Front/Back)</strong>
+            </div>
+            ${aadhaarSrc ? `
+              <a href="${aadhaarSrc}" target="_blank" class="btn btn-outline" style="font-size:11.5px;padding:6px 12px;display:flex;align-items:center;justify-content:center;gap:6px;color:#38bdf8;border-color:rgba(56,189,248,0.4);background:rgba(56,189,248,0.1);text-decoration:none">
+                👁️ View Aadhaar Card (PDF/Image)
+              </a>
+            ` : `<span style="font-size:11px;color:#94a3b8">No document uploaded</span>`}
+          </div>
+
+          <!-- Education Certificate Document -->
+          <div style="background:#131d33;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:18px">📜</span>
+              <strong style="font-size:12px;color:#fff">Education Certificate / Marksheet</strong>
+            </div>
+            ${certSrc ? `
+              <a href="${certSrc}" target="_blank" class="btn btn-outline" style="font-size:11.5px;padding:6px 12px;display:flex;align-items:center;justify-content:center;gap:6px;color:#fde68a;border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.1);text-decoration:none">
+                👁️ View Certificate (PDF/Image)
+              </a>
+            ` : `<span style="font-size:11px;color:#94a3b8">No document uploaded</span>`}
+          </div>
+
+          <!-- Student Formal Photo -->
+          <div style="background:#131d33;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:18px">📸</span>
+              <strong style="font-size:12px;color:#fff">Formal Passport Photo</strong>
+            </div>
+            ${photoSrc ? `
+              <a href="${photoSrc}" target="_blank" class="btn btn-outline" style="font-size:11.5px;padding:6px 12px;display:flex;align-items:center;justify-content:center;gap:6px;color:#34d399;border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.1);text-decoration:none">
+                👁️ View Full Photo
+              </a>
+            ` : `<span style="font-size:11px;color:#94a3b8">No photo uploaded</span>`}
+          </div>
+
+        </div>
+      </div>
+    `;
+  }
+
+  // Action buttons inside modal footer
+  const btnsEl = document.getElementById('offlineDetailActionBtns');
+  if (btnsEl) {
+    btnsEl.innerHTML = `
+      ${!isPaid ? `
+        <button onclick="quickApproveOfflineStudent('${admId}', '${phone}', true)" class="btn btn-gold" style="font-size:12px;padding:8px 16px">
+          💰 Mark ₹500 Paid &amp; Approve
+        </button>
+      ` : (!isApproved ? `
+        <button onclick="quickApproveOfflineStudent('${admId}', '${phone}', false)" class="btn btn-gold" style="font-size:12px;padding:8px 16px">
+          ✓ Approve Admission
+        </button>
+      ` : `
+        <span style="color:#34d399;font-size:12px;font-weight:700;display:flex;align-items:center;gap:4px">
+          ✓ Approved &amp; Enrolled
+        </span>
+        <button onclick="publishApplicantToAlumniAdmin('${phone}')" class="btn btn-outline" style="font-size:12px;padding:8px 14px;color:#f472b6;border-color:rgba(244,114,182,0.4);background:rgba(244,114,182,0.1)">
+          🌟 Feature in Alumni Directory (/alumni/)
+        </button>
+      `)}
+      <button onclick="openStudentWhatsApp('${phone}', '${escapeHtml(fullName)}')" class="btn btn-outline" style="font-size:12px;padding:8px 14px;color:#34d399;border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.1)">
+        💬 WhatsApp
+      </button>
+      <a href="tel:+91${phone}" class="btn btn-outline" style="font-size:12px;padding:8px 14px;color:#93c5fd;border-color:rgba(59,130,246,0.4);background:rgba(59,130,246,0.1);text-decoration:none">
+        📞 Call
+      </a>
+    `;
+  }
+
+  const modalEl = document.getElementById('offlineStudentDetailModal');
+  if (modalEl) modalEl.classList.add('show');
+}
+
+function closeOfflineDetailModal() {
+  const modalEl = document.getElementById('offlineStudentDetailModal');
+  if (modalEl) modalEl.classList.remove('show');
+}
+
+async function quickApproveOfflineStudent(admissionId, phone, markPaid = true) {
+  if (!confirm(`Are you sure you want to approve this admission${markPaid ? ' and mark the ₹500 seat fee paid' : ''}?`)) return;
+
+  try {
+    const res = await lmsAdmin('approve-offline-admission', {
+      method: 'POST',
+      body: { id: admissionId, markPaid }
+    });
+
+    if (res.approved) {
+      toast('✓ Admission approved successfully! Student access activated.');
+      closeOfflineDetailModal();
+      loadLmsStudents();
+      loadOfflineAdmissionsAdmin();
+    } else {
+      throw new Error(res.error || 'Failed to approve');
+    }
+  } catch (err) {
+    alert('Action failed: ' + err.message);
+  }
 }
 
 function toggleAllEnrollCourses(select) {
@@ -6176,177 +6652,8 @@ async function saveLandingPageSettings(e) {
 }
 
 // ==========================================
-// 🏛️ OFFLINE ADMISSIONS & ALUMNI CONTROLLER
+// 🏛️ ALUMNI PUBLISHING CONTROLLER
 // ==========================================
-let allOfflineAdmissions = [];
-
-async function loadOfflineAdmissionsAdmin() {
-  const tbody = document.getElementById('offlineAdmissionsTbody');
-  if (tbody) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">Loading offline applicants…</td></tr>';
-
-  try {
-    const res = await lmsAdmin('get-offline-admissions');
-    allOfflineAdmissions = res.admissions || [];
-
-    // Calculate KPIs
-    const total = allOfflineAdmissions.length;
-    const paid = allOfflineAdmissions.filter(a => a.paymentStatus === 'paid').length;
-    const cash = allOfflineAdmissions.filter(a => a.paymentStatus !== 'paid').length;
-    const alumniCount = allOfflineAdmissions.filter(a => a.alumniApproved || a.status === 'approved').length;
-
-    if (document.getElementById('kpi-offline-total')) document.getElementById('kpi-offline-total').textContent = total;
-    if (document.getElementById('kpi-offline-paid')) document.getElementById('kpi-offline-paid').textContent = paid;
-    if (document.getElementById('kpi-offline-cash')) document.getElementById('kpi-offline-cash').textContent = cash;
-    if (document.getElementById('kpi-offline-alumni')) document.getElementById('kpi-offline-alumni').textContent = alumniCount;
-
-    renderOfflineAdmissionsTable();
-  } catch (err) {
-    if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--red)">Failed to load admissions: ${escapeHtml(err.message)}</td></tr>`;
-  }
-}
-
-function renderOfflineAdmissionsTable() {
-  const tbody = document.getElementById('offlineAdmissionsTbody');
-  if (!tbody) return;
-
-  if (!allOfflineAdmissions.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">No offline admission applications received yet.</td></tr>';
-    return;
-  }
-
-  const query = (document.getElementById('offlineSearch')?.value || '').trim().toLowerCase();
-  const statusFilter = document.getElementById('offlineStatusFilter')?.value || '';
-
-  const filtered = allOfflineAdmissions.filter(a => {
-    if (statusFilter === 'paid' && a.paymentStatus !== 'paid') return false;
-    if (statusFilter === 'campus_payment' && a.paymentStatus === 'paid') return false;
-    if (statusFilter === 'approved' && a.status !== 'approved') return false;
-    if (statusFilter === 'alumni_pending' && !a.examPassed && !a.alumniPendingApproval) return false;
-
-    if (!query) return true;
-    const nameMatch = (a.fullName || '').toLowerCase().includes(query);
-    const phoneMatch = (a.phone || '').includes(query);
-    const cityMatch = (a.permanentAddress || '').toLowerCase().includes(query) || (a.city || '').toLowerCase().includes(query);
-    const studioMatch = (a.studioName || '').toLowerCase().includes(query);
-    return nameMatch || phoneMatch || cityMatch || studioMatch;
-  });
-
-  if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">No matching applications found.</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = filtered.map(a => {
-    const isPaid = a.paymentStatus === 'paid';
-    const isApproved = a.status === 'approved';
-    const photoSrc = a.photoUrl ? (a.photoUrl.startsWith('http') ? a.photoUrl : `../${a.photoUrl}`) : '../home-assets/ec55a6be3747a9.webp';
-    const aadhaarSrc = a.aadhaarDocUrl ? (a.aadhaarDocUrl.startsWith('http') ? a.aadhaarDocUrl : `../${a.aadhaarDocUrl}`) : '';
-    const certSrc = a.prevCertUrl ? (a.prevCertUrl.startsWith('http') ? a.prevCertUrl : `../${a.prevCertUrl}`) : '';
-
-    return `
-      <tr style="border-bottom:1px solid rgba(255,255,255,0.06)">
-        <td style="vertical-align:middle;text-align:center">
-          <img src="${photoSrc}" alt="${escapeHtml(a.fullName || '')}" style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid rgba(245,158,11,0.5);" onerror="this.src='../home-assets/ec55a6be3747a9.webp'" />
-        </td>
-        <td>
-          <div style="font-weight:700;color:#fff;font-size:14px">${escapeHtml(a.fullName || 'Student')}</div>
-          <div style="font-size:12px;color:#94a3b8;margin-top:2px">
-            📞 <a href="https://wa.me/91${a.phone}?text=Namaste%20${encodeURIComponent(a.fullName || '')},%20Quick%20Art%20Photography%20Academy%20se%20aapka%20admission%20confirm%20ho%20gaya%20hai!" target="_blank" style="color:#34d399;font-weight:600;text-decoration:none">+91 ${escapeHtml(a.phone || '')}</a>
-          </div>
-          ${a.email ? `<div style="font-size:11px;color:#64748b">✉️ ${escapeHtml(a.email)}</div>` : ''}
-          ${a.fatherName ? `<div style="font-size:11px;color:#64748b">👨‍👦 Father: ${escapeHtml(a.fatherName)}</div>` : ''}
-          ${a.permanentAddress ? `<div style="font-size:11px;color:#94a3b8;margin-top:2px">📍 ${escapeHtml(a.permanentAddress)}</div>` : ''}
-        </td>
-        <td>
-          <span style="display:inline-block;padding:3px 8px;border-radius:6px;background:rgba(216,161,83,0.15);color:#fcd34d;font-size:12px;font-weight:600">
-            ${escapeHtml(a.courseName || 'Offline 14-Week Master Class')}
-          </span>
-          <div style="font-size:11px;color:#94a3b8;margin-top:4px">
-            Batch: ${escapeHtml(a.batchPref || 'Upcoming Offline Batch')}
-          </div>
-          <div style="font-size:10.5px;color:#64748b;margin-top:2px">
-            App ID: <span style="font-family:monospace">${escapeHtml(a.id || '')}</span>
-          </div>
-        </td>
-        <td>
-          <div style="display:flex;flex-direction:column;gap:4px">
-            ${aadhaarSrc ? `
-              <a href="${aadhaarSrc}" target="_blank" class="btn-sm btn-outline" style="font-size:11px;padding:3px 8px;text-align:center;display:inline-flex;align-items:center;gap:4px;text-decoration:none">
-                📄 View Aadhaar Card
-              </a>
-            ` : '<span style="color:#64748b;font-size:11px">Aadhaar not attached</span>'}
-            ${certSrc ? `
-              <a href="${certSrc}" target="_blank" class="btn-sm btn-outline" style="font-size:11px;padding:3px 8px;text-align:center;display:inline-flex;align-items:center;gap:4px;text-decoration:none">
-                📜 View Previous Cert
-              </a>
-            ` : '<span style="color:#64748b;font-size:11px">Cert not attached</span>'}
-          </div>
-        </td>
-        <td>
-          <div style="font-weight:600;color:#fcd34d;font-size:13px">${escapeHtml(a.studioName || 'Studio (Self-employed)')}</div>
-          <div style="font-size:12px;color:#cbd5e1">${escapeHtml(a.currentWork || 'Wedding Photographer / Editor')}</div>
-          <div style="font-size:11px;color:#94a3b8">City: ${escapeHtml(a.workCity || a.city || 'Siwan / Bihar')}</div>
-          ${a.portfolioUrl ? `
-            <a href="${a.portfolioUrl}" target="_blank" style="font-size:11px;color:#60a5fa;text-decoration:none;display:inline-block;margin-top:2px">
-              🔗 Portfolio / Instagram
-            </a>
-          ` : ''}
-        </td>
-        <td>
-          ${isPaid ? `
-            <span style="display:inline-flex;align-items:center;gap:4px;background:rgba(16,185,129,0.2);color:#34d399;font-weight:700;font-size:11.5px;padding:3px 8px;border-radius:999px;border:1px solid rgba(16,185,129,0.3)">
-              ✓ Paid ₹500
-            </span>
-            ${a.paymentId ? `<div style="font-size:10px;color:#64748b;margin-top:3px;font-family:monospace">${escapeHtml(a.paymentId)}</div>` : ''}
-          ` : `
-            <span style="display:inline-flex;align-items:center;gap:4px;background:rgba(239,68,68,0.2);color:#fca5a5;font-weight:700;font-size:11.5px;padding:3px 8px;border-radius:999px;border:1px solid rgba(239,68,68,0.3)">
-              ⏳ Pay at Campus
-            </span>
-          `}
-        </td>
-        <td style="text-align:right;white-space:nowrap">
-          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
-            ${!isPaid ? `
-              <button onclick="approveOfflineAdmissionAdmin('${a.id}', true)" class="btn-sm btn-gold" style="font-size:11px;padding:4px 10px">
-                💰 Mark ₹500 Paid &amp; Approve
-              </button>
-            ` : (!isApproved ? `
-              <button onclick="approveOfflineAdmissionAdmin('${a.id}', false)" class="btn-sm btn-gold" style="font-size:11px;padding:4px 10px">
-                ✓ Approve Admission
-              </button>
-            ` : `
-              <span style="color:#34d399;font-size:11px;font-weight:600">✓ Enrolled in LMS</span>
-            `)}
-            
-            <button onclick="publishApplicantToAlumniAdmin('${a.phone}')" class="btn-sm btn-outline" style="font-size:11px;padding:4px 10px;border-color:rgba(245,158,11,0.5);color:#fcd34d">
-              🌟 Publish to Alumni Page
-            </button>
-          </div>
-        </td>
-      </tr>
-    `;
-  }).join('');
-}
-
-async function approveOfflineAdmissionAdmin(admissionId, markPaid = false) {
-  if (!confirm(`Are you sure you want to approve this admission${markPaid ? ' and mark the ₹500 seat fee paid' : ''}?`)) return;
-
-  try {
-    const res = await lmsAdmin('approve-offline-admission', {
-      method: 'POST',
-      body: { id: admissionId, markPaid }
-    });
-
-    if (res.approved) {
-      toast('✓ Admission status updated successfully!');
-      loadOfflineAdmissionsAdmin();
-    } else {
-      throw new Error(res.error || 'Failed to approve');
-    }
-  } catch (err) {
-    alert('Action failed: ' + err.message);
-  }
-}
 
 async function publishApplicantToAlumniAdmin(phone) {
   if (!confirm(`Do you want to publish this student directly to the official Alumni Directory (/alumni/)?`)) return;
@@ -6359,7 +6666,8 @@ async function publishApplicantToAlumniAdmin(phone) {
 
     if (res.ok) {
       toast('🎉 Student published to Alumni Directory successfully!');
-      loadOfflineAdmissionsAdmin();
+      loadLmsStudents();
+      if (typeof loadOfflineAdmissionsAdmin === 'function') loadOfflineAdmissionsAdmin();
     } else {
       throw new Error(res.error || 'Failed to publish');
     }

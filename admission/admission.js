@@ -6,65 +6,22 @@ document.addEventListener('DOMContentLoaded', function () {
   var submitBtn = document.getElementById('btn-submit-admission');
   var statusBox = document.getElementById('adm-status-msg');
 
-  // Badge live preview elements
-  var badgeName = document.getElementById('id-badge-name');
-  var badgeRole = document.getElementById('id-badge-role');
-  var badgeStudio = document.getElementById('id-badge-studio');
-  var badgeCity = document.getElementById('id-badge-city');
-  var badgePhoto = document.getElementById('id-badge-photo');
   var previewImg = document.getElementById('photo-preview-img');
-
-  // Input listeners for live ID Badge preview
-  var inputName = document.getElementById('adm-name');
-  var inputRole = document.getElementById('adm-role');
-  var inputStudio = document.getElementById('adm-studio');
-  var inputCity = document.getElementById('adm-city');
-  var inputWorkCity = document.getElementById('adm-workcity');
   var inputPhoto = document.getElementById('adm-photo');
   var inputAadhaar = document.getElementById('adm-aadhaar');
   var inputCert = document.getElementById('adm-cert');
-  var inputBlood = document.getElementById('adm-bloodgroup');
   var inputPhone = document.getElementById('adm-phone');
+  var inputEmail = document.getElementById('adm-email');
 
-  if (inputName && badgeName) {
-    inputName.addEventListener('input', function () {
-      badgeName.textContent = this.value.trim() || 'Your Full Name';
-    });
-  }
-
-  if (inputRole && badgeRole) {
-    inputRole.addEventListener('change', function () {
-      badgeRole.textContent = this.value || 'Offline Masterclass Student';
-    });
-  }
-
-  var badgeBlood = document.getElementById('id-badge-blood');
-  if (inputBlood && badgeBlood) {
-    inputBlood.addEventListener('change', function () {
-      badgeBlood.textContent = this.value || 'B+';
-    });
-  }
-
-  if (inputStudio && badgeStudio) {
-    inputStudio.addEventListener('input', function () {
-      var val = this.value.trim() || 'Your Studio Name';
-      badgeStudio.innerHTML = 'Studio: <span>' + escapeHtml(val) + '</span>';
-    });
-  }
-
-  function updateCityPreview() {
-    var c = (inputWorkCity && inputWorkCity.value.trim()) || (inputCity && inputCity.value.trim()) || 'Siwan, Bihar';
-    if (badgeCity) {
-      badgeCity.innerHTML = 'Location: <span>' + escapeHtml(c) + '</span>';
-    }
-  }
-
-  if (inputCity) inputCity.addEventListener('input', updateCityPreview);
-  if (inputWorkCity) inputWorkCity.addEventListener('input', updateCityPreview);
-
-  // Photo file preview with 500 KB size limit
+  // File size limits: Photo = 500 KB, Documents = 1 MB (1024 * 1024 bytes)
   var MAX_PHOTO_BYTES = 500 * 1024; // 500 KB
+  var MAX_DOC_BYTES = 1024 * 1024;  // 1 MB
 
+  // Verification state flags
+  var isPhoneVerified = false;
+  var isEmailVerified = false;
+
+  // 1. Photo file preview with 500 KB size limit
   if (inputPhoto) {
     inputPhoto.addEventListener('change', function () {
       if (this.files && this.files[0]) {
@@ -77,33 +34,341 @@ document.addEventListener('DOMContentLoaded', function () {
         var reader = new FileReader();
         reader.onload = function (e) {
           if (previewImg) previewImg.src = e.target.result;
-          if (badgePhoto) badgePhoto.src = e.target.result;
         };
         reader.readAsDataURL(file);
       }
     });
   }
 
-  // File label updates
-  function attachFileLabel(inputEl, labelId) {
+  // 2. Document file size checks (Max 1 MB) for Aadhaar & Certificate
+  function attachFileSizeCheck(inputEl, labelId, docName) {
     if (!inputEl) return;
     inputEl.addEventListener('change', function () {
-      var label = document.getElementById(labelId);
-      if (label && this.files && this.files[0]) {
-        label.textContent = '✓ ' + this.files[0].name;
+      if (this.files && this.files[0]) {
+        var file = this.files[0];
+        if (file.size > MAX_DOC_BYTES) {
+          alert(docName + ' ka file size 1 MB se bada hai (' + Math.round(file.size / 1024) + ' KB)। Kripya 1 MB se chhota photo ya PDF upload karein.');
+          this.value = '';
+          var label = document.getElementById(labelId);
+          if (label) label.textContent = 'Click to upload ' + docName + ' (Max 1 MB)';
+          return;
+        }
+        var label = document.getElementById(labelId);
+        if (label) label.textContent = '✓ ' + file.name + ' (' + Math.round(file.size / 1024) + ' KB)';
       }
     });
   }
-  attachFileLabel(inputAadhaar, 'aadhaar-label');
-  attachFileLabel(inputCert, 'cert-label');
+  attachFileSizeCheck(inputAadhaar, 'aadhaar-label', 'Aadhaar Card');
+  attachFileSizeCheck(inputCert, 'cert-label', 'Education Certificate');
 
-  // Form submission handler
+  // --- 3. WhatsApp Number OTP Verification ---
+  var btnSendPhoneOtp = document.getElementById('btn-send-phone-otp');
+  var boxPhoneOtp = document.getElementById('box-phone-otp');
+  var inputPhoneOtp = document.getElementById('adm-phone-otp');
+  var btnSubmitPhoneOtp = document.getElementById('btn-submit-phone-otp');
+  var btnResendPhoneOtp = document.getElementById('btn-resend-phone-otp');
+  var phoneOtpMsg = document.getElementById('phone-otp-msg');
+  var badgePhoneVerified = document.getElementById('badge-phone-verified');
+  var devPhoneOtpPill = document.getElementById('dev-phone-otp-pill');
+  var devPhoneOtpVal = document.getElementById('dev-phone-otp-val');
+
+  function sendPhoneOtp() {
+    var phone = inputPhone ? inputPhone.value.trim().replace(/\D/g, '') : '';
+    if (phone.length !== 10) {
+      alert('Kripya 10-digit valid WhatsApp mobile number enter karein.');
+      if (inputPhone) inputPhone.focus();
+      return;
+    }
+
+    if (btnSendPhoneOtp) {
+      btnSendPhoneOtp.disabled = true;
+      btnSendPhoneOtp.textContent = 'Sending OTP…';
+    }
+    if (phoneOtpMsg) {
+      phoneOtpMsg.textContent = 'Sending OTP to WhatsApp…';
+      phoneOtpMsg.className = 'adm-otp-msg';
+    }
+
+    fetch('../api/lms.php?action=send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: phone })
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (!data.ok) {
+          throw new Error(data.error || 'WhatsApp OTP bhejne me dikkat aayi.');
+        }
+        if (boxPhoneOtp) boxPhoneOtp.style.display = 'flex';
+        if (inputPhoneOtp) {
+          inputPhoneOtp.value = '';
+          inputPhoneOtp.focus();
+        }
+
+        if (data.devOtp && devPhoneOtpPill && devPhoneOtpVal) {
+          devPhoneOtpVal.textContent = data.devOtp;
+          devPhoneOtpPill.style.display = 'inline-block';
+          if (inputPhoneOtp) inputPhoneOtp.value = data.devOtp;
+        }
+
+        if (phoneOtpMsg) {
+          phoneOtpMsg.textContent = '✓ OTP WhatsApp (+91 ' + phone + ') par bhej diya gaya hai!';
+          phoneOtpMsg.className = 'adm-otp-msg is-success';
+        }
+        startPhoneResendTimer();
+      })
+      .catch(function (err) {
+        if (phoneOtpMsg) {
+          phoneOtpMsg.textContent = '✕ ' + err.message;
+          phoneOtpMsg.className = 'adm-otp-msg is-error';
+        }
+        alert(err.message);
+      })
+      .finally(function () {
+        if (btnSendPhoneOtp) {
+          btnSendPhoneOtp.disabled = false;
+          btnSendPhoneOtp.textContent = isPhoneVerified ? '✓ Verified' : 'Verify WhatsApp';
+        }
+      });
+  }
+
+  function startPhoneResendTimer() {
+    if (!btnResendPhoneOtp) return;
+    var sec = 30;
+    btnResendPhoneOtp.disabled = true;
+    btnResendPhoneOtp.textContent = 'Resend (' + sec + 's)';
+    var interval = setInterval(function () {
+      sec--;
+      if (sec <= 0) {
+        clearInterval(interval);
+        btnResendPhoneOtp.disabled = false;
+        btnResendPhoneOtp.textContent = 'Resend';
+      } else {
+        btnResendPhoneOtp.textContent = 'Resend (' + sec + 's)';
+      }
+    }, 1000);
+  }
+
+  if (btnSendPhoneOtp) btnSendPhoneOtp.addEventListener('click', sendPhoneOtp);
+  if (btnResendPhoneOtp) btnResendPhoneOtp.addEventListener('click', sendPhoneOtp);
+
+  if (btnSubmitPhoneOtp) {
+    btnSubmitPhoneOtp.addEventListener('click', function () {
+      var phone = inputPhone ? inputPhone.value.trim().replace(/\D/g, '') : '';
+      var otp = inputPhoneOtp ? inputPhoneOtp.value.trim() : '';
+      if (otp.length < 4) {
+        alert('Kripya 6-digit OTP code enter karein.');
+        if (inputPhoneOtp) inputPhoneOtp.focus();
+        return;
+      }
+
+      btnSubmitPhoneOtp.disabled = true;
+      btnSubmitPhoneOtp.textContent = 'Verifying…';
+
+      fetch('../api/lms.php?action=verify-phone-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phone, otp: otp })
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (!data.ok) {
+            throw new Error(data.error || 'Galat ya expired OTP code.');
+          }
+          isPhoneVerified = true;
+          if (boxPhoneOtp) boxPhoneOtp.style.display = 'none';
+          if (badgePhoneVerified) badgePhoneVerified.style.display = 'inline-flex';
+          if (inputPhone) {
+            inputPhone.readOnly = true;
+            inputPhone.style.background = '#f0fdf4';
+          }
+          if (btnSendPhoneOtp) {
+            btnSendPhoneOtp.disabled = true;
+            btnSendPhoneOtp.classList.add('is-verified');
+            btnSendPhoneOtp.textContent = '✓ Verified';
+          }
+          if (phoneOtpMsg) phoneOtpMsg.textContent = '';
+          showStatus('WhatsApp Number successfully verified!', 'info');
+        })
+        .catch(function (err) {
+          if (phoneOtpMsg) {
+            phoneOtpMsg.textContent = '✕ ' + err.message;
+            phoneOtpMsg.className = 'adm-otp-msg is-error';
+          }
+          alert(err.message);
+        })
+        .finally(function () {
+          btnSubmitPhoneOtp.disabled = false;
+          btnSubmitPhoneOtp.textContent = 'Submit OTP';
+        });
+    });
+  }
+
+  // --- 4. Email OTP Verification ---
+  var btnSendEmailOtp = document.getElementById('btn-send-email-otp');
+  var boxEmailOtp = document.getElementById('box-email-otp');
+  var inputEmailOtp = document.getElementById('adm-email-otp');
+  var btnSubmitEmailOtp = document.getElementById('btn-submit-email-otp');
+  var btnResendEmailOtp = document.getElementById('btn-resend-email-otp');
+  var emailOtpMsg = document.getElementById('email-otp-msg');
+  var badgeEmailVerified = document.getElementById('badge-email-verified');
+  var devEmailOtpPill = document.getElementById('dev-email-otp-pill');
+  var devEmailOtpVal = document.getElementById('dev-email-otp-val');
+
+  function sendEmailOtp() {
+    var email = inputEmail ? inputEmail.value.trim().toLowerCase() : '';
+    if (!email || email.indexOf('@') === -1 || email.indexOf('.') === -1) {
+      alert('Kripya valid Email Address enter karein.');
+      if (inputEmail) inputEmail.focus();
+      return;
+    }
+
+    if (btnSendEmailOtp) {
+      btnSendEmailOtp.disabled = true;
+      btnSendEmailOtp.textContent = 'Sending OTP…';
+    }
+    if (emailOtpMsg) {
+      emailOtpMsg.textContent = 'Sending OTP to email…';
+      emailOtpMsg.className = 'adm-otp-msg';
+    }
+
+    fetch('../api/lms.php?action=send-email-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, purpose: 'admission' })
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (!data.ok) {
+          throw new Error(data.error || 'Email OTP bhejne me error aaya.');
+        }
+        if (boxEmailOtp) boxEmailOtp.style.display = 'flex';
+        if (inputEmailOtp) {
+          inputEmailOtp.value = '';
+          inputEmailOtp.focus();
+        }
+
+        if (data.devOtp && devEmailOtpPill && devEmailOtpVal) {
+          devEmailOtpVal.textContent = data.devOtp;
+          devEmailOtpPill.style.display = 'inline-block';
+          if (inputEmailOtp) inputEmailOtp.value = data.devOtp;
+        }
+
+        if (emailOtpMsg) {
+          emailOtpMsg.textContent = '✓ OTP aapke email (' + email + ') par bhej diya gaya hai!';
+          emailOtpMsg.className = 'adm-otp-msg is-success';
+        }
+        startEmailResendTimer();
+      })
+      .catch(function (err) {
+        if (emailOtpMsg) {
+          emailOtpMsg.textContent = '✕ ' + err.message;
+          emailOtpMsg.className = 'adm-otp-msg is-error';
+        }
+        alert(err.message);
+      })
+      .finally(function () {
+        if (btnSendEmailOtp) {
+          btnSendEmailOtp.disabled = false;
+          btnSendEmailOtp.textContent = isEmailVerified ? '✓ Verified' : 'Verify Email';
+        }
+      });
+  }
+
+  function startEmailResendTimer() {
+    if (!btnResendEmailOtp) return;
+    var sec = 30;
+    btnResendEmailOtp.disabled = true;
+    btnResendEmailOtp.textContent = 'Resend (' + sec + 's)';
+    var interval = setInterval(function () {
+      sec--;
+      if (sec <= 0) {
+        clearInterval(interval);
+        btnResendEmailOtp.disabled = false;
+        btnResendEmailOtp.textContent = 'Resend';
+      } else {
+        btnResendEmailOtp.textContent = 'Resend (' + sec + 's)';
+      }
+    }, 1000);
+  }
+
+  if (btnSendEmailOtp) btnSendEmailOtp.addEventListener('click', sendEmailOtp);
+  if (btnResendEmailOtp) btnResendEmailOtp.addEventListener('click', sendEmailOtp);
+
+  if (btnSubmitEmailOtp) {
+    btnSubmitEmailOtp.addEventListener('click', function () {
+      var email = inputEmail ? inputEmail.value.trim().toLowerCase() : '';
+      var otp = inputEmailOtp ? inputEmailOtp.value.trim() : '';
+      if (otp.length < 4) {
+        alert('Kripya 6-digit OTP code enter karein.');
+        if (inputEmailOtp) inputEmailOtp.focus();
+        return;
+      }
+
+      btnSubmitEmailOtp.disabled = true;
+      btnSubmitEmailOtp.textContent = 'Verifying…';
+
+      fetch('../api/lms.php?action=verify-email-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, otp: otp, purpose: 'admission' })
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (!data.ok) {
+            throw new Error(data.error || 'Galat ya expired OTP code.');
+          }
+          isEmailVerified = true;
+          if (boxEmailOtp) boxEmailOtp.style.display = 'none';
+          if (badgeEmailVerified) badgeEmailVerified.style.display = 'inline-flex';
+          if (inputEmail) {
+            inputEmail.readOnly = true;
+            inputEmail.style.background = '#f0fdf4';
+          }
+          if (btnSendEmailOtp) {
+            btnSendEmailOtp.disabled = true;
+            btnSendEmailOtp.classList.add('is-verified');
+            btnSendEmailOtp.textContent = '✓ Verified';
+          }
+          if (emailOtpMsg) emailOtpMsg.textContent = '';
+          showStatus('Email Address successfully verified!', 'info');
+        })
+        .catch(function (err) {
+          if (emailOtpMsg) {
+            emailOtpMsg.textContent = '✕ ' + err.message;
+            emailOtpMsg.className = 'adm-otp-msg is-error';
+          }
+          alert(err.message);
+        })
+        .finally(function () {
+          btnSubmitEmailOtp.disabled = false;
+          btnSubmitEmailOtp.textContent = 'Submit OTP';
+        });
+    });
+  }
+
+  // --- 5. Form submission handler ---
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
       if (!form.checkValidity()) {
         form.reportValidity();
+        return;
+      }
+
+      // Mandatory WhatsApp & Email OTP Verification Check
+      if (!isPhoneVerified) {
+        alert('⚠️ WhatsApp Verification Zaroori Hai!\n\nKripya pehle "Verify WhatsApp" button par click karke apna WhatsApp OTP verify karein.');
+        if (inputPhone) inputPhone.focus();
+        showStatus('WhatsApp Number OTP se verify karein.', 'error');
+        return;
+      }
+
+      if (!isEmailVerified) {
+        alert('⚠️ Email Verification Zaroori Hai!\n\nKripya pehle "Verify Email" button par click karke apna Email OTP verify karein.');
+        if (inputEmail) inputEmail.focus();
+        showStatus('Email Address OTP se verify karein.', 'error');
         return;
       }
 
@@ -114,6 +379,18 @@ document.addEventListener('DOMContentLoaded', function () {
           inputPhoto.focus();
           return;
         }
+      }
+
+      // Check document sizes (Max 1 MB) before submitting
+      if (inputAadhaar && inputAadhaar.files && inputAadhaar.files[0] && inputAadhaar.files[0].size > MAX_DOC_BYTES) {
+        showStatus('Aadhaar Card ka size 1 MB se bada hai (' + Math.round(inputAadhaar.files[0].size / 1024) + ' KB)। Kripya 1 MB se chhota photo ya PDF upload karein.', 'error');
+        inputAadhaar.focus();
+        return;
+      }
+      if (inputCert && inputCert.files && inputCert.files[0] && inputCert.files[0].size > MAX_DOC_BYTES) {
+        showStatus('Certificate ka size 1 MB se bada hai (' + Math.round(inputCert.files[0].size / 1024) + ' KB)। Kripya 1 MB se chhota photo ya PDF upload karein.', 'error');
+        inputCert.focus();
+        return;
       }
 
       showStatus('Submitting your admission form & documents...', 'info');
@@ -181,7 +458,10 @@ document.addEventListener('DOMContentLoaded', function () {
           .then(function (verifyData) {
             if (verifyData.ok) {
               if (verifyData.token) {
-                try { localStorage.setItem('qa_student_token', verifyData.token); } catch (e) { }
+                try {
+                  localStorage.setItem('qaa_student_token', verifyData.token);
+                  localStorage.setItem('qa_student_token', verifyData.token);
+                } catch (e) { }
               }
               showSuccessModal(admissionData, true);
             } else {
@@ -305,7 +585,17 @@ document.addEventListener('DOMContentLoaded', function () {
     if (studioEl) studioEl.textContent = sStudio;
     if (cityEl) cityEl.textContent = sCity;
     if (bloodEl) bloodEl.textContent = sBlood;
-    if (backBloodEl) backBloodEl.textContent = sBlood + ' (Positive)';
+    if (backBloodEl) {
+      if (sBlood === 'N/A' || sBlood === 'NA') {
+        backBloodEl.textContent = 'N/A';
+      } else if (sBlood.indexOf('+') !== -1) {
+        backBloodEl.textContent = sBlood + ' (Positive)';
+      } else if (sBlood.indexOf('-') !== -1) {
+        backBloodEl.textContent = sBlood + ' (Negative)';
+      } else {
+        backBloodEl.textContent = sBlood;
+      }
+    }
     if (backCityEl) backCityEl.textContent = sCity + ' (IN)';
     if (backBarcodeEl) backBarcodeEl.textContent = '*' + sId.replace(/[^a-zA-Z0-9-]/g, '') + '*';
     if (backIdTextEl) backIdTextEl.textContent = sId;
@@ -332,6 +622,48 @@ document.addEventListener('DOMContentLoaded', function () {
       qrImg.src = qrApi;
     }
 
+    // Dynamic ID card status badge & notification based on Campus Cash Approval
+    var isPendingApproval = (data.paymentMode === 'cash') || (data.status === 'pending_approval') || (!isPaid && data.paymentMode !== 'online');
+    var statusPill = document.getElementById('modal-card-status-pill');
+    var topTagText = document.getElementById('modal-top-tag-text');
+    var mainTitle = document.getElementById('modal-main-title');
+    var mainSub = document.getElementById('modal-main-sub');
+    var photoRibbon = document.getElementById('modal-photo-ribbon');
+
+    if (isPendingApproval) {
+      if (statusPill) {
+        statusPill.textContent = 'PENDING APPROVAL';
+        statusPill.style.background = 'rgba(245, 158, 11, 0.2)';
+        statusPill.style.color = '#fbbf24';
+        statusPill.style.borderColor = 'rgba(245, 158, 11, 0.6)';
+      }
+      if (topTagText) topTagText.textContent = 'APPLICATION REGISTERED • PENDING CAMPUS APPROVAL';
+      if (mainTitle) mainTitle.textContent = 'Admission Form Registered! (Pending Approval)';
+      if (mainSub) {
+        mainSub.innerHTML = 'Aapka admission submit ho gaya hai. Aapne <strong>Pay at Siwan Campus / Cash on Arrival</strong> select kiya hai.<br><span style="color:#fbbf24; font-weight:600;">🏛️ Note:</span> Admin se verification aur campus desk par fees payment verify hone ke baad aapka official ID Card aur LMS Portal active kiya jayega.';
+      }
+      if (photoRibbon) {
+        photoRibbon.textContent = 'PROVISIONAL';
+        photoRibbon.style.background = '#d97706';
+      }
+    } else {
+      if (statusPill) {
+        statusPill.textContent = 'ACTIVE';
+        statusPill.style.background = 'rgba(16, 185, 129, 0.2)';
+        statusPill.style.color = '#34d399';
+        statusPill.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+      }
+      if (topTagText) topTagText.textContent = 'OFFICIALLY ISSUED • VERIFIED ADMISSION 2026';
+      if (mainTitle) mainTitle.textContent = 'Official Student ID Card Issued!';
+      if (mainSub) {
+        mainSub.textContent = 'Aapka admission register ho gaya hai. Niche aapka verifiable QR Scanner ID Card issue kar diya gaya hai:';
+      }
+      if (photoRibbon) {
+        photoRibbon.textContent = 'STUDENT';
+        photoRibbon.style.background = '#10b981';
+      }
+    }
+
     modal.style.display = 'flex';
   }
 
@@ -350,7 +682,7 @@ document.addEventListener('DOMContentLoaded', function () {
       window.html2canvas(card, {
         scale: 3, // 300 DPI high resolution
         useCORS: true,
-        allowTaint: false,
+        allowTaint: true,
         backgroundColor: '#0a0d14'
       }).then(function (canvas) {
         var a = document.createElement('a');

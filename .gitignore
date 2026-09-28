@@ -22,4 +22,5 @@ data/*-otps.json
 data/otps.json
 data/*sessions.json
 data/rate-limit.json
+data/verified-admissions.json
 scratch/

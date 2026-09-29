@@ -115,15 +115,12 @@
             <span class="dropdown-item-badge" id="dd-enrolled-count"></span>
           </button>
           <button class="dropdown-item" onclick="handleDashboardLiveClick(); closeUserMenu();" role="menuitem">
-            <span class="dropdown-item-icon">🔴</span>
+            <span class="dropdown-item-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;color:#ef4444"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            </span>
             <span>Join Live Class</span>
-            <span class="dropdown-item-badge" id="dd-live-badge" style="background:#ef4444;color:#fff;font-size:10px;padding:2px 6px;border-radius:10px">OFFLINE</span>
+            <span class="dropdown-item-badge" id="dd-live-badge" style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:10px;padding:2px 6px;border-radius:10px">OFFLINE</span>
           </button>
-          <a href="/master-class/live.html" class="dropdown-item" role="menuitem" style="text-decoration:none">
-            <span class="dropdown-item-icon">🎟️</span>
-            <span>Book Paid Masterclass</span>
-            <span class="dropdown-item-badge" style="background:rgba(245,158,11,0.2);color:#f59e0b;font-weight:700;font-size:10px;padding:2px 6px;border-radius:10px;border:1px solid rgba(245,158,11,0.4)">₹21 PASS</span>
-          </a>
           <button class="dropdown-item" onclick="openMyCertificates(); closeUserMenu();" role="menuitem">
             <span class="dropdown-item-icon">🏆</span>
             <span>My Certificates</span>
@@ -714,9 +711,6 @@
               <input type="text" id="mycourses-search-input" placeholder="Search my courses…"
                 oninput="onSearchMyCourses(this.value)" />
             </div>
-            <a href="/master-class/live.html" class="btn-sm btn-gold-outline" style="text-decoration:none;border-color:rgba(245,158,11,0.5);color:#f59e0b;white-space:nowrap;display:inline-flex;align-items:center;gap:6px">
-              🎟️ Book Live Masterclass (₹21)
-            </a>
             <a href="../online/" class="btn-sm btn-gold-outline browse-more-btn" style="text-decoration:none;">
               + Browse All Classes
             </a>
@@ -730,10 +724,12 @@
               <h2 id="mycourses-section-title">My Enrolled Courses</h2>
               <span class="muted" id="courses-count-label">Active Learning Programs</span>
             </div>
-            <!-- Dynamic Join Live Class Status Button (Green = Live Now, Orange/Timer = Scheduled, Red = Offline) -->
-            <button type="button" id="mycourses-live-indicator-btn" class="mycourses-live-pill live-pill-offline" onclick="handleDashboardLiveClick()" title="Live Class Status & Quick Join">
-              <span class="live-pill-dot"></span>
-              <span id="mycourses-live-pill-text">🔴 Live Class: Offline</span>
+            <!-- Professional Dynamic Join Live Class Status Button -->
+            <button type="button" id="mycourses-live-indicator-btn" class="mycourses-live-pill live-pill-offline" onclick="handleDashboardLiveClick()" title="Live Class Status & Join">
+              <span id="mycourses-live-pill-text">
+                <span class="live-status-dot offline"></span>
+                <span class="live-pill-label">Live Class Offline</span>
+              </span>
             </button>
           </div>
           <div class="view-switch-btns">
@@ -748,37 +744,6 @@
         <!-- Grid of Courses -->
         <div id="courses-grid" class="courses-grid">
           <div class="loading-state">Loading your courses…</div>
-        </div>
-
-        <!-- Special Paid Live Masterclass & Workshop Booking Card -->
-        <div id="portal-paid-masterclass-shelf" class="masterclass-booking-shelf" style="margin-top: 36px;">
-          <div class="masterclass-booking-inner">
-            <div class="masterclass-booking-left">
-              <div class="masterclass-badge-row">
-                <span class="badge-masterclass-live">🔥 SPECIAL 2-DAY LIVE WORKSHOP</span>
-                <span class="badge-price-pill">ONLY ₹21 <small style="text-decoration:line-through;opacity:0.6;margin-left:4px">₹999</small></span>
-                <span class="badge-discount">98% OFF</span>
-              </div>
-              <h3 class="masterclass-booking-title">Wedding Video Editing Me AI Ka Sahi Use (2-Day Live Pass)</h3>
-              <p class="masterclass-booking-desc">
-                Special Wedding Photographers &amp; Video Editors ke liye live interactive workshop. Day 1: AI Photo Retouching • Day 2: AI Video Editing &amp; Beat Sync. Hands-on timeline practice + Live Q&amp;A with Lead Mentor Anil Sharma.
-              </p>
-              <div class="masterclass-features-pills">
-                <span>🗓️ Har Sunday &amp; Monday Shaam 7:00 PM</span>
-                <span>⚡ Live Doubt Clearing</span>
-                <span>📦 4K RAW Practice Footage Included</span>
-              </div>
-            </div>
-            <div class="masterclass-booking-action">
-              <div class="masterclass-price-box">
-                <div class="masterclass-price-tag">₹21 <span class="masterclass-price-period">/ Full Pass</span></div>
-                <div class="masterclass-instant-access">⚡ Instant Pass via Razorpay</div>
-              </div>
-              <a href="/master-class/live.html" class="btn btn-gold btn-book-pass" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;">
-                <span>🎟️ Book Live Masterclass Pass</span> ➔
-              </a>
-            </div>
-          </div>
         </div>
 
         <!-- Discover More Masterclasses Banner -->

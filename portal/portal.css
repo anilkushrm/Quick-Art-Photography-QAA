@@ -9057,18 +9057,18 @@ video::-webkit-media-controls-download-button {
 }
 
 /* ==========================================================================
-   DASHBOARD LIVE CLASS BUTTONS & STATUS PILLS (MOBILE & PC RESPONSIVE)
+   DASHBOARD LIVE CLASS BUTTONS & STATUS PILLS (PROFESSIONAL BROADCAST DESIGN)
    ========================================================================== */
 
 /* 1. Master Live Pill in My Courses Section Bar */
 .mycourses-live-pill {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 14px;
+  gap: 8px;
+  padding: 7px 16px;
   border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 12.5px;
+  font-weight: 600;
   letter-spacing: 0.02em;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -9078,133 +9078,190 @@ video::-webkit-media-controls-download-button {
   text-decoration: none;
   font-family: inherit;
   user-select: none;
+  position: relative;
+  overflow: hidden;
 }
 .mycourses-live-pill:hover {
   transform: translateY(-1px);
 }
 
-/* Live Active State (GREEN) */
+/* Master Live Active State (Executive Broadcast Crimson) */
 .mycourses-live-pill.live-pill-active {
-  background: rgba(16, 185, 129, 0.12);
-  border-color: rgba(16, 185, 129, 0.55);
-  color: #34d399;
-  box-shadow: 0 0 16px rgba(16, 185, 129, 0.3);
-  animation: live-pill-green-pulse 2s infinite;
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 60%, #9f1239 100%);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(225, 29, 72, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  animation: live-broadcast-pulse 2.2s infinite;
 }
 .mycourses-live-pill.live-pill-active:hover {
-  background: rgba(16, 185, 129, 0.22);
-  border-color: #10b981;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(225, 29, 72, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  filter: brightness(1.08);
 }
 
-/* Live Scheduled State (AMBER / COUNTDOWN) */
+/* Master Live Scheduled State (Refined Amber Countdown) */
 .mycourses-live-pill.live-pill-scheduled {
-  background: rgba(245, 158, 11, 0.12);
-  border-color: rgba(245, 158, 11, 0.45);
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.38);
   color: #fbbf24;
+  backdrop-filter: blur(8px);
 }
 .mycourses-live-pill.live-pill-scheduled:hover {
-  background: rgba(245, 158, 11, 0.2);
+  background: rgba(245, 158, 11, 0.16);
   border-color: #f59e0b;
 }
 
-/* Live Offline State (RED) */
+/* Master Live Offline State (Quiet Luxury Dark Glass) */
 .mycourses-live-pill.live-pill-offline {
-  background: rgba(239, 68, 68, 0.08);
-  border-color: rgba(239, 68, 68, 0.3);
-  color: #f87171;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  font-size: 12px;
 }
 .mycourses-live-pill.live-pill-offline:hover {
-  background: rgba(239, 68, 68, 0.14);
-  border-color: rgba(239, 68, 68, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
 }
 
-.live-pill-dot {
-  display: inline-block;
+/* Animated Broadcast Radar Ping Element */
+.live-radar-ping {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.radar-ripple {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+  animation: radar-ping-wave 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+.radar-dot {
+  position: relative;
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: currentColor;
+  background: #ffffff;
+  box-shadow: 0 0 8px currentColor;
 }
-.live-pill-active .live-pill-dot {
-  background: #10b981;
-  box-shadow: 0 0 8px #10b981;
-}
-.live-pill-scheduled .live-pill-dot {
-  background: #f59e0b;
-  box-shadow: 0 0 8px #f59e0b;
-}
-.live-pill-offline .live-pill-dot {
-  background: #ef4444;
-  box-shadow: 0 0 6px #ef4444;
+@keyframes radar-ping-wave {
+  0% { transform: scale(0.6); opacity: 0.8; }
+  80% { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(2.2); opacity: 0; }
 }
 
-@keyframes live-pill-green-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45); }
-  70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+@keyframes live-broadcast-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.55), 0 4px 18px rgba(225, 29, 72, 0.4); }
+  70% { box-shadow: 0 0 0 9px rgba(225, 29, 72, 0), 0 4px 18px rgba(225, 29, 72, 0.4); }
+  100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0), 0 4px 18px rgba(225, 29, 72, 0.4); }
 }
 
-/* 2. Course-Card Level Live Action Bar (Separate per course) */
+/* Micro Status Badges */
+.live-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  backdrop-filter: blur(4px);
+}
+.live-status-badge-amber {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: rgba(245, 158, 11, 0.22);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+.live-offline-pill {
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #94a3b8;
+  margin-left: 4px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.live-dot-dormant {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #64748b;
+  flex-shrink: 0;
+}
+.live-arrow-svg {
+  display: inline-block;
+  margin-left: 2px;
+  transition: transform 0.2s ease;
+}
+.btn-course-live:hover .live-arrow-svg,
+.mycourses-live-pill:hover .live-arrow-svg {
+  transform: translateX(3px);
+}
+
+/* 2. Course-Card Level Live Action Bar */
 .course-live-action-bar {
-  margin: 10px 0 12px;
+  margin: 12px 0 14px;
 }
 .btn-course-live {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 8px;
   width: 100%;
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 12.5px;
   font-weight: 700;
-  letter-spacing: 0.02em;
-  transition: all 0.2s ease;
+  letter-spacing: 0.03em;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid transparent;
   font-family: inherit;
   text-decoration: none;
   box-sizing: border-box;
-}
-
-/* Active Live on Card (GREEN) */
-.btn-course-live.live-state-active {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(5, 150, 105, 0.28));
-  border-color: rgba(16, 185, 129, 0.6);
-  color: #34d399;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
-  animation: live-pill-green-pulse 2s infinite;
+  position: relative;
+  overflow: hidden;
+}
+.btn-course-live.live-state-active {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 60%, #9f1239 100%);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(225, 29, 72, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  animation: live-broadcast-pulse 2.2s infinite;
 }
 .btn-course-live.live-state-active:hover {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: #ffffff;
-  border-color: #10b981;
-  box-shadow: 0 4px 18px rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 26px rgba(225, 29, 72, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  filter: brightness(1.08);
 }
-
-/* Scheduled Live on Card (AMBER / COUNTDOWN) */
 .btn-course-live.live-state-scheduled {
-  background: rgba(245, 158, 11, 0.1);
-  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.09);
+  border-color: rgba(245, 158, 11, 0.35);
   color: #fbbf24;
-  cursor: pointer;
 }
 .btn-course-live.live-state-scheduled:hover {
-  background: rgba(245, 158, 11, 0.2);
+  background: rgba(245, 158, 11, 0.18);
   border-color: #f59e0b;
-}
-
-/* Offline Live on Card (SUBTLE RED) */
-.btn-course-live.live-state-offline {
-  background: rgba(239, 68, 68, 0.05);
-  border-color: rgba(239, 68, 68, 0.2);
-  color: #94a3b8;
-  cursor: pointer;
-}
-.btn-course-live.live-state-offline:hover {
-  background: rgba(239, 68, 68, 0.09);
-  border-color: rgba(239, 68, 68, 0.35);
-  color: #f87171;
 }
 
 .live-status-dot {
@@ -9223,8 +9280,7 @@ video::-webkit-media-controls-download-button {
   box-shadow: 0 0 8px #f59e0b;
 }
 .live-status-dot.offline {
-  background: #ef4444;
-  box-shadow: 0 0 6px rgba(239, 68, 68, 0.8);
+  background: #64748b;
 }
 
 /* 3. Luxury Paid Masterclass Booking Shelf */

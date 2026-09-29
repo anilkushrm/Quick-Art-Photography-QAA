@@ -7777,26 +7777,37 @@ video::-webkit-media-controls-download-button {
   pointer-events: none !important;
 }
 
-/* ── Stream Status Bar (Clean: Live Now, Watching, Audio/Mute, Fullscreen) ── */
+/* ── Stream Status Bar (Strict 1-Line Layout: Live Now, Watching, Audio/Mute, Fullscreen) ── */
 .live-stream-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
+  padding: 8px 12px;
   background: #070b14;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 12px;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: nowrap !important; /* Strict 1 line: never wrap to second line */
+  white-space: nowrap !important;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.live-stream-bar::-webkit-scrollbar {
+  display: none;
 }
 .live-stream-status {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: nowrap !important;
+  flex-shrink: 1;
+  min-width: 0;
 }
 .stream-live-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   background: rgba(239, 68, 68, 0.18);
   border: 1px solid #ef4444;
   padding: 3px 8px;
@@ -7805,11 +7816,13 @@ video::-webkit-media-controls-download-button {
   font-weight: 800;
   font-size: 11px;
   letter-spacing: 0.04em;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .live-attendees-chip-bar {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   background: rgba(16, 185, 129, 0.12);
   border: 1px solid rgba(16, 185, 129, 0.3);
   color: #a7f3d0;
@@ -7817,23 +7830,57 @@ video::-webkit-media-controls-download-button {
   font-size: 11.5px;
   padding: 3px 8px;
   border-radius: 6px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .live-stream-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: nowrap !important;
+  flex-shrink: 0;
 }
 .live-sound-btn, .live-fs-btn {
   font-size: 12px;
   font-weight: 700;
-  padding: 6px 14px;
+  padding: 6px 12px;
   border-radius: 8px;
   transition: all 0.2s;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .live-fs-btn.active-fs {
   background: rgba(239, 68, 68, 0.2) !important;
   border-color: #ef4444 !important;
   color: #fff !important;
+}
+
+@media (max-width: 480px) {
+  .live-stream-bar {
+    padding: 6px 8px;
+    gap: 6px;
+  }
+  .live-stream-status {
+    gap: 6px;
+  }
+  .stream-live-chip {
+    padding: 3px 6px;
+    font-size: 10px;
+    gap: 4px;
+  }
+  .live-attendees-chip-bar {
+    padding: 3px 6px;
+    font-size: 10.5px;
+    gap: 4px;
+  }
+  .live-stream-actions {
+    gap: 6px;
+  }
+  .live-sound-btn, .live-fs-btn {
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
 }
 
 /* ── Live Details Card & Downloads ── */

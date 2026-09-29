@@ -1912,7 +1912,7 @@ if ($action === 'get-live-classes' && $method === 'GET') {
         if ($stu) {
             if (in_array($c['id'], $enrolledList) || in_array('all-access', $enrolledList)) {
                 $isAuth = true;
-            } elseif (!empty($c['courseId']) && in_array($c['courseId'], $enrolledList)) {
+            } elseif (!empty($c['courseId']) && ($c['courseId'] === 'all' || in_array($c['courseId'], $enrolledList))) {
                 $isAuth = true;
             }
         }
@@ -1971,7 +1971,7 @@ if ($action === 'get-live-session' && ($method === 'GET' || $method === 'POST'))
     $isAuth = false;
     if (in_array($target['id'], $enrolledList) || in_array('all-access', $enrolledList)) {
         $isAuth = true;
-    } elseif (!empty($target['courseId']) && in_array($target['courseId'], $enrolledList)) {
+    } elseif (!empty($target['courseId']) && ($target['courseId'] === 'all' || in_array($target['courseId'], $enrolledList))) {
         $isAuth = true;
     }
 

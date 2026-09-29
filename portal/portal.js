@@ -678,6 +678,21 @@ function renderMyCoursesGrid() {
 
     const durationText = c.duration || (c.totalLessons ? `${c.totalLessons} Lessons` : 'Full Course');
 
+    // Check if any Live Session is assigned to this course
+    const courseLiveNow = (studentLiveClasses || []).find(x => (x.courseId === c.id || x.courseId === 'all') && x.status === 'live');
+    const courseLiveUpcoming = (studentLiveClasses || []).find(x => (x.courseId === c.id || x.courseId === 'all') && x.status === 'scheduled');
+    const courseLiveReplay = (studentLiveClasses || []).find(x => (x.courseId === c.id || x.courseId === 'all') && x.status === 'completed' && x.replayUrl);
+
+    let liveChipHtml = '';
+    if (courseLiveNow) {
+      liveChipHtml = `<span class="course-live-chip live-now">🔴 LIVE NOW</span>`;
+    } else if (courseLiveUpcoming && courseLiveUpcoming.scheduledAt) {
+      const dt = new Date(courseLiveUpcoming.scheduledAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+      liveChipHtml = `<span class="course-live-chip live-scheduled">🗓️ Live: ${dt}</span>`;
+    } else if (courseLiveReplay) {
+      liveChipHtml = `<span class="course-live-chip live-replay">📹 Live Replay</span>`;
+    }
+
     return `
       <article class="course-card">
         <div class="course-thumb-wrap">
@@ -685,6 +700,7 @@ function renderMyCoursesGrid() {
           <div class="course-thumb-overlay"></div>
           ${c.badge ? `<span class="course-badge-top">${escapeHtml(c.badge)}</span>` : ''}
           ${statusHtml}
+          ${liveChipHtml}
         </div>
 
         <div class="course-card-body">
@@ -707,6 +723,11 @@ function renderMyCoursesGrid() {
           </div>
 
           <div class="course-card-footer">
+            ${courseLiveNow ? `
+              <button type="button" class="btn btn-gold" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-weight:700;flex:1;box-shadow:0 4px 14px rgba(239,68,68,0.4)" onclick="event.stopPropagation(); openLiveStudio('${courseLiveNow.id}')">
+                🔴 Join Live Broadcast
+              </button>
+            ` : ''}
             <button type="button" class="btn btn-gold" style="flex: 1;" onclick="openCourseClassroom('${c.id}')">
               ${isDone ? 'Review Lessons ↺' : (c.completedCount > 0 ? 'Resume Lesson ▶' : 'Start Learning ▶')}
             </button>
@@ -750,6 +771,14 @@ async function openCourseClassroom(courseId, targetLessonId = null) {
     const res = await lmsApi(`course-details&id=${encodeURIComponent(courseId)}`);
     currentCourse = res.course;
 
+    // Ensure live classes are loaded
+    if (!studentLiveClasses || !studentLiveClasses.length) {
+      try {
+        const resLive = await lmsApi('get-live-classes');
+        studentLiveClasses = resLive.liveClasses || [];
+      } catch (e) {}
+    }
+
     const playerCourseCat = document.getElementById('player-course-category');
     if (playerCourseCat) playerCourseCat.textContent = (currentCourse.category || 'VIDEO EDITING').toUpperCase();
     const playerCourseTitle = document.getElementById('player-course-title');
@@ -757,7 +786,10 @@ async function openCourseClassroom(courseId, targetLessonId = null) {
     const playerProgBadge = document.getElementById('player-progress-badge');
     if (playerProgBadge) playerProgBadge.textContent = `${currentCourse.progressPercent}% Complete`;
 
-    // Render Curriculum Accordion
+    // Render course-specific live alert banner above video player
+    renderCourseLiveAlert(courseId);
+
+    // Render Curriculum Accordion (with integrated Live Sessions module)
     renderCurriculum(currentCourse);
 
     // Determine initial lesson
@@ -796,6 +828,69 @@ async function openCourseClassroom(courseId, targetLessonId = null) {
   }
 }
 
+function renderCourseLiveAlert(courseId) {
+  const container = document.getElementById('course-live-alert-container');
+  if (!container) return;
+
+  const courseLive = (studentLiveClasses || []).filter(c => c.courseId === courseId || c.courseId === 'all');
+  if (!courseLive.length) {
+    container.innerHTML = '';
+    return;
+  }
+
+  // Prioritize: 1. Live Now, 2. Scheduled, 3. Completed Replay
+  const liveNow = courseLive.find(c => c.status === 'live');
+  const liveScheduled = courseLive.find(c => c.status === 'scheduled');
+  const liveReplay = courseLive.find(c => c.status === 'completed' && c.replayUrl);
+
+  const activeTarget = liveNow || liveScheduled || liveReplay;
+  if (!activeTarget) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const isLive = activeTarget.status === 'live';
+  const isCompleted = activeTarget.status === 'completed';
+
+  let tagHtml = '';
+  let btnHtml = '';
+  let bannerClass = '';
+  let descHtml = '';
+
+  if (isLive) {
+    bannerClass = 'live-active';
+    tagHtml = '<span class="course-live-banner-tag">🔴 LIVE BROADCAST IN PROGRESS</span>';
+    descHtml = `Lead Mentor Anil Sharma is broadcasting live on timeline right now! Ask doubts and interact in the live chat room.`;
+    btnHtml = `<button type="button" class="btn btn-gold btn-live-enter" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-weight:700;box-shadow:0 4px 18px rgba(239,68,68,0.4)" onclick="openLiveStudio('${activeTarget.id}')">🔴 Enter Live Studio Now ➔</button>`;
+  } else if (isCompleted) {
+    bannerClass = 'live-completed';
+    tagHtml = '<span class="course-live-banner-tag">📹 LIVE CLASS REPLAY READY</span>';
+    descHtml = `Full high-definition recording and practical breakdown of this batch's live session is available.`;
+    btnHtml = `<button type="button" class="btn btn-outline" style="border-color:#38bdf8;color:#38bdf8;font-weight:600" onclick="openLiveStudio('${activeTarget.id}')">▶ Watch Live Replay ➔</button>`;
+  } else {
+    bannerClass = 'live-scheduled';
+    const dateFormatted = activeTarget.scheduledAt ? new Date(activeTarget.scheduledAt).toLocaleString('en-IN', {
+      weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+    }) : 'Coming Soon';
+    tagHtml = `<span class="course-live-banner-tag">🗓️ UPCOMING LIVE CLASS • ${dateFormatted}</span>`;
+    descHtml = `${escapeHtml(activeTarget.description || 'Doubt clearing and advanced workflow live masterclass.')} (Duration: ${escapeHtml(activeTarget.duration || '90 Mins')})`;
+    btnHtml = `<button type="button" class="btn btn-outline" style="border-color:#d8a153;color:#fde68a;font-weight:600" onclick="openLiveStudio('${activeTarget.id}')">⏳ Join Waiting Room / Live Studio ➔</button>`;
+  }
+
+  container.innerHTML = `
+    <div class="course-live-banner ${bannerClass}">
+      <div class="course-live-banner-left">
+        ${tagHtml}
+        <h3 class="course-live-banner-title">${escapeHtml(activeTarget.title)}</h3>
+        <p class="course-live-banner-desc">${descHtml}</p>
+      </div>
+      <div class="course-live-banner-actions">
+        ${btnHtml}
+      </div>
+    </div>
+  `;
+}
+
 function renderCurriculum(course) {
   const container = document.getElementById('curriculum-accordion');
   const total = course.totalLessons || 0;
@@ -804,12 +899,53 @@ function renderCurriculum(course) {
   document.getElementById('curriculum-bar-fill').style.width = `${course.progressPercent}%`;
   document.getElementById('curriculum-stat-text').textContent = `${done} of ${total} Lessons Completed`;
 
+  const courseLive = (studentLiveClasses || []).filter(c => c.courseId === course.id || c.courseId === 'all');
+  let liveModuleHtml = '';
+
+  if (courseLive.length > 0) {
+    liveModuleHtml = `
+      <div class="module-group live-curriculum-module" style="margin-bottom:16px;border:1.5px solid rgba(239,68,68,0.4);border-radius:12px;overflow:hidden">
+        <div class="module-title live-module-header" style="background:rgba(239,68,68,0.12);padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="display:inline-block;width:9px;height:9px;background:#ef4444;border-radius:50%;box-shadow:0 0 8px #ef4444"></span>
+            <span style="color:#fca5a5;font-weight:700">🔴 Live Sessions &amp; Doubt Classes (${courseLive.length})</span>
+          </div>
+          <span style="font-size:11px;background:rgba(239,68,68,0.22);color:#fca5a5;padding:2px 8px;border-radius:12px;font-weight:600">Batch Live</span>
+        </div>
+        <div class="module-lessons">
+          ${courseLive.map(liveItem => {
+            const isLive = liveItem.status === 'live';
+            const isCompleted = liveItem.status === 'completed';
+            const icon = isLive ? '🔴' : (isCompleted ? '▶' : '🗓️');
+            const statusLabel = isLive ? 'LIVE NOW' : (isCompleted ? 'Replay Available' : (liveItem.scheduledAt ? new Date(liveItem.scheduledAt).toLocaleString('en-IN', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : 'Scheduled'));
+            return `
+              <div class="lesson-list-item live-lesson-entry" 
+                   onclick="openLiveStudio('${liveItem.id}')"
+                   style="border-left: 3px solid ${isLive ? '#ef4444' : (isCompleted ? '#38bdf8' : '#d8a153')};">
+                <div class="lesson-title-col">
+                  <span class="lesson-check-icon" style="color:${isLive ? '#ef4444' : (isCompleted ? '#38bdf8' : '#d8a153')}">${icon}</span>
+                  <div>
+                    <span style="font-weight:600">${escapeHtml(liveItem.title)}</span>
+                    <div style="font-size:11px;color:#94a3b8;margin-top:2px">${statusLabel} • ${escapeHtml(liveItem.duration || '90 Mins')}</div>
+                  </div>
+                </div>
+                <button type="button" class="btn-sm ${isLive ? 'btn-gold' : 'btn-outline'}" style="font-size:11px;padding:3px 9px;white-space:nowrap" onclick="event.stopPropagation(); openLiveStudio('${liveItem.id}')">
+                  ${isLive ? '🔴 Join Live' : (isCompleted ? '▶ Watch Replay' : 'Waiting Room ➔')}
+                </button>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   if (!course.modules || course.modules.length === 0) {
-    container.innerHTML = '<div class="muted">No modules uploaded yet.</div>';
+    container.innerHTML = liveModuleHtml + '<div class="muted">No modules uploaded yet.</div>';
     return;
   }
 
-  container.innerHTML = course.modules.map((m, mIdx) => `
+  container.innerHTML = liveModuleHtml + course.modules.map((m, mIdx) => `
     <div class="module-group">
       <div class="module-title">${escapeHtml(m.title)}</div>
       <div class="module-lessons">
@@ -4517,6 +4653,11 @@ function openLiveStudioFromBanner(liveId = null, isAuth = true) {
 }
 
 async function openLiveStudio(liveId) {
+  // Remember course context if entering from a course classroom
+  if (currentCourse && currentCourse.id) {
+    window._activeCourseIdBeforeLive = currentCourse.id;
+  }
+
   switchView('live-studio');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -4881,7 +5022,13 @@ function exitLiveStudio() {
     toggleLiveTheaterMode();
   }
 
-  showDashboard();
+  if (window._activeCourseIdBeforeLive) {
+    const prevCourseId = window._activeCourseIdBeforeLive;
+    window._activeCourseIdBeforeLive = null;
+    openCourseClassroom(prevCourseId);
+  } else {
+    showDashboard();
+  }
 }
 
 async function pollLiveDoubtsStudent() {

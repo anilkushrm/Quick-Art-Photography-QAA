@@ -6248,9 +6248,11 @@ function onLiveTypeChange() {
 function populateLiveCourseDropdown(selectedCourseId = '') {
   const select = document.getElementById('liveCourseId');
   if (!select) return;
-  select.innerHTML = '<option value="">-- Select Linked Course --</option>' + (allLmsCourses || []).map(c => `
-    <option value="${escapeHtml(c.id)}" ${c.id === selectedCourseId ? 'selected' : ''}>${escapeHtml(c.title)}</option>
-  `).join('');
+  select.innerHTML = '<option value="">-- Select Linked Course --</option>' +
+    `<option value="all" ${selectedCourseId === 'all' ? 'selected' : ''}>🌐 All Courses (All Enrolled Students Free)</option>` +
+    (allLmsCourses || []).map(c => `
+      <option value="${escapeHtml(c.id)}" ${c.id === selectedCourseId ? 'selected' : ''}>🎓 ${escapeHtml(c.title)}</option>
+    `).join('');
 }
 
 function openScheduleLiveModal() {

@@ -483,7 +483,7 @@ async function loadDashboard() {
     if (statAvg) statAvg.textContent = `${avgProgress}%`;
 
     const countLabel = document.getElementById('courses-count-label');
-    if (countLabel) countLabel.textContent = `${enrolledCount} Active Learning Programs`;
+    if (countLabel) countLabel.textContent = `${enrolledCount} Active ${enrolledCount === 1 ? 'Course' : 'Courses'}`;
 
     updateDropdownEnrolledBadge(enrolledCount);
 

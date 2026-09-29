@@ -707,15 +707,18 @@ a {
 .section-title-bar {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 24px;
+  align-items: center;
+  margin-top: 28px;
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   gap: 16px;
 }
 
 .mycourses-header-left {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
 }
 
 .mycourses-title-row {
@@ -726,15 +729,33 @@ a {
 }
 
 .section-title-bar h2 {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
+  color: #f8fafc;
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
 }
 
-.section-title-bar .muted {
-  font-size: 13px;
-  color: var(--text-muted);
+.mycourses-count-pill {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--gold, #d8a153);
+  background: rgba(216, 161, 83, 0.1);
+  border: 1px solid rgba(216, 161, 83, 0.28);
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.mycourses-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 .courses-grid {
@@ -5195,21 +5216,6 @@ video::-webkit-media-controls-download-button {
   box-shadow: none !important;
 }
 
-.student-perk-chip {
-  font-size: 11.5px;
-  color: #34d399;
-  background: rgba(52, 211, 153, 0.08);
-  border: 1px solid rgba(52, 211, 153, 0.2);
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-weight: 600;
-}
-
-.view-switch-btns {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
 
 /* ── Upgraded Course Cards ── */
 .courses-grid {
@@ -5690,21 +5696,41 @@ video::-webkit-media-controls-download-button {
   /* Section Title Bar */
   .section-title-bar {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 18px;
     margin-bottom: 16px;
+    padding-bottom: 14px;
   }
   .section-title-bar h2 {
-    font-size: 18px;
+    font-size: 19px;
   }
-  .view-switch-btns {
-    flex-wrap: wrap;
-    gap: 6px;
+  .mycourses-header-left {
+    width: 100%;
   }
-  .student-perk-chip {
-    font-size: 10.5px;
-    padding: 3px 8px;
+  .mycourses-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+  }
+  .mycourses-header-right {
+    width: 100%;
+  }
+  .mycourses-header-right .mycourses-live-pill {
+    width: 100%;
+    justify-content: center;
+    height: 38px;
+    font-size: 12.5px;
     border-radius: 12px;
+  }
+  .mycourses-header-right .mycourses-live-pill.live-pill-offline {
+    width: auto;
+    align-self: flex-start;
+    height: 30px;
+    font-size: 11.5px;
+    padding: 0 12px;
   }
 
   /* Course Cards Grid */

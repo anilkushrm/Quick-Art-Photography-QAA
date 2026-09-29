@@ -90,44 +90,292 @@
 
     <!-- ═══ ADVANCED SCHEMA.ORG JSON-LD (Rich Snippets, Ratings & FAQs) ═══ -->
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
-      "@graph": [
+      "@type": [
+        "EducationalOrganization",
+        "LocalBusiness"
+      ],
+      "@id": "https://quickartphotography.in/#academy",
+      "name": "Quick Art Photography Academy",
+      "alternateName": [
+        "Quick Art Photography",
+        "Quick Art Academy",
+        "QAA"
+      ],
+      "url": "https://quickartphotography.in/",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://quickartphotography.in/#logo",
+        "url": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
+        "width": 798,
+        "height": 795
+      },
+      "image": [
+        "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
+        "https://quickartphotography.in/assets/best-video-editing-course-in-gopalganj-quick-art.jpg"
+      ],
+      "description": "Quick Art Photography Academy offers the Best Video Editing Course for students in Gopalganj, Siwan and all of Bihar. Complete practical wedding filmmaking, Adobe Premiere Pro, DaVinci Resolve, album design and free hostel.",
+      "telephone": "+919939800780",
+      "email": "support@quickartphotography.in",
+      "priceRange": "₹₹",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Ayodhya Puri, Near Lalit Bus Stand",
+        "addressLocality": "Siwan",
+        "addressRegion": "Bihar",
+        "postalCode": "841226",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 26.2289734,
+        "longitude": 84.3347944
+      },
+      "hasMap": "https://maps.app.goo.gl/FaDPbjTHsV5QehoU9",
+      "openingHoursSpecification": [
         {
-          "@type": [
-            "EducationalOrganization",
-            "LocalBusiness"
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
           ],
-          "@id": "https://quickartphotography.in/#academy",
-          "name": "Quick Art Photography Academy",
-          "alternateName": [
-            "Quick Art Photography",
-            "Quick Art Academy",
-            "QAA"
-          ],
-          "url": "https://quickartphotography.in/",
-          "logo": {
-            "@type": "ImageObject",
-            "@id": "https://quickartphotography.in/#logo",
-            "url": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
-            "width": 798,
-            "height": 795
-          },
-          "image": [
-            "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
-            "https://quickartphotography.in/assets/best-video-editing-course-in-gopalganj-quick-art.jpg"
-          ],
-          "description": "Quick Art Photography Academy offers the Best Video Editing Course for students in Gopalganj, Siwan and all of Bihar. Complete practical wedding filmmaking, Adobe Premiere Pro, DaVinci Resolve, album design and free hostel.",
+          "opens": "10:00",
+          "closes": "19:00"
+        }
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
           "telephone": "+919939800780",
+          "contactType": "admissions",
           "email": "support@quickartphotography.in",
-          "priceRange": "₹₹",
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "reviewCount": "1840",
-            "bestRating": "5",
-            "worstRating": "1"
+          "areaServed": "IN",
+          "availableLanguage": [
+            "Hindi",
+            "English"
+          ]
+        }
+      ],
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Gopalganj"
+        },
+        {
+          "@type": "City",
+          "name": "Siwan"
+        },
+        {
+          "@type": "City",
+          "name": "Chhapra"
+        },
+        {
+          "@type": "City",
+          "name": "Patna"
+        },
+        {
+          "@type": "State",
+          "name": "Bihar"
+        }
+      ],
+      "founder": {
+        "@id": "https://quickartphotography.in/#anil-sharma"
+      },
+      "sameAs": [
+        "https://maps.app.goo.gl/FaDPbjTHsV5QehoU9",
+        "https://www.youtube.com/@QuickartPhotographyAcademy",
+        "https://www.instagram.com/quick.art.photography.academy/",
+        "https://www.facebook.com/Quick.art.Photography.Academy"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://quickartphotography.in/#anil-sharma",
+      "name": "Anil Sharma",
+      "jobTitle": "Founder & Master Video Editing Instructor",
+      "url": "https://quickartphotography.in/about-us/",
+      "image": "https://quickartphotography.in/assets/anil-sharma.webp",
+      "worksFor": {
+        "@id": "https://quickartphotography.in/#academy"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://quickartphotography.in/#website",
+      "url": "https://quickartphotography.in/",
+      "name": "Quick Art Photography Academy",
+      "alternateName": "Quick Art Photography",
+      "inLanguage": "en-IN",
+      "publisher": {
+        "@id": "https://quickartphotography.in/#academy"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#webpage",
+      "url": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/",
+      "name": "Best Video Editing Course in Gopalganj | Quick Art Photography Academy",
+      "isPartOf": {
+        "@id": "https://quickartphotography.in/#website"
+      },
+      "about": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "inLanguage": "en-IN",
+      "description": "Join the Best Video Editing Course in Gopalganj at Quick Art Photography Academy. Learn wedding filmmaking, editing, album design & marketing with free stay and EMI options.",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://quickartphotography.in/assets/best-video-editing-course-in-gopalganj-quick-art.jpg"
+      },
+      "breadcrumb": {
+        "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#article"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://quickartphotography.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://quickartphotography.in/blog/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Best Video Editing Course in Gopalganj",
+          "item": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/"
+        }
+      ]
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#article",
+      "headline": "Best Video Editing Course in Gopalganj – Top Video Editing Institute & Wedding Filmmaking Training",
+      "description": "Searching for the Best Video Editing Course in Gopalganj? Join Quick Art Academy for hands-on Video Editing Training Gopalganj & Wedding Filmmaking Course. Gopalganj Editing Classes with free hostel. Top Video Editing Institute in Bihar.",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://quickartphotography.in/assets/best-video-editing-course-in-gopalganj-quick-art.jpg",
+        "width": 1024,
+        "height": 576
+      },
+      "datePublished": "2026-09-27T00:00:00+05:30",
+      "dateModified": "2026-09-27T00:00:00+05:30",
+      "author": {
+        "@id": "https://quickartphotography.in/#anil-sharma"
+      },
+      "publisher": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#webpage"
+      },
+      "isPartOf": {
+        "@type": "Blog",
+        "@id": "https://quickartphotography.in/blog/#blog",
+        "name": "Quick Art Blog",
+        "url": "https://quickartphotography.in/blog/"
+      },
+      "keywords": "Best Video Editing Course in Gopalganj, Video Editing Training Gopalganj, Video Editing Institute, Wedding Filmmaking Course, Gopalganj Editing Classes",
+      "inLanguage": "en-IN"
+    },
+    {
+      "@type": "Course",
+      "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#course",
+      "name": "Best Video Editing Course in Gopalganj - Top Video Editing Institute & Wedding Filmmaking Training",
+      "description": "Comprehensive 14-week practical video editing training, wedding filmmaking, DaVinci Resolve, Adobe Premiere Pro, and album design course with free hostel accommodation for Gopalganj students.",
+      "provider": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "educationalCredentialAwarded": "Official ISO 9001:2015 Accredited Certification in Professional Video Editing",
+      "timeRequired": "P14W",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": 4.9,
+        "reviewCount": 1840,
+        "ratingCount": 1840,
+        "bestRating": 5,
+        "worstRating": 1
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Rohan Yadav (Mirganj, Gopalganj)"
           },
+          "datePublished": "2026-08-15",
+          "reviewBody": "Mai Gopalganj ke Mirganj se hu. Quick Art Academy me 14 hafte ka video editing course complete kiya. Yaha real wedding raw 4K footage par practice karwayi gayi. Hostel bilkul free tha aur Anil sir ka color grading sikhane ka tarika lajawab hai. Aaj mai per wedding project ₹15,000+ charge kar raha hu.",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": 5,
+            "bestRating": 5,
+            "worstRating": 1
+          }
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Amit Kushwaha (Gopalganj Town)"
+          },
+          "datePublished": "2026-07-20",
+          "reviewBody": "Gopalganj me koi aisi video editing classes nahi hai jahan DaVinci Resolve aur Premiere Pro 2026 deep level pe sikhaye. Siwan sirf 40 minute ki doori pe hai. Quick Art me admission lene ke baad meri editing speed 3x fast ho gayi. Best video editing institute in Bihar!",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": 5,
+            "bestRating": 5,
+            "worstRating": 1
+          }
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Sanjeev Verma (Thawe, Gopalganj)"
+          },
+          "datePublished": "2026-09-02",
+          "reviewBody": "Thawe se daily aana-jana bhi aasan tha, par maine free hostel liya. Anil Sharma sir ne client se deal karna, album design aur cinematic teasers banana practically sikhaya. 100% recommended for every aspiring filmmaker.",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": 5,
+            "bestRating": 5,
+            "worstRating": 1
+          }
+        }
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "35000",
+        "priceCurrency": "INR",
+        "category": "Educational Course",
+        "availability": "https://schema.org/InStock"
+      },
+      "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": "offline",
+        "courseWorkload": "PT14W",
+        "inLanguage": "hi",
+        "location": {
+          "@type": "Place",
+          "name": "Quick Art Photography Academy",
           "address": {
             "@type": "PostalAddress",
             "streetAddress": "Ayodhya Puri, Near Lalit Bus Stand",
@@ -135,343 +383,58 @@
             "addressRegion": "Bihar",
             "postalCode": "841226",
             "addressCountry": "IN"
-          },
-          "geo": {
-            "@type": "GeoCoordinates",
-            "latitude": 26.2289734,
-            "longitude": 84.3347944
-          },
-          "hasMap": "https://maps.app.goo.gl/FaDPbjTHsV5QehoU9",
-          "openingHoursSpecification": [
-            {
-              "@type": "OpeningHoursSpecification",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday"
-              ],
-              "opens": "10:00",
-              "closes": "19:00"
-            }
-          ],
-          "contactPoint": [
-            {
-              "@type": "ContactPoint",
-              "telephone": "+919939800780",
-              "contactType": "admissions",
-              "email": "support@quickartphotography.in",
-              "areaServed": "IN",
-              "availableLanguage": [
-                "Hindi",
-                "English"
-              ]
-            }
-          ],
-          "areaServed": [
-            {
-              "@type": "City",
-              "name": "Gopalganj"
-            },
-            {
-              "@type": "City",
-              "name": "Siwan"
-            },
-            {
-              "@type": "City",
-              "name": "Chhapra"
-            },
-            {
-              "@type": "City",
-              "name": "Patna"
-            },
-            {
-              "@type": "State",
-              "name": "Bihar"
-            }
-          ],
-          "founder": {
-            "@id": "https://quickartphotography.in/#anil-sharma"
-          },
-          "sameAs": [
-            "https://maps.app.goo.gl/FaDPbjTHsV5QehoU9",
-            "https://www.youtube.com/@QuickartPhotographyAcademy",
-            "https://www.instagram.com/quick.art.photography.academy/",
-            "https://www.facebook.com/Quick.art.Photography.Academy"
-          ]
-        },
+          }
+        }
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#faq",
+      "mainEntity": [
         {
-          "@type": "Person",
-          "@id": "https://quickartphotography.in/#anil-sharma",
-          "name": "Anil Sharma",
-          "jobTitle": "Founder & Master Video Editing Instructor",
-          "url": "https://quickartphotography.in/about-us/",
-          "image": "https://quickartphotography.in/assets/anil-sharma.webp",
-          "worksFor": {
-            "@id": "https://quickartphotography.in/#academy"
+          "@type": "Question",
+          "name": "Which is the best video editing institute in Gopalganj?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Quick Art Photography Academy is one of the best academies near Gopalganj offering a complete filmmaking and editing course with 100% practical training, real wedding footage, and free hostel accommodation."
           }
         },
         {
-          "@type": "WebSite",
-          "@id": "https://quickartphotography.in/#website",
-          "url": "https://quickartphotography.in/",
-          "name": "Quick Art Photography Academy",
-          "alternateName": "Quick Art Photography",
-          "inLanguage": "en-IN",
-          "publisher": {
-            "@id": "https://quickartphotography.in/#academy"
+          "@type": "Question",
+          "name": "Is the course suitable for beginners?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Even if you’ve never edited a video before, our practical approach will make you confident in 50 days."
           }
         },
         {
-          "@type": "WebPage",
-          "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#webpage",
-          "url": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/",
-          "name": "Best Video Editing Course in Gopalganj | Quick Art Photography Academy",
-          "isPartOf": {
-            "@id": "https://quickartphotography.in/#website"
-          },
-          "about": {
-            "@id": "https://quickartphotography.in/#academy"
-          },
-          "inLanguage": "en-IN",
-          "description": "Join the Best Video Editing Course in Gopalganj at Quick Art Photography Academy. Learn wedding filmmaking, editing, album design & marketing with free stay and EMI options.",
-          "primaryImageOfPage": {
-            "@type": "ImageObject",
-            "url": "https://quickartphotography.in/assets/best-video-editing-course-in-gopalganj-quick-art.jpg"
-          },
-          "breadcrumb": {
-            "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#breadcrumb"
-          },
-          "mainEntity": {
-            "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#article"
+          "@type": "Question",
+          "name": "What software will I learn?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You’ll learn Adobe Premiere Pro 2026, Edius, DaVinci Resolve, Photoshop 2026, and data recovery tools."
           }
         },
         {
-          "@type": "BreadcrumbList",
-          "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#breadcrumb",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://quickartphotography.in/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Blog",
-              "item": "https://quickartphotography.in/blog/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 3,
-              "name": "Best Video Editing Course in Gopalganj",
-              "item": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/"
-            }
-          ]
-        },
-        {
-          "@type": "BlogPosting",
-          "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#article",
-          "headline": "Best Video Editing Course in Gopalganj – Top Video Editing Institute & Wedding Filmmaking Training",
-          "description": "Searching for the Best Video Editing Course in Gopalganj? Join Quick Art Academy for hands-on Video Editing Training Gopalganj & Wedding Filmmaking Course. Gopalganj Editing Classes with free hostel. Top Video Editing Institute in Bihar.",
-          "image": {
-            "@type": "ImageObject",
-            "url": "https://quickartphotography.in/assets/best-video-editing-course-in-gopalganj-quick-art.jpg",
-            "width": 1024,
-            "height": 576
-          },
-          "datePublished": "2026-09-27T00:00:00+05:30",
-          "dateModified": "2026-09-27T00:00:00+05:30",
-          "author": {
-            "@id": "https://quickartphotography.in/#anil-sharma"
-          },
-          "publisher": {
-            "@id": "https://quickartphotography.in/#academy"
-          },
-          "mainEntityOfPage": {
-            "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#webpage"
-          },
-          "isPartOf": {
-            "@type": "Blog",
-            "@id": "https://quickartphotography.in/blog/#blog",
-            "name": "Quick Art Blog",
-            "url": "https://quickartphotography.in/blog/"
-          },
-          "keywords": "Best Video Editing Course in Gopalganj, Video Editing Training Gopalganj, Video Editing Institute, Wedding Filmmaking Course, Gopalganj Editing Classes",
-          "inLanguage": "en-IN"
-        },
-        {
-          "@type": "Course",
-          "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#course",
-          "name": "Best Video Editing Course in Gopalganj - Top Video Editing Institute & Wedding Filmmaking Training",
-          "description": "Comprehensive 14-week practical video editing training, wedding filmmaking, DaVinci Resolve, Adobe Premiere Pro, and album design course with free hostel accommodation for Gopalganj students.",
-          "provider": {
-            "@id": "https://quickartphotography.in/#academy"
-          },
-          "educationalCredentialAwarded": "Official ISO 9001:2015 Accredited Certification in Professional Video Editing",
-          "timeRequired": "P14W",
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "reviewCount": "1840",
-            "ratingCount": "1840",
-            "bestRating": "5",
-            "worstRating": "1"
-          },
-          "review": [
-            {
-              "@type": "Review",
-              "author": {
-                "@type": "Person",
-                "name": "Rohan Yadav (Mirganj, Gopalganj)"
-              },
-              "datePublished": "2026-08-15",
-              "reviewBody": "Mai Gopalganj ke Mirganj se hu. Quick Art Academy me 14 hafte ka video editing course complete kiya. Yaha real wedding raw 4K footage par practice karwayi gayi. Hostel bilkul free tha aur Anil sir ka color grading sikhane ka tarika lajawab hai. Aaj mai per wedding project ₹15,000+ charge kar raha hu.",
-              "reviewRating": {
-                "@type": "Rating",
-                "ratingValue": "5",
-                "bestRating": "5",
-                "worstRating": "1"
-              }
-            },
-            {
-              "@type": "Review",
-              "author": {
-                "@type": "Person",
-                "name": "Amit Kushwaha (Gopalganj Town)"
-              },
-              "datePublished": "2026-07-20",
-              "reviewBody": "Gopalganj me koi aisi video editing classes nahi hai jahan DaVinci Resolve aur Premiere Pro 2026 deep level pe sikhaye. Siwan sirf 40 minute ki doori pe hai. Quick Art me admission lene ke baad meri editing speed 3x fast ho gayi. Best video editing institute in Bihar!",
-              "reviewRating": {
-                "@type": "Rating",
-                "ratingValue": "5",
-                "bestRating": "5",
-                "worstRating": "1"
-              }
-            },
-            {
-              "@type": "Review",
-              "author": {
-                "@type": "Person",
-                "name": "Sanjeev Verma (Thawe, Gopalganj)"
-              },
-              "datePublished": "2026-09-02",
-              "reviewBody": "Thawe se daily aana-jana bhi aasan tha, par maine free hostel liya. Anil Sharma sir ne client se deal karna, album design aur cinematic teasers banana practically sikhaya. 100% recommended for every aspiring filmmaker.",
-              "reviewRating": {
-                "@type": "Rating",
-                "ratingValue": "5",
-                "bestRating": "5",
-                "worstRating": "1"
-              }
-            }
-          ],
-          "offers": {
-            "@type": "Offer",
-            "price": "35000",
-            "priceCurrency": "INR",
-            "category": "Educational Course",
-            "availability": "https://schema.org/InStock"
-          },
-          "hasCourseInstance": {
-            "@type": "CourseInstance",
-            "courseMode": "offline",
-            "courseWorkload": "PT14W",
-            "inLanguage": "hi",
-            "location": {
-              "@type": "Place",
-              "name": "Quick Art Photography Academy",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Ayodhya Puri, Near Lalit Bus Stand",
-                "addressLocality": "Siwan",
-                "addressRegion": "Bihar",
-                "postalCode": "841226",
-                "addressCountry": "IN"
-              }
-            }
+          "@type": "Question",
+          "name": "Are EMI or accommodation facilities available?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, EMI starts from ₹2,500/month and accommodation is completely free for all enrolled students."
           }
         },
         {
-          "@type": "Product",
-          "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#product",
-          "name": "Best Video Editing Course in Gopalganj - Quick Art Academy",
-          "image": "https://quickartphotography.in/assets/best-video-editing-course-in-gopalganj-quick-art.jpg",
-          "description": "Top-rated 14-week practical video editing training, wedding filmmaking, DaVinci Resolve, Adobe Premiere Pro, and album design course with free hostel accommodation for Gopalganj students.",
-          "brand": {
-            "@type": "Brand",
-            "name": "Quick Art Photography Academy"
-          },
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "reviewCount": "1840",
-            "ratingCount": "1840",
-            "bestRating": "5",
-            "worstRating": "1"
-          },
-          "offers": {
-            "@type": "Offer",
-            "url": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/",
-            "priceCurrency": "INR",
-            "price": "35000",
-            "priceValidUntil": "2027-12-31",
-            "availability": "https://schema.org/InStock",
-            "seller": {
-              "@id": "https://quickartphotography.in/#academy"
-            }
+          "@type": "Question",
+          "name": "How do I enroll?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Call 9939800780 or visit quickartphotography.in to book your free demo class."
           }
-        },
-        {
-          "@type": "FAQPage",
-          "@id": "https://quickartphotography.in/blog/best-video-editing-course-in-gopalganj/#faq",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "Which is the best video editing institute in Gopalganj?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Quick Art Photography Academy is one of the best academies near Gopalganj offering a complete filmmaking and editing course with 100% practical training, real wedding footage, and free hostel accommodation."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Is the course suitable for beginners?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes! Even if you’ve never edited a video before, our practical approach will make you confident in 50 days."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "What software will I learn?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "You’ll learn Adobe Premiere Pro 2026, Edius, DaVinci Resolve, Photoshop 2026, and data recovery tools."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Are EMI or accommodation facilities available?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes, EMI starts from ₹2,500/month and accommodation is completely free for all enrolled students."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How do I enroll?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Call 9939800780 or visit quickartphotography.in to book your free demo class."
-              }
-            }
-          ]
         }
       ]
     }
+  ]
+}
     </script>
 
     <style>
@@ -493,6 +456,9 @@
             color: #f59e0b;
             font-size: 1.1rem;
             letter-spacing: 2px;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+            display: inline-block;
         }
         .gop-stat-grid {
             display: grid;
@@ -1027,14 +993,11 @@
                         </div>
 
                         <!-- ═══ COURSE REVIEW RICH SNIPPET (1800+ Reviews & 4.9 Stars) ═══ -->
-                        <div class="gop-rating-badge" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+                        <div class="gop-rating-badge">
                             <span class="gop-stars" aria-hidden="true">★★★★★</span>
-                            <span><strong><span itemprop="ratingValue">4.9</span> / 5 Rating</strong> &middot; Over <span itemprop="reviewCount">1,840</span>+ Student Reviews &middot; Google Verified</span>
-                            <meta itemprop="bestRating" content="5">
-                            <meta itemprop="worstRating" content="1">
+                            <span><strong>4.9 / 5 Rating</strong> &middot; Over 1,840+ Student Reviews &middot; Google Verified</span>
                         </div>
-
-                        <h1 class="blog-article-title" itemprop="headline">
+<h1 class="blog-article-title" itemprop="headline">
                             Best Video Editing Course in Gopalganj – Top Video Editing Institute &amp; Wedding Filmmaking Training
                         </h1>
 

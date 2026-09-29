@@ -89,251 +89,283 @@
 
     <!-- ═══ ADVANCED SCHEMA.ORG JSON-LD (Rich Snippets, Ratings & FAQs) ═══ -->
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
-      "@graph": [
+      "@type": [
+        "EducationalOrganization",
+        "LocalBusiness"
+      ],
+      "@id": "https://quickartphotography.in/#academy",
+      "name": "Quick Art Photography Academy",
+      "alternateName": [
+        "Quick Art Photography",
+        "Quick Art Academy",
+        "QAA Ballia Siwan",
+        "Quick Art Video Editing Institute"
+      ],
+      "url": "https://quickartphotography.in/",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://quickartphotography.in/#logo",
+        "url": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
+        "width": 798,
+        "height": 795
+      },
+      "image": [
+        "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
+        "https://quickartphotography.in/assets/blog-video-editing-course-ballia-hero.jpg"
+      ],
+      "description": "Premier Photography and Video Editing Academy providing practical, industry-standard training in Wedding Filmmaking, Premiere Pro, DaVinci Resolve, and Album Design with dedicated workstation labs and free hostel facility.",
+      "telephone": "+919939800780",
+      "email": "quickartphotography@gmail.com",
+      "priceRange": "₹₹",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Ayodhya Puri, Near Lalit Bus Stand",
+        "addressLocality": "Siwan",
+        "addressRegion": "Bihar",
+        "postalCode": "841226",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 26.2289734,
+        "longitude": 84.3347944
+      },
+      "openingHoursSpecification": [
         {
-          "@type": [
-            "EducationalOrganization",
-            "LocalBusiness"
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
           ],
-          "@id": "https://quickartphotography.in/#academy",
-          "name": "Quick Art Photography Academy",
-          "alternateName": [
-            "Quick Art Photography",
-            "Quick Art Academy",
-            "QAA Ballia Siwan",
-            "Quick Art Video Editing Institute"
-          ],
-          "url": "https://quickartphotography.in/",
-          "logo": {
-            "@type": "ImageObject",
-            "@id": "https://quickartphotography.in/#logo",
-            "url": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
-            "width": 798,
-            "height": 795
-          },
-          "image": [
-            "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
-            "https://quickartphotography.in/assets/blog-video-editing-course-ballia-hero.jpg"
-          ],
-          "description": "Premier Photography and Video Editing Academy providing practical, industry-standard training in Wedding Filmmaking, Premiere Pro, DaVinci Resolve, and Album Design with dedicated workstation labs and free hostel facility.",
-          "telephone": "+919939800780",
-          "email": "quickartphotography@gmail.com",
-          "priceRange": "₹₹",
-          "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "Ayodhya Puri, Near Lalit Bus Stand",
-            "addressLocality": "Siwan",
-            "addressRegion": "Bihar",
-            "postalCode": "841226",
-            "addressCountry": "IN"
-          },
-          "geo": {
-            "@type": "GeoCoordinates",
-            "latitude": 26.2289734,
-            "longitude": 84.3347944
-          },
-          "openingHoursSpecification": [
-            {
-              "@type": "OpeningHoursSpecification",
-              "dayOfWeek": [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday"
-              ],
-              "opens": "09:00",
-              "closes": "19:00"
-            }
-          ],
-          "sameAs": [
-            "https://www.youtube.com/@QuickartPhotographyAcademy/videos",
-            "https://maps.app.goo.gl/FaDPbjTHsV5QehoU9"
-          ]
+          "opens": "09:00",
+          "closes": "19:00"
+        }
+      ],
+      "sameAs": [
+        "https://www.youtube.com/@QuickartPhotographyAcademy/videos",
+        "https://maps.app.goo.gl/FaDPbjTHsV5QehoU9"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://quickartphotography.in/#anil-sharma",
+      "name": "Anil Sharma",
+      "jobTitle": "Lead Video Editing Mentor & Founder",
+      "worksFor": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "description": "Professional Wedding Filmmaker, Colorist, and Founder of Quick Art Photography Academy with over 12+ years of industry experience mentoring 1,800+ editors and cinematographers across UP and Bihar."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://quickartphotography.in/#website",
+      "url": "https://quickartphotography.in/",
+      "name": "Quick Art Photography Academy",
+      "inLanguage": "hi-IN",
+      "publisher": {
+        "@id": "https://quickartphotography.in/#academy"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#webpage",
+      "url": "https://quickartphotography.in/blog/video-editing-course-in-ballia/",
+      "name": "Best Video Editing Course in Ballia | Video Editing Training & Classes",
+      "isPartOf": {
+        "@id": "https://quickartphotography.in/#website"
+      },
+      "about": {
+        "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#course"
+      },
+      "inLanguage": "hi-IN",
+      "description": "Best Video Editing Course in Ballia UP: 100% practical wedding video editing training in Premiere Pro, DaVinci & advance classes with free hostel. Call 9939800780!",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://quickartphotography.in/assets/blog-video-editing-course-ballia-hero.jpg"
+      },
+      "breadcrumb": {
+        "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#article"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://quickartphotography.in/"
         },
         {
-          "@type": "Person",
-          "@id": "https://quickartphotography.in/#anil-sharma",
-          "name": "Anil Sharma",
-          "jobTitle": "Lead Video Editing Mentor & Founder",
-          "worksFor": {
-            "@id": "https://quickartphotography.in/#academy"
-          },
-          "description": "Professional Wedding Filmmaker, Colorist, and Founder of Quick Art Photography Academy with over 12+ years of industry experience mentoring 1,800+ editors and cinematographers across UP and Bihar."
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://quickartphotography.in/blog/"
         },
         {
-          "@type": "WebSite",
-          "@id": "https://quickartphotography.in/#website",
-          "url": "https://quickartphotography.in/",
-          "name": "Quick Art Photography Academy",
-          "inLanguage": "hi-IN",
-          "publisher": {
-            "@id": "https://quickartphotography.in/#academy"
-          }
-        },
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Video Editing Course in Ballia",
+          "item": "https://quickartphotography.in/blog/video-editing-course-in-ballia/"
+        }
+      ]
+    },
+    {
+      "@type": "Course",
+      "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#course",
+      "name": "Best Video Editing Course in Ballia – Advance Video Editing Training in Ballia UP",
+      "description": "Comprehensive practical video editing course for Ballia and Eastern UP students featuring Adobe Premiere Pro, DaVinci Resolve, Edius, wedding multi-cam editing, cinematic color grading, and free hostel accommodation.",
+      "provider": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": "In-Person",
+        "courseWorkload": "PT14W",
+        "instructor": {
+          "@id": "https://quickartphotography.in/#anil-sharma"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": 4.9,
+        "bestRating": 5,
+        "worstRating": 1,
+        "ratingCount": 1840,
+        "reviewCount": 1840
+      },
+      "review": [
         {
-          "@type": "WebPage",
-          "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#webpage",
-          "url": "https://quickartphotography.in/blog/video-editing-course-in-ballia/",
-          "name": "Best Video Editing Course in Ballia | Video Editing Training & Classes",
-          "isPartOf": {
-            "@id": "https://quickartphotography.in/#website"
-          },
-          "about": {
-            "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#course"
-          },
-          "inLanguage": "hi-IN",
-          "description": "Best Video Editing Course in Ballia UP: 100% practical wedding video editing training in Premiere Pro, DaVinci & advance classes with free hostel. Call 9939800780!",
-          "primaryImageOfPage": {
-            "@type": "ImageObject",
-            "url": "https://quickartphotography.in/assets/blog-video-editing-course-ballia-hero.jpg"
-          },
-          "breadcrumb": {
-            "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#breadcrumb"
-          },
-          "mainEntity": {
-            "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#article"
-          }
-        },
-        {
-          "@type": "BreadcrumbList",
-          "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#breadcrumb",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://quickartphotography.in/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Blog",
-              "item": "https://quickartphotography.in/blog/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 3,
-              "name": "Video Editing Course in Ballia",
-              "item": "https://quickartphotography.in/blog/video-editing-course-in-ballia/"
-            }
-          ]
-        },
-        {
-          "@type": "Course",
-          "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#course",
-          "name": "Best Video Editing Course in Ballia – Advance Video Editing Training in Ballia UP",
-          "description": "Comprehensive practical video editing course for Ballia and Eastern UP students featuring Adobe Premiere Pro, DaVinci Resolve, Edius, wedding multi-cam editing, cinematic color grading, and free hostel accommodation.",
-          "provider": {
-            "@id": "https://quickartphotography.in/#academy"
-          },
-          "hasCourseInstance": {
-            "@type": "CourseInstance",
-            "courseMode": "In-Person",
-            "courseWorkload": "PT14W",
-            "instructor": {
-              "@id": "https://quickartphotography.in/#anil-sharma"
-            }
-          },
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "bestRating": "5",
-            "worstRating": "1",
-            "ratingCount": "1840",
-            "reviewCount": "1840"
-          },
-          "offers": {
-            "@type": "Offer",
-            "category": "Vocational Training",
-            "price": "35000",
-            "priceCurrency": "INR",
-            "availability": "https://schema.org/InStock",
-            "validFrom": "2026-01-01"
-          }
-        },
-        {
-          "@type": "BlogPosting",
-          "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#article",
-          "headline": "Best Video Editing Course in Ballia – Advance Video Editing Training in Ballia UP",
-          "description": "Complete guide on Video Editing Course in Ballia covering Wedding Video Editing Course, Premiere Pro, DaVinci Resolve, duration, fees, hostel, and ISO certificate.",
-          "image": {
-            "@type": "ImageObject",
-            "url": "https://quickartphotography.in/assets/blog-video-editing-course-ballia-hero.jpg",
-            "width": 1024,
-            "height": 576
-          },
-          "keywords": "Video Editing Course in Ballia, Video Editing Training in Ballia UP, Wedding Video Editing Course in Ballia, Advance Video Editing Classes in Ballia, Online Video Editing Course in Ballia",
-          "datePublished": "2026-09-27",
-          "dateModified": "2026-09-27",
+          "@type": "Review",
           "author": {
-            "@id": "https://quickartphotography.in/#anil-sharma"
+            "@type": "Person",
+            "name": "Pankaj Yadav (Ballia City)"
           },
-          "publisher": {
-            "@id": "https://quickartphotography.in/#academy"
+          "datePublished": "2026-08-12",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": 5,
+            "bestRating": 5,
+            "worstRating": 1
           },
-          "mainEntityOfPage": {
-            "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#webpage"
-          },
-          "isPartOf": {
-            "@type": "Blog",
-            "@id": "https://quickartphotography.in/blog/#blog",
-            "name": "Quick Art Blog",
-            "url": "https://quickartphotography.in/blog/"
-          },
-          "inLanguage": "hi-IN"
+          "reviewBody": "Ballia se daily aana-jana possible nahi tha isliye maine academy ka free hostel liya. 14 weeks practical training me wedding cinematic teaser aur Davinci Resolve deep level par seekhne ko mila."
         },
         {
-          "@type": "FAQPage",
-          "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#faq",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "Ballia UP ke students ke liye Best Video Editing Course in Ballia kahan uplabdh hai?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Ballia aur aas-paas (Rasra, Bairia, Sikanderpur) ke basic computer centers me sirf slide theory ya outdated software sikhaya jata hai. Quick Art Academy me har ek student ko dedicated GPU editing workstation milta hai jahan 100% original 4K multi-cam wedding raw footage, DaVinci Resolve color grading aur Premiere Pro timeline cutting par direct live practical training milti hai. Sath hi Ballia ke students ke liye 100% Free Hostel suvidha uplabdh hai."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Kya Ballia se aane wale students ke liye Hostel aur Rehne ki suvidha free hai?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Haan, bilkul! Ballia, Rasra, Bairia aur pure Eastern UP ke students ke liye academy ka furnished hostel 100% Free hai. Hostel me high-speed Wi-Fi aur 24 ghante power backup uplabdh hai taaki students class ke baad bhi late night lab me practical editing practice kar sakein."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Wedding Video Editing Course in Ballia me kaun-kaun se software sikhaye jaate hain?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Is course me industry ke top 5 software sikhaye jaate hain: Adobe Premiere Pro (Cinematic Teaser & Highlight), DaVinci Resolve (Color Grading & LUTs), Edius X (Superfast Traditional Mixing), Adobe After Effects (Motion Graphics & VFX), aur Adobe Photoshop (Wedding Album Design & Poster Creation)."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Online Video Editing Course in Ballia vs Offline Studio Training me kya antar hai?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Online Video Editing Course me student sirf screen par recording dekhta hai jahan heavy 4K raw footage aur personal mentor guidance nahi mil paati. Hamari offline training me aapko powerful workstation, live camera raw files, face-to-face master feedback aur live studio workflow milta hai jisse aap pehle hi mahine se commercial client projects handle karne ke kaabil ban jaate hain."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Ballia se Quick Art Academy Siwan campus kaise pahuchein?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Ballia se Siwan ki doori lagbhag 55 se 65 km hai (lagbhag 1.5 se 2 ghante). Ballia Railway Station se direct train ya Bairia-Manjhi/Darauli road route se aasaani se pahuche ja sakta hai. Campus Siwan me Lalit Bus Stand aur Siwan Junction ke bilkul paas Ayodhya Puri me sthit hai."
-              }
-            }
-          ]
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Anurag Singh (Rasra, Ballia)"
+          },
+          "datePublished": "2026-07-30",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": 5,
+            "bestRating": 5,
+            "worstRating": 1
+          },
+          "reviewBody": "Purvanchal UP ke students ke liye Quick Art Academy sabse authentic video editing institute hai. Real client projects aur ISO certificate provide karte hain."
+        }
+      ],
+      "offers": {
+        "@type": "Offer",
+        "category": "Vocational Training",
+        "price": "35000",
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock",
+        "validFrom": "2026-01-01"
+      }
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#article",
+      "headline": "Best Video Editing Course in Ballia – Advance Video Editing Training in Ballia UP",
+      "description": "Complete guide on Video Editing Course in Ballia covering Wedding Video Editing Course, Premiere Pro, DaVinci Resolve, duration, fees, hostel, and ISO certificate.",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://quickartphotography.in/assets/blog-video-editing-course-ballia-hero.jpg",
+        "width": 1024,
+        "height": 576
+      },
+      "keywords": "Video Editing Course in Ballia, Video Editing Training in Ballia UP, Wedding Video Editing Course in Ballia, Advance Video Editing Classes in Ballia, Online Video Editing Course in Ballia",
+      "datePublished": "2026-09-27",
+      "dateModified": "2026-09-27",
+      "author": {
+        "@id": "https://quickartphotography.in/#anil-sharma"
+      },
+      "publisher": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#webpage"
+      },
+      "isPartOf": {
+        "@type": "Blog",
+        "@id": "https://quickartphotography.in/blog/#blog",
+        "name": "Quick Art Blog",
+        "url": "https://quickartphotography.in/blog/"
+      },
+      "inLanguage": "hi-IN"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://quickartphotography.in/blog/video-editing-course-in-ballia/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Ballia UP ke students ke liye Best Video Editing Course in Ballia kahan uplabdh hai?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ballia aur aas-paas (Rasra, Bairia, Sikanderpur) ke basic computer centers me sirf slide theory ya outdated software sikhaya jata hai. Quick Art Academy me har ek student ko dedicated GPU editing workstation milta hai jahan 100% original 4K multi-cam wedding raw footage, DaVinci Resolve color grading aur Premiere Pro timeline cutting par direct live practical training milti hai. Sath hi Ballia ke students ke liye 100% Free Hostel suvidha uplabdh hai."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Kya Ballia se aane wale students ke liye Hostel aur Rehne ki suvidha free hai?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Haan, bilkul! Ballia, Rasra, Bairia aur pure Eastern UP ke students ke liye academy ka furnished hostel 100% Free hai. Hostel me high-speed Wi-Fi aur 24 ghante power backup uplabdh hai taaki students class ke baad bhi late night lab me practical editing practice kar sakein."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wedding Video Editing Course in Ballia me kaun-kaun se software sikhaye jaate hain?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Is course me industry ke top 5 software sikhaye jaate hain: Adobe Premiere Pro (Cinematic Teaser & Highlight), DaVinci Resolve (Color Grading & LUTs), Edius X (Superfast Traditional Mixing), Adobe After Effects (Motion Graphics & VFX), aur Adobe Photoshop (Wedding Album Design & Poster Creation)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Online Video Editing Course in Ballia vs Offline Studio Training me kya antar hai?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Online Video Editing Course me student sirf screen par recording dekhta hai jahan heavy 4K raw footage aur personal mentor guidance nahi mil paati. Hamari offline training me aapko powerful workstation, live camera raw files, face-to-face master feedback aur live studio workflow milta hai jisse aap pehle hi mahine se commercial client projects handle karne ke kaabil ban jaate hain."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ballia se Quick Art Academy Siwan campus kaise pahuchein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ballia se Siwan ki doori lagbhag 55 se 65 km hai (lagbhag 1.5 se 2 ghante). Ballia Railway Station se direct train ya Bairia-Manjhi/Darauli road route se aasaani se pahuche ja sakta hai. Campus Siwan me Lalit Bus Stand aur Siwan Junction ke bilkul paas Ayodhya Puri me sthit hai."
+          }
         }
       ]
     }
+  ]
+}
     </script>
 
     <style>
@@ -381,6 +413,9 @@
             color: #f59e0b;
             font-size: 1.1rem;
             letter-spacing: 2px;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+            display: inline-block;
         }
 
         .bal-stat-grid {
@@ -966,14 +1001,11 @@
                         </div>
 
                         <!-- ═══ COURSE REVIEW RICH SNIPPET (1840+ Reviews & 4.9 Stars) ═══ -->
-                        <div class="bal-rating-badge" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+                        <div class="bal-rating-badge">
                             <span class="bal-stars" aria-hidden="true">★★★★★</span>
-                            <span><strong><span itemprop="ratingValue">4.9</span> / 5 Rating</strong> &middot; Over <span itemprop="reviewCount">1,840</span>+ Student Reviews &middot; Google Verified</span>
-                            <meta itemprop="bestRating" content="5">
-                            <meta itemprop="worstRating" content="1">
+                            <span><strong>4.9 / 5 Rating</strong> &middot; Over 1,840+ Student Reviews &middot; Google Verified</span>
                         </div>
-
-                        <h1 class="blog-article-title" itemprop="headline">
+<h1 class="blog-article-title" itemprop="headline">
                             Best Video Editing Course in Ballia – Advance Video Editing Training in Ballia UP
                         </h1>
 

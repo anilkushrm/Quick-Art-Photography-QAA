@@ -88,210 +88,242 @@
 
     <!-- ═══ ADVANCED SCHEMA.ORG JSON-LD (Course, Playlist, Video, Organization & FAQs) ═══ -->
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
-      "@graph": [
+      "@type": [
+        "EducationalOrganization",
+        "LocalBusiness"
+      ],
+      "@id": "https://quickartphotography.in/#academy",
+      "name": "Quick Art Photography Academy",
+      "alternateName": [
+        "Quick Art Photography",
+        "Quick Art Academy",
+        "QAA Video Editing Institute"
+      ],
+      "url": "https://quickartphotography.in/",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://quickartphotography.in/#logo",
+        "url": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
+        "width": 798,
+        "height": 795
+      },
+      "image": [
+        "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
+        "https://quickartphotography.in/assets/blog-premiere-pro-video-editing-course-hindi-hero.jpg"
+      ],
+      "description": "Premier Photography and Video Editing Academy providing practical, industry-standard training in Wedding Filmmaking, Premiere Pro, DaVinci Resolve, and Album Design with dedicated workstation labs and free hostel facility.",
+      "telephone": "+919939800780",
+      "email": "quickartphotography@gmail.com",
+      "priceRange": "₹₹",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Ayodhya Puri, Near Lalit Bus Stand",
+        "addressLocality": "Siwan",
+        "addressRegion": "Bihar",
+        "postalCode": "841226",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 26.2289734,
+        "longitude": 84.3347944
+      },
+      "sameAs": [
+        "https://www.youtube.com/@QuickartPhotographyAcademy/videos",
+        "https://www.youtube.com/playlist?list=PLepLLO-93fuHAUUJv6sLu7EN21iKq6MWm",
+        "https://maps.app.goo.gl/FaDPbjTHsV5QehoU9"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://quickartphotography.in/#anil-sharma",
+      "name": "Anil Sharma",
+      "jobTitle": "Lead Video Editing Mentor & Founder",
+      "worksFor": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "description": "Professional Wedding Filmmaker, Video Editor, and Founder of Quick Art Photography Academy with over 12+ years of industry experience mentoring 1,800+ editors and cinematographers across India."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://quickartphotography.in/#website",
+      "url": "https://quickartphotography.in/",
+      "name": "Quick Art Photography Academy",
+      "inLanguage": "hi-IN",
+      "publisher": {
+        "@id": "https://quickartphotography.in/#academy"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#webpage",
+      "url": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/",
+      "name": "Adobe Premiere Pro Full Course in Hindi | Free Video Editing Playlist",
+      "isPartOf": {
+        "@id": "https://quickartphotography.in/#website"
+      },
+      "about": {
+        "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#course"
+      },
+      "inLanguage": "hi-IN",
+      "description": "Adobe Premiere Pro Course in Hindi: Free 99+ practical video editing tutorials, wedding film tricks, shortcuts & certificate guide. Watch full playlist!",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://quickartphotography.in/assets/blog-premiere-pro-video-editing-course-hindi-hero.jpg"
+      },
+      "breadcrumb": {
+        "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#breadcrumb",
+      "itemListElement": [
         {
-          "@type": [
-            "EducationalOrganization",
-            "LocalBusiness"
-          ],
-          "@id": "https://quickartphotography.in/#academy",
-          "name": "Quick Art Photography Academy",
-          "alternateName": [
-            "Quick Art Photography",
-            "Quick Art Academy",
-            "QAA Video Editing Institute"
-          ],
-          "url": "https://quickartphotography.in/",
-          "logo": {
-            "@type": "ImageObject",
-            "@id": "https://quickartphotography.in/#logo",
-            "url": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
-            "width": 798,
-            "height": 795
-          },
-          "image": [
-            "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
-            "https://quickartphotography.in/assets/blog-premiere-pro-video-editing-course-hindi-hero.jpg"
-          ],
-          "description": "Premier Photography and Video Editing Academy providing practical, industry-standard training in Wedding Filmmaking, Premiere Pro, DaVinci Resolve, and Album Design with dedicated workstation labs and free hostel facility.",
-          "telephone": "+919939800780",
-          "email": "quickartphotography@gmail.com",
-          "priceRange": "₹₹",
-          "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "Ayodhya Puri, Near Lalit Bus Stand",
-            "addressLocality": "Siwan",
-            "addressRegion": "Bihar",
-            "postalCode": "841226",
-            "addressCountry": "IN"
-          },
-          "geo": {
-            "@type": "GeoCoordinates",
-            "latitude": 26.2289734,
-            "longitude": 84.3347944
-          },
-          "sameAs": [
-            "https://www.youtube.com/@QuickartPhotographyAcademy/videos",
-            "https://www.youtube.com/playlist?list=PLepLLO-93fuHAUUJv6sLu7EN21iKq6MWm",
-            "https://maps.app.goo.gl/FaDPbjTHsV5QehoU9"
-          ]
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://quickartphotography.in/"
         },
         {
-          "@type": "Person",
-          "@id": "https://quickartphotography.in/#anil-sharma",
-          "name": "Anil Sharma",
-          "jobTitle": "Lead Video Editing Mentor & Founder",
-          "worksFor": {
-            "@id": "https://quickartphotography.in/#academy"
-          },
-          "description": "Professional Wedding Filmmaker, Video Editor, and Founder of Quick Art Photography Academy with over 12+ years of industry experience mentoring 1,800+ editors and cinematographers across India."
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://quickartphotography.in/blog/"
         },
         {
-          "@type": "WebSite",
-          "@id": "https://quickartphotography.in/#website",
-          "url": "https://quickartphotography.in/",
-          "name": "Quick Art Photography Academy",
-          "inLanguage": "hi-IN",
-          "publisher": {
-            "@id": "https://quickartphotography.in/#academy"
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Premiere Pro Video Editing Course in Hindi",
+          "item": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/"
+        }
+      ]
+    },
+    {
+      "@type": "Course",
+      "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#course",
+      "name": "Adobe Premiere Pro Full Video Editing Course in Hindi (99+ Episodes Playlist)",
+      "description": "Complete hands-on practical Adobe Premiere Pro video editing course in Hindi taught by Anil Sharma covering timeline editing, speed ramps, keyframe animations, wedding teasers, shortcuts, and ISO certification.",
+      "provider": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": "Online",
+        "courseWorkload": "PT35H",
+        "instructor": {
+          "@id": "https://quickartphotography.in/#anil-sharma"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": 4.9,
+        "bestRating": 5,
+        "worstRating": 1,
+        "ratingCount": 1840,
+        "reviewCount": 1840
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Abhishek Dubey"
+          },
+          "datePublished": "2026-08-19",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": 5,
+            "bestRating": 5,
+            "worstRating": 1
+          },
+          "reviewBody": "YouTube par itna detailed aur practical Premiere Pro course Hindi me pehli baar mila. Anil Sharma sir ne cutting, speed ramp, keyframe animation aur audio sync sab free playlist me sikhaya hai."
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Naveen Gupta"
+          },
+          "datePublished": "2026-09-01",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": 5,
+            "bestRating": 5,
+            "worstRating": 1
+          },
+          "reviewBody": "99+ practical episodes are gold for every aspiring editor in Bihar and UP. Best free video editing course with certificate."
+        }
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR",
+        "category": "Free YouTube Course",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "VideoObject",
+      "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#video",
+      "name": "Adobe Premiere Pro Full Course in Hindi Playlist - Quick Art Photography Academy",
+      "description": "Complete 99+ Episode video editing masterclass in Hindi for Adobe Premiere Pro taught by mentor Anil Sharma.",
+      "thumbnailUrl": "https://quickartphotography.in/assets/blog-premiere-pro-video-editing-course-hindi-hero.jpg",
+      "uploadDate": "2026-09-27T00:00:00+05:30",
+      "embedUrl": "https://www.youtube-nocookie.com/embed/videoseries?list=PLepLLO-93fuHAUUJv6sLu7EN21iKq6MWm"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Kya yeh Adobe Premiere Pro Full Course in Hindi beginners ke liye bilkul free hai?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Haan, Quick Art Photography Academy ke YouTube channel par yeh poora 99+ episode course 100% Free uplabdh hai. Aap bina kisi subscription ya payment ke timeline tools, keyframes, transitions aur shortcuts seekh sakte hain."
           }
         },
         {
-          "@type": "WebPage",
-          "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#webpage",
-          "url": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/",
-          "name": "Adobe Premiere Pro Full Course in Hindi | Free Video Editing Playlist",
-          "isPartOf": {
-            "@id": "https://quickartphotography.in/#website"
-          },
-          "about": {
-            "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#course"
-          },
-          "inLanguage": "hi-IN",
-          "description": "Adobe Premiere Pro Course in Hindi: Free 99+ practical video editing tutorials, wedding film tricks, shortcuts & certificate guide. Watch full playlist!",
-          "primaryImageOfPage": {
-            "@type": "ImageObject",
-            "url": "https://quickartphotography.in/assets/blog-premiere-pro-video-editing-course-hindi-hero.jpg"
-          },
-          "breadcrumb": {
-            "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#breadcrumb"
+          "@type": "Question",
+          "name": "Free Video Editing Course complete karne par Certificate kaise milta hai?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Online YouTube playlist dekhne ke baad agar aap ISO 9001:2015 Accredited Government Recognized Certificate aur direct mentor feedback chahte hain, toh aap hamare evaluation test aur portal certification program me enroll kar sakte hain."
           }
         },
         {
-          "@type": "BreadcrumbList",
-          "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#breadcrumb",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://quickartphotography.in/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Blog",
-              "item": "https://quickartphotography.in/blog/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 3,
-              "name": "Premiere Pro Video Editing Course in Hindi",
-              "item": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/"
-            }
-          ]
-        },
-        {
-          "@type": "Course",
-          "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#course",
-          "name": "Adobe Premiere Pro Full Video Editing Course in Hindi (99+ Episodes Playlist)",
-          "description": "Complete hands-on practical Adobe Premiere Pro video editing course in Hindi taught by Anil Sharma covering timeline editing, speed ramps, keyframe animations, wedding teasers, shortcuts, and ISO certification.",
-          "provider": {
-            "@id": "https://quickartphotography.in/#academy"
-          },
-          "hasCourseInstance": {
-            "@type": "CourseInstance",
-            "courseMode": "Online",
-            "courseWorkload": "PT35H",
-            "instructor": {
-              "@id": "https://quickartphotography.in/#anil-sharma"
-            }
-          },
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "bestRating": "5",
-            "worstRating": "1",
-            "ratingCount": "1840",
-            "reviewCount": "1840"
-          },
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "INR",
-            "category": "Free YouTube Course",
-            "availability": "https://schema.org/InStock"
+          "@type": "Question",
+          "name": "Kya is course me Premiere Pro Wedding Video Editing sikhayi gayi hai?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ji haan! Is course me wedding teasers, cinematic speed ramping, slow motion with optical flow, color grading, audio remixing aur multi-cam cutting ko step-by-step Hindi me samjhaya gaya hai."
           }
         },
         {
-          "@type": "VideoObject",
-          "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#video",
-          "name": "Adobe Premiere Pro Full Course in Hindi Playlist - Quick Art Photography Academy",
-          "description": "Complete 99+ Episode video editing masterclass in Hindi for Adobe Premiere Pro taught by mentor Anil Sharma.",
-          "thumbnailUrl": "https://quickartphotography.in/assets/blog-premiere-pro-video-editing-course-hindi-hero.jpg",
-          "uploadDate": "2026-09-27T00:00:00+05:30",
-          "embedUrl": "https://www.youtube-nocookie.com/embed/videoseries?list=PLepLLO-93fuHAUUJv6sLu7EN21iKq6MWm"
+          "@type": "Question",
+          "name": "Premiere Pro chalane ke liye computer me minimum kya configuration chahiye?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Minimum configuration: Intel i5 (8th Gen ya upar) ya AMD Ryzen 5 processor, 16GB RAM, 4GB Dedicated Graphic Card (NVIDIA GTX/RTX) aur SSD storage zaroori hai. 4K editing ke liye 32GB RAM recommended hai."
+          }
         },
         {
-          "@type": "FAQPage",
-          "@id": "https://quickartphotography.in/blog/premiere-pro-video-editing-course-hindi/#faq",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "Kya yeh Adobe Premiere Pro Full Course in Hindi beginners ke liye bilkul free hai?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Haan, Quick Art Photography Academy ke YouTube channel par yeh poora 99+ episode course 100% Free uplabdh hai. Aap bina kisi subscription ya payment ke timeline tools, keyframes, transitions aur shortcuts seekh sakte hain."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Free Video Editing Course complete karne par Certificate kaise milta hai?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Online YouTube playlist dekhne ke baad agar aap ISO 9001:2015 Accredited Government Recognized Certificate aur direct mentor feedback chahte hain, toh aap hamare evaluation test aur portal certification program me enroll kar sakte hain."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Kya is course me Premiere Pro Wedding Video Editing sikhayi gayi hai?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Ji haan! Is course me wedding teasers, cinematic speed ramping, slow motion with optical flow, color grading, audio remixing aur multi-cam cutting ko step-by-step Hindi me samjhaya gaya hai."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Premiere Pro chalane ke liye computer me minimum kya configuration chahiye?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Minimum configuration: Intel i5 (8th Gen ya upar) ya AMD Ryzen 5 processor, 16GB RAM, 4GB Dedicated Graphic Card (NVIDIA GTX/RTX) aur SSD storage zaroori hai. 4K editing ke liye 32GB RAM recommended hai."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Offline class aur Free Hostel suvidha ke liye academy kaise contact karein?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Aap seedhe hamare official helpline number +91 9939800780 par call ya WhatsApp kar sakte hain. Outstation students ke liye Siwan campus me 100% Free Hostel aur live editing workstations uplabdh hain."
-              }
-            }
-          ]
+          "@type": "Question",
+          "name": "Offline class aur Free Hostel suvidha ke liye academy kaise contact karein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Aap seedhe hamare official helpline number +91 9939800780 par call ya WhatsApp kar sakte hain. Outstation students ke liye Siwan campus me 100% Free Hostel aur live editing workstations uplabdh hain."
+          }
         }
       ]
     }
+  ]
+}
     </script>
 
     <style>
@@ -712,17 +744,14 @@
                 <article class="blog-article-card" itemscope itemtype="https://schema.org/Article">
                     <header class="blog-article-header">
                         <!-- Rating Snippet -->
-                        <div class="pr-rating-pill" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
-                            <span>⭐ <strong><span itemprop="ratingValue">4.9</span> / 5.0</strong></span>
+                        <div class="pr-rating-pill">
+                            <span>⭐ <strong>4.9 / 5.0</strong></span>
                             <span>&middot;</span>
-                            <span>Over <span itemprop="reviewCount">1,840</span>+ Enrolled Students</span>
+                            <span>Over 1,840+ Enrolled Students</span>
                             <span>&middot;</span>
                             <span>100% Free Playlist</span>
-                            <meta itemprop="bestRating" content="5">
-                            <meta itemprop="worstRating" content="1">
                         </div>
-
-                        <h1 class="blog-article-title" itemprop="headline">
+<h1 class="blog-article-title" itemprop="headline">
                             Adobe Premiere Pro Full Course in Hindi – 99+ Free Practical Video Editing Tutorials Playlist
                         </h1>
 

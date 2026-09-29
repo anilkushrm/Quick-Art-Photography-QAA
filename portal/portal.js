@@ -187,6 +187,7 @@ async function logoutStudent() {
   } catch (e) {}
   studentToken = '';
   localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem('qa_student_token');
   currentStudent = null;
   currentCourse = null;
   currentLesson = null;
@@ -3339,6 +3340,7 @@ async function launchRazorpayCheckout({ courseId, name, phone, couponCode }) {
           // AUTO-ACCESS GRANTED ON SUCCESSFUL VERIFIED PAYMENT!
           studentToken = verifyRes.token;
           localStorage.setItem(TOKEN_KEY, studentToken);
+          localStorage.setItem('qa_student_token', studentToken);
           currentStudent = verifyRes.student;
           window._currentStudent = currentStudent;
           if (window.qaTrackPurchase) qaTrackPurchase(orderRes, response, courseId);
@@ -3506,6 +3508,7 @@ if (modalCheckoutForm) {
 
             studentToken = verifyRes.token;
             localStorage.setItem(TOKEN_KEY, studentToken);
+            localStorage.setItem('qa_student_token', studentToken);
             currentStudent = verifyRes.student;
             window._currentStudent = currentStudent;
             if (window.qaTrackPurchase) qaTrackPurchase(orderRes, response, courseId);

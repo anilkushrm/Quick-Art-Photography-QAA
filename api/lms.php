@@ -2770,15 +2770,19 @@ if ($action === 'verify-offline-admission-payment' && $method === 'POST') {
 
     $admCourseTitle = '';
 
+    $admRecord = null;
     foreach ($admissions as &$adm) {
         if ($adm['id'] === $admissionId || (!empty($adm['razorpayOrderId']) && $adm['razorpayOrderId'] === $orderId)) {
             $adm['paymentStatus'] = 'paid';
+            $adm['isPaid500'] = true;
+            $adm['isApproved'] = true;
             $adm['status'] = 'confirmed';
             $adm['razorpayPaymentId'] = $paymentId;
             $adm['paidAt'] = date('c');
             $studentPhone = $adm['phone'];
             $studentName = $adm['fullName'];
             $admCourseTitle = $adm['courseTitle'] ?? '';
+            $admRecord = $adm;
             $matched = true;
             break;
         }
@@ -2809,6 +2813,7 @@ if ($action === 'verify-offline-admission-payment' && $method === 'POST') {
         // Unlock course in My Courses only for students who paid ₹500
         $courseId = map_offline_course_id($admCourseTitle);
         $students = get_all_students();
+        $foundStu = false;
         foreach ($students as &$stu) {
             if (($stu['phone'] ?? '') === $studentPhone) {
                 if (!isset($stu['enrolledCourses']) || !is_array($stu['enrolledCourses'])) {
@@ -2820,10 +2825,35 @@ if ($action === 'verify-offline-admission-payment' && $method === 'POST') {
                 $stu['isPaid500'] = true;
                 $stu['paymentStatus'] = 'paid';
                 $stu['appliedCourse'] = $admCourseTitle;
+                $stu['isApproved'] = true;
+                $stu['status'] = 'active';
+                $foundStu = true;
                 break;
             }
         }
         unset($stu);
+
+        if (!$foundStu) {
+            $students[] = [
+                'id'                 => 'stu_' . time() . '_' . substr(md5($studentPhone), 0, 4),
+                'name'               => $studentName,
+                'phone'              => $studentPhone,
+                'email'              => $admRecord['email'] ?? '',
+                'avatar'             => $admRecord['photoUrl'] ?? '',
+                'enrolledCourses'    => [$courseId],
+                'isOfflineStudent'   => true,
+                'offlineAdmissionId' => $admissionId,
+                'appliedCourse'      => $admCourseTitle,
+                'paymentStatus'      => 'paid',
+                'isPaid500'          => true,
+                'isApproved'         => true,
+                'status'             => 'active',
+                'studioName'         => $admRecord['studioName'] ?? '',
+                'currentRole'        => $admRecord['currentRole'] ?? '',
+                'workCity'           => $admRecord['city'] ?? '',
+                'registeredAt'       => date('c')
+            ];
+        }
         save_all_students($students);
 
         $sessionToken = create_student_session($studentPhone);

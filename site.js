@@ -1151,6 +1151,53 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         initStatsCounter();
     }
+
+    // ═════════════════════════════════════════════════════════════════════
+    // Universal Smooth Scroll Reveal & High-Performance Page Speed Boost
+    // ═════════════════════════════════════════════════════════════════════
+    const initPagePolish = () => {
+        if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const revealObserver = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('qa-revealed');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { rootMargin: '0px 0px -40px 0px', threshold: 0.08 });
+
+            document.querySelectorAll(
+                '.hub-card, .qa-road-card, .lp-stat-item, .lp-feature-card, .qa-feature-card, .glass-dark, .qa-road-step, .course-decor-card, .hub-review-card'
+            ).forEach(el => {
+                el.classList.add('qa-reveal-item');
+                revealObserver.observe(el);
+            });
+        }
+
+        // Instant Navigation: Prefetch internal links on desktop hover
+        if ('connection' in navigator && (navigator.connection.saveData || /(2|3)g/.test(navigator.connection.effectiveType))) {
+            return;
+        }
+        const prefetchedUrls = new Set();
+        document.addEventListener('pointerenter', event => {
+            const link = event.target?.closest?.('a[href]');
+            if (!link) return;
+            const url = link.href;
+            if (url && url.startsWith(location.origin) && !url.includes('#') && !url.endsWith('.pdf') && !prefetchedUrls.has(url)) {
+                prefetchedUrls.add(url);
+                const prefetch = document.createElement('link');
+                prefetch.rel = 'prefetch';
+                prefetch.href = url;
+                document.head.appendChild(prefetch);
+            }
+        }, { passive: true, capture: true });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPagePolish);
+    } else {
+        initPagePolish();
+    }
 })();
 
 

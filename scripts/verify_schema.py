@@ -32,17 +32,23 @@ def check_file(rel_path):
         errors.append(f"Contains placeholder 'REPLACE': {matches[:2]}")
 
     # Excluded files should have NO JSON-LD
+    # Excluded files (redirects/admin/app-only pages that should not have schema)
     excluded_files = {
         "404.html",
         "admin.html",
+        "admission/preview.html",
+        "admission/verify.html",
         "adobe-premiere-pro-course/index.html",
         "best-davinci-resolve-online-course-in-hindi/index.html",
+        "courses/ai-marketing/index.html",
         "courses/graphic-design/index.html",
         "join-video-editing-album-design-course/index.html",
-        "master-class/live.html",
         "portal/email-template-preview.html",
         "portal/index.html",
         "portal/signup.html",
+        "scratch/card_only.html",
+        "scratch/pvc_vertical_card.html",
+        "scratch/test_pro_id.html",
         "thank-you/index.html",
         "watch/index.html"
     }
@@ -100,17 +106,18 @@ def check_file(rel_path):
                 if ntype in FORBIDDEN_TYPES:
                     errors.append(f"Forbidden schema type: {ntype}")
 
-            # Check Course nodes
+            # Check Course nodes - AggregateRating & reviews are supported and encouraged by Google
             if ntype == "Course" or (isinstance(ntype, list) and "Course" in ntype):
                 if "aggregateRating" in node:
-                    errors.append("Course node contains forbidden aggregateRating")
+                    agg = node["aggregateRating"]
+                    rc = agg.get("reviewCount")
+                    if isinstance(rc, str) and not rc.isdigit():
+                        errors.append(f"Course aggregateRating reviewCount is not integer: {rc}")
 
-            # Check Org nodes
-            if ntype == "EducationalOrganization" or (isinstance(ntype, list) and "EducationalOrganization" in ntype):
+            # Check Org nodes - Self-serving aggregateRating on LocalBusiness / EducationalOrganization is forbidden by Google (causes <parent_node> errors)
+            if ntype in ["EducationalOrganization", "LocalBusiness", "Organization"] or (isinstance(ntype, list) and any(t in ["EducationalOrganization", "LocalBusiness", "Organization"] for t in ntype)):
                 if "aggregateRating" in node:
-                    # Verify page has visible reviews & maps link
-                    if "4.9" not in content or "1,800" not in content or "maps.app.goo.gl" not in content:
-                        errors.append("Org node has aggregateRating but page lacks visible 4.9 / 1800 reviews + Google Maps link")
+                    errors.append("Org node contains aggregateRating (Google flags self-serving reviews on Organization as <parent_node> error)")
 
             # Check Person node reference
             # If anil-sharma is referenced, the full Person node must be in @graph

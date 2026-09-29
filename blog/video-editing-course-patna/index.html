@@ -89,249 +89,297 @@
 
     <!-- ═══ ADVANCE RICH SNIPPET STRUCTURED DATA (JSON-LD) ═══ -->
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
-      "@graph": [
+      "@type": "Course",
+      "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#course",
+      "name": "Best Video Editing Course in Patna",
+      "description": "100% practical video editing training in Patna Bihar with live wedding editing classes, Premiere Pro, After Effects, DaVinci Resolve color grading, and hostel facility.",
+      "provider": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": "In-Person",
+        "courseWorkload": "PT6W",
+        "instructor": {
+          "@id": "https://quickartphotography.in/#anil-sharma"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": 4.9,
+        "bestRating": 5,
+        "worstRating": 1,
+        "ratingCount": 1840,
+        "reviewCount": 1840
+      },
+      "review": [
         {
-          "@type": "Course",
-          "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#course",
-          "name": "Best Video Editing Course in Patna",
-          "description": "100% practical video editing training in Patna Bihar with live wedding editing classes, Premiere Pro, After Effects, DaVinci Resolve color grading, and hostel facility.",
-          "provider": {
-            "@id": "https://quickartphotography.in/#academy"
-          },
-          "hasCourseInstance": {
-            "@type": "CourseInstance",
-            "courseMode": "In-Person",
-            "courseWorkload": "PT6W",
-            "instructor": {
-              "@id": "https://quickartphotography.in/#anil-sharma"
-            }
-          },
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "bestRating": "5",
-            "worstRating": "1",
-            "ratingCount": "1840",
-            "reviewCount": "1840"
-          },
-          "offers": {
-            "@type": "Offer",
-            "category": "Vocational Training",
-            "availability": "https://schema.org/InStock",
-            "priceCurrency": "INR"
-          }
-        },
-        {
-          "@type": [
-            "EducationalOrganization",
-            "LocalBusiness"
-          ],
-          "@id": "https://quickartphotography.in/#academy",
-          "name": "Quick Art Photography Academy",
-          "alternateName": [
-            "Quick Art Academy",
-            "QAA Siwan Patna",
-            "Quick Art Video Editing Institute"
-          ],
-          "url": "https://quickartphotography.in/",
-          "logo": {
-            "@type": "ImageObject",
-            "@id": "https://quickartphotography.in/#logo",
-            "url": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
-            "width": 798,
-            "height": 795
-          },
-          "image": [
-            "https://quickartphotography.in/assets/blog-video-editing-course-patna-hero.jpg",
-            "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp"
-          ],
-          "description": "Bihar's leading practical video editing and filmmaking academy providing 100% hands-on training on Adobe Premiere Pro, After Effects, DaVinci Resolve, and Wedding Film Editing with free hostel for Patna & Bihar students.",
-          "telephone": "+919939800780",
-          "email": "support@quickartphotography.in",
-          "priceRange": "₹₹",
-          "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "Ayodhya Puri, Near Lalit Bus Stand",
-            "addressLocality": "Siwan",
-            "addressRegion": "Bihar",
-            "postalCode": "841226",
-            "addressCountry": "IN"
-          },
-          "geo": {
-            "@type": "GeoCoordinates",
-            "latitude": 26.2289734,
-            "longitude": 84.3347944
-          },
-          "hasMap": "https://maps.app.goo.gl/FaDPbjTHsV5QehoU9",
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "ratingCount": "1840",
-            "reviewCount": "1840",
-            "bestRating": "5",
-            "worstRating": "1"
-          },
-          "areaServed": [
-            { "@type": "City", "name": "Patna" },
-            { "@type": "City", "name": "Siwan" },
-            { "@type": "City", "name": "Gopalganj" },
-            { "@type": "City", "name": "Chhapra" },
-            { "@type": "City", "name": "Muzaffarpur" },
-            { "@type": "City", "name": "Gaya" },
-            { "@type": "State", "name": "Bihar" },
-            { "@type": "Country", "name": "India" }
-          ]
-        },
-        {
-          "@type": "Person",
-          "@id": "https://quickartphotography.in/#anil-sharma",
-          "name": "Anil Sharma",
-          "jobTitle": "Founder & Lead Mentor",
-          "url": "https://quickartphotography.in/about-us/",
-          "image": "https://quickartphotography.in/assets/anil-sharma.webp",
-          "worksFor": {
-            "@id": "https://quickartphotography.in/#academy"
-          }
-        },
-        {
-          "@type": "WebSite",
-          "@id": "https://quickartphotography.in/#website",
-          "url": "https://quickartphotography.in/",
-          "name": "Quick Art Photography Academy",
-          "inLanguage": "hi-IN",
-          "publisher": {
-            "@id": "https://quickartphotography.in/#academy"
-          }
-        },
-        {
-          "@type": "WebPage",
-          "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#webpage",
-          "url": "https://quickartphotography.in/blog/video-editing-course-patna/",
-          "name": "Best Video Editing Course in Patna | Video Editing Training & Classes",
-          "isPartOf": {
-            "@id": "https://quickartphotography.in/#website"
-          },
-          "about": {
-            "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#course"
-          },
-          "inLanguage": "hi-IN",
-          "description": "Best Video Editing Course in Patna: 100% practical video editing training in Premiere Pro, DaVinci & wedding editing classes for beginners. Call 9939800780!",
-          "primaryImageOfPage": {
-            "@type": "ImageObject",
-            "url": "https://quickartphotography.in/assets/blog-video-editing-course-patna-hero.jpg"
-          },
-          "breadcrumb": {
-            "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#breadcrumb"
-          },
-          "mainEntity": {
-            "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#article"
-          }
-        },
-        {
-          "@type": "BreadcrumbList",
-          "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#breadcrumb",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://quickartphotography.in/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Blog",
-              "item": "https://quickartphotography.in/blog/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 3,
-              "name": "Video Editing Course in Patna",
-              "item": "https://quickartphotography.in/blog/video-editing-course-patna/"
-            }
-          ]
-        },
-        {
-          "@type": "BlogPosting",
-          "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#article",
-          "headline": "Best Video Editing Course in Patna – Practical Training & Classes at Quick Art Academy",
-          "description": "Complete guide on Video Editing Course in Patna covering Premiere Pro, DaVinci Resolve color grading, wedding video editing classes, duration, fees, hostel, and ISO certificate.",
-          "image": {
-            "@type": "ImageObject",
-            "url": "https://quickartphotography.in/assets/blog-video-editing-course-patna-hero.jpg",
-            "width": 1024,
-            "height": 576
-          },
-          "keywords": "Video Editing Course in Patna, Video Editing Training in Patna, Video Editing Classes in Patna for Beginners, Wedding Video Editing Classes in Patna, Best Video Editing Course in Patna",
-          "datePublished": "2026-09-27",
-          "dateModified": "2026-09-27",
+          "@type": "Review",
           "author": {
-            "@id": "https://quickartphotography.in/#anil-sharma"
+            "@type": "Person",
+            "name": "Alok Ranjan (Kankarbagh, Patna)"
           },
-          "publisher": {
-            "@id": "https://quickartphotography.in/#academy"
+          "datePublished": "2026-08-16",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": 5,
+            "bestRating": 5,
+            "worstRating": 1
           },
-          "mainEntityOfPage": {
-            "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#webpage"
-          },
-          "isPartOf": {
-            "@type": "Blog",
-            "@id": "https://quickartphotography.in/blog/#blog",
-            "name": "Quick Art Blog",
-            "url": "https://quickartphotography.in/blog/"
-          },
-          "inLanguage": "hi-IN"
+          "reviewBody": "Patna me institutes sirf theoretical classes dete the. Quick Art me maine 6 hafte ka course kiya jisme real wedding RAW footage par timeline cut, color grading aur sound design seekhne ko mila. Free hostel ka fayda sabse bada tha."
         },
         {
-          "@type": "FAQPage",
-          "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#faq",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "क्या ये Video Editing Classes in Patna for Beginners के लिए बिल्कुल सही है?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "हाँ, बिल्कुल! हमारी Video Editing Classes in Patna for Beginners पूरी तरह से जीरो लेवल से शुरू होती हैं। यदि आपको पहले से एडिटिंग का कोई अनुभव नहीं है, तब भी बेसिक कंप्यूटर ज्ञान के साथ आप पहले ही हफ्ते से प्रैक्टिकल कटिंग और टाइमलाइन पर काम करना सीख जाते हैं।"
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Patna के स्टूडेंट्स के लिए Quick Art Academy की Video Editing Training क्यों बेहतर है?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "पटना के ज्यादातर कोचिंग सेंटर्स में सिर्फ थ्योरी या स्लो सिस्टम पर बेसिक टूल्स सिखाए जाते हैं। Quick Art Academy में हर स्टूडेंट को हाई-एंड डेडिकेटेड एडिटिंग वर्कस्टेशन मिलता है, जहाँ वे असली 4K मल्टी-कैमरा वेडिंग फुटेज, ल्यूमेट्री कलर ग्रेडिंग और आफ्टर इफेक्ट्स पर लाइव प्रैक्टिस करते हैं। साथ ही पटना के महंगे पीजी खर्च से बचाने के लिए हॉस्टल सुविधा भी मिलती है।"
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Wedding Video Editing Classes in Patna में क्या-क्या सिखाया जाता है?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "वेडिंग एडिटिंग क्लासेस में सिनेमैटिक टीज़र (1 मिनट), 3-5 मिनट का वेडिंग हाईलाइट, ट्रेडिशनल सॉन्ग मिक्सिंग, ऑडियो बीट सिंकिंग, मल्टी-कैमरा सिंक्रोनाइज़ेशन, ब्राइडल स्लो-मोशन और फिल्म LUTs कलर ग्रेडिंग सिखाई जाती है।"
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Best Video Editing Course in Patna पूरा करने के बाद सर्टिफिकेट और प्लेसमेंट सपोर्ट मिलता है?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "हाँ, कोर्स पूरा होने पर ISO 9001:2015 Accredited Industry-Recognized Certificate मिलता है। साथ ही हम स्टूडेंट्स का प्रोफेशनल शोरील पोर्टफोलियो तैयार करवाते हैं और पटना व बिहार के टॉप वेडिंग स्टूडियोज तथा फ्रीलांसिंग क्लाइंट्स के साथ काम दिलाने में पूरा सहयोग करते हैं।"
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Patna से Quick Art Academy कैंपस कैसे पहुँचें?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "पटना जंक्शन से सीवान जंक्शन के लिए रोजाना कई सीधी सुपरफास्ट व इंटरसिटी ट्रेनें (जैसे वैशाली एक्सप्रेस, मौर्य एक्सप्रेस, इंटरसिटी) उपलब्ध हैं जो सिर्फ 2 से 2.5 घंटे में पहुँचा देती हैं। कैंपस सीवान स्टेशन और ललित बस स्टैंड के बिल्कुल पास अयोध्या पुरी में स्थित है।"
-              }
-            }
-          ]
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Md. Tariq (Danapur, Patna)"
+          },
+          "datePublished": "2026-07-25",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": 5,
+            "bestRating": 5,
+            "worstRating": 1
+          },
+          "reviewBody": "Anil Sharma sir ka practical sikhane ka tarika lajawab hai. Course complete hone ke baad ab mai freelance wedding projects se har mahine acchi earning kar raha hu."
+        }
+      ],
+      "offers": {
+        "@type": "Offer",
+        "category": "Vocational Training",
+        "availability": "https://schema.org/InStock",
+        "priceCurrency": "INR"
+      }
+    },
+    {
+      "@type": [
+        "EducationalOrganization",
+        "LocalBusiness"
+      ],
+      "@id": "https://quickartphotography.in/#academy",
+      "name": "Quick Art Photography Academy",
+      "alternateName": [
+        "Quick Art Academy",
+        "QAA Siwan Patna",
+        "Quick Art Video Editing Institute"
+      ],
+      "url": "https://quickartphotography.in/",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://quickartphotography.in/#logo",
+        "url": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp",
+        "width": 798,
+        "height": 795
+      },
+      "image": [
+        "https://quickartphotography.in/assets/blog-video-editing-course-patna-hero.jpg",
+        "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp"
+      ],
+      "description": "Bihar's leading practical video editing and filmmaking academy providing 100% hands-on training on Adobe Premiere Pro, After Effects, DaVinci Resolve, and Wedding Film Editing with free hostel for Patna & Bihar students.",
+      "telephone": "+919939800780",
+      "email": "support@quickartphotography.in",
+      "priceRange": "₹₹",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Ayodhya Puri, Near Lalit Bus Stand",
+        "addressLocality": "Siwan",
+        "addressRegion": "Bihar",
+        "postalCode": "841226",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 26.2289734,
+        "longitude": 84.3347944
+      },
+      "hasMap": "https://maps.app.goo.gl/FaDPbjTHsV5QehoU9",
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Patna"
+        },
+        {
+          "@type": "City",
+          "name": "Siwan"
+        },
+        {
+          "@type": "City",
+          "name": "Gopalganj"
+        },
+        {
+          "@type": "City",
+          "name": "Chhapra"
+        },
+        {
+          "@type": "City",
+          "name": "Muzaffarpur"
+        },
+        {
+          "@type": "City",
+          "name": "Gaya"
+        },
+        {
+          "@type": "State",
+          "name": "Bihar"
+        },
+        {
+          "@type": "Country",
+          "name": "India"
+        }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://quickartphotography.in/#anil-sharma",
+      "name": "Anil Sharma",
+      "jobTitle": "Founder & Lead Mentor",
+      "url": "https://quickartphotography.in/about-us/",
+      "image": "https://quickartphotography.in/assets/anil-sharma.webp",
+      "worksFor": {
+        "@id": "https://quickartphotography.in/#academy"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://quickartphotography.in/#website",
+      "url": "https://quickartphotography.in/",
+      "name": "Quick Art Photography Academy",
+      "inLanguage": "hi-IN",
+      "publisher": {
+        "@id": "https://quickartphotography.in/#academy"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#webpage",
+      "url": "https://quickartphotography.in/blog/video-editing-course-patna/",
+      "name": "Best Video Editing Course in Patna | Video Editing Training & Classes",
+      "isPartOf": {
+        "@id": "https://quickartphotography.in/#website"
+      },
+      "about": {
+        "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#course"
+      },
+      "inLanguage": "hi-IN",
+      "description": "Best Video Editing Course in Patna: 100% practical video editing training in Premiere Pro, DaVinci & wedding editing classes for beginners. Call 9939800780!",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://quickartphotography.in/assets/blog-video-editing-course-patna-hero.jpg"
+      },
+      "breadcrumb": {
+        "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#article"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://quickartphotography.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://quickartphotography.in/blog/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Video Editing Course in Patna",
+          "item": "https://quickartphotography.in/blog/video-editing-course-patna/"
+        }
+      ]
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#article",
+      "headline": "Best Video Editing Course in Patna – Practical Training & Classes at Quick Art Academy",
+      "description": "Complete guide on Video Editing Course in Patna covering Premiere Pro, DaVinci Resolve color grading, wedding video editing classes, duration, fees, hostel, and ISO certificate.",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://quickartphotography.in/assets/blog-video-editing-course-patna-hero.jpg",
+        "width": 1024,
+        "height": 576
+      },
+      "keywords": "Video Editing Course in Patna, Video Editing Training in Patna, Video Editing Classes in Patna for Beginners, Wedding Video Editing Classes in Patna, Best Video Editing Course in Patna",
+      "datePublished": "2026-09-27",
+      "dateModified": "2026-09-27",
+      "author": {
+        "@id": "https://quickartphotography.in/#anil-sharma"
+      },
+      "publisher": {
+        "@id": "https://quickartphotography.in/#academy"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#webpage"
+      },
+      "isPartOf": {
+        "@type": "Blog",
+        "@id": "https://quickartphotography.in/blog/#blog",
+        "name": "Quick Art Blog",
+        "url": "https://quickartphotography.in/blog/"
+      },
+      "inLanguage": "hi-IN"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://quickartphotography.in/blog/video-editing-course-patna/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "क्या ये Video Editing Classes in Patna for Beginners के लिए बिल्कुल सही है?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "हाँ, बिल्कुल! हमारी Video Editing Classes in Patna for Beginners पूरी तरह से जीरो लेवल से शुरू होती हैं। यदि आपको पहले से एडिटिंग का कोई अनुभव नहीं है, तब भी बेसिक कंप्यूटर ज्ञान के साथ आप पहले ही हफ्ते से प्रैक्टिकल कटिंग और टाइमलाइन पर काम करना सीख जाते हैं।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Patna के स्टूडेंट्स के लिए Quick Art Academy की Video Editing Training क्यों बेहतर है?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "पटना के ज्यादातर कोचिंग सेंटर्स में सिर्फ थ्योरी या स्लो सिस्टम पर बेसिक टूल्स सिखाए जाते हैं। Quick Art Academy में हर स्टूडेंट को हाई-एंड डेडिकेटेड एडिटिंग वर्कस्टेशन मिलता है, जहाँ वे असली 4K मल्टी-कैमरा वेडिंग फुटेज, ल्यूमेट्री कलर ग्रेडिंग और आफ्टर इफेक्ट्स पर लाइव प्रैक्टिस करते हैं। साथ ही पटना के महंगे पीजी खर्च से बचाने के लिए हॉस्टल सुविधा भी मिलती है।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wedding Video Editing Classes in Patna में क्या-क्या सिखाया जाता है?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "वेडिंग एडिटिंग क्लासेस में सिनेमैटिक टीज़र (1 मिनट), 3-5 मिनट का वेडिंग हाईलाइट, ट्रेडिशनल सॉन्ग मिक्सिंग, ऑडियो बीट सिंकिंग, मल्टी-कैमरा सिंक्रोनाइज़ेशन, ब्राइडल स्लो-मोशन और फिल्म LUTs कलर ग्रेडिंग सिखाई जाती है।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Best Video Editing Course in Patna पूरा करने के बाद सर्टिफिकेट और प्लेसमेंट सपोर्ट मिलता है?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "हाँ, कोर्स पूरा होने पर ISO 9001:2015 Accredited Industry-Recognized Certificate मिलता है। साथ ही हम स्टूडेंट्स का प्रोफेशनल शोरील पोर्टफोलियो तैयार करवाते हैं और पटना व बिहार के टॉप वेडिंग स्टूडियोज तथा फ्रीलांसिंग क्लाइंट्स के साथ काम दिलाने में पूरा सहयोग करते हैं।"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Patna से Quick Art Academy कैंपस कैसे पहुँचें?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "पटना जंक्शन से सीवान जंक्शन के लिए रोजाना कई सीधी सुपरफास्ट व इंटरसिटी ट्रेनें (जैसे वैशाली एक्सप्रेस, मौर्य एक्सप्रेस, इंटरसिटी) उपलब्ध हैं जो सिर्फ 2 से 2.5 घंटे में पहुँचा देती हैं। कैंपस सीवान स्टेशन और ललित बस स्टैंड के बिल्कुल पास अयोध्या पुरी में स्थित है।"
+          }
         }
       ]
     }
+  ]
+}
     </script>
 </head>
 

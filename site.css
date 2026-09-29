@@ -6443,3 +6443,149 @@ html.qa-animations-active .qa-scroll-right.is-revealed {
 .qa-home-hero {
   border-bottom: 1px solid rgba(216, 161, 83, 0.18);
 }
+
+/* ==========================================================================
+   SITE-WIDE LUXURY POLISH: ADVANCED MICRO-ANIMATIONS & COLOR HARMONY
+   Applied globally across all pages (Home, Online, Offline, Masterclass, Blog)
+   ========================================================================== */
+
+/* 1. Global Color Consistency Tokens */
+:root {
+  --qa-gold-primary: #d8a153;
+  --qa-gold-light: #f6d389;
+  --qa-gold-dark: #b88238;
+  --qa-gold-gradient: linear-gradient(135deg, #d8a153 0%, #f6d389 100%);
+  --qa-gold-glow: rgba(216, 161, 83, 0.28);
+  --qa-dark-bg: #090a0f;
+  --qa-dark-surface: rgba(18, 20, 29, 0.88);
+  --qa-border-subtle: rgba(255, 255, 255, 0.08);
+  --qa-border-gold: rgba(216, 161, 83, 0.25);
+  --qa-emerald-success: #22c55e;
+}
+
+/* 2. Button Light Sweep Shimmer Animation */
+:is(.qa-demo, .lp-btn-primary, .hub-btn-enroll, .btn-gold, .lp-btn-card, .btn-primary) {
+  position: relative !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease !important;
+}
+
+:is(.qa-demo, .lp-btn-primary, .hub-btn-enroll, .btn-gold, .lp-btn-card, .btn-primary)::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -140% !important;
+  width: 60% !important;
+  height: 100% !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  ) !important;
+  transform: skewX(-25deg) !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+
+:is(.qa-demo, .lp-btn-primary, .hub-btn-enroll, .btn-gold, .lp-btn-card, .btn-primary):hover::after {
+  left: 150% !important;
+  transition: left 0.75s ease-in-out !important;
+}
+
+/* 3. Smooth Card Hover Elevation with Warm Gold Aura */
+:is(.hub-card, .qa-road-card, .lp-stat-item, .lp-feature-card, .qa-feature-card, .glass-dark, .lp-media-card) {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease, box-shadow 0.28s ease !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :is(.hub-card, .qa-road-card, .lp-feature-card, .qa-feature-card):hover {
+    transform: translateY(-5px) !important;
+    border-color: rgba(216, 161, 83, 0.45) !important;
+    box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.75), 0 0 30px -5px rgba(216, 161, 83, 0.2) !important;
+  }
+}
+
+/* 4. Ambient Trust Badge Glow Pulse */
+@keyframes luxuryPulseRing {
+  0% { box-shadow: 0 0 0 0 rgba(216, 161, 83, 0.38); }
+  70% { box-shadow: 0 0 0 8px rgba(216, 161, 83, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(216, 161, 83, 0); }
+}
+
+.lp-badge-pill, .hub-hero-badge {
+  animation: luxuryPulseRing 3.2s infinite cubic-bezier(0.66, 0, 0, 1) !important;
+}
+
+/* 5. High-Performance Hardware-Accelerated Scroll Reveal */
+.qa-reveal-item {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.qa-reveal-item.qa-revealed {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qa-reveal-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .lp-badge-pill, .hub-hero-badge {
+    animation: none !important;
+  }
+  :is(.qa-demo, .lp-btn-primary, .hub-btn-enroll, .btn-gold, .lp-btn-card, .btn-primary)::after {
+    display: none !important;
+  }
+}
+/* ==========================================================================
+   PERFORMANCE: Content Visibility for Off-Screen Sections
+   Tells browser to skip rendering content until it's near the viewport
+   ========================================================================== */
+
+/* Apply content-visibility to sections that are typically below the fold */
+:is(
+  .lp-features-section,
+  .lp-how-section,
+  .lp-reviews-section,
+  .lp-faq-section,
+  .hub-courses-section,
+  .qa-courses-section,
+  .qa-reviews-section,
+  .qa-faq-section,
+  .qa-stats-section,
+  footer
+) {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 600px; /* estimated size to prevent CLS */
+}
+
+/* Critical: hero and above-fold sections must NOT have content-visibility */
+:is(
+  .lp-hero-section,
+  .hub-hero-section,
+  .qa-hero-section,
+  .qa-master-hero,
+  header,
+  nav
+) {
+  content-visibility: visible !important;
+}
+
+/* ==========================================================================
+   PERFORMANCE: Optimized Font Display for Zero FOUT
+   ========================================================================== */
+
+/* Ensure system font fallback is defined to prevent layout shift */
+body {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

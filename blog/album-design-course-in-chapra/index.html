@@ -15,7 +15,7 @@
     <title>Album Design Course in Chapra | Quick Art Photography Academy</title>
 
     <!-- ═══ ADVANCED SEO META TAGS (TARGETING ALL 5 PRIMARY KEYWORDS) ═══ -->
-    <meta name="description" content="Looking for the best Album Design Course in Chapra? Learn Wedding Album Design, Photoshop CC, creative layouts & typography with 100% practical training & free hostel.">
+    <meta name="description" content="Best Album Design Course in Chapra: Learn wedding album layouts, Photoshop CC retouching &amp; print files with 100% practical training &amp; free hostel.">
     <meta name="keywords" content="Album Design Course in Chapra, Wedding Album Design Chapra, Photoshop Album Design Course, Professional Album Making Course Chapra, Freelance Album Designer Training, Karizma Album Design Bihar, Photobook Canvera Design Chapra, Quick Art Photography Academy">
     <meta name="author" content="Anil Sharma — Quick Art Photography Academy">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -44,8 +44,6 @@
     <meta property="article:author" content="Anil Sharma">
     <meta property="article:section" content="Album Design">
     <meta property="article:tag" content="Album Design Course in Chapra">
-    <meta property="article:tag" content="Wedding Album Design Chapra">
-    <meta property="article:tag" content="Photoshop Album Design Course">
 
     <!-- ═══ TWITTER CARD META ═══ -->
     <meta name="twitter:card" content="summary_large_image">
@@ -461,21 +459,45 @@
         .chp-rating-strip {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 50px;
-            padding: 6px 16px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-            margin-bottom: 20px;
+            border: 1.5px solid #ebd9be;
+            border-radius: 9999px;
+            padding: 8px 20px;
+            box-shadow: 0 4px 16px rgba(216, 161, 83, 0.12), 0 1px 3px rgba(0, 0, 0, 0.04);
+            margin: 14px 0 22px;
             font-size: 0.9rem;
-            color: #334155;
+            line-height: 1.45;
+            color: #1e293b;
             font-weight: 600;
+            max-width: 100%;
+            box-sizing: border-box;
+            transition: all 0.25s ease;
+        }
+        .chp-rating-strip:hover {
+            border-color: #d8a153;
+            box-shadow: 0 6px 22px rgba(216, 161, 83, 0.22);
+            transform: translateY(-1px);
         }
         .chp-stars {
             color: #f59e0b;
-            letter-spacing: 1px;
+            letter-spacing: 2.5px;
+            font-size: 1.05rem;
             font-weight: 900;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1;
+            user-select: none;
+        }
+        .chp-rating-text {
+            color: #334155;
+            white-space: normal;
+        }
+        .chp-rating-text strong {
+            color: #0f172a;
+            font-weight: 800;
         }
 
         /* Hero Poster Display */
@@ -517,41 +539,69 @@
             font-weight: 700;
         }
 
-        /* Stat Counter Row */
+        /* Stat Counter Row - Strict 4 columns on desktop, 2x2 on tablet/mobile */
         .chp-stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 16px;
-            margin: 32px 0 40px;
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 16px !important;
+            margin: 32px 0 40px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
         }
         .chp-stat-card {
-            background: #ffffff;
-            border: 1.5px solid #ebd9be;
-            border-radius: 16px;
-            padding: 22px 20px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.04);
-            text-align: center;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            background: #ffffff !important;
+            border: 1.5px solid #ebd9be !important;
+            border-radius: 16px !important;
+            padding: 22px 14px !important;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.04) !important;
+            text-align: center !important;
+            transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+            box-sizing: border-box !important;
+            min-width: 0 !important;
         }
         .chp-stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 26px rgba(216,161,83,0.18);
+            transform: translateY(-4px) !important;
+            box-shadow: 0 10px 26px rgba(216,161,83,0.18) !important;
         }
         .chp-stat-num {
-            font-size: 2rem;
-            font-weight: 900;
-            color: #0f172a;
-            font-family: 'Outfit', sans-serif;
-            display: block;
-            margin-bottom: 4px;
-            background: linear-gradient(135deg, #0f172a 0%, #b88636 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: clamp(1.6rem, 2.2vw, 2.1rem) !important;
+            font-weight: 900 !important;
+            color: #0f172a !important;
+            font-family: 'Outfit', sans-serif !important;
+            display: block !important;
+            margin-bottom: 4px !important;
+            background: linear-gradient(135deg, #0f172a 0%, #b88636 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            line-height: 1.15 !important;
         }
         .chp-stat-label {
-            font-size: 0.88rem;
-            color: #64748b;
-            font-weight: 600;
+            font-size: 0.84rem !important;
+            color: #64748b !important;
+            font-weight: 600 !important;
+            line-height: 1.35 !important;
+            display: block !important;
+        }
+        @media (max-width: 900px) {
+            .chp-stat-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .chp-stat-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+            .chp-stat-card {
+                padding: 14px 10px !important;
+            }
+            .chp-stat-num {
+                font-size: 1.45rem !important;
+            }
+            .chp-stat-label {
+                font-size: 0.78rem !important;
+            }
         }
 
         /* Feature Highlight Cards */
@@ -684,38 +734,151 @@
             font-size: 1.4rem;
         }
 
-        /* Certificate Showcase Box */
+        /* Grand Certificate Showcase */
         .chp-cert-showcase {
-            background: radial-gradient(circle at 50% 30%, #151d30 0%, #090e1a 100%);
-            border: 2px solid rgba(216, 161, 83, 0.4);
-            border-radius: 20px;
-            padding: 36px 30px;
-            margin: 40px 0;
+            background: radial-gradient(circle at 50% 25%, #182238 0%, #090e1a 100%);
+            border: 2px solid rgba(216, 161, 83, 0.45);
+            border-radius: 24px;
+            padding: 44px 36px;
+            margin: 44px 0;
             color: #ffffff;
-            box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+            text-align: center;
         }
-        .chp-cert-grid {
-            display: grid;
-            grid-template-columns: 1.15fr 0.85fr;
-            gap: 32px;
-            align-items: center;
+        .chp-cert-header-center {
+            max-width: 760px;
+            margin: 0 auto 30px;
         }
-        @media (max-width: 860px) {
-            .chp-cert-grid {
-                grid-template-columns: 1fr;
-            }
+        .chp-cert-badge-gold {
+            display: inline-block;
+            background: rgba(216, 161, 83, 0.18);
+            border: 1px solid rgba(216, 161, 83, 0.5);
+            color: #fce09b;
+            padding: 6px 18px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
         }
-        .chp-cert-preview {
-            border-radius: 14px;
+        .chp-cert-showcase h2,
+        .chp-cert-title,
+        h2.chp-cert-title,
+        .blog-article-body .chp-cert-showcase h2,
+        .blog-article-body h2.chp-cert-title {
+            font-family: 'Outfit', sans-serif !important;
+            font-size: clamp(24px, 3.2vw, 36px) !important;
+            font-weight: 800 !important;
+            color: #ffffff !important;
+            margin: 0 0 14px !important;
+            padding: 0 !important;
+            border-bottom: none !important;
+            line-height: 1.25 !important;
+            text-align: center !important;
+        }
+        .chp-cert-showcase h2::after,
+        .chp-cert-title::after,
+        .blog-article-body .chp-cert-showcase h2::after,
+        .blog-article-body h2.chp-cert-title::after {
+            display: none !important;
+            content: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+        .chp-cert-subtitle,
+        .chp-cert-showcase p,
+        .blog-article-body .chp-cert-showcase p {
+            color: #cbd5e1 !important;
+            font-size: 1rem !important;
+            line-height: 1.65 !important;
+            margin: 0 !important;
+            text-align: center !important;
+        }
+        .chp-cert-large-preview {
+            position: relative;
+            max-width: 860px;
+            margin: 0 auto 32px;
+            border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
-            border: 1.5px solid rgba(216,161,83,0.5);
-            background: #fff;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 0 2px rgba(216, 161, 83, 0.55);
+            background: #ffffff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .chp-cert-preview img {
+        .chp-cert-large-preview:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 26px 60px rgba(216, 161, 83, 0.3), 0 0 0 2.5px rgba(216, 161, 83, 0.85);
+        }
+        .chp-cert-large-img {
             width: 100%;
             height: auto;
             display: block;
+            object-fit: contain;
+        }
+        .chp-cert-zoom-btn {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(11, 17, 32, 0.88);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #fce09b;
+            border: 1px solid rgba(216, 161, 83, 0.6);
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .chp-cert-zoom-btn:hover {
+            background: #d8a153;
+            color: #090e1a;
+            border-color: #d8a153;
+        }
+        .chp-cert-features-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            max-width: 860px;
+            margin: 0 auto 32px;
+            text-align: left;
+        }
+        .chp-cert-pill-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        .chp-cert-pill-icon {
+            font-size: 1.5rem;
+            line-height: 1;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .chp-cert-pill-title {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            font-family: 'Outfit', sans-serif;
+        }
+        .chp-cert-pill-desc {
+            color: #94a3b8;
+            font-size: 0.82rem;
+            line-height: 1.45;
+        }
+        .chp-cert-action-row {
+            display: flex;
+            justify-content: center;
         }
 
         /* Reviews Box */
@@ -758,18 +921,48 @@
             border-color: rgba(216,161,83,0.5);
             background: rgba(255, 255, 255, 0.08);
         }
-        .chp-reviewer-name {
-            font-weight: 800;
-            color: #ffffff;
-            font-size: 1rem;
-            margin: 0;
-            font-family: 'Outfit', sans-serif;
+        .chp-reviews-box h2,
+        .blog-article-body .chp-reviews-box h2 {
+            color: #ffffff !important;
+            border-bottom: none !important;
+            padding-bottom: 0 !important;
+            margin: 0 !important;
+        }
+        .chp-reviews-box h2::after,
+        .blog-article-body .chp-reviews-box h2::after {
+            display: none !important;
+            content: none !important;
+        }
+        .chp-reviews-box p,
+        .blog-article-body .chp-reviews-box p {
+            color: #e2e8f0 !important;
+        }
+        .chp-reviewer-name,
+        h3.chp-reviewer-name,
+        .chp-reviews-box .chp-reviewer-name,
+        .chp-reviews-box h3,
+        .blog-article-body .chp-reviews-box h3,
+        .blog-article-body h3.chp-reviewer-name {
+            font-weight: 800 !important;
+            color: #ffffff !important;
+            font-size: 1.08rem !important;
+            margin: 0 0 3px 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            font-family: 'Outfit', sans-serif !important;
+            line-height: 1.3 !important;
+        }
+        .chp-reviewer-name::after,
+        .chp-reviews-box h3::after,
+        .blog-article-body .chp-reviews-box h3::after {
+            display: none !important;
+            content: none !important;
         }
         .chp-reviewer-place {
-            color: #d8a153;
-            font-size: 0.82rem;
-            font-weight: 700;
-            letter-spacing: 0.03em;
+            color: #d8a153 !important;
+            font-size: 0.85rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.03em !important;
         }
 
         /* Map & Travel Directions Box */
@@ -812,6 +1005,21 @@
             color: #ffffff;
             margin: 44px 0;
             box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+        }
+        .chp-cta-box h2,
+        .blog-article-body .chp-cta-box h2 {
+            color: #ffffff !important;
+            border-bottom: none !important;
+            padding-bottom: 0 !important;
+        }
+        .chp-cta-box h2::after,
+        .blog-article-body .chp-cta-box h2::after {
+            display: none !important;
+            content: none !important;
+        }
+        .chp-cta-box p,
+        .blog-article-body .chp-cta-box p {
+            color: #cbd5e1 !important;
         }
         .chp-cta-btns {
             display: flex;
@@ -938,8 +1146,74 @@
             row-gap: 6px !important;
         }
         .blog-article-meta-row {
+            display: flex;
+            align-items: center;
             flex-wrap: wrap !important;
             gap: 10px 16px !important;
+            padding: 14px 0 16px;
+            border-top: 1px solid #f1f5f9;
+            border-bottom: 1px solid #f1f5f9;
+            margin-top: 18px;
+            font-size: 0.88rem;
+            color: #64748b;
+        }
+        .blog-meta-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .blog-meta-avatar {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 50% !important;
+            object-fit: cover !important;
+            border: 2px solid #d8a153 !important;
+            flex-shrink: 0 !important;
+        }
+        .blog-meta-name {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 0.92rem;
+            line-height: 1.2;
+        }
+        .blog-meta-role {
+            font-size: 0.78rem;
+            color: #b88636;
+            font-weight: 600;
+        }
+        .blog-meta-sep {
+            color: #cbd5e1;
+            font-size: 0.8rem;
+        }
+        .blog-meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #64748b;
+            font-size: 0.88rem;
+        }
+        .blog-meta-icon {
+            width: 16px !important;
+            height: 16px !important;
+            min-width: 16px !important;
+            min-height: 16px !important;
+            max-width: 16px !important;
+            max-height: 16px !important;
+            flex-shrink: 0 !important;
+            display: inline-block;
+            vertical-align: middle;
+            color: #b88636;
+        }
+        .chp-iso-badge {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            padding: 3px 10px;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            display: inline-flex;
+            align-items: center;
         }
 
         @media (max-width: 1024px) {
@@ -966,6 +1240,17 @@
                 font-size: 0.95rem !important;
                 line-height: 1.65 !important;
             }
+            .chp-rating-strip {
+                border-radius: 14px !important;
+                padding: 10px 14px !important;
+                gap: 10px !important;
+                width: 100% !important;
+                font-size: 0.84rem !important;
+            }
+            .chp-stars {
+                font-size: 0.95rem !important;
+                letter-spacing: 1.5px !important;
+            }
             .chp-stat-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 12px;
@@ -980,7 +1265,22 @@
                 padding: 18px;
             }
             .chp-cert-showcase {
-                padding: 24px 18px;
+                padding: 28px 16px;
+            }
+            .chp-cert-large-preview {
+                margin-bottom: 24px;
+            }
+            .chp-cert-zoom-btn {
+                position: static;
+                margin: 12px auto 0;
+                display: flex;
+                justify-content: center;
+                width: fit-content;
+            }
+            .chp-cert-features-strip {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-bottom: 24px;
             }
             .chp-reviews-box {
                 padding: 24px 16px;
@@ -1113,9 +1413,9 @@
                             <span class="blog-badge">&#127891; 100% Practical Training</span>
                         </div>
 
-                        <div class="chp-rating-strip" style="margin-top: 14px;">
-                            <span class="chp-stars">★★★★★</span>
-                            <span><strong>4.9 / 5.0 Rating</strong> · 1,850+ Google Verified Reviews · Bihar's #1 Creative Academy</span>
+                        <div class="chp-rating-strip">
+                            <span class="chp-stars" aria-label="5 out of 5 stars">★★★★★</span>
+                            <span class="chp-rating-text"><strong>4.9 / 5.0 Rating</strong> · 1,850+ Google Verified Reviews · Bihar's #1 Creative Academy</span>
                         </div>
 
                         <!-- Single H1 Title for Clean SEO Hierarchy -->
@@ -1130,7 +1430,7 @@
                         <!-- Author & Publication Meta Strip -->
                         <div class="blog-article-meta-row">
                             <div class="blog-meta-author">
-                                <img src="../../assets/anil-sharma.webp" alt="Anil Sharma Mentor" class="blog-meta-avatar" width="40" height="40">
+                                <img src="../../assets/anil-sharma.webp" alt="Anil Sharma Mentor" class="blog-meta-avatar" width="40" height="40" loading="lazy">
                                 <div>
                                     <div class="blog-meta-name" itemprop="author" itemscope itemtype="https://schema.org/Person">
                                         <span itemprop="name">Anil Sharma</span>
@@ -1140,17 +1440,17 @@
                             </div>
                             <span class="blog-meta-sep" aria-hidden="true">•</span>
                             <div class="blog-meta-item">
-                                <svg class="blog-meta-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <svg class="blog-meta-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                                 <time datetime="2026-09-30" itemprop="datePublished">Sep 30, 2026</time>
                             </div>
                             <span class="blog-meta-sep" aria-hidden="true">•</span>
                             <div class="blog-meta-item">
-                                <svg class="blog-meta-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                <svg class="blog-meta-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                                 <span>7 min read</span>
                             </div>
                             <span class="blog-meta-sep" aria-hidden="true">•</span>
-                            <div class="blog-meta-item" style="color:#16a34a; font-weight:700;">
-                                <span>✔ ISO 9001:2015 Accredited</span>
+                            <div class="blog-meta-item">
+                                <span class="chp-iso-badge">✔ ISO 9001:2015 Accredited</span>
                             </div>
                         </div>
                     </header>
@@ -1205,15 +1505,15 @@
                         📑 Table of Contents (Quick Jump)
                     </h2>
                     <ul style="margin:0; padding-left:20px; font-size:0.95rem; color:#475569; display:flex; flex-direction:column; gap:8px;">
-                        <li><a href="#why-album-design" style="color:#b88636; text-decoration:none; font-weight:600;">1. Introduction: Why Album Design in Chapra?</a></li>
-                        <li><a href="#why-choose-quickart" style="color:#b88636; text-decoration:none; font-weight:600;">2. Why Choose Quick Art Photography Academy in Chapra?</a></li>
-                        <li><a href="#career-opportunities" style="color:#b88636; text-decoration:none; font-weight:600;">3. What Album Design Can Do for Your Career in Chapra</a></li>
+                        <li><a href="#why-album-design" style="color:#b88636; text-decoration:none; font-weight:600;">1. Introduction: Why Learn Album Design?</a></li>
+                        <li><a href="#why-choose-quickart" style="color:#b88636; text-decoration:none; font-weight:600;">2. Why Choose Quick Art Photography Academy?</a></li>
+                        <li><a href="#career-opportunities" style="color:#b88636; text-decoration:none; font-weight:600;">3. Career &amp; Business Opportunities for Designers</a></li>
                         <li><a href="#course-modules" style="color:#b88636; text-decoration:none; font-weight:600;">4. Course Modules You Will Learn (Step-by-Step)</a></li>
-                        <li><a href="#industries-served" style="color:#b88636; text-decoration:none; font-weight:600;">5. Industries We Serve in Chapra &amp; Saran District</a></li>
+                        <li><a href="#industries-served" style="color:#b88636; text-decoration:none; font-weight:600;">5. Creative Industries We Cater to in Saran</a></li>
                         <li><a href="#certificate-section" style="color:#b88636; text-decoration:none; font-weight:600;">6. ISO 9001:2015 Course Certificate Verification</a></li>
-                        <li><a href="#student-reviews" style="color:#b88636; text-decoration:none; font-weight:600;">7. Authentic Student Reviews &amp; Testimonials (Chapra Students)</a></li>
-                        <li><a href="#map-directions" style="color:#b88636; text-decoration:none; font-weight:600;">8. Location &amp; Easy Travel Route from Chapra to Siwan Campus</a></li>
-                        <li><a href="#contact-connect" style="color:#b88636; text-decoration:none; font-weight:600;">9. Connect with Quick Art Photography Academy &amp; Book Demo</a></li>
+                        <li><a href="#student-reviews" style="color:#b88636; text-decoration:none; font-weight:600;">7. Authentic Student Reviews &amp; Testimonials</a></li>
+                        <li><a href="#map-directions" style="color:#b88636; text-decoration:none; font-weight:600;">8. Location &amp; Easy Travel Route from Chapra to Siwan</a></li>
+                        <li><a href="#contact-connect" style="color:#b88636; text-decoration:none; font-weight:600;">9. Connect with Quick Art Academy &amp; Book Demo</a></li>
                         <li><a href="#faqs" style="color:#b88636; text-decoration:none; font-weight:600;">10. Frequently Asked Questions (FAQs)</a></li>
                     </ul>
                 </div>
@@ -1432,33 +1732,64 @@
 
                     <!-- Section 6: Certificate Showcase -->
                     <section id="certificate-section" class="chp-cert-showcase">
-                        <div class="chp-cert-grid">
-                            <div>
-                                <span style="display:inline-block; background:rgba(216,161,83,0.2); border:1px solid rgba(216,161,83,0.5); color:#fce09b; padding:6px 16px; border-radius:50px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:12px;">
-                                    🏆 ISO 9001:2015 ACCREDITED CERTIFICATION
-                                </span>
-                                <h2 style="font-family:'Outfit', sans-serif; font-size:clamp(22px, 2.8vw, 34px); font-weight:800; color:#ffffff; margin:0 0 14px; line-height:1.25;">
-                                    Official Course Certificate for Every Enrolled Student
-                                </h2>
-                                <p style="color:#cbd5e1; font-size:0.95rem; line-height:1.65; margin-bottom:20px;">
-                                    Upon successfully finishing the practical projects and portfolio evaluation, you will be awarded an official certificate from <strong>Quick Art Photography Academy</strong>.
-                                </p>
-                                <ul style="color:#f1f5f9; padding-left:20px; font-size:0.92rem; display:flex; flex-direction:column; gap:8px; margin-bottom:24px;">
-                                    <li>Verifiable unique QR Code linked to the Academy database</li>
-                                    <li>Recognized by top photo studios, wedding agencies, and print labs</li>
-                                    <li>Enhances your professional brand and social media credentials</li>
-                                </ul>
-                                <a href="../../admission/" class="chp-btn-gold">
-                                    🎓 Apply for Admission &amp; Certificate
-                                </a>
-                            </div>
+                        <div class="chp-cert-header-center">
+                            <span class="chp-cert-badge-gold">
+                                🏆 ISO 9001:2015 ACCREDITED CERTIFICATION
+                            </span>
+                            <h2 class="chp-cert-title">
+                                Official Course Certificate for Every Enrolled Student
+                            </h2>
+                            <p class="chp-cert-subtitle">
+                                Upon completing practical projects &amp; portfolio evaluation, you will receive an official verifiable certificate recognized by top photo studios, wedding production houses, and print labs across India.
+                            </p>
+                        </div>
 
-                            <div class="chp-cert-preview">
-                                <picture>
-                                    <source srcset="../../assets/sample-certificate-demo.webp" type="image/webp">
-                                    <img src="../../assets/sample-certificate-demo.png" alt="Quick Art Academy ISO Certified Course Certificate Demo" width="600" height="424" loading="lazy">
-                                </picture>
+                        <!-- Grand Large Certificate Display -->
+                        <div class="chp-cert-large-preview">
+                            <picture>
+                                <source srcset="../../assets/sample-certificate-demo.webp" type="image/webp">
+                                <img src="../../assets/sample-certificate-demo.png"
+                                     alt="Quick Art Photography Academy ISO Certified Course Certificate Preview"
+                                     width="1024"
+                                     height="770"
+                                     class="chp-cert-large-img"
+                                     loading="lazy">
+                            </picture>
+                            <a href="../../assets/sample-certificate-demo.png" target="_blank" rel="noopener noreferrer" class="chp-cert-zoom-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                <span>Click to View Full-Size Certificate</span>
+                            </a>
+                        </div>
+
+                        <!-- 3 Credibility Highlights Strip -->
+                        <div class="chp-cert-features-strip">
+                            <div class="chp-cert-pill-box">
+                                <div class="chp-cert-pill-icon">🛡️</div>
+                                <div>
+                                    <div class="chp-cert-pill-title">ISO 9001:2015 Accredited</div>
+                                    <div class="chp-cert-pill-desc">Certified standard curriculum recognized nationwide</div>
+                                </div>
                             </div>
+                            <div class="chp-cert-pill-box">
+                                <div class="chp-cert-pill-icon">📱</div>
+                                <div>
+                                    <div class="chp-cert-pill-title">QR Code Verification</div>
+                                    <div class="chp-cert-pill-desc">Online instant credential validation database</div>
+                                </div>
+                            </div>
+                            <div class="chp-cert-pill-box">
+                                <div class="chp-cert-pill-icon">💼</div>
+                                <div>
+                                    <div class="chp-cert-pill-title">Career Credibility</div>
+                                    <div class="chp-cert-pill-desc">Valuable for studio jobs, freelancing &amp; client trust</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chp-cert-action-row">
+                            <a href="../../admission/" class="chp-btn-gold">
+                                🎓 Apply for Admission &amp; Get Certified
+                            </a>
                         </div>
                     </section>
 
@@ -1488,7 +1819,7 @@
                                     </p>
                                 </div>
                                 <div>
-                                    <h4 class="chp-reviewer-name">Vikas Kumar</h4>
+                                    <h3 class="chp-reviewer-name">Vikas Kumar</h3>
                                     <span class="chp-reviewer-place">Chapra Town, Saran</span>
                                 </div>
                             </div>
@@ -1501,7 +1832,7 @@
                                     </p>
                                 </div>
                                 <div>
-                                    <h4 class="chp-reviewer-name">Rahul Singh</h4>
+                                    <h3 class="chp-reviewer-name">Rahul Singh</h3>
                                     <span class="chp-reviewer-place">Sonpur, Saran</span>
                                 </div>
                             </div>
@@ -1514,7 +1845,7 @@
                                     </p>
                                 </div>
                                 <div>
-                                    <h4 class="chp-reviewer-name">Deepak Ojha</h4>
+                                    <h3 class="chp-reviewer-name">Deepak Ojha</h3>
                                     <span class="chp-reviewer-place">Marhaura, Saran</span>
                                 </div>
                             </div>
@@ -1544,11 +1875,11 @@
                             </div>
                             <div class="chp-direction-pill">
                                 <strong>🚌 By Bus / Highway:</strong>
-                                Frequent direct express buses operate via NH 531 / Chapra-Siwan Road right to Lalit Bus Stand, Siwan (Walking distance to Academy).
+                                Frequent direct express buses operate via NH 531 highway right to Lalit Bus Stand, Siwan (Walking distance to Academy).
                             </div>
                             <div class="chp-direction-pill">
                                 <strong>🏠 Free Student Stay:</strong>
-                                For all students coming from Chapra, accommodation (hostel) is 100% free so you can focus completely on practical learning!
+                                For outstation students enrolling from Chapra, Saran, and nearby districts, hostel accommodation is 100% free!
                             </div>
                         </div>
 
@@ -1639,13 +1970,13 @@
                                     Q4. Can I start freelancing after the course?
                                 </summary>
                                 <div class="chp-faq-content">
-                                    Absolutely! Our training focuses on real-world practical projects and portfolio preparation. We also teach you how to price your sheets, pitch to photography studios in Chapra and Bihar, and deliver print-ready files to Canvera and Karizma labs seamlessly.
+                                    Absolutely! Our training focuses on real-world practical projects and portfolio preparation. We also teach you how to price your sheets, pitch to photography studios across Bihar, and deliver print-ready files to Canvera and Karizma labs seamlessly.
                                 </div>
                             </details>
 
                             <details class="chp-faq-item">
                                 <summary class="chp-faq-summary">
-                                    Q5. Why choose Quick Art Photography Academy in Chapra?
+                                    Q5. Why choose Quick Art Photography Academy?
                                 </summary>
                                 <div class="chp-faq-content">
                                     Because of our 10+ years of industry expertise, 100% practical training on live wedding projects, affordable fees with easy EMI options, free hostel accommodation for outstation students, and proven track record of 1,850+ successful alumni across Bihar.
@@ -1656,7 +1987,7 @@
 
                     <!-- SEO Keywords Meta Box -->
                     <div style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:12px; padding:16px 20px; margin-bottom:40px; font-size:0.85rem; color:#64748b;">
-                        <strong>🔑 Related Search Topics:</strong> Album Design Course in Chapra • Wedding Album Design Chapra • Photoshop Album Design Course • Professional Album Making Course Chapra • Freelance Album Designer Training • Karizma Album Designing in Saran • Wedding Photography Institute Bihar • Canvera Photobook Design Classes
+                        <strong>🔑 Key Topics Covered:</strong> Wedding Photobook Layouts • Adobe Photoshop Mastery • Color Calibration &amp; Retouching • Studio Freelancing Skills • Karizma &amp; Canvera Printing Profiles • Saran Creative Training
                     </div>
 
                 </div><!-- /.blog-article-body -->

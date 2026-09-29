@@ -221,8 +221,18 @@
      });
    }
 
-   // Ensure single consolidated "Download Course Details PDF" link in Free Resources dropdown
-   freeResPanel.querySelectorAll('a[href*="curriculum"]').forEach(a => a.remove());
+   // Ensure Course Curriculum (14-Weeks) and Download Course Details PDF in Free Resources dropdown
+   if (freeResPanel && !freeResPanel.querySelector('a[href*="curriculum"]')) {
+     const currDropA = document.createElement('a');
+     currDropA.href = `${navPrefix}curriculum/`;
+     currDropA.textContent = 'Course Curriculum (14-Weeks)';
+     const brochureA = freeResPanel.querySelector('a[href*="course-details.pdf"]');
+     if (brochureA) {
+       freeResPanel.insertBefore(currDropA, brochureA);
+     } else {
+       freeResPanel.prepend(currDropA);
+     }
+   }
    const brochureA = freeResPanel.querySelector('a[href*="course-details.pdf"]');
    if (brochureA) {
      brochureA.textContent = 'Download Course Details PDF';
@@ -268,8 +278,19 @@
      }
    }
 
-   // Ensure single consolidated "Download Course Details (PDF)" in mobile Free Resources
-   mobileResources.querySelectorAll('a[href*="curriculum"]').forEach(a => a.remove());
+   // Ensure Course Curriculum (14-Weeks) and Download Course Details (PDF) in mobile Free Resources
+   if (mobileResources && !mobileResources.querySelector('a[href*="curriculum"]')) {
+     const mobCurrA = document.createElement('a');
+     mobCurrA.className = 'ref-course';
+     mobCurrA.href = `${navPrefix}curriculum/`;
+     mobCurrA.innerHTML = '<span class="ref-course-icon" aria-hidden="true">Cu</span><span>Course Curriculum (14-Weeks)</span>';
+     const brochureMobA = mobileResources.querySelector('a[href*="course-details.pdf"]');
+     if (brochureMobA) {
+       mobileResources.insertBefore(mobCurrA, brochureMobA);
+     } else {
+       mobileResources.append(mobCurrA);
+     }
+   }
    const brochureMobA = mobileResources.querySelector('a[href*="course-details.pdf"]');
    if (brochureMobA) {
      const labelSpan = brochureMobA.querySelector('span:last-child');

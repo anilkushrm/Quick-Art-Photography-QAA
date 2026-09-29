@@ -7454,39 +7454,50 @@ video::-webkit-media-controls-download-button {
   color: var(--gold, #d8a153);
 }
 
-/* ── Live Studio Main Grid & Theater Mode ── */
+/* ── Live Studio Main Grid & Layout ── */
 .live-studio-layout {
   display: grid;
   grid-template-columns: 1fr 380px;
+  grid-template-areas:
+    "player chat"
+    "details chat";
   gap: 20px;
   align-items: start;
   transition: all 0.3s ease;
 }
-.live-studio-layout.theater-mode {
-  grid-template-columns: 1fr;
-}
-.live-studio-layout.theater-mode .live-chat-column {
-  margin-top: 24px;
-}
-@media (max-width: 1080px) {
-  .live-studio-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ── Player Column & Cinema Container ── */
-.live-player-column {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
 .live-player-wrapper {
+  grid-area: player;
   background: #020408;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), 0 0 40px rgba(216, 161, 83, 0.08);
   position: relative;
+}
+.live-chat-column {
+  grid-area: chat;
+}
+.live-details-card {
+  grid-area: details;
+}
+
+@media (max-width: 1080px) {
+  .live-studio-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "player"
+      "chat"
+      "details";
+    gap: 16px;
+  }
+}
+
+.live-studio-layout.theater-mode {
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "player"
+    "chat"
+    "details";
 }
 .live-video-box {
   position: relative;

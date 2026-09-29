@@ -1020,117 +1020,92 @@
         <!-- Cinema Layout Grid -->
         <div class="live-studio-layout" id="live-studio-layout">
 
-          <!-- LEFT: HD Video Stream & Lesson Info -->
-          <div class="live-player-column">
-            <div class="live-player-wrapper">
-              <div class="live-video-box" id="live-video-box" onmousemove="revealLiveOverlayControls()" onmouseleave="hideLiveOverlayControls()">
+          <!-- 1. HD Video Stream & Live Controls -->
+          <div class="live-player-wrapper">
+            <div class="live-video-box" id="live-video-box" onmousemove="revealLiveOverlayControls()" onmouseleave="hideLiveOverlayControls()">
 
-                <!-- 1. Live Stream Video Mount (Base layer) -->
-                <div id="live-video-mount" class="live-video-mount">
-                  <div class="live-placeholder">
-                    <div class="live-pulse-ring"></div>
-                    <div style="font-weight:700;font-size:16px;margin-top:16px;color:#fff">Connecting to Live Studio…
-                    </div>
-                    <div class="muted" style="font-size:13px;margin-top:4px">1080p 60fps High-Definition Feed</div>
+              <!-- 1. Live Stream Video Mount (Base layer) -->
+              <div id="live-video-mount" class="live-video-mount">
+                <div class="live-placeholder">
+                  <div class="live-pulse-ring"></div>
+                  <div style="font-weight:700;font-size:16px;margin-top:16px;color:#fff">Connecting to Live Studio…
                   </div>
-                </div>
-
-                <!-- 2. Invisible Full-Screen Anti-Pause & Anti-Leak Click Shield (Disables Pause/Play & blocks YouTube redirects) -->
-                <div id="live-full-shield" class="live-full-shield" oncontextmenu="return false;" ondragstart="return false;"
-                  onclick="handleLiveShieldClick(event)" ontouchstart="handleLiveShieldTouch(event)"
-                  ondblclick="toggleLiveCinemaFullscreen()" title="Quick Art Academy Continuous Live Broadcast"></div>
-
-                <!-- 3. Floating Fullscreen Live Comments Toggle Button (Auto-hides after 3.5s or mouse inactivity) -->
-                <button type="button" class="fs-chat-toggle-btn" id="fs-chat-toggle-btn" onclick="toggleFullscreenChatDrawer()"
-                  title="Live Doubts &amp; Comments (Press C)">
-                  <span class="fs-chat-badge-dot"></span>
-                  <span>💬 Comments</span>
-                </button>
-
-                <!-- 4. Floating Video Overlay Fullscreen Button (Auto-hides after 3.5s or mouse inactivity) -->
-                <button type="button" class="live-video-overlay-fs live-fs-btn" onclick="toggleLiveCinemaFullscreen()"
-                  title="Fullscreen Mode (Press F)">
-                  ⛶
-                </button>
-
-                <!-- 5. Fullscreen Live Chat & Comments Drawer (Visible in Fullscreen Mode) -->
-                <div id="fs-chat-drawer" class="fs-chat-drawer hidden">
-                  <div class="fs-chat-header">
-                    <div class="fs-chat-title">
-                      <span class="chat-icon-dot"></span>
-                      <span>Live Doubts &amp; Comments</span>
-                    </div>
-                    <div class="fs-chat-actions">
-                      <button type="button" class="fs-chat-btn-icon" onclick="pollLiveDoubtsStudent()" title="Refresh Doubts">🔄</button>
-                      <button type="button" class="fs-chat-btn-icon" onclick="toggleFullscreenChatDrawer()" title="Close Chat (Press C)">✕</button>
-                    </div>
-                  </div>
-                  <div id="fs-live-chat-messages" class="fs-chat-messages">
-                    <div class="chat-empty-state">
-                      <span>💬</span>
-                      <p>Live doubts chat is open. Ask your editing doubts or color grading questions below.</p>
-                    </div>
-                  </div>
-                  <div class="fs-chat-input-box">
-                    <input type="text" id="fs-live-doubt-input" placeholder="Ask doubt to Mentor Anil Sharma..." maxlength="300" onkeydown="if(event.key==='Enter')sendLiveDoubtFullscreen()" />
-                    <button type="button" class="btn-live-send" onclick="sendLiveDoubtFullscreen()" id="btn-fs-live-send" title="Send Question">➔</button>
-                  </div>
-                  <div class="fs-chat-footer-note">
-                    🔒 Quick Art Academy Zero-Leak Protected
-                  </div>
-                </div>
-
-              </div>
-
-              <!-- Stream Control Bar: Clean - Live Now, Watching, Audio/Mute, Fullscreen -->
-              <div class="live-stream-bar">
-                <div class="live-stream-status">
-                  <span class="stream-live-chip">
-                    <span class="live-pulse-dot"></span>
-                    <span id="live-time-indicator">LIVE NOW</span>
-                  </span>
-                  <span class="live-attendees-chip-bar" id="live-attendees-pill-mini">
-                    👥 <span id="live-viewer-count-mini" class="attendees-num">0</span> Watching
-                  </span>
-                </div>
-                <div class="live-stream-actions">
-                  <button type="button" class="btn-sm btn-outline live-sound-btn" id="live-sound-btn" data-muted="0" onclick="toggleLiveAudioMute()"
-                    title="Toggle Audio / Mute">
-                    🔊 Audio
-                  </button>
-                  <button type="button" class="btn-sm btn-gold live-fs-btn" onclick="toggleLiveCinemaFullscreen()"
-                    title="Cinema Fullscreen (Press F)">
-                    ⛶ Fullscreen
-                  </button>
+                  <div class="muted" style="font-size:13px;margin-top:4px">1080p 60fps High-Definition Feed</div>
                 </div>
               </div>
+
+              <!-- 2. Invisible Full-Screen Anti-Pause & Anti-Leak Click Shield (Disables Pause/Play & blocks YouTube redirects) -->
+              <div id="live-full-shield" class="live-full-shield" oncontextmenu="return false;" ondragstart="return false;"
+                onclick="handleLiveShieldClick(event)" ontouchstart="handleLiveShieldTouch(event)"
+                ondblclick="toggleLiveCinemaFullscreen()" title="Quick Art Academy Continuous Live Broadcast"></div>
+
+              <!-- 3. Floating Fullscreen Live Comments Toggle Button (Auto-hides after 3.5s or mouse inactivity) -->
+              <button type="button" class="fs-chat-toggle-btn" id="fs-chat-toggle-btn" onclick="toggleFullscreenChatDrawer()"
+                title="Live Doubts &amp; Comments (Press C)">
+                <span class="fs-chat-badge-dot"></span>
+                <span>💬 Comments</span>
+              </button>
+
+              <!-- 4. Floating Video Overlay Fullscreen Button (Auto-hides after 3.5s or mouse inactivity) -->
+              <button type="button" class="live-video-overlay-fs live-fs-btn" onclick="toggleLiveCinemaFullscreen()"
+                title="Fullscreen Mode (Press F)">
+                ⛶
+              </button>
+
+              <!-- 5. Fullscreen Live Chat & Comments Drawer (Visible in Fullscreen Mode) -->
+              <div id="fs-chat-drawer" class="fs-chat-drawer hidden">
+                <div class="fs-chat-header">
+                  <div class="fs-chat-title">
+                    <span class="chat-icon-dot"></span>
+                    <span>Live Doubts &amp; Comments</span>
+                  </div>
+                  <div class="fs-chat-actions">
+                    <button type="button" class="fs-chat-btn-icon" onclick="pollLiveDoubtsStudent()" title="Refresh Doubts">🔄</button>
+                    <button type="button" class="fs-chat-btn-icon" onclick="toggleFullscreenChatDrawer()" title="Close Chat (Press C)">✕</button>
+                  </div>
+                </div>
+                <div id="fs-live-chat-messages" class="fs-chat-messages">
+                  <div class="chat-empty-state">
+                    <span>💬</span>
+                    <p>Live doubts chat is open. Ask your editing doubts or color grading questions below.</p>
+                  </div>
+                </div>
+                <div class="fs-chat-input-box">
+                  <input type="text" id="fs-live-doubt-input" placeholder="Ask doubt to Mentor Anil Sharma..." maxlength="300" onkeydown="if(event.key==='Enter')sendLiveDoubtFullscreen()" />
+                  <button type="button" class="btn-live-send" onclick="sendLiveDoubtFullscreen()" id="btn-fs-live-send" title="Send Question">➔</button>
+                </div>
+                <div class="fs-chat-footer-note">
+                  🔒 Quick Art Academy Zero-Leak Protected
+                </div>
+              </div>
+
             </div>
 
-            <!-- Live Session Details & Practice Downloads -->
-            <div class="live-details-card">
-              <div class="live-details-header">
-                <div>
-                  <h3 id="live-desc-title" class="live-details-h3">Session Title</h3>
-                  <div id="live-desc-schedule" class="live-details-meta">Scheduled: — • Duration: —</div>
-                </div>
-                <div id="live-access-status" class="live-access-badge">✓ Verified Access Pass</div>
+            <!-- Stream Control Bar: Clean - Live Now, Watching, Audio/Mute, Fullscreen -->
+            <div class="live-stream-bar">
+              <div class="live-stream-status">
+                <span class="stream-live-chip">
+                  <span class="live-pulse-dot"></span>
+                  <span id="live-time-indicator">LIVE NOW</span>
+                </span>
+                <span class="live-attendees-chip-bar" id="live-attendees-pill-mini">
+                  👥 <span id="live-viewer-count-mini" class="attendees-num">0</span> Watching
+                </span>
               </div>
-
-              <div id="live-desc-body" class="live-desc-body">
-                Description of this live session…
-              </div>
-
-              <!-- Downloadable Practice Footage / LUTs Section -->
-              <div id="live-resources-section" class="live-resources-section">
-                <h4 class="live-section-subtitle">📁 Practice Footage &amp; Project Assets</h4>
-                <div id="live-resources-list" class="live-resources-list">
-                  <div class="muted" style="font-size:12.5px">No download files attached to this live session.</div>
-                </div>
+              <div class="live-stream-actions">
+                <button type="button" class="btn-sm btn-outline live-sound-btn" id="live-sound-btn" data-muted="0" onclick="toggleLiveAudioMute()"
+                  title="Toggle Audio / Mute">
+                  🔊 Audio
+                </button>
+                <button type="button" class="btn-sm btn-gold live-fs-btn" onclick="toggleLiveCinemaFullscreen()"
+                  title="Cinema Fullscreen (Press F)">
+                  ⛶ Fullscreen
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- RIGHT: Live Doubts & Interaction Deck -->
+          <!-- 2. Live Doubts & Interaction Deck -->
           <aside class="live-chat-column">
             <div class="live-chat-card">
               <div class="live-chat-header">
@@ -1167,6 +1142,29 @@
               </div>
             </div>
           </aside>
+
+          <!-- 3. Live Session Details & Practice Downloads -->
+          <div class="live-details-card">
+            <div class="live-details-header">
+              <div>
+                <h3 id="live-desc-title" class="live-details-h3">Session Title</h3>
+                <div id="live-desc-schedule" class="live-details-meta">Scheduled: — • Duration: —</div>
+              </div>
+              <div id="live-access-status" class="live-access-badge">✓ Verified Access Pass</div>
+            </div>
+
+            <div id="live-desc-body" class="live-desc-body">
+              Description of this live session…
+            </div>
+
+            <!-- Downloadable Practice Footage / LUTs Section -->
+            <div id="live-resources-section" class="live-resources-section">
+              <h4 class="live-section-subtitle">📁 Practice Footage &amp; Project Assets</h4>
+              <div id="live-resources-list" class="live-resources-list">
+                <div class="muted" style="font-size:12.5px">No download files attached to this live session.</div>
+              </div>
+            </div>
+          </div>
 
         </div>
 

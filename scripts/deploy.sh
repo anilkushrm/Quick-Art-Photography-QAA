@@ -10,10 +10,7 @@ rsync -avz -e ssh \
   --exclude='.git' \
   --exclude='node_modules' \
   --exclude='.DS_Store' \
-  --exclude='data/*otps.json' \
-  --exclude='data/*sessions.json' \
-  --exclude='data/rate-limit.json' \
-  --exclude='data/verified-admissions.json' \
+  --exclude='data/' \
   --exclude='uploads/' \
   --exclude='scratch/' \
   ./ "$SERVER:$DEST/"

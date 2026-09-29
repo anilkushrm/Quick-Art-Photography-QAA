@@ -1,5 +1,23 @@
 [
     {
+        "id": "live_37d1b867",
+        "title": "Test",
+        "description": "trrr",
+        "type": "course",
+        "courseId": "all",
+        "ticketPrice": 299,
+        "originalPrice": 999,
+        "scheduledAt": "2026-09-29T11:13:00.000Z",
+        "duration": "90 Mins",
+        "status": "scheduled",
+        "streamId": "hFgtoAejOjQ",
+        "replayUrl": "",
+        "chatEnabled": true,
+        "resources": [],
+        "updatedAt": "2026-09-29T11:15:06+00:00",
+        "createdAt": "2026-09-29T11:15:06+00:00"
+    },
+    {
         "id": "live_demo_01",
         "title": "Wedding Video Editing Me AI Ka Sahi Use (2-Day Live Workshop)",
         "description": "2 Din Ka Live Workshop Special Wedding Photographers & Video Editors Ke Liye. Day 1: AI Se Wedding Photo Editing & Retouching | Day 2: AI Se Wedding Video Editing & 10x Fast Timeline Workflow. Har Sunday Shaam 7:00 PM.",

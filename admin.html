@@ -6344,6 +6344,21 @@ async function saveLiveClassAdmin() {
     });
   }
 
+  function cleanYtId(input) {
+    if (!input) return '';
+    input = input.trim();
+    if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+    const mLive = input.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/i);
+    if (mLive) return mLive[1];
+    const mShort = input.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/i);
+    if (mShort) return mShort[1];
+    const mV = input.match(/[?&]v=([a-zA-Z0-9_-]{11})/i);
+    if (mV) return mV[1];
+    const mEmbed = input.match(/embed\/([a-zA-Z0-9_-]{11})/i);
+    if (mEmbed) return mEmbed[1];
+    return input;
+  }
+
   const liveClass = {
     id: document.getElementById('liveSessionId').value.trim(),
     title,
@@ -6354,8 +6369,8 @@ async function saveLiveClassAdmin() {
     originalPrice: parseInt(document.getElementById('liveOriginalPrice').value, 10) || 0,
     scheduledAt: document.getElementById('liveScheduledAt').value ? new Date(document.getElementById('liveScheduledAt').value).toISOString() : new Date().toISOString(),
     duration: document.getElementById('liveDuration').value.trim() || '90 Mins',
-    streamId: document.getElementById('liveStreamId').value.trim(),
-    replayUrl: document.getElementById('liveReplayUrl').value.trim(),
+    streamId: cleanYtId(document.getElementById('liveStreamId').value),
+    replayUrl: cleanYtId(document.getElementById('liveReplayUrl').value),
     chatEnabled: document.getElementById('liveChatEnabled').checked,
     resources
   };

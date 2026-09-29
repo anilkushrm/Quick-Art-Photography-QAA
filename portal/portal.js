@@ -4751,15 +4751,32 @@ function initLiveWatermark(watermarkText) {
   liveWatermarkInterval = setInterval(moveWatermark, 10000);
 }
 
+function cleanYouTubeVideoId(input) {
+  if (!input) return '';
+  input = input.trim();
+  if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+  const mLive = input.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/i);
+  if (mLive) return mLive[1];
+  const mShort = input.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/i);
+  if (mShort) return mShort[1];
+  const mV = input.match(/[?&]v=([a-zA-Z0-9_-]{11})/i);
+  if (mV) return mV[1];
+  const mEmbed = input.match(/embed\/([a-zA-Z0-9_-]{11})/i);
+  if (mEmbed) return mEmbed[1];
+  return input;
+}
+
 function embedLiveStream(streamId, replayUrl, status) {
   const mount = document.getElementById('live-video-mount');
   if (!mount) return;
 
   // If status is completed and custom replayUrl provided, check if it's a Bunny GUID or YouTube ID
-  let videoId = streamId;
+  let rawId = streamId;
   if (status === 'completed' && replayUrl) {
-    videoId = replayUrl;
+    rawId = replayUrl;
   }
+
+  const videoId = cleanYouTubeVideoId(rawId);
 
   if (!videoId) {
     mount.innerHTML = `

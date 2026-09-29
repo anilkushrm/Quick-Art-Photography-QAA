@@ -101,18 +101,15 @@ body.landing-page-body {
 @media (min-width: 1024px) { .lp-hero-title { font-size: 50px !important; line-height: 1.12 !important; } }
 @media (min-width: 1280px) { .lp-hero-title { font-size: 52px !important; line-height: 1.12 !important; } }
 
-/* Animated gold shimmer */
-.lp-hero-title span.gold, .lp-gold-text {
-  background: linear-gradient(90deg, #d8a153 0%, #f6d389 30%, #d8a153 60%, #f6d389 100%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: goldShimmer 3s linear infinite;
-}
-@keyframes goldShimmer {
-  0%   { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
+/* Original Warm Gold for Hero Sub-heading */
+.lp-hero-title span.gold,
+.lp-hero-title span.lp-gold-text,
+.lp-gold-text {
+  background: linear-gradient(135deg, #d8a153 0%, #f6d389 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-shadow: none !important;
 }
 
 /* 5. BADGE PILL — PULSE */
@@ -996,17 +993,19 @@ body.landing-page-body {
   }
 }
 
-.lp-hero-title span.gold, .lp-gold-text {
+.lp-hero-title span.gold,
+.lp-hero-title span.lp-gold-text,
+.lp-gold-text {
   font-family: inherit !important;
-  font-weight: 850 !important;
-  background: linear-gradient(90deg, #d8a153 0%, #fef08a 25%, #d8a153 50%, #fef08a 75%, #d8a153 100%) !important;
-  background-size: 200% auto !important;
+  font-weight: inherit !important;
+  background: linear-gradient(135deg, #d8a153 0%, #f6d389 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
-  animation: goldShimmer 3.5s linear infinite !important;
-  display: inline-block !important;
-  filter: drop-shadow(0 2px 14px rgba(216, 161, 83, 0.45)) !important;
+  animation: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+  display: inline !important;
 }
 
 .lp-hero-sub, .lp-hero-desc {

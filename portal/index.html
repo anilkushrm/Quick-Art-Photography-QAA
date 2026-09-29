@@ -25,7 +25,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="portal.css?v=20260929_07" />
+  <link rel="stylesheet" href="portal.css?v=20260929_08" />
   <!-- Google Tag Manager -->
   <script>(function (w, d, s, l, i) {
       w[l] = w[l] || []; w[l].push({
@@ -1039,10 +1039,15 @@
                 onclick="handleLiveShieldClick(event)" ontouchstart="handleLiveShieldTouch(event)"
                 ondblclick="toggleLiveCinemaFullscreen()" title="Quick Art Academy Continuous Live Broadcast"></div>
 
-              <!-- 3. Initial Startup Anti-Brand Mask (Hides YouTube title & More Videos in first 3-5 seconds) -->
+              <!-- 3. Initial 5-Second Cinematic Bars (Complete coverage of YouTube top title & bottom branding) -->
               <div id="live-start-mask" class="live-start-mask">
-                <div class="live-mask-top"></div>
-                <div class="live-mask-bottom-right"></div>
+                <div class="live-cinematic-bar-top">
+                  <div class="cinematic-bar-tag">
+                    <span class="cinematic-dot"></span>
+                    <span>Quick Art Live Broadcast</span>
+                  </div>
+                </div>
+                <div class="live-cinematic-bar-bottom"></div>
               </div>
 
               <!-- 3. Floating Fullscreen Live Comments Toggle Button (Auto-hides after 3.5s or mouse inactivity) -->
@@ -1714,7 +1719,7 @@
       <script src="qrcode.min.js"></script>
       <script src="html2canvas.min.js"></script>
       <script src="/qa-purchase-tracking.js"></script>
-      <script src="portal.js?v=20260929_07"></script>
+      <script src="portal.js?v=20260929_08"></script>
       <script defer src="/meta-events.js"></script>
 </body>
 

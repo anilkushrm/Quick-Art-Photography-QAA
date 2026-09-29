@@ -7581,13 +7581,13 @@ video::-webkit-media-controls-download-button {
   left: 0 !important;
 }
 
-/* ── Live Startup Anti-Branding Mask (Active only during the first 5 seconds to hide YouTube startup overlays) ── */
+/* ── Initial 5-Second Cinematic Letterbox Bars (Full Coverage for YouTube Overlays) ── */
 .live-start-mask {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 15;
+  z-index: 18;
   pointer-events: none;
   opacity: 1;
   visibility: visible;
@@ -7599,35 +7599,85 @@ video::-webkit-media-controls-download-button {
   visibility: hidden;
 }
 
-/* Covers YouTube Title & Channel Info at top during first 5 seconds */
-.live-mask-top {
+/* 1. Top Cinematic Bar (Completely covers YouTube title, avatar, watch later & share across entire top) */
+.live-cinematic-bar-top {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
-  background: linear-gradient(to bottom, rgba(5, 8, 15, 0.95) 0%, rgba(5, 8, 15, 0.75) 55%, transparent 100%);
+  height: 64px;
+  background: #05080f;
+  background: linear-gradient(to bottom, #04070d 0%, #05080f 75%, rgba(5, 8, 15, 0.92) 100%);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+  transform: translateY(0);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
 }
 
-/* Covers YouTube "More videos", suggested thumbnails & Logo in bottom right corner during first 5 seconds */
-.live-mask-bottom-right {
+.cinematic-bar-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 5px 12px;
+  border-radius: 999px;
+  color: #e2e8f0;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.cinematic-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+  animation: liveBlinkDot 1s infinite alternate ease-in-out;
+}
+
+/* 2. Bottom Cinematic Bar (Completely covers YouTube logo, more videos, thumbnail & link across entire bottom) */
+.live-cinematic-bar-bottom {
   position: absolute;
   bottom: 0;
+  left: 0;
   right: 0;
-  width: 320px;
   height: 64px;
-  background: linear-gradient(to top left, rgba(5, 8, 15, 0.98) 0%, rgba(5, 8, 15, 0.85) 55%, transparent 100%);
+  background: #05080f;
+  background: linear-gradient(to top, #04070d 0%, #05080f 75%, rgba(5, 8, 15, 0.92) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.7);
+  transform: translateY(0);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
+}
+
+/* Cinematic Slide-out Animations upon expiration of first 5 seconds */
+.live-start-mask.faded .live-cinematic-bar-top {
+  transform: translateY(-100%);
+}
+
+.live-start-mask.faded .live-cinematic-bar-bottom {
+  transform: translateY(100%);
 }
 
 @media (max-width: 640px) {
-  .live-mask-top {
+  .live-cinematic-bar-top {
+    height: 48px;
+    padding: 0 12px;
+  }
+  .live-cinematic-bar-bottom {
     height: 48px;
   }
-  .live-mask-bottom-right {
-    width: 220px;
-    height: 48px;
+  .cinematic-bar-tag {
+    font-size: 10.5px;
+    padding: 3px 9px;
+    gap: 6px;
   }
 }
 

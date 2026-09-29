@@ -6589,3 +6589,53 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* ==========================================================================
+   ANIMATED GOLD SHIMMER — Hero Heading Second Line
+   Applied to: .lp-gold-text, .lp-hero-title span.gold
+   A smooth flowing gold-to-light-gold color sweep animation
+   ========================================================================== */
+
+/* Keyframe: Gold color flows left-to-right like liquid gold */
+@keyframes qaGoldFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Apply animated gradient to hero title gold spans */
+.lp-hero-title .lp-gold-text,
+.lp-hero-title span.gold,
+.lp-hero-title .gold {
+  /* Animated flowing gold gradient */
+  background: linear-gradient(
+    90deg,
+    #b87b2a 0%,
+    #d8a153 20%,
+    #f6d389 40%,
+    #ffe9a0 55%,
+    #f6d389 70%,
+    #d8a153 85%,
+    #b87b2a 100%
+  ) !important;
+  background-size: 250% 100% !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  animation: qaGoldFlow 4s ease-in-out infinite !important;
+  display: inline-block !important;
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .lp-hero-title .lp-gold-text,
+  .lp-hero-title span.gold,
+  .lp-hero-title .gold {
+    background: linear-gradient(135deg, #d8a153 0%, #f6d389 100%) !important;
+    background-size: 100% 100% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    animation: none !important;
+  }
+}

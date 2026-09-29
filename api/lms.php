@@ -2055,6 +2055,14 @@ if ($action === 'send-live-doubt' && $method === 'POST') {
     json_ok(['sent' => true, 'message' => $newMsg]);
 }
 
+// 21.45 Get Masterclass Landing Page Customization (Public)
+if ($action === 'get-masterclass-landing' && ($method === 'GET' || $method === 'POST')) {
+    $landingFile = DATA_DIR . '/masterclass-landing.json';
+    $data = file_exists($landingFile) ? json_decode(file_get_contents($landingFile), true) : [];
+    if (!is_array($data)) $data = [];
+    json_ok(['landing' => $data]);
+}
+
 // 21.5 Create Razorpay Order for Workshop / Masterclass Ticket
 if ($action === 'create-workshop-order' && $method === 'POST') {
     $body = read_json_body() ?: [];

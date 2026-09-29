@@ -2740,6 +2740,19 @@
 
           // Check if Razorpay Gateway is enabled
           if (!orderData.razorpayEnabled || !orderData.orderId) {
+            if (orderData.razorpayEnabled === false) {
+              btn.innerHTML = 'Activating Access…';
+              await verifyAndGrantAccess({
+                liveId: activeWorkshopId,
+                name,
+                phone,
+                email,
+                razorpay_order_id: 'direct_' + Date.now(),
+                razorpay_payment_id: 'direct_' + Date.now(),
+                razorpay_signature: 'direct_offline'
+              });
+              return;
+            }
             throw new Error(orderData.message || 'Payment gateway filhal active nahi hai. Kripya academy helpline (+91 9939800780) par sampark karein.');
           }
 

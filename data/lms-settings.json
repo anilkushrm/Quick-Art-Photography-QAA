@@ -4,7 +4,7 @@
     "bunnyTokenAuthKey": "",
     "bunnyHostname": "iframe.mediadelivery.net",
     "bunnyAccountApiKey": "",
-    "razorpayEnabled": false,
+    "razorpayEnabled": true,
     "razorpayKeyId": "",
     "razorpayKeySecret": "",
     "razorpayWebhookSecret": "",

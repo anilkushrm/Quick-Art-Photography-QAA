@@ -1013,26 +1013,7 @@
             <span aria-hidden="true">←</span> Leave Studio
           </button>
           <div class="live-topbar-center">
-            <div class="live-pulse-badge">
-              <span class="live-pulse-dot"></span>
-              <span id="live-status-tag">🔴 LIVE BROADCAST</span>
-            </div>
             <h2 class="live-studio-title" id="live-player-title">Live Masterclass Studio</h2>
-          </div>
-          <div class="live-topbar-meta">
-            <span class="live-attendees-pill" id="live-attendees-pill" title="Live Attendees in session">
-              <span class="viewer-dot"></span> <span id="live-viewer-count" class="attendees-num">485</span> <span
-                class="attendees-lbl">Active Students</span>
-            </span>
-            <span class="live-mentor-tag">Mentor: Anil Sharma</span>
-            <button type="button" class="btn-sm btn-outline btn-fs-topbar live-fs-btn"
-              onclick="toggleLiveCinemaFullscreen()" title="Toggle Fullscreen (Press F)">
-              <span>⛶</span> Fullscreen
-            </button>
-            <button type="button" class="btn-sm btn-outline btn-theater-mode" onclick="toggleLiveTheaterMode()"
-              id="btn-theater-mode" title="Toggle Cinema / Simple Mode (Press T)">
-              <span>🎬</span> <span id="theater-btn-text">Cinema View</span>
-            </button>
           </div>
         </div>
 
@@ -1042,7 +1023,7 @@
           <!-- LEFT: HD Video Stream & Lesson Info -->
           <div class="live-player-column">
             <div class="live-player-wrapper">
-              <div class="live-video-box" id="live-video-box">
+              <div class="live-video-box" id="live-video-box" onmousemove="revealLiveOverlayControls()" onmouseleave="hideLiveOverlayControls()">
 
                 <!-- 1. Live Stream Video Mount (Base layer) -->
                 <div id="live-video-mount" class="live-video-mount">
@@ -1056,27 +1037,23 @@
 
                 <!-- 2. Invisible Full-Screen Anti-Pause & Anti-Leak Click Shield (Disables Pause/Play & blocks YouTube redirects) -->
                 <div id="live-full-shield" class="live-full-shield" oncontextmenu="return false;" ondragstart="return false;"
+                  onclick="handleLiveShieldClick(event)" ontouchstart="handleLiveShieldTouch(event)"
                   ondblclick="toggleLiveCinemaFullscreen()" title="Quick Art Academy Continuous Live Broadcast"></div>
 
-                <!-- 3. Dynamic Anti-Piracy Floating Watermark -->
-                <div id="live-watermark-layer" class="live-watermark-layer" aria-hidden="true">
-                  <span id="live-watermark-text" class="live-watermark-chip">Quick Art Academy Protected</span>
-                </div>
-
-                <!-- 4. Floating Fullscreen Live Comments Toggle Button -->
+                <!-- 3. Floating Fullscreen Live Comments Toggle Button (Auto-hides after 3.5s or mouse inactivity) -->
                 <button type="button" class="fs-chat-toggle-btn" id="fs-chat-toggle-btn" onclick="toggleFullscreenChatDrawer()"
                   title="Live Doubts &amp; Comments (Press C)">
                   <span class="fs-chat-badge-dot"></span>
                   <span>💬 Comments</span>
                 </button>
 
-                <!-- 5. Floating Video Overlay Fullscreen Button -->
+                <!-- 4. Floating Video Overlay Fullscreen Button (Auto-hides after 3.5s or mouse inactivity) -->
                 <button type="button" class="live-video-overlay-fs live-fs-btn" onclick="toggleLiveCinemaFullscreen()"
                   title="Fullscreen Mode (Press F)">
                   ⛶
                 </button>
 
-                <!-- 6. Fullscreen Live Chat & Comments Drawer (Visible in Fullscreen Mode) -->
+                <!-- 5. Fullscreen Live Chat & Comments Drawer (Visible in Fullscreen Mode) -->
                 <div id="fs-chat-drawer" class="fs-chat-drawer hidden">
                   <div class="fs-chat-header">
                     <div class="fs-chat-title">
@@ -1105,27 +1082,21 @@
 
               </div>
 
-              <!-- Stream Control Bar -->
+              <!-- Stream Control Bar: Clean - Live Now, Watching, Audio/Mute, Fullscreen -->
               <div class="live-stream-bar">
                 <div class="live-stream-status">
                   <span class="stream-live-chip">
                     <span class="live-pulse-dot"></span>
                     <span id="live-time-indicator">LIVE NOW</span>
                   </span>
-                  <span class="stream-quality-badge">1080p 60FPS HD</span>
-                  <span class="stream-audio-badge">🔴 Non-Stop Live Feed</span>
                   <span class="live-attendees-chip-bar" id="live-attendees-pill-mini">
-                    👥 <span id="live-viewer-count-mini" class="attendees-num">485</span> Watching
+                    👥 <span id="live-viewer-count-mini" class="attendees-num">0</span> Watching
                   </span>
                 </div>
                 <div class="live-stream-actions">
                   <button type="button" class="btn-sm btn-outline live-sound-btn" id="live-sound-btn" data-muted="0" onclick="toggleLiveAudioMute()"
-                    title="Toggle Audio">
+                    title="Toggle Audio / Mute">
                     🔊 Audio
-                  </button>
-                  <button type="button" class="btn-sm btn-outline live-reload-btn" onclick="reloadLivePlayer()"
-                    title="Re-sync Stream Feed">
-                    🔄 Sync Live
                   </button>
                   <button type="button" class="btn-sm btn-gold live-fs-btn" onclick="toggleLiveCinemaFullscreen()"
                     title="Cinema Fullscreen (Press F)">

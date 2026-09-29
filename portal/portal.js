@@ -5008,20 +5008,54 @@ async function openLiveStudio(liveId) {
 }
 
 function initLiveWatermark(watermarkText) {
+  if (liveWatermarkInterval) {
+    clearInterval(liveWatermarkInterval);
+    liveWatermarkInterval = null;
+  }
   const el = document.getElementById('live-watermark-text');
-  if (!el) return;
-  el.textContent = watermarkText || 'Quick Art Photography Academy';
+  if (el) el.remove();
+  const layer = document.getElementById('live-watermark-layer');
+  if (layer) layer.remove();
+}
 
-  // Float watermark randomly across the player every 10 seconds
-  if (liveWatermarkInterval) clearInterval(liveWatermarkInterval);
-  const moveWatermark = () => {
-    const top = Math.floor(Math.random() * 65) + 15; // 15% to 80%
-    const left = Math.floor(Math.random() * 65) + 15; // 15% to 80%
-    el.style.top = `${top}%`;
-    el.style.left = `${left}%`;
-  };
-  moveWatermark();
-  liveWatermarkInterval = setInterval(moveWatermark, 10000);
+// Auto-hiding interactive video overlay controls (Comments & Fullscreen)
+let liveOverlayHideTimeout = null;
+
+function revealLiveOverlayControls() {
+  const box = document.getElementById('live-video-box');
+  if (!box) return;
+
+  box.classList.add('show-controls');
+
+  if (liveOverlayHideTimeout) {
+    clearTimeout(liveOverlayHideTimeout);
+  }
+
+  liveOverlayHideTimeout = setTimeout(() => {
+    const drawer = document.getElementById('fs-chat-drawer');
+    const isChatOpen = drawer && !drawer.classList.contains('hidden');
+    if (!isChatOpen) {
+      box.classList.remove('show-controls');
+    }
+  }, 3500); // Automatically hides after 3.5 seconds
+}
+
+function hideLiveOverlayControls() {
+  const box = document.getElementById('live-video-box');
+  if (!box) return;
+  const drawer = document.getElementById('fs-chat-drawer');
+  const isChatOpen = drawer && !drawer.classList.contains('hidden');
+  if (!isChatOpen) {
+    box.classList.remove('show-controls');
+  }
+}
+
+function handleLiveShieldClick(e) {
+  revealLiveOverlayControls();
+}
+
+function handleLiveShieldTouch(e) {
+  revealLiveOverlayControls();
 }
 
 function cleanYouTubeVideoId(input) {
@@ -5146,12 +5180,14 @@ function toggleFullscreenChatDrawer() {
   const isHidden = drawer.classList.contains('hidden');
   if (isHidden) {
     drawer.classList.remove('hidden');
+    revealLiveOverlayControls();
     const msgBox = document.getElementById('fs-live-chat-messages');
     if (msgBox) msgBox.scrollTop = msgBox.scrollHeight;
     const inp = document.getElementById('fs-live-doubt-input');
     if (inp) inp.focus();
   } else {
     drawer.classList.add('hidden');
+    revealLiveOverlayControls();
   }
 }
 
@@ -5404,6 +5440,13 @@ document.addEventListener('keydown', (e) => {
 
 function exitLiveStudio() {
   stopLiveAttendeesCounter();
+
+  if (liveOverlayHideTimeout) {
+    clearTimeout(liveOverlayHideTimeout);
+    liveOverlayHideTimeout = null;
+  }
+  const box = document.getElementById('live-video-box');
+  if (box) box.classList.remove('show-controls');
 
   if (liveDoubtsPollTimer) {
     clearInterval(liveDoubtsPollTimer);

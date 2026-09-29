@@ -7359,54 +7359,31 @@ video::-webkit-media-controls-download-button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 14px 20px;
-  margin-bottom: 20px;
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 16px;
+  margin-bottom: 14px;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  flex-wrap: nowrap;
 }
 .live-topbar-center {
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-.live-pulse-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(239, 68, 68, 0.2);
-  border: 1px solid #ef4444;
-  padding: 4px 10px;
-  border-radius: 100px;
-  font-size: 11px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: 0.05em;
-}
-.live-pulse-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #ef4444;
-  box-shadow: 0 0 8px #ef4444;
-  animation: livePulse 1.2s infinite;
+  gap: 10px;
+  overflow: hidden;
 }
 .live-studio-title {
   font-family: 'Outfit', sans-serif;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 700;
   color: #fff;
   margin: 0;
-}
-.live-topbar-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .live-attendees-pill {
   font-size: 12.5px;
@@ -7577,6 +7554,26 @@ video::-webkit-media-controls-download-button {
   left: 0 !important;
 }
 
+/* ── Video Overlay Interactive Controls (Comments & Fullscreen) ── */
+.live-video-overlay-fs,
+.fs-chat-toggle-btn {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s ease, visibility 0.3s ease;
+  transform: translateY(8px);
+}
+
+.live-video-box:hover .live-video-overlay-fs,
+.live-video-box:hover .fs-chat-toggle-btn,
+.live-video-box.show-controls .live-video-overlay-fs,
+.live-video-box.show-controls .fs-chat-toggle-btn {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+  transform: translateY(0);
+}
+
 /* ── Live Video Overlay Fullscreen Button ── */
 .live-video-overlay-fs {
   position: absolute;
@@ -7586,7 +7583,7 @@ video::-webkit-media-controls-download-button {
   width: 42px;
   height: 42px;
   border-radius: 10px;
-  background: rgba(10, 15, 26, 0.75);
+  background: rgba(10, 15, 26, 0.85);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.25);
@@ -7596,22 +7593,13 @@ video::-webkit-media-controls-download-button {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  opacity: 0.75;
-  transition: all 0.2s ease;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
 }
-.live-video-box:hover .live-video-overlay-fs {
-  opacity: 1;
-  transform: scale(1.05);
-  border-color: var(--gold, #d8a153);
-  color: var(--gold, #d8a153);
-}
 .live-video-overlay-fs:hover {
-  opacity: 1 !important;
   background: rgba(216, 161, 83, 0.35) !important;
   border-color: #d8a153 !important;
   color: #fff !important;
-  transform: scale(1.1) !important;
+  transform: scale(1.08) !important;
 }
 
 /* ── Invisible Full-Screen Anti-Leak & Continuous Broadcast Shield (Disables Pause/Play & blocks YouTube redirects) ── */
@@ -7650,7 +7638,6 @@ video::-webkit-media-controls-download-button {
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
   font-family: inherit;
 }
@@ -7770,32 +7757,16 @@ video::-webkit-media-controls-download-button {
 }
 
 /* ── Dynamic Anti-Piracy Watermark ── */
-.live-watermark-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 12;
-  pointer-events: none;
-  overflow: hidden;
-}
+/* ── Dynamic Anti-Piracy Watermark (Disabled) ── */
+.live-watermark-layer,
 .live-watermark-chip {
-  position: absolute;
-  top: 25%;
-  left: 30%;
-  padding: 5px 12px;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(4px);
-  border-radius: 6px;
-  font-family: 'Plus Jakarta Sans', monospace;
-  font-size: 11px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.45);
-  letter-spacing: 0.04em;
-  transition: top 3s ease-in-out, left 3s ease-in-out;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
-/* ── Stream Status Bar ── */
+/* ── Stream Status Bar (Clean: Live Now, Watching, Audio/Mute, Fullscreen) ── */
 .live-stream-bar {
   display: flex;
   align-items: center;
@@ -7804,14 +7775,12 @@ video::-webkit-media-controls-download-button {
   background: #070b14;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 12px;
-  flex-wrap: wrap;
   gap: 10px;
 }
 .live-stream-status {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 10px;
 }
 .stream-live-chip {
   display: inline-flex;
@@ -7819,28 +7788,12 @@ video::-webkit-media-controls-download-button {
   gap: 6px;
   background: rgba(239, 68, 68, 0.18);
   border: 1px solid #ef4444;
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
   color: #fca5a5;
   font-weight: 800;
   font-size: 11px;
   letter-spacing: 0.04em;
-}
-.stream-quality-badge {
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  color: #34d399;
-  font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 4px;
-}
-.stream-audio-badge {
-  background: rgba(99, 102, 241, 0.15);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  color: #a5b4fc;
-  font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 4px;
 }
 .live-attendees-chip-bar {
   display: inline-flex;
@@ -7851,19 +7804,19 @@ video::-webkit-media-controls-download-button {
   color: #a7f3d0;
   font-weight: 700;
   font-size: 11.5px;
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
 }
 .live-stream-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
-.live-reload-btn, .live-fs-btn {
-  font-size: 11.5px;
-  padding: 5px 12px;
-  border-radius: 8px;
+.live-sound-btn, .live-fs-btn {
+  font-size: 12px;
   font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 8px;
   transition: all 0.2s;
 }
 .live-fs-btn.active-fs {

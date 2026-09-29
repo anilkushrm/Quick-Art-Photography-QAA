@@ -5071,22 +5071,112 @@ function embedLiveStream(streamId, replayUrl, status) {
     return;
   }
 
-  // Pure Protected Embed:
-  // - modestbranding=1 : hides large YouTube logo
+  // Pure Anti-Leak Zero-Pause Broadcast Embed:
+  // - controls=0 : completely disables pause/play bar, scrubber, and YouTube branding
+  // - autoplay=1 : automatically plays live stream
+  // - modestbranding=1 : hides YouTube logo
   // - rel=0 : does not show external recommended videos
+  // - showinfo=0 : hides video title/channel links
   // - iv_load_policy=3 : hides video annotations
-  // - disablekb=0 : keyboard navigation
-  const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&modestbranding=1&rel=0&controls=1&showinfo=0&iv_load_policy=3`;
+  // - disablekb=1 : disables keyboard shortcuts (space/k/j/l) from pausing or seeking
+  // - playsinline=1 : prevents iOS native fullscreen takeover
+  // - enablejsapi=1 : enables iframe API for audio mute/unmute control
+  const originStr = encodeURIComponent(window.location.origin);
+  const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&playsinline=1&enablejsapi=1&origin=${originStr}`;
 
   mount.innerHTML = `
     <iframe 
+      id="live-stream-iframe"
       src="${embedUrl}" 
       title="Quick Art Photography Academy Live Stream" 
       frameborder="0" 
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+      sandbox="allow-scripts allow-same-origin allow-presentation"
+      tabindex="-1"
+      style="pointer-events:none !important;"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
       allowfullscreen>
     </iframe>
   `;
+}
+
+// Zero-Pause Continuous Broadcast Guard:
+// If YouTube iframe emits state 2 (paused) for any reason, immediately resume playback
+window.addEventListener('message', (event) => {
+  try {
+    const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+    if (data && data.event === 'onStateChange' && data.info === 2) {
+      const liveStudio = document.getElementById('view-live-studio');
+      if (liveStudio && !liveStudio.classList.contains('hidden')) {
+        const iframe = document.getElementById('live-stream-iframe');
+        if (iframe && iframe.contentWindow) {
+          iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo' }), '*');
+        }
+      }
+    }
+  } catch (e) {}
+});
+
+function toggleLiveAudioMute() {
+  const iframe = document.getElementById('live-stream-iframe');
+  if (!iframe || !iframe.contentWindow) return;
+  const soundBtn = document.getElementById('live-sound-btn');
+  const isMuted = soundBtn && soundBtn.getAttribute('data-muted') === '1';
+
+  if (isMuted) {
+    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute' }), '*');
+    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [100] }), '*');
+    if (soundBtn) {
+      soundBtn.setAttribute('data-muted', '0');
+      soundBtn.innerHTML = '🔊 Audio On';
+    }
+    toast('🔊 Audio unmuted');
+  } else {
+    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute' }), '*');
+    if (soundBtn) {
+      soundBtn.setAttribute('data-muted', '1');
+      soundBtn.innerHTML = '🔇 Muted';
+    }
+    toast('🔇 Audio muted');
+  }
+}
+
+function toggleFullscreenChatDrawer() {
+  const drawer = document.getElementById('fs-chat-drawer');
+  if (!drawer) return;
+  const isHidden = drawer.classList.contains('hidden');
+  if (isHidden) {
+    drawer.classList.remove('hidden');
+    const msgBox = document.getElementById('fs-live-chat-messages');
+    if (msgBox) msgBox.scrollTop = msgBox.scrollHeight;
+    const inp = document.getElementById('fs-live-doubt-input');
+    if (inp) inp.focus();
+  } else {
+    drawer.classList.add('hidden');
+  }
+}
+
+async function sendLiveDoubtFullscreen() {
+  if (!currentLiveSession || !currentLiveSession.id) return;
+  const input = document.getElementById('fs-live-doubt-input');
+  const btn = document.getElementById('btn-fs-live-send');
+  const msg = input ? input.value.trim() : '';
+  if (!msg) return;
+
+  input.value = '';
+  if (btn) btn.disabled = true;
+
+  try {
+    await lmsApi('send-live-doubt', {
+      method: 'POST',
+      body: { liveId: currentLiveSession.id, message: msg }
+    });
+    pollLiveDoubtsStudent();
+    toast('✓ Question sent to Mentor');
+  } catch (err) {
+    toast(err.message, false);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
 }
 
 function reloadLivePlayer() {
@@ -5276,12 +5366,20 @@ function stopLiveAttendeesCounter() {
   }
 }
 
-// Global hotkeys inside Classroom & Live Studio (F = Fullscreen, T = Cinema Mode)
+// Global hotkeys inside Classroom & Live Studio (F = Fullscreen, T = Cinema Mode, C = Comments)
 document.addEventListener('keydown', (e) => {
   if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
 
   const liveStudio = document.getElementById('view-live-studio');
   const classroom = document.getElementById('view-classroom');
+
+  // Live Studio: Disable pause keys (Spacebar and 'k') so stream cannot be paused
+  if (liveStudio && !liveStudio.classList.contains('hidden')) {
+    if (e.code === 'Space' || e.key === ' ' || e.key === 'k' || e.key === 'K') {
+      e.preventDefault();
+      return;
+    }
+  }
 
   if (e.key === 'f' || e.key === 'F') {
     if (liveStudio && !liveStudio.classList.contains('hidden')) {
@@ -5295,6 +5393,11 @@ document.addEventListener('keydown', (e) => {
     if (liveStudio && !liveStudio.classList.contains('hidden')) {
       e.preventDefault();
       toggleLiveTheaterMode();
+    }
+  } else if (e.key === 'c' || e.key === 'C') {
+    if (liveStudio && !liveStudio.classList.contains('hidden')) {
+      e.preventDefault();
+      toggleFullscreenChatDrawer();
     }
   }
 });
@@ -5333,23 +5436,27 @@ function exitLiveStudio() {
 async function pollLiveDoubtsStudent() {
   if (!currentLiveSession || !currentLiveSession.id) return;
   const container = document.getElementById('live-chat-messages');
-  if (!container) return;
+  const fsContainer = document.getElementById('fs-live-chat-messages');
+  if (!container && !fsContainer) return;
 
   try {
     const res = await lmsApi(`fetch-live-doubts&liveId=${encodeURIComponent(currentLiveSession.id)}`);
     const messages = res.messages || [];
 
+    const emptyHtml = `
+      <div class="chat-empty-state">
+        <span>💬</span>
+        <p>Live doubts chat is open. Ask your editing doubts or color grading questions below.</p>
+      </div>
+    `;
+
     if (!messages.length) {
-      container.innerHTML = `
-        <div class="chat-empty-state">
-          <span>💬</span>
-          <p>Live doubts chat is open. Ask your editing doubts or color grading questions below.</p>
-        </div>
-      `;
+      if (container) container.innerHTML = emptyHtml;
+      if (fsContainer) fsContainer.innerHTML = emptyHtml;
       return;
     }
 
-    container.innerHTML = messages.map(m => {
+    const messagesHtml = messages.map(m => {
       const timeStr = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
       if (m.isMentor) {
         return `
@@ -5373,7 +5480,14 @@ async function pollLiveDoubtsStudent() {
       `;
     }).join('');
 
-    container.scrollTop = container.scrollHeight;
+    if (container) {
+      container.innerHTML = messagesHtml;
+      container.scrollTop = container.scrollHeight;
+    }
+    if (fsContainer) {
+      fsContainer.innerHTML = messagesHtml;
+      fsContainer.scrollTop = fsContainer.scrollHeight;
+    }
   } catch(e){}
 }
 

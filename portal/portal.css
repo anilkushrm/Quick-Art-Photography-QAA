@@ -7520,6 +7520,14 @@ video::-webkit-media-controls-download-button {
   user-select: none;
   -webkit-user-select: none;
 }
+.live-video-mount {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
 .live-video-box iframe,
 .live-video-box video {
   position: absolute;
@@ -7529,6 +7537,7 @@ video::-webkit-media-controls-download-button {
   height: 100%;
   border: none;
   outline: none;
+  pointer-events: none !important; /* Zero click-through to YouTube: prevents pause/play, seekbar, and external redirects */
 }
 
 /* ── Enhanced HTML5 Fullscreen Support ── */
@@ -7550,7 +7559,15 @@ video::-webkit-media-controls-download-button {
 .live-video-box:fullscreen iframe,
 .live-video-box:-webkit-full-screen iframe,
 .live-video-box:-moz-full-screen iframe,
-.live-video-box:-ms-fullscreen iframe {
+.live-video-box:-ms-fullscreen iframe,
+.live-video-box:fullscreen .live-video-mount,
+.live-video-box:-webkit-full-screen .live-video-mount,
+.live-video-box:-moz-full-screen .live-video-mount,
+.live-video-box:-ms-fullscreen .live-video-mount,
+.live-video-box:fullscreen .live-full-shield,
+.live-video-box:-webkit-full-screen .live-full-shield,
+.live-video-box:-moz-full-screen .live-full-shield,
+.live-video-box:-ms-fullscreen .live-full-shield {
   width: 100vw !important;
   height: 100vh !important;
   max-width: 100vw !important;
@@ -7597,16 +7614,159 @@ video::-webkit-media-controls-download-button {
   transform: scale(1.1) !important;
 }
 
-/* ── Invisible Anti-Leak Click Shield ── */
+/* ── Invisible Full-Screen Anti-Leak & Continuous Broadcast Shield (Disables Pause/Play & blocks YouTube redirects) ── */
+.live-full-shield,
 .live-click-shield {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 70px; /* Shields top bar and YouTube branding from clicks */
+  inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: 10;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.001); /* Transparent hit area to catch any clicks/touches before reaching the player */
   cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+}
+
+/* ── Fullscreen Live Comments Toggle Button ── */
+.fs-chat-toggle-btn {
+  position: absolute;
+  bottom: 14px;
+  right: 68px;
+  z-index: 25;
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 10px;
+  background: rgba(10, 15, 26, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  font-family: inherit;
+}
+.fs-chat-toggle-btn:hover {
+  background: rgba(216, 161, 83, 0.35);
+  border-color: var(--gold, #d8a153);
+  color: #fff;
+  transform: scale(1.05);
+}
+.fs-chat-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulse-dot-anim 1.8s infinite;
+}
+
+/* ── Fullscreen Live Chat & Comments Drawer (Overlay inside Fullscreen) ── */
+.fs-chat-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 360px;
+  max-width: 90vw;
+  background: rgba(7, 11, 20, 0.94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.8);
+  animation: slideDrawerIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideDrawerIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.fs-chat-drawer.hidden {
+  display: none !important;
+}
+.fs-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+.fs-chat-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #fff;
+}
+.fs-chat-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.fs-chat-btn-icon {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+.fs-chat-btn-icon:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+.fs-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.fs-chat-input-box {
+  display: flex;
+  gap: 8px;
+  padding: 12px 14px;
+  background: rgba(10, 15, 26, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.fs-chat-input-box input {
+  flex: 1;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  outline: none;
+  font-family: inherit;
+}
+.fs-chat-input-box input:focus {
+  border-color: var(--gold, #d8a153);
+}
+.fs-chat-footer-note {
+  font-size: 10.5px;
+  color: #64748b;
+  text-align: center;
+  padding: 6px 12px 8px;
 }
 
 /* ── Dynamic Anti-Piracy Watermark ── */

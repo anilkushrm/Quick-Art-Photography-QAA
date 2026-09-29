@@ -4848,42 +4848,9 @@ function scrollToLiveClasses() {
 }
 
 async function renderLoginLivePreview() {
+  // Disabled: Live masterclass preview removed from student portal login page
   const mount = document.getElementById('login-live-preview');
-  if (!mount) return;
-  try {
-    const res = await lmsApi('get-live-classes');
-    const classes = res.liveClasses || [];
-    if (!classes.length) {
-      mount.classList.add('hidden');
-      return;
-    }
-    const upcoming = classes[0];
-    const isLiveNow = upcoming.status === 'live';
-    const dateFormatted = upcoming.scheduledAt ? new Date(upcoming.scheduledAt).toLocaleString('en-IN', {
-      day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
-    }) : 'Coming Soon';
-
-    mount.classList.remove('hidden');
-    mount.innerHTML = `
-      <div class="card" style="border:1.5px solid ${isLiveNow ? 'rgba(239,68,68,0.5)' : 'rgba(216,161,83,0.3)'};background:rgba(15,23,42,0.85);backdrop-filter:blur(10px);padding:18px;border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,0.5)">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:${isLiveNow ? '#ef4444' : '#f59e0b'};text-transform:uppercase;letter-spacing:0.04em">
-            <span style="width:8px;height:8px;border-radius:50%;background:${isLiveNow ? '#ef4444' : '#f59e0b'};box-shadow:0 0 8px ${isLiveNow ? '#ef4444' : '#f59e0b'}"></span>
-            ${isLiveNow ? '🔴 LIVE BROADCAST IN PROGRESS' : '⏳ UPCOMING LIVE MASTERCLASS'}
-          </span>
-          <span style="font-size:11px;color:#94a3b8;font-weight:600">⏱️ ${escapeHtml(upcoming.duration || '90 Mins')}</span>
-        </div>
-        <h4 style="font-size:16px;color:#fff;margin:0 0 6px;font-weight:700">${escapeHtml(upcoming.title)}</h4>
-        <p style="font-size:12.5px;color:#94a3b8;margin:0 0 12px;line-height:1.5">${escapeHtml(upcoming.description || 'Hands-on live editing, grading & doubt clearing timeline session with Mentor Anil Sharma.')}</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08)">
-          <span style="font-size:12px;color:#cbd5e1">🗓️ ${dateFormatted}</span>
-          <span style="font-size:12px;font-weight:700;color:#10b981">Free for Enrolled Students</span>
-        </div>
-      </div>
-    `;
-  } catch(e) {
-    if (mount) mount.classList.add('hidden');
-  }
+  if (mount) mount.remove();
 }
 
 function openLiveStudioFromBanner(liveId = null, isAuth = true) {

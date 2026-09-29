@@ -679,19 +679,51 @@ function renderMyCoursesGrid() {
 
     const durationText = c.duration || (c.totalLessons ? `${c.totalLessons} Lessons` : 'Full Course');
 
-    // Check if any Live Session is assigned to this course
-    const courseLiveNow = (studentLiveClasses || []).find(x => (x.courseId === c.id || x.courseId === 'all') && x.status === 'live');
-    const courseLiveUpcoming = (studentLiveClasses || []).find(x => (x.courseId === c.id || x.courseId === 'all') && x.status === 'scheduled');
-    const courseLiveReplay = (studentLiveClasses || []).find(x => (x.courseId === c.id || x.courseId === 'all') && x.status === 'completed' && x.replayUrl);
+    // Course-specific Live Class Check (Separate per course)
+    const cLiveList = (studentLiveClasses || []).filter(x => (x.courseId === c.id || (x.courseId === 'all' && c.isEnrolled)));
+    const courseLiveNow = cLiveList.find(x => x.status === 'live');
+    const courseLiveUpcoming = cLiveList.find(x => x.status === 'scheduled');
+    const courseLiveReplay = cLiveList.find(x => x.status === 'completed' && x.replayUrl);
 
     let liveChipHtml = '';
     if (courseLiveNow) {
-      liveChipHtml = `<span class="course-live-chip live-now">🔴 LIVE NOW</span>`;
+      liveChipHtml = `<span class="course-live-chip live-now">🟢 LIVE NOW</span>`;
     } else if (courseLiveUpcoming && courseLiveUpcoming.scheduledAt) {
       const dt = new Date(courseLiveUpcoming.scheduledAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
-      liveChipHtml = `<span class="course-live-chip live-scheduled">🗓️ Live: ${dt}</span>`;
+      liveChipHtml = `<span class="course-live-chip live-scheduled">⏳ Live: ${dt}</span>`;
     } else if (courseLiveReplay) {
       liveChipHtml = `<span class="course-live-chip live-replay">📹 Live Replay</span>`;
+    }
+
+    // Dynamic Course Live Action Bar (Green = Live Now, Orange/Timer = Scheduled, Red = Offline)
+    let courseLiveActionHtml = '';
+    if (courseLiveNow) {
+      courseLiveActionHtml = `
+        <div class="course-live-action-bar">
+          <button type="button" class="btn-course-live live-state-active" onclick="event.stopPropagation(); openLiveStudio('${courseLiveNow.id}')">
+            <span class="live-status-dot active"></span>
+            <span>🟢 Join Live Class (LIVE NOW)</span>
+          </button>
+        </div>
+      `;
+    } else if (courseLiveUpcoming && courseLiveUpcoming.scheduledAt) {
+      courseLiveActionHtml = `
+        <div class="course-live-action-bar">
+          <button type="button" class="btn-course-live live-state-scheduled" data-course-live-scheduled="${courseLiveUpcoming.scheduledAt}" onclick="event.stopPropagation(); openLiveStudio('${courseLiveUpcoming.id}')">
+            <span class="live-status-dot scheduled"></span>
+            <span class="live-countdown-text">⏳ Live in ...</span>
+          </button>
+        </div>
+      `;
+    } else {
+      courseLiveActionHtml = `
+        <div class="course-live-action-bar">
+          <div class="btn-course-live live-state-offline" title="Is course ke liye filhal koi live class scheduled nahi hai." onclick="event.stopPropagation(); toast('🔴 Is course ki abhi koi live class active nahi hai.');">
+            <span class="live-status-dot offline"></span>
+            <span>🔴 Live Class: Offline</span>
+          </div>
+        </div>
+      `;
     }
 
     return `
@@ -723,12 +755,9 @@ function renderMyCoursesGrid() {
             </div>
           </div>
 
+          ${courseLiveActionHtml}
+
           <div class="course-card-footer">
-            ${courseLiveNow ? `
-              <button type="button" class="btn btn-gold" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-weight:700;flex:1;box-shadow:0 4px 14px rgba(239,68,68,0.4)" onclick="event.stopPropagation(); openLiveStudio('${courseLiveNow.id}')">
-                🔴 Join Live Broadcast
-              </button>
-            ` : ''}
             <button type="button" class="btn btn-gold" style="flex: 1;" onclick="openCourseClassroom('${c.id}')">
               ${isDone ? 'Review Lessons ↺' : (c.completedCount > 0 ? 'Resume Lesson ▶' : 'Start Learning ▶')}
             </button>
@@ -742,6 +771,10 @@ function renderMyCoursesGrid() {
       </article>
     `;
   }).join('');
+
+  if (typeof updateLiveDashboardState === 'function') {
+    updateLiveDashboardState();
+  }
 }
 
 // ── Filter by Status Tab ──
@@ -4552,6 +4585,11 @@ async function loadStudentLiveClasses() {
     const res = await lmsApi('get-live-classes');
     studentLiveClasses = res.liveClasses || [];
 
+    // Re-sync course cards with live data
+    if (studentCourses && studentCourses.length) {
+      renderMyCoursesGrid();
+    }
+
     // 1. Check if any class is LIVE NOW
     const liveNowSession = studentLiveClasses.find(c => c.status === 'live');
     if (liveNowSession && banner) {
@@ -4632,9 +4670,164 @@ async function loadStudentLiveClasses() {
       }).join('');
     }
 
+    // 3. Paid Masterclass Shelf Update (If workshop present)
+    const masterclassShelf = document.getElementById('portal-paid-masterclass-shelf');
+    const workshopItem = (studentLiveClasses || []).find(c => c.type === 'workshop');
+    if (workshopItem && masterclassShelf) {
+      const priceTag = masterclassShelf.querySelector('.masterclass-price-tag');
+      const bookBtn = document.getElementById('btn-portal-book-masterclass');
+      const titleEl = masterclassShelf.querySelector('.masterclass-booking-title');
+      const descEl = masterclassShelf.querySelector('.masterclass-booking-desc');
+      if (priceTag && workshopItem.ticketPrice) priceTag.textContent = `₹${workshopItem.ticketPrice}`;
+      if (titleEl && workshopItem.title) titleEl.textContent = workshopItem.title;
+      if (descEl && workshopItem.description) descEl.textContent = workshopItem.description;
+
+      if (workshopItem.isAuthorized && bookBtn) {
+        bookBtn.innerHTML = `🟢 Pass Unlocked • Enter Studio ➔`;
+        bookBtn.className = 'btn btn-gold btn-book-pass';
+        bookBtn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+        bookBtn.onclick = (e) => { e.preventDefault(); openLiveStudio(workshopItem.id); };
+      }
+    }
+
+    // 4. Start Live Countdown & State Sync
+    startLiveCountdownTimer();
+
   } catch (err) {
     if (shelf) shelf.classList.add('hidden');
+    startLiveCountdownTimer();
   }
+}
+
+let liveCountdownTimerInterval = null;
+
+function startLiveCountdownTimer() {
+  if (liveCountdownTimerInterval) clearInterval(liveCountdownTimerInterval);
+  updateLiveDashboardState();
+  liveCountdownTimerInterval = setInterval(updateLiveDashboardState, 1000);
+}
+
+function updateLiveDashboardState() {
+  const enrolledIds = (window._currentStudent && window._currentStudent.enrolledCourses) || [];
+
+  // Check if any class is currently LIVE
+  const liveNow = (studentLiveClasses || []).find(c => {
+    if (c.status !== 'live') return false;
+    if (c.courseId === 'all') return true;
+    if (c.type === 'workshop') return true;
+    return enrolledIds.includes(c.courseId);
+  });
+
+  // Check upcoming scheduled classes
+  const upcomingList = (studentLiveClasses || []).filter(c => {
+    if (c.status !== 'scheduled' || !c.scheduledAt) return false;
+    if (c.courseId === 'all') return true;
+    if (c.type === 'workshop') return true;
+    return enrolledIds.includes(c.courseId);
+  });
+  upcomingList.sort((a, b) => new Date(a.scheduledAt || 0) - new Date(b.scheduledAt || 0));
+  const earliestUpcoming = upcomingList[0];
+
+  // 1. Update Master Live Pill in My Courses Section Bar
+  const masterBtn = document.getElementById('mycourses-live-indicator-btn');
+  const masterText = document.getElementById('mycourses-live-pill-text');
+  const ddLiveBadge = document.getElementById('dd-live-badge');
+
+  if (masterBtn && masterText) {
+    if (liveNow) {
+      masterBtn.className = 'mycourses-live-pill live-pill-active';
+      masterText.innerHTML = `🟢 Join Live Class <span style="font-weight:800;letter-spacing:0.04em">(LIVE NOW)</span>`;
+      if (ddLiveBadge) {
+        ddLiveBadge.style.background = '#10b981';
+        ddLiveBadge.textContent = 'LIVE NOW';
+      }
+    } else if (earliestUpcoming) {
+      const diff = new Date(earliestUpcoming.scheduledAt) - new Date();
+      if (diff > 0) {
+        const hours = Math.floor(diff / 3600000);
+        const mins = Math.floor((diff % 3600000) / 60000);
+        const secs = Math.floor((diff % 60000) / 1000);
+        const timeStr = hours > 24 
+          ? `${Math.floor(hours/24)}d ${hours%24}h`
+          : `${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+        masterBtn.className = 'mycourses-live-pill live-pill-scheduled';
+        masterText.innerHTML = `⏳ Live in <b>${timeStr}</b>`;
+        if (ddLiveBadge) {
+          ddLiveBadge.style.background = '#f59e0b';
+          ddLiveBadge.textContent = timeStr;
+        }
+      } else {
+        masterBtn.className = 'mycourses-live-pill live-pill-scheduled';
+        masterText.innerHTML = `⏳ Live Starting Soon...`;
+        if (ddLiveBadge) {
+          ddLiveBadge.style.background = '#f59e0b';
+          ddLiveBadge.textContent = 'STARTING';
+        }
+      }
+    } else {
+      masterBtn.className = 'mycourses-live-pill live-pill-offline';
+      masterText.innerHTML = `🔴 Live Class: Offline`;
+      if (ddLiveBadge) {
+        ddLiveBadge.style.background = 'rgba(239,68,68,0.3)';
+        ddLiveBadge.textContent = 'OFFLINE';
+      }
+    }
+  }
+
+  // 2. Update Course-Card Live Action Countdowns
+  document.querySelectorAll('[data-course-live-scheduled]').forEach(el => {
+    const scheduledAt = el.getAttribute('data-course-live-scheduled');
+    if (!scheduledAt) return;
+    const diff = new Date(scheduledAt) - new Date();
+    const lbl = el.querySelector('.live-countdown-text');
+    if (lbl) {
+      if (diff > 0) {
+        const hours = Math.floor(diff / 3600000);
+        const mins = Math.floor((diff % 3600000) / 60000);
+        const secs = Math.floor((diff % 60000) / 1000);
+        lbl.textContent = hours > 24 
+          ? `Live in ${Math.floor(hours/24)}d ${hours%24}h`
+          : `Live in ${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+      } else {
+        lbl.textContent = 'Live Starting Soon...';
+      }
+    }
+  });
+}
+
+function handleDashboardLiveClick() {
+  const enrolledIds = (window._currentStudent && window._currentStudent.enrolledCourses) || [];
+
+  // 1. Is any class live right now?
+  const liveNow = (studentLiveClasses || []).find(c => {
+    if (c.status !== 'live') return false;
+    if (c.courseId === 'all') return true;
+    if (c.type === 'workshop') return true;
+    return enrolledIds.includes(c.courseId);
+  });
+
+  if (liveNow) {
+    openLiveStudio(liveNow.id);
+    return;
+  }
+
+  // 2. Is any class scheduled?
+  const upcomingList = (studentLiveClasses || []).filter(c => {
+    if (c.status !== 'scheduled' || !c.scheduledAt) return false;
+    if (c.courseId === 'all') return true;
+    if (c.type === 'workshop') return true;
+    return enrolledIds.includes(c.courseId);
+  });
+
+  if (upcomingList.length) {
+    upcomingList.sort((a, b) => new Date(a.scheduledAt || 0) - new Date(b.scheduledAt || 0));
+    const target = upcomingList[0];
+    openLiveStudio(target.id);
+    return;
+  }
+
+  // 3. No live class active
+  toast('🔴 Filhal koi live class active nahi hai. Next class schedule hote hi notification aur timer start ho jayega.');
 }
 
 function scrollToLiveClasses() {

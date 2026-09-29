@@ -1432,7 +1432,200 @@
     .mobile-sticky-cta {
       display: none;
     }
+
+    /* ── Responsive Polish ── */
+    @media (max-width: 960px) {
+      .masterclass-grid {
+        grid-template-columns: 1fr !important;
+        gap: 28px !important;
+        margin-bottom: 40px !important;
+      }
+      .ticket-card {
+        position: static !important;
+        max-width: 540px;
+        margin: 0 auto;
+      }
+    }
+
     @media (max-width: 768px) {
+      body {
+        padding-bottom: 84px !important; /* clearance for mobile sticky bar */
+      }
+      .container {
+        padding: 0 16px !important;
+      }
+      .top-announcement {
+        padding: 7px 12px !important;
+        font-size: 11.5px !important;
+        line-height: 1.4 !important;
+      }
+      .top-announcement span {
+        font-size: 10px !important;
+        padding: 2px 6px !important;
+        margin-right: 4px !important;
+      }
+      .nav-header {
+        padding: 12px 0 !important;
+      }
+      .brand-logo-wrap {
+        gap: 8px !important;
+      }
+      .brand-logo-wrap img {
+        height: 32px !important;
+        width: 32px !important;
+      }
+      .brand-text-title {
+        font-size: 13.5px !important;
+      }
+      .brand-text-sub {
+        font-size: 9.5px !important;
+      }
+      .nav-portal-btn {
+        padding: 6px 12px !important;
+        font-size: 11.5px !important;
+      }
+      .hero-section {
+        padding: 24px 0 20px !important;
+      }
+      .live-badge-pill {
+        font-size: 11px !important;
+        padding: 5px 12px !important;
+        margin-bottom: 14px !important;
+        white-space: normal !important;
+        text-align: center !important;
+      }
+      .hero-title {
+        font-size: 25px !important;
+        line-height: 1.25 !important;
+        margin-bottom: 12px !important;
+      }
+      .hero-sub {
+        font-size: 13.5px !important;
+        line-height: 1.55 !important;
+        margin-bottom: 20px !important;
+        padding: 0 !important;
+      }
+      .live-schedule-strip {
+        gap: 8px !important;
+        margin-bottom: 20px !important;
+      }
+      .schedule-pill {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 10px 14px !important;
+        border-radius: 12px !important;
+        gap: 10px !important;
+      }
+      .sch-val {
+        font-size: 13.5px !important;
+      }
+      .hero-video-box {
+        border-radius: 14px !important;
+        margin-bottom: 20px !important;
+      }
+      .hero-video-info-strip {
+        padding: 8px 12px !important;
+        gap: 8px !important;
+        font-size: 11px !important;
+      }
+      .timer-container {
+        margin-bottom: 22px !important;
+      }
+      .timer-wrap {
+        padding: 8px 12px !important;
+        gap: 6px !important;
+        border-radius: 14px !important;
+      }
+      .timer-unit {
+        min-width: 40px !important;
+      }
+      .timer-num {
+        font-size: 20px !important;
+      }
+      .timer-lbl {
+        font-size: 9px !important;
+      }
+      .timer-colon {
+        font-size: 18px !important;
+      }
+      .hook-chai-callout {
+        padding: 14px 16px !important;
+        gap: 12px !important;
+        border-radius: 14px !important;
+        margin-bottom: 24px !important;
+      }
+      .hook-chai-icon {
+        font-size: 28px !important;
+      }
+      .hook-chai-title {
+        font-size: 15px !important;
+      }
+      .hook-chai-desc {
+        font-size: 12.5px !important;
+      }
+      .ai-tools-strip {
+        gap: 6px !important;
+        margin-bottom: 24px !important;
+      }
+      .ai-tool-pill {
+        font-size: 11px !important;
+        padding: 5px 9px !important;
+      }
+      .comparison-card {
+        padding: 18px !important;
+        border-radius: 16px !important;
+      }
+      .comparison-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+      }
+      .comp-col {
+        padding: 16px !important;
+        border-radius: 12px !important;
+      }
+      .curriculum-card {
+        padding: 18px !important;
+        border-radius: 16px !important;
+      }
+      .bonuses-box {
+        padding: 18px !important;
+        border-radius: 16px !important;
+      }
+      .bonuses-title {
+        font-size: 17px !important;
+      }
+      .bonus-pill {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+        padding: 10px 12px !important;
+      }
+      .bonus-val {
+        align-self: flex-start !important;
+      }
+      .ticket-card {
+        padding: 20px 16px !important;
+        border-radius: 18px !important;
+      }
+      .ticket-price-val {
+        font-size: 34px !important;
+      }
+      .cert-showcase-section {
+        padding: 40px 12px !important;
+      }
+      .mentor-card {
+        padding: 20px 16px !important;
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 16px !important;
+        margin-bottom: 40px !important;
+      }
+      .mentor-img {
+        width: 100px !important;
+        height: 100px !important;
+      }
+
+      /* Mobile Sticky CTA */
       .mobile-sticky-cta {
         display: flex;
         align-items: center;
@@ -1441,8 +1634,8 @@
         bottom: 0;
         left: 0;
         right: 0;
-        z-index: 999;
-        background: rgba(7, 9, 14, 0.95);
+        z-index: 9999;
+        background: rgba(7, 9, 14, 0.96);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border-top: 1px solid rgba(216, 161, 83, 0.4);
@@ -1460,17 +1653,17 @@
       }
       .m-price {
         font-family: 'Outfit', sans-serif;
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 900;
         color: #fff;
       }
       .m-orig {
-        font-size: 13px;
+        font-size: 12px;
         color: #64748b;
         text-decoration: line-through;
       }
       .mobile-cta-seats {
-        font-size: 10.5px;
+        font-size: 10px;
         color: #f87171;
         font-weight: 700;
       }
@@ -1479,9 +1672,9 @@
         color: #07090e;
         border: none;
         font-family: 'Outfit', sans-serif;
-        font-size: 14px;
+        font-size: 13.5px;
         font-weight: 800;
-        padding: 11px 20px;
+        padding: 10px 18px;
         border-radius: 10px;
         cursor: pointer;
         box-shadow: 0 4px 14px rgba(216, 161, 83, 0.4);
@@ -1490,43 +1683,73 @@
         align-items: center;
         gap: 6px;
       }
-      body {
-        padding-bottom: 74px; /* clearance for sticky bar */
+
+      /* Footer Mobile Polish */
+      .qa-footer {
+        padding: 44px 0 110px !important;
       }
-      .hero-title {
-        font-size: 27px !important;
-        line-height: 1.25 !important;
+      .qa-footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 28px !important;
       }
-      .hero-sub {
-        font-size: 14.5px !important;
-        padding: 0 4px;
+      .qa-footer-brand-col {
+        align-items: center !important;
+        text-align: center !important;
       }
-      .timer-wrap {
-        padding: 10px 16px !important;
-        gap: 8px !important;
+      .qa-footer-badges {
+        justify-content: center !important;
       }
-      .timer-num {
-        font-size: 21px !important;
+      .qa-footer-contacts {
+        width: 100% !important;
+        align-items: center !important;
       }
-      .timer-unit {
-        min-width: 44px !important;
+      .qa-contact-link {
+        width: 100% !important;
+        max-width: 320px !important;
+        justify-content: center !important;
       }
-      .ticket-card {
-        padding: 20px !important;
-        border-radius: 18px !important;
+      .qa-footer-address {
+        text-align: center !important;
       }
-      .ticket-price-val {
-        font-size: 38px !important;
+      .qa-footer-heading {
+        justify-content: center !important;
+        text-align: center !important;
+      }
+      .qa-footer-links-list {
+        align-items: center !important;
+        text-align: center !important;
+      }
+      .qa-footer-seo-strip {
+        text-align: center !important;
+        padding: 16px 0 !important;
+      }
+      .qa-footer-base {
+        flex-direction: column !important;
+        gap: 12px !important;
+        text-align: center !important;
+      }
+      .qa-footer-base-links {
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+        gap: 8px 12px !important;
       }
     }
 
-    /* ── Footer ── */
-    .footer {
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 30px 0;
-      text-align: center;
-      font-size: 13px;
-      color: #64748b;
+    /* ── Full Width Desktop & Tablet Footer ── */
+    .qa-footer {
+      width: 100%;
+      background: radial-gradient(ellipse at top center, #181c26 0%, #0c0e14 60%, #06070a 100%) !important;
+      border-top: 1px solid rgba(216, 161, 83, 0.25) !important;
+      color: #cbd5e1 !important;
+      padding: 68px 0 32px !important;
+      position: relative !important;
+      box-sizing: border-box !important;
+    }
+    .qa-footer .container {
+      max-width: 1200px !important;
+      width: calc(100% - 48px) !important;
+      margin: 0 auto !important;
+      padding: 0 !important;
     }
   </style>
 </head>
@@ -1540,7 +1763,19 @@
 
   <div class="container">
 
-
+    <!-- Header Navigation -->
+    <header class="nav-header">
+      <a href="https://quickartphotography.in/" class="brand-logo-wrap" aria-label="Quick Art Academy Home">
+        <img src="../home-assets/ec55a6be3747a9.webp" alt="Quick Art Logo" width="38" height="38">
+        <div>
+          <div class="brand-text-title">Quick Art Photography Academy</div>
+          <div class="brand-text-sub">LIVE MASTERCLASS WORKSHOP</div>
+        </div>
+      </a>
+      <a href="../portal/" class="nav-portal-btn" target="_blank" rel="noopener">
+        <span>🎓 Student Login</span>
+      </a>
+    </header>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -1587,7 +1822,7 @@
       <!-- Hero Cinema Video Preview Box -->
       <div class="hero-video-box" id="hero-video-box">
         <div class="hero-video-frame" id="hero-video-mount">
-          <iframe id="hero-video-iframe" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0&modestbranding=1" title="Masterclass Video Preview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe id="hero-video-iframe" src="https://www.youtube-nocookie.com/embed/XWFnwJowfx4?rel=0&modestbranding=1" title="Masterclass Video Preview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div class="hero-video-info-strip">
           <span class="v-pill"><span>🔴</span> 2-Day Live Workshop Demo</span>
@@ -1906,6 +2141,7 @@
           </div>
         </div>
       </div>
+    </div> <!-- /.masterclass-grid -->
 
 
       <!-- Official Certificate of Completion Showcase -->
@@ -2074,131 +2310,131 @@
         </div>
       </div>
 
-      <!-- Footer -->
-          <footer role="contentinfo" class="qa-footer">
-        <div class="container qa-footer-grid">
-            <div class="qa-footer-brand-col">
-                <a class="qa-brand" href="https://quickartphotography.in/" aria-label="Quick Art Photography Academy Home">
-                    <img src="../home-assets/ec55a6be3747a9.webp" width="48" height="48" alt="Quick Art Photography Academy logo" loading="lazy">
-                    <span>Quick <b>Art</b><small>PHOTOGRAPHY ACADEMY</small></span>
-                </a>
-                <p class="qa-footer-brand-desc">Practical training in wedding filmmaking, cinematography, video editing, and album design. Build a high-earning creative career with mentor Anil Sharma in Siwan, Bihar.</p>
-                <div class="qa-footer-badges">
-                    <a href="https://maps.app.goo.gl/eRkAc7kia1D1s1zQ7" target="_blank" rel="noopener" class="qa-footer-badge-pill" style="text-decoration:none;display:inline-block;">4.9/5 · 1,800+ student reviews</a>
-                    <span class="qa-footer-badge-pill">Free Hostel &amp; Stay for Outstation Students</span>
-                    <span class="qa-footer-badge-pill">100% Practical Studio Lab</span>
-                </div>
-                <div class="qa-footer-contacts">
-                    <a href="tel:+919939800780" class="qa-contact-link" aria-label="Call Quick Art Academy">
-                        <span>Call: +91 99398 00780</span>
-                    </a>
-                    <a href="https://wa.me/919939800780" class="qa-contact-link" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-                        WhatsApp: +91 99398 00780
-                    </a>
-                    <a href="mailto:support@quickartphotography.in" class="qa-contact-link" aria-label="Email Quick Art Academy">
-                        <span>support@quickartphotography.in</span>
-                    </a>
-                    <a href="https://maps.app.goo.gl/eRkAc7kia1D1s1zQ7" class="qa-contact-link" target="_blank" rel="noopener" aria-label="Quick Art Photography Academy on Google Maps">
-                        Quick Art Photography Academy on Google Maps
-                    </a>
-                </div>
-                <div class="qa-footer-address">
-                    <p><strong>Campus:</strong> Ayodhya Puri, Near Lalit Bus Stand, Siwan, Bihar - 841226, India</p>
-                    <p class="qa-footer-hours">Mon – Sat: 9:00 AM – 7:00 PM (Sunday by appointment)</p>
-                </div>
-            </div>
-            <div>
-                <h3 class="qa-footer-heading">On-Campus Courses</h3>
-                <ul class="qa-footer-links-list">
-                    <li><a href="../courses/video-editing/index.html">Video Editing Course in Siwan</a></li>
-                    <li><a href="../courses/album-design/index.html">Wedding Album Design Course</a></li>
-                    <li><a href="../courses/ai-wedding-filmmaking/index.html">AI Wedding Filmmaking Course</a></li>
-                    <li><a href="../master-class/index.html">14-Week Master Class in Siwan</a></li>
-                    <li><a href="../admission/index.html" class="qa-footer-highlight-link" style="color: #f59e0b; font-weight: 700;">Apply Admission Form</a></li>
-                    <li><a href="../courses/index.html">All On-Campus Courses Overview</a></li>
-                    <li><a href="../contact-us/index.html" class="qa-footer-highlight-link">Book Free 1-on-1 Demo Class</a></li>
-                    <li><a href="../downloads/course-details.pdf" target="_blank" rel="noopener noreferrer">Download Syllabus (PDF)</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="qa-footer-heading">Popular Online Courses</h3>
-                <ul class="qa-footer-links-list">
-                    <li><a href="../online/premiere-pro-course/index.html">Adobe Premiere Pro Course in Hindi</a></li>
-                    <li><a href="../online/davinci-resolve-course/index.html">DaVinci Resolve Course in Hindi</a></li>
-                    <li><a href="../online/edius-course/index.html">EDIUS Fast Wedding Editing Course</a></li>
-                    <li><a href="../online/cinematic-editing-course/index.html">Cinematic Wedding Video Editing Course</a></li>
-                    <li><a href="../online/pre-wedding-shoot-course/index.html">Pre-Wedding Shoot Course in Hindi</a></li>
-                    <li><a href="../online/album-design-course/index.html">Album Designing Course Online in Hindi</a></li>
-                    <li><a href="../online/website-design-course/index.html">Website Design Course in Hindi</a></li>
-                    <li><a href="../online/digital-marketing-course/index.html">Digital Marketing Course in Hindi</a></li>
-                    <li><a href="../online/automation-course/index.html">Studio Automation &amp; AI CRM</a></li>
-                    <li><a href="../online/index.html">All Online Video Editing Courses</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="qa-footer-heading">Student &amp; Academy</h3>
-                <ul class="qa-footer-links-list">
-                    <li><a href="../admission/index.html" class="qa-footer-highlight-link" style="color: #f59e0b; font-weight: 700;">Apply Admission Form</a></li>
-                    <li><a href="../alumni/index.html">Alumni Directory &amp; Hall of Fame</a></li>
-                    <li><a href="../portal/index.html" class="qa-footer-highlight-link">Student Portal Login</a></li>
-                    <li><a href="../online/index.html">Online Course Catalog</a></li>
-                    <li><a href="../about-us/index.html">About Anil Sharma &amp; Mentors</a></li>
-                    <li><a href="../contact-us/index.html">Contact Us &amp; Campus Visit</a></li>
-                    <li><a href="../blog/index.html">Editing Blogs &amp; Tutorials</a></li>
-                    <li><a href="../blog/best-video-editing-software-in-2026/index.html">Best Video Editing Software in 2026</a></li>
-                    <li><a href="../blog/freelance-video-editor-earn-in-bihar/index.html">Freelance Video Editor in Bihar</a></li>
-                    <li><a href="../blog/how-ai-is-changing-wedding-filmmaking-2026/index.html">AI in Wedding Filmmaking 2026</a></li>
-                    <li><a href="../sitemap.html">Complete Website Sitemap</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="qa-footer-heading">Connect &amp; Policies</h3>
-                <ul class="qa-footer-links-list">
-                    <li><a href="https://www.youtube.com/@QuickartPhotographyAcademy/videos" target="_blank" rel="noopener noreferrer me">YouTube Channel</a></li>
-                    <li><a href="https://www.instagram.com/quick.art.photography.academy/" target="_blank" rel="noopener noreferrer me">Instagram Profile</a></li>
-                    <li><a href="https://www.facebook.com/Quick.art.Photography.Academy" target="_blank" rel="noopener noreferrer me">Facebook Page</a></li>
-                    <li><a href="https://wa.me/919939800780" target="_blank" rel="noopener noreferrer">WhatsApp Helpdesk</a></li>
-                    <li><a href="../privacy-policy/index.html">Privacy Policy</a></li>
-                    <li><a href="../terms-and-conditions/index.html">Terms &amp; Conditions</a></li>
-                    <li><a href="../refund-policy/index.html">Refund Policy</a></li>
-                    <li><a href="../shipping-policy/index.html">Shipping Policy</a></li>
-                </ul>
-            </div>
+    </div> <!-- /.container -->
+
+    <!-- Footer -->
+    <footer role="contentinfo" class="qa-footer">
+      <div class="container qa-footer-grid">
+        <div class="qa-footer-brand-col">
+          <a class="qa-brand" href="https://quickartphotography.in/" aria-label="Quick Art Photography Academy Home">
+            <img src="../home-assets/ec55a6be3747a9.webp" width="48" height="48" alt="Quick Art Photography Academy logo" loading="lazy">
+            <span>Quick <b>Art</b><small>PHOTOGRAPHY ACADEMY</small></span>
+          </a>
+          <p class="qa-footer-brand-desc">Practical training in wedding filmmaking, cinematography, video editing, and album design. Build a high-earning creative career with mentor Anil Sharma in Siwan, Bihar.</p>
+          <div class="qa-footer-badges">
+            <a href="https://maps.app.goo.gl/eRkAc7kia1D1s1zQ7" target="_blank" rel="noopener" class="qa-footer-badge-pill" style="text-decoration:none;display:inline-block;">4.9/5 · 1,800+ student reviews</a>
+            <span class="qa-footer-badge-pill">Free Hostel &amp; Stay for Outstation Students</span>
+            <span class="qa-footer-badge-pill">100% Practical Studio Lab</span>
+          </div>
+          <div class="qa-footer-contacts">
+            <a href="tel:+919939800780" class="qa-contact-link" aria-label="Call Quick Art Academy">
+              <span>Call: +91 99398 00780</span>
+            </a>
+            <a href="https://wa.me/919939800780" class="qa-contact-link" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+              WhatsApp: +91 99398 00780
+            </a>
+            <a href="mailto:support@quickartphotography.in" class="qa-contact-link" aria-label="Email Quick Art Academy">
+              <span>support@quickartphotography.in</span>
+            </a>
+            <a href="https://maps.app.goo.gl/eRkAc7kia1D1s1zQ7" class="qa-contact-link" target="_blank" rel="noopener" aria-label="Quick Art Photography Academy on Google Maps">
+              Quick Art Photography Academy on Google Maps
+            </a>
+          </div>
+          <div class="qa-footer-address">
+            <p><strong>Campus:</strong> Ayodhya Puri, Near Lalit Bus Stand, Siwan, Bihar - 841226, India</p>
+            <p class="qa-footer-hours">Mon – Sat: 9:00 AM – 7:00 PM (Sunday by appointment)</p>
+          </div>
         </div>
-        <div class="container qa-footer-seo-strip">
-            <p style="margin:0;color:#94a3b8;font-size:13.5px;line-height:1.6;">Students from Siwan, Gopalganj, Chhapra and Patna attend our offline classes; online courses are available across India.</p>
+        <div>
+          <h3 class="qa-footer-heading">On-Campus Courses</h3>
+          <ul class="qa-footer-links-list">
+            <li><a href="../courses/video-editing/index.html">Video Editing Course in Siwan</a></li>
+            <li><a href="../courses/album-design/index.html">Wedding Album Design Course</a></li>
+            <li><a href="../courses/ai-wedding-filmmaking/index.html">AI Wedding Filmmaking Course</a></li>
+            <li><a href="../master-class/index.html">14-Week Master Class in Siwan</a></li>
+            <li><a href="../admission/index.html" class="qa-footer-highlight-link" style="color: #f59e0b; font-weight: 700;">Apply Admission Form</a></li>
+            <li><a href="../courses/index.html">All On-Campus Courses Overview</a></li>
+            <li><a href="../contact-us/index.html" class="qa-footer-highlight-link">Book Free 1-on-1 Demo Class</a></li>
+            <li><a href="../downloads/course-details.pdf" target="_blank" rel="noopener noreferrer">Download Syllabus (PDF)</a></li>
+          </ul>
         </div>
-        <div class="container qa-footer-base">
-            <div>© <span data-year>2026</span> Quick Art Photography Academy. All Rights Reserved. | Managed by Anil Sharma</div>
-            <div class="qa-footer-base-links">
-                <a href="../portal/index.html">Student Login</a> ·
-                <a href="../about-us/index.html">About</a> ·
-                <a href="../courses/index.html">Courses</a> ·
-                <a href="../online/index.html">Online Courses</a> ·
-                <a href="../contact-us/index.html">Contact</a> ·
-                <a href="../privacy-policy/index.html">Privacy</a> ·
-                <a href="../terms-and-conditions/index.html">Terms</a> ·
-                <a href="../refund-policy/index.html">Refunds</a> ·
-                <a href="../shipping-policy/index.html">Shipping</a> ·
-                <a href="../sitemap.html">Sitemap</a>
-            </div>
+        <div>
+          <h3 class="qa-footer-heading">Popular Online Courses</h3>
+          <ul class="qa-footer-links-list">
+            <li><a href="../online/premiere-pro-course/index.html">Adobe Premiere Pro Course in Hindi</a></li>
+            <li><a href="../online/davinci-resolve-course/index.html">DaVinci Resolve Course in Hindi</a></li>
+            <li><a href="../online/edius-course/index.html">EDIUS Fast Wedding Editing Course</a></li>
+            <li><a href="../online/cinematic-editing-course/index.html">Cinematic Wedding Video Editing Course</a></li>
+            <li><a href="../online/pre-wedding-shoot-course/index.html">Pre-Wedding Shoot Course in Hindi</a></li>
+            <li><a href="../online/album-design-course/index.html">Album Designing Course Online in Hindi</a></li>
+            <li><a href="../online/website-design-course/index.html">Website Design Course in Hindi</a></li>
+            <li><a href="../online/digital-marketing-course/index.html">Digital Marketing Course in Hindi</a></li>
+            <li><a href="../online/automation-course/index.html">Studio Automation &amp; AI CRM</a></li>
+            <li><a href="../online/index.html">All Online Video Editing Courses</a></li>
+          </ul>
         </div>
+        <div>
+          <h3 class="qa-footer-heading">Student &amp; Academy</h3>
+          <ul class="qa-footer-links-list">
+            <li><a href="../admission/index.html" class="qa-footer-highlight-link" style="color: #f59e0b; font-weight: 700;">Apply Admission Form</a></li>
+            <li><a href="../alumni/index.html">Alumni Directory &amp; Hall of Fame</a></li>
+            <li><a href="../portal/index.html" class="qa-footer-highlight-link">Student Portal Login</a></li>
+            <li><a href="../online/index.html">Online Course Catalog</a></li>
+            <li><a href="../about-us/index.html">About Anil Sharma &amp; Mentors</a></li>
+            <li><a href="../contact-us/index.html">Contact Us &amp; Campus Visit</a></li>
+            <li><a href="../blog/index.html">Editing Blogs &amp; Tutorials</a></li>
+            <li><a href="../blog/best-video-editing-software-in-2026/index.html">Best Video Editing Software in 2026</a></li>
+            <li><a href="../blog/freelance-video-editor-earn-in-bihar/index.html">Freelance Video Editor in Bihar</a></li>
+            <li><a href="../blog/how-ai-is-changing-wedding-filmmaking-2026/index.html">AI in Wedding Filmmaking 2026</a></li>
+            <li><a href="../sitemap.html">Complete Website Sitemap</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="qa-footer-heading">Connect &amp; Policies</h3>
+          <ul class="qa-footer-links-list">
+            <li><a href="https://www.youtube.com/@QuickartPhotographyAcademy/videos" target="_blank" rel="noopener noreferrer me">YouTube Channel</a></li>
+            <li><a href="https://www.instagram.com/quick.art.photography.academy/" target="_blank" rel="noopener noreferrer me">Instagram Profile</a></li>
+            <li><a href="https://www.facebook.com/Quick.art.Photography.Academy" target="_blank" rel="noopener noreferrer me">Facebook Page</a></li>
+            <li><a href="https://wa.me/919939800780" target="_blank" rel="noopener noreferrer">WhatsApp Helpdesk</a></li>
+            <li><a href="../privacy-policy/index.html">Privacy Policy</a></li>
+            <li><a href="../terms-and-conditions/index.html">Terms &amp; Conditions</a></li>
+            <li><a href="../refund-policy/index.html">Refund Policy</a></li>
+            <li><a href="../shipping-policy/index.html">Shipping Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="container qa-footer-seo-strip">
+        <p style="margin:0;color:#94a3b8;font-size:13.5px;line-height:1.6;">Students from Siwan, Gopalganj, Chhapra and Patna attend our offline classes; online courses are available across India.</p>
+      </div>
+      <div class="container qa-footer-base">
+        <div>© <span data-year>2026</span> Quick Art Photography Academy. All Rights Reserved. | Managed by Anil Sharma</div>
+        <div class="qa-footer-base-links">
+          <a href="../portal/index.html">Student Login</a> ·
+          <a href="../about-us/index.html">About</a> ·
+          <a href="../courses/index.html">Courses</a> ·
+          <a href="../online/index.html">Online Courses</a> ·
+          <a href="../contact-us/index.html">Contact</a> ·
+          <a href="../privacy-policy/index.html">Privacy</a> ·
+          <a href="../terms-and-conditions/index.html">Terms</a> ·
+          <a href="../refund-policy/index.html">Refunds</a> ·
+          <a href="../shipping-policy/index.html">Shipping</a> ·
+          <a href="../sitemap.html">Sitemap</a>
+        </div>
+      </div>
     </footer>
 
-      <!-- Mobile-First Sticky Bottom Booking Bar -->
-      <div class="mobile-sticky-cta" id="mobileStickyCta">
-        <div class="mobile-cta-info">
-          <div class="mobile-cta-price">
-            <span class="m-price" id="m-sticky-price"><span class="dynamic-ticket-price">₹21</span></span>
-            <span class="m-orig" id="m-sticky-orig"><span class="dynamic-orig-price">₹999</span></span>
-          </div>
-          <div class="mobile-cta-seats" id="m-sticky-seats">🔥 ONLY 17 SEATS AT <span class="dynamic-ticket-price">₹21</span></div>
+    <!-- Mobile-First Sticky Bottom Booking Bar -->
+    <div class="mobile-sticky-cta" id="mobileStickyCta">
+      <div class="mobile-cta-info">
+        <div class="mobile-cta-price">
+          <span class="m-price" id="m-sticky-price"><span class="dynamic-ticket-price">₹21</span></span>
+          <span class="m-orig" id="m-sticky-orig"><span class="dynamic-orig-price">₹999</span></span>
         </div>
-        <button type="button" class="btn-mobile-book" onclick="scrollToCheckoutForm()">
-          Join 2-Day Pass ➔
-        </button>
+        <div class="mobile-cta-seats" id="m-sticky-seats">🔥 ONLY 17 SEATS AT <span class="dynamic-ticket-price">₹21</span></div>
       </div>
-
+      <button type="button" class="btn-mobile-book" onclick="scrollToCheckoutForm()">
+        Join 2-Day Pass ➔
+      </button>
     </div>
 
     <script>

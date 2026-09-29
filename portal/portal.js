@@ -5162,12 +5162,12 @@ function toggleLiveAudioMute() {
     if (soundBtn) {
       soundBtn.setAttribute('data-muted', '0');
       soundBtn.innerHTML = `
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
           <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
         </svg>
-        <span>Audio</span>
       `;
+      soundBtn.title = "Mute Audio";
     }
     toast('🔊 Audio unmuted');
   } else {
@@ -5175,15 +5175,31 @@ function toggleLiveAudioMute() {
     if (soundBtn) {
       soundBtn.setAttribute('data-muted', '1');
       soundBtn.innerHTML = `
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#ef4444">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="1" y1="1" x2="23" y2="23"></line>
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
           <path d="M17 9l4 4m0-4l-4 4"></path>
         </svg>
-        <span>Muted</span>
       `;
+      soundBtn.title = "Unmute Audio";
     }
     toast('🔇 Audio muted');
+  }
+}
+
+function handleCommentButtonClick() {
+  const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+  if (isFullscreen) {
+    toggleFullscreenChatDrawer();
+  } else {
+    const chatCard = document.querySelector('.live-chat-card');
+    const doubtInp = document.getElementById('live-doubt-input');
+    if (chatCard) {
+      chatCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      if (doubtInp) doubtInp.focus();
+    } else {
+      toggleFullscreenChatDrawer();
+    }
   }
 }
 
@@ -5271,6 +5287,15 @@ function updateLiveFullscreenUI() {
     if (btn.classList.contains('live-video-overlay-fs')) {
       btn.innerHTML = isFs ? '✕' : '⛶';
       btn.title = isFs ? 'Exit Fullscreen (Esc / Press F)' : 'Fullscreen Mode (Press F)';
+    } else if (btn.classList.contains('live-icon-btn')) {
+      btn.title = isFs ? 'Exit Fullscreen (Esc / Press F)' : 'Fullscreen Mode (Press F)';
+      if (isFs) {
+        btn.classList.add('active-fs');
+        btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path></svg>`;
+      } else {
+        btn.classList.remove('active-fs');
+        btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>`;
+      }
     } else {
       btn.innerHTML = isFs ? '<span>⤶</span> Exit Fullscreen' : '<span>⛶</span> Fullscreen';
       if (isFs) btn.classList.add('active-fs');

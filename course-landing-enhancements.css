@@ -101,13 +101,16 @@ body.landing-page-body {
 @media (min-width: 1024px) { .lp-hero-title { font-size: 50px !important; line-height: 1.12 !important; } }
 @media (min-width: 1280px) { .lp-hero-title { font-size: 52px !important; line-height: 1.12 !important; } }
 
-/* Animated Gold Shimmer Sweep for Hero Sub-heading */
-@keyframes textGoldShineFlow {
+/* Animated Liquid Gold Light Flow for Hero Sub-heading */
+@keyframes liquidGoldFlow {
   0% {
-    background-position: 200% center;
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
   }
   100% {
-    background-position: -200% center;
+    background-position: 0% 50%;
   }
 }
 
@@ -116,19 +119,19 @@ body.landing-page-body {
 .lp-gold-text {
   display: inline-block !important;
   background: linear-gradient(
-    90deg,
+    110deg,
     #d8a153 0%,
-    #e8b96e 20%,
+    #f5c879 20%,
     #ffffff 45%,
-    #fff9e6 55%,
-    #e8b96e 80%,
+    #ffe8a3 55%,
+    #f5c879 75%,
     #d8a153 100%
   ) !important;
-  background-size: 200% auto !important;
+  background-size: 250% 100% !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
-  animation: textGoldShineFlow 3.5s linear infinite !important;
+  animation: liquidGoldFlow 3.2s ease-in-out infinite !important;
   text-shadow: none !important;
   filter: none !important;
 }
@@ -1021,19 +1024,19 @@ body.landing-page-body {
   font-weight: inherit !important;
   display: inline-block !important;
   background: linear-gradient(
-    90deg,
+    110deg,
     #d8a153 0%,
-    #e8b96e 20%,
+    #f5c879 20%,
     #ffffff 45%,
-    #fff9e6 55%,
-    #e8b96e 80%,
+    #ffe8a3 55%,
+    #f5c879 75%,
     #d8a153 100%
   ) !important;
-  background-size: 200% auto !important;
+  background-size: 250% 100% !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
-  animation: textGoldShineFlow 3.5s linear infinite !important;
+  animation: liquidGoldFlow 3.2s ease-in-out infinite !important;
   filter: none !important;
   text-shadow: none !important;
 }

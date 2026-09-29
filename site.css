@@ -6468,7 +6468,7 @@ html.qa-animations-active .qa-scroll-right.is-revealed {
   0% {
     left: -130%;
   }
-  35%, 100% {
+  45%, 100% {
     left: 160%;
   }
 }
@@ -6481,22 +6481,22 @@ html.qa-animations-active .qa-scroll-right.is-revealed {
 }
 
 :is(.qa-demo, .lp-btn-primary, .hub-btn-enroll, .btn-gold, .lp-btn-card, .btn-primary, .cs-action-btn, .lp-sticky-btn, .lp-pricing-btn)::after {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: -130% !important;
-  width: 55% !important;
-  height: 100% !important;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 55%;
+  height: 100%;
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.38) 50%,
-    rgba(255, 255, 255, 0) 100%
-  ) !important;
-  transform: skewX(-25deg) !important;
-  pointer-events: none !important;
-  z-index: 2 !important;
-  animation: btnContinuousShine 2.8s ease-in-out infinite !important;
+    transparent 0%,
+    rgba(255, 255, 255, 0.42) 50%,
+    transparent 100%
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+  z-index: 2;
+  animation: btnContinuousShine 2.5s ease-in-out infinite;
 }
 
 /* 3. Smooth Card Hover Elevation with Warm Gold Aura */
@@ -6601,13 +6601,16 @@ body {
    A smooth flowing light gleam across gold text
    ========================================================================== */
 
-/* Keyframe: Seamless gold shimmer shine sweep across heading text */
-@keyframes textGoldShineFlow {
+/* Keyframe: Liquid gold light flow across heading text */
+@keyframes liquidGoldFlow {
   0% {
-    background-position: 200% center;
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
   }
   100% {
-    background-position: -200% center;
+    background-position: 0% 50%;
   }
 }
 
@@ -6618,19 +6621,19 @@ body {
 .lp-hero-title .gold {
   display: inline-block !important;
   background: linear-gradient(
-    90deg,
+    110deg,
     #d8a153 0%,
-    #e8b96e 20%,
+    #f5c879 20%,
     #ffffff 45%,
-    #fff9e6 55%,
-    #e8b96e 80%,
+    #ffe8a3 55%,
+    #f5c879 75%,
     #d8a153 100%
   ) !important;
-  background-size: 200% auto !important;
+  background-size: 250% 100% !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
-  animation: textGoldShineFlow 3.5s linear infinite !important;
+  animation: liquidGoldFlow 3.2s ease-in-out infinite !important;
   filter: none !important;
   text-shadow: none !important;
 }

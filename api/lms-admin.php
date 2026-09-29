@@ -1022,6 +1022,28 @@ if ($action === 'save-live-class' && $method === 'POST') {
     }
 
     save_all_live_classes($classes);
+
+    // Keep masterclass landing settings in sync if editing a workshop
+    if ($record['type'] === 'workshop') {
+        $landingFile = DATA_DIR . '/masterclass-landing.json';
+        if (file_exists($landingFile)) {
+            $landingData = json_decode(file_get_contents($landingFile), true) ?: [];
+            if ($record['ticketPrice'] > 0) {
+                $landingData['ticketPrice'] = $record['ticketPrice'];
+                if (!empty($landingData['topAnnouncement'])) {
+                    $landingData['topAnnouncement'] = preg_replace('/₹\d+/', '₹' . $record['ticketPrice'], $landingData['topAnnouncement']);
+                }
+                if (!empty($landingData['seatsRemaining'])) {
+                    $landingData['seatsRemaining'] = preg_replace('/₹\d+/', '₹' . $record['ticketPrice'], $landingData['seatsRemaining']);
+                }
+            }
+            if ($record['originalPrice'] > 0) {
+                $landingData['originalPrice'] = $record['originalPrice'];
+            }
+            file_put_contents($landingFile, json_encode($landingData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        }
+    }
+
     json_ok(['saved' => true, 'liveClass' => $record]);
 }
 
@@ -1137,6 +1159,17 @@ if ($action === 'save-masterclass-landing' && $method === 'POST') {
     foreach ($body as $k => $v) {
         if ($k !== 'action') {
             $current[$k] = $v;
+        }
+    }
+
+    if (isset($body['ticketPrice'])) {
+        $tp = (int)$body['ticketPrice'];
+        $current['ticketPrice'] = $tp;
+        if (!empty($current['topAnnouncement'])) {
+            $current['topAnnouncement'] = preg_replace('/₹\d+/', '₹' . $tp, $current['topAnnouncement']);
+        }
+        if (!empty($current['seatsRemaining'])) {
+            $current['seatsRemaining'] = preg_replace('/₹\d+/', '₹' . $tp, $current['seatsRemaining']);
         }
     }
 

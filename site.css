@@ -6614,11 +6614,29 @@ body {
   }
 }
 
-/* Apply animated gradient to hero title gold spans */
-.lp-hero-title .lp-gold-text,
-.lp-hero-title span.gold,
-.lp-hero-title span.lp-gold-text,
-.lp-hero-title .gold {
+/* Apply animated gradient to hero title gold spans & button-color text across entire website */
+:is(
+  .lp-hero-title .lp-gold-text,
+  .lp-hero-title span.gold,
+  .lp-hero-title span.lp-gold-text,
+  .lp-hero-title .gold,
+  .lp-gold-text,
+  .cs-gold,
+  .text-gold-gradient,
+  .qa-home-hero #home-title .qa-hero-line2,
+  .qa-home-hero .qa-hero-inner h1 .qa-hero-line2,
+  .qa-home-hero .qa-hero-inner h1 .qa-hero-part1,
+  .qa-home-hero .qa-hero-inner h1 .qa-hero-part2,
+  .qa-home-hero .qa-hero-copy > p strong:last-child,
+  .mc-studio-h1 .mc-studio-gradient,
+  .adm-hero-h1 .adm-gold-text,
+  .alm-hero-h1 .alm-gold-text,
+  .qa-hero-sub-gold,
+  .lp-sticky-price,
+  h1 .text-gold-300,
+  h2 .text-gold-gradient,
+  h3 .text-gold-gradient
+) {
   display: inline-block !important;
   background: linear-gradient(
     110deg,
@@ -6640,10 +6658,21 @@ body {
 
 /* Respect reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .lp-hero-title .lp-gold-text,
-  .lp-hero-title span.gold,
-  .lp-hero-title span.lp-gold-text,
-  .lp-hero-title .gold {
+  :is(
+    .lp-hero-title .lp-gold-text,
+    .lp-hero-title span.gold,
+    .lp-hero-title span.lp-gold-text,
+    .lp-hero-title .gold,
+    .lp-gold-text,
+    .cs-gold,
+    .text-gold-gradient,
+    .qa-home-hero #home-title .qa-hero-line2,
+    .qa-home-hero .qa-hero-inner h1 .qa-hero-line2,
+    .qa-home-hero .qa-hero-copy > p strong:last-child,
+    .mc-studio-h1 .mc-studio-gradient,
+    .adm-hero-h1 .adm-gold-text,
+    .alm-hero-h1 .alm-gold-text
+  ) {
     background: linear-gradient(135deg, #d8a153 0%, #f6d389 100%) !important;
     background-size: 100% 100% !important;
     -webkit-background-clip: text !important;

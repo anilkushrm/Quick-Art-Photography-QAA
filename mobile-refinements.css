@@ -615,12 +615,22 @@ img {
 .qa-home-hero #home-title .qa-hero-line2,
 .qa-home-hero .qa-hero-inner h1 .qa-hero-line2 {
   display: inline-block !important;
-  background: linear-gradient(135deg, #FFF6D8 0%, #F5C869 35%, #D99026 70%, #F5CE7B 100%) !important;
+  background: linear-gradient(
+    110deg,
+    #d8a153 0%,
+    #f5c879 20%,
+    #ffffff 45%,
+    #ffe8a3 55%,
+    #f5c879 75%,
+    #d8a153 100%
+  ) !important;
+  background-size: 250% 100% !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
-  filter: drop-shadow(0 2px 16px rgba(216, 161, 83, 0.40)) !important;
+  animation: liquidGoldFlow 3.2s ease-in-out infinite !important;
+  filter: none !important;
 }
 
 @media (min-width: 769px) {
@@ -640,12 +650,21 @@ img {
     font-weight: inherit !important;
     line-height: inherit !important;
     margin-top: 0 !important;
-    background: linear-gradient(135deg, #FFF6D8 0%, #F5C869 35%, #D99026 70%, #F5CE7B 100%) !important;
+    background: linear-gradient(
+      110deg,
+      #d8a153 0%,
+      #f5c879 20%,
+      #ffffff 45%,
+      #ffe8a3 55%,
+      #f5c879 75%,
+      #d8a153 100%
+    ) !important;
+    background-size: 250% 100% !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
-    color: transparent !important;
-    filter: drop-shadow(0 2px 16px rgba(216, 161, 83, 0.40)) !important;
+    animation: liquidGoldFlow 3.2s ease-in-out infinite !important;
+    filter: none !important;
   }
   .qa-home-hero #home-title .qa-hero-part1 {
     display: inline !important;
@@ -782,12 +801,22 @@ img {
     font-weight: 850 !important;
     line-height: 1.25 !important;
     letter-spacing: -0.02em !important;
-    background: linear-gradient(135deg, #FFF6D8 0%, #F5C869 35%, #D99026 70%, #F5CE7B 100%) !important;
+    background: linear-gradient(
+      110deg,
+      #d8a153 0%,
+      #f5c879 20%,
+      #ffffff 45%,
+      #ffe8a3 55%,
+      #f5c879 75%,
+      #d8a153 100%
+    ) !important;
+    background-size: 250% 100% !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     color: transparent !important;
-    filter: drop-shadow(0 2px 16px rgba(216, 161, 83, 0.40)) !important;
+    animation: liquidGoldFlow 3.2s ease-in-out infinite !important;
+    filter: none !important;
   }
 
   /* Line 3: in Siwan, Bihar */
@@ -803,12 +832,22 @@ img {
     line-height: 1.25 !important;
     letter-spacing: -0.02em !important;
     margin-top: 3px !important;
-    background: linear-gradient(135deg, #FFF6D8 0%, #F5C869 35%, #D99026 70%, #F5CE7B 100%) !important;
+    background: linear-gradient(
+      110deg,
+      #d8a153 0%,
+      #f5c879 20%,
+      #ffffff 45%,
+      #ffe8a3 55%,
+      #f5c879 75%,
+      #d8a153 100%
+    ) !important;
+    background-size: 250% 100% !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     color: transparent !important;
-    filter: drop-shadow(0 2px 16px rgba(216, 161, 83, 0.40)) !important;
+    animation: liquidGoldFlow 3.2s ease-in-out infinite !important;
+    filter: none !important;
   }
 
   .qa-home-hero .qa-hero-copy > p {
@@ -834,10 +873,26 @@ img {
     display: block !important;
     font-size: 12.5px !important;
     font-weight: 700 !important;
-    color: #f5c879 !important;
     margin-top: 8px !important;
     letter-spacing: 0.02em !important;
     text-align: center !important;
+    background: linear-gradient(
+      110deg,
+      #d8a153 0%,
+      #f5c879 20%,
+      #ffffff 45%,
+      #ffe8a3 55%,
+      #f5c879 75%,
+      #d8a153 100%
+    ) !important;
+    background-size: 250% 100% !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    animation: liquidGoldFlow 3.2s ease-in-out infinite !important;
+    text-shadow: none !important;
+    filter: none !important;
   }
 
   .qa-home-hero .qa-actions,

@@ -4791,7 +4791,7 @@ function updateLiveDashboardState() {
         masterText.innerHTML = `
           <svg class="live-pill-clock-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           <span class="live-status-badge-amber">UPCOMING</span>
-          <span class="live-pill-label">Live in <b>${timeStr}</b></span>
+          <span class="live-pill-label">Live in <b class="live-pill-countdown">${timeStr}</b></span>
         `;
       } else {
         masterBtn.className = 'mycourses-live-pill live-pill-scheduled';

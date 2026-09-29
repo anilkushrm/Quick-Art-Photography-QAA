@@ -707,13 +707,29 @@ a {
 .section-title-bar {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: flex-start;
   margin-bottom: 24px;
+  gap: 16px;
+}
+
+.mycourses-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mycourses-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .section-title-bar h2 {
   font-size: 20px;
   font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .section-title-bar .muted {
@@ -9323,10 +9339,12 @@ video::-webkit-media-controls-download-button {
 .mycourses-live-pill {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 7px 16px;
+  height: 32px;
+  padding: 0 13px;
   border-radius: 999px;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.02em;
   cursor: pointer;
@@ -9339,9 +9357,19 @@ video::-webkit-media-controls-download-button {
   user-select: none;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
+  vertical-align: middle;
 }
 .mycourses-live-pill:hover {
   transform: translateY(-1px);
+}
+
+#mycourses-live-pill-text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  line-height: 1;
 }
 
 /* Master Live Active State (Executive Broadcast Crimson) */
@@ -9358,16 +9386,19 @@ video::-webkit-media-controls-download-button {
   filter: brightness(1.08);
 }
 
-/* Master Live Scheduled State (Refined Amber Countdown) */
+/* Master Live Scheduled State (Refined Amber Countdown - Ultra-Sleek Glassmorphic) */
 .mycourses-live-pill.live-pill-scheduled {
-  background: rgba(245, 158, 11, 0.08);
-  border-color: rgba(245, 158, 11, 0.38);
-  color: #fbbf24;
-  backdrop-filter: blur(8px);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.06) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.32);
+  color: #fef3c7;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 .mycourses-live-pill.live-pill-scheduled:hover {
-  background: rgba(245, 158, 11, 0.16);
-  border-color: #f59e0b;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.12) 100%);
+  border-color: rgba(245, 158, 11, 0.55);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 /* Master Live Offline State (Quiet Luxury Dark Glass) */
@@ -9426,8 +9457,9 @@ video::-webkit-media-controls-download-button {
 .live-status-badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px 7px;
-  border-radius: 4px;
+  justify-content: center;
+  padding: 2.5px 7px;
+  border-radius: 999px;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -9435,19 +9467,51 @@ video::-webkit-media-controls-download-button {
   background: rgba(255, 255, 255, 0.22);
   color: #ffffff;
   backdrop-filter: blur(4px);
+  line-height: 1;
 }
+
 .live-status-badge-amber {
   display: inline-flex;
   align-items: center;
-  padding: 2px 7px;
-  border-radius: 4px;
+  justify-content: center;
+  padding: 3px 8px;
+  border-radius: 999px;
   font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  background: rgba(245, 158, 11, 0.22);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.32) 0%, rgba(217, 119, 6, 0.24) 100%);
+  color: #fef08a;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  line-height: 1;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.live-pill-clock-svg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #f59e0b;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.live-pill-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  line-height: 1;
+  font-size: 12px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+.live-pill-label b,
+.live-pill-countdown {
   color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
 }
 .live-offline-pill {
   font-size: 10px;

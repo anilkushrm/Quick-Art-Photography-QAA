@@ -1081,25 +1081,37 @@
 
             </div>
 
-            <!-- Stream Control Bar: Clean - Live Now, Watching, Audio/Mute, Fullscreen -->
+            <!-- Stream Control Bar: Broadcast-Grade Luxury Minimal Toolbar -->
             <div class="live-stream-bar">
               <div class="live-stream-status">
-                <span class="stream-live-chip">
+                <span class="live-telemetry-chip live-status-chip">
                   <span class="live-pulse-dot"></span>
-                  <span id="live-time-indicator">LIVE NOW</span>
+                  <span id="live-time-indicator">LIVE</span>
                 </span>
-                <span class="live-attendees-chip-bar" id="live-attendees-pill-mini">
-                  👥 <span id="live-viewer-count-mini" class="attendees-num">0</span> Watching
+                <span class="live-telemetry-chip live-watching-chip" id="live-attendees-pill-mini">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <span id="live-viewer-count-mini" class="attendees-num">0</span>
+                  <span class="watching-lbl">Watching</span>
                 </span>
               </div>
               <div class="live-stream-actions">
-                <button type="button" class="btn-sm btn-outline live-sound-btn" id="live-sound-btn" data-muted="0" onclick="toggleLiveAudioMute()"
+                <button type="button" class="live-action-btn live-sound-btn" id="live-sound-btn" data-muted="0" onclick="toggleLiveAudioMute()"
                   title="Toggle Audio / Mute">
-                  🔊 Audio
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                  </svg>
+                  <span>Audio</span>
                 </button>
-                <button type="button" class="btn-sm btn-gold live-fs-btn" onclick="toggleLiveCinemaFullscreen()"
+                <button type="button" class="live-action-btn live-fs-btn" onclick="toggleLiveCinemaFullscreen()"
                   title="Cinema Fullscreen (Press F)">
-                  ⛶ Fullscreen
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                  </svg>
+                  <span>Fullscreen</span>
                 </button>
               </div>
             </div>

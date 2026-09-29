@@ -5161,14 +5161,27 @@ function toggleLiveAudioMute() {
     iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [100] }), '*');
     if (soundBtn) {
       soundBtn.setAttribute('data-muted', '0');
-      soundBtn.innerHTML = '🔊 Audio On';
+      soundBtn.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <span>Audio</span>
+      `;
     }
     toast('🔊 Audio unmuted');
   } else {
     iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute' }), '*');
     if (soundBtn) {
       soundBtn.setAttribute('data-muted', '1');
-      soundBtn.innerHTML = '🔇 Muted';
+      soundBtn.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#ef4444">
+          <line x1="1" y1="1" x2="23" y2="23"></line>
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M17 9l4 4m0-4l-4 4"></path>
+        </svg>
+        <span>Muted</span>
+      `;
     }
     toast('🔇 Audio muted');
   }

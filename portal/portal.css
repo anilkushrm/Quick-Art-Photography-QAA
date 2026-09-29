@@ -7777,62 +7777,21 @@ video::-webkit-media-controls-download-button {
   pointer-events: none !important;
 }
 
-/* ── Stream Status Bar (Strict 1-Line Layout: Live Now, Watching, Audio/Mute, Fullscreen) ── */
+/* ── Stream Status Bar (Broadcast-Grade Luxury Minimal Toolbar) ── */
 .live-stream-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px;
-  background: #070b14;
+  height: 48px;
+  padding: 0 14px;
+  background: #080c14;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 12px;
-  gap: 8px;
-  flex-wrap: nowrap !important; /* Strict 1 line: never wrap to second line */
-  white-space: nowrap !important;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.live-stream-bar::-webkit-scrollbar {
-  display: none;
-}
-.live-stream-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: nowrap !important;
-  flex-shrink: 1;
-  min-width: 0;
+  white-space: nowrap !important;
+  box-sizing: border-box;
 }
-.stream-live-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(239, 68, 68, 0.18);
-  border: 1px solid #ef4444;
-  padding: 3px 8px;
-  border-radius: 6px;
-  color: #fca5a5;
-  font-weight: 800;
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-.live-attendees-chip-bar {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #a7f3d0;
-  font-weight: 700;
-  font-size: 11.5px;
-  padding: 3px 8px;
-  border-radius: 6px;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
+.live-stream-status,
 .live-stream-actions {
   display: flex;
   align-items: center;
@@ -7840,46 +7799,125 @@ video::-webkit-media-controls-download-button {
   flex-wrap: nowrap !important;
   flex-shrink: 0;
 }
-.live-sound-btn, .live-fs-btn {
-  font-size: 12px;
-  font-weight: 700;
-  padding: 6px 12px;
+.live-telemetry-chip,
+.live-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 12px;
   border-radius: 8px;
-  transition: all 0.2s;
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap !important;
+  box-sizing: border-box;
+  text-decoration: none;
+  gap: 6px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.02em;
+}
+
+/* 1. Live Pulse Chip */
+.live-status-chip {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.live-status-chip .live-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+  animation: livePulse 1.4s infinite;
   flex-shrink: 0;
-  white-space: nowrap;
+}
+
+/* 2. Live Watching Pill */
+.live-watching-chip {
+  background: rgba(16, 185, 129, 0.09);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: #6ee7b7;
+  font-weight: 600;
+}
+.live-watching-chip svg {
+  color: #10b981;
+  flex-shrink: 0;
+}
+.live-watching-chip .attendees-num {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: #fff;
+}
+.live-watching-chip .watching-lbl {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* 3. Audio Action Button */
+.live-sound-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
+  cursor: pointer;
+}
+.live-sound-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+.live-sound-btn:active {
+  transform: scale(0.97);
+}
+
+/* 4. Fullscreen Action Button */
+.live-fs-btn {
+  background: rgba(216, 161, 83, 0.12);
+  border: 1px solid rgba(216, 161, 83, 0.35);
+  color: #f5c06d;
+  cursor: pointer;
+  font-weight: 600;
+}
+.live-fs-btn:hover {
+  background: rgba(216, 161, 83, 0.24);
+  border-color: #d8a153;
+  color: #fff;
+}
+.live-fs-btn:active {
+  transform: scale(0.97);
 }
 .live-fs-btn.active-fs {
-  background: rgba(239, 68, 68, 0.2) !important;
+  background: rgba(239, 68, 68, 0.18) !important;
   border-color: #ef4444 !important;
   color: #fff !important;
 }
 
-@media (max-width: 480px) {
+/* ── Mobile Compact Responsive Optimization ── */
+@media (max-width: 520px) {
   .live-stream-bar {
-    padding: 6px 8px;
+    height: 42px;
+    padding: 0 10px;
     gap: 6px;
   }
-  .live-stream-status {
-    gap: 6px;
-  }
-  .stream-live-chip {
-    padding: 3px 6px;
-    font-size: 10px;
-    gap: 4px;
-  }
-  .live-attendees-chip-bar {
-    padding: 3px 6px;
-    font-size: 10.5px;
-    gap: 4px;
-  }
+  .live-stream-status,
   .live-stream-actions {
-    gap: 6px;
+    gap: 5px;
   }
-  .live-sound-btn, .live-fs-btn {
+  .live-telemetry-chip,
+  .live-action-btn {
+    height: 29px;
+    padding: 0 8px;
     font-size: 11px;
-    padding: 4px 8px;
+    gap: 4px;
     border-radius: 6px;
+  }
+  .live-watching-chip .watching-lbl {
+    display: none; /* Shows icon + count for ultra-clean look on narrow phones */
   }
 }
 

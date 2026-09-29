@@ -4934,6 +4934,9 @@ async function openLiveStudio(liveId) {
   switchView('live-studio');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
+  // Display initial 5-second Comment & Fullscreen controls and startup anti-brand mask
+  revealLiveOverlayControls(5000, true);
+
   // Initialize and run dynamic realistic live attendee counter (300-800)
   startLiveAttendeesCounter();
 
@@ -5018,29 +5021,45 @@ function initLiveWatermark(watermarkText) {
   if (layer) layer.remove();
 }
 
-// Auto-hiding interactive video overlay controls (Comments & Fullscreen)
+// Auto-hiding interactive video overlay controls (Comments & Fullscreen) and Startup Anti-Branding Mask
 let liveOverlayHideTimeout = null;
+window._isLiveInitialIntro = false;
 
-function revealLiveOverlayControls() {
+function revealLiveOverlayControls(duration = 5000, isInitial = false) {
   const box = document.getElementById('live-video-box');
   if (!box) return;
 
   box.classList.add('show-controls');
 
+  const startMask = document.getElementById('live-start-mask');
+  if (startMask && isInitial) {
+    startMask.classList.remove('faded');
+  }
+
+  if (isInitial) {
+    window._isLiveInitialIntro = true;
+  }
+
   if (liveOverlayHideTimeout) {
     clearTimeout(liveOverlayHideTimeout);
+    liveOverlayHideTimeout = null;
   }
 
   liveOverlayHideTimeout = setTimeout(() => {
+    window._isLiveInitialIntro = false;
     const drawer = document.getElementById('fs-chat-drawer');
     const isChatOpen = drawer && !drawer.classList.contains('hidden');
     if (!isChatOpen) {
       box.classList.remove('show-controls');
     }
-  }, 3500); // Automatically hides after 3.5 seconds
+    if (startMask) {
+      startMask.classList.add('faded');
+    }
+  }, duration);
 }
 
 function hideLiveOverlayControls() {
+  if (window._isLiveInitialIntro) return; // Protect initial 5s display window on mouseleave
   const box = document.getElementById('live-video-box');
   if (!box) return;
   const drawer = document.getElementById('fs-chat-drawer');
@@ -5051,11 +5070,11 @@ function hideLiveOverlayControls() {
 }
 
 function handleLiveShieldClick(e) {
-  revealLiveOverlayControls();
+  revealLiveOverlayControls(5000);
 }
 
 function handleLiveShieldTouch(e) {
-  revealLiveOverlayControls();
+  revealLiveOverlayControls(5000);
 }
 
 function cleanYouTubeVideoId(input) {
@@ -5131,6 +5150,9 @@ function embedLiveStream(streamId, replayUrl, status) {
       allowfullscreen>
     </iframe>
   `;
+
+  // Start 5-second initial intro for Comment & Fullscreen controls and anti-branding mask
+  revealLiveOverlayControls(5000, true);
 }
 
 // Zero-Pause Continuous Broadcast Guard:

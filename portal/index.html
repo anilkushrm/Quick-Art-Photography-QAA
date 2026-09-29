@@ -25,7 +25,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="portal.css?v=20260929_06" />
+  <link rel="stylesheet" href="portal.css?v=20260929_07" />
   <!-- Google Tag Manager -->
   <script>(function (w, d, s, l, i) {
       w[l] = w[l] || []; w[l].push({
@@ -1022,7 +1022,7 @@
 
           <!-- 1. HD Video Stream & Live Controls -->
           <div class="live-player-wrapper">
-            <div class="live-video-box" id="live-video-box" onmousemove="revealLiveOverlayControls()" onmouseleave="hideLiveOverlayControls()">
+            <div class="live-video-box show-controls" id="live-video-box" onmousemove="revealLiveOverlayControls(5000)" onmouseleave="hideLiveOverlayControls()">
 
               <!-- 1. Live Stream Video Mount (Base layer) -->
               <div id="live-video-mount" class="live-video-mount">
@@ -1038,6 +1038,12 @@
               <div id="live-full-shield" class="live-full-shield" oncontextmenu="return false;" ondragstart="return false;"
                 onclick="handleLiveShieldClick(event)" ontouchstart="handleLiveShieldTouch(event)"
                 ondblclick="toggleLiveCinemaFullscreen()" title="Quick Art Academy Continuous Live Broadcast"></div>
+
+              <!-- 3. Initial Startup Anti-Brand Mask (Hides YouTube title & More Videos in first 3-5 seconds) -->
+              <div id="live-start-mask" class="live-start-mask">
+                <div class="live-mask-top"></div>
+                <div class="live-mask-bottom-right"></div>
+              </div>
 
               <!-- 3. Floating Fullscreen Live Comments Toggle Button (Auto-hides after 3.5s or mouse inactivity) -->
               <button type="button" class="fs-chat-toggle-btn" id="fs-chat-toggle-btn" onclick="toggleFullscreenChatDrawer()"
@@ -1708,7 +1714,7 @@
       <script src="qrcode.min.js"></script>
       <script src="html2canvas.min.js"></script>
       <script src="/qa-purchase-tracking.js"></script>
-      <script src="portal.js?v=20260929_06"></script>
+      <script src="portal.js?v=20260929_07"></script>
       <script defer src="/meta-events.js"></script>
 </body>
 

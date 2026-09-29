@@ -605,63 +605,6 @@ fbq('track', 'PageView');
           </div>
         </div>
 
-        <!-- Offline On-Campus Studio Hub (Daily Tasks, Recordings & Certification Exam) -->
-        <div id="offline-studio-hub" class="offline-hub-container" style="display:none;">
-          <div class="offline-hub-header">
-            <div class="offline-hub-top-row">
-              <span class="offline-hub-pill">🏛️ SIWAN ON-CAMPUS STUDIO LAB</span>
-              <span class="offline-hub-badge">OFFLINE BATCH ACCESS</span>
-            </div>
-            <h3 class="offline-hub-title">Daily Studio Tasks, Class Recordings &amp; Certification Exam</h3>
-            <p class="offline-hub-desc">Complete your daily 4K workstation lab challenges, revise studio class lecture recordings, and take the final certification exam to unlock your official credential and get featured in the Academy Alumni Directory.</p>
-          </div>
-
-          <!-- Hub Tabs -->
-          <div class="offline-hub-tabs">
-            <button type="button" class="offline-hub-tab active" data-otab="tasks" onclick="switchOfflineTab('tasks')">
-              📋 Daily Studio Tasks (<span id="offline-tasks-badge-count">4</span>)
-            </button>
-            <button type="button" class="offline-hub-tab" data-otab="recordings" onclick="switchOfflineTab('recordings')">
-              🎥 Class Recordings &amp; Archives (<span id="offline-rec-badge-count">2</span>)
-            </button>
-            <button type="button" class="offline-hub-tab" data-otab="exam" onclick="switchOfflineTab('exam')">
-              📝 Final Certification Exam &amp; Alumni Pass
-            </button>
-          </div>
-
-          <!-- TAB 1: Daily Studio Tasks -->
-          <div id="otab-tasks" class="offline-tab-pane">
-            <div id="offline-tasks-list" class="offline-tasks-grid">
-              <div class="loading-state">Loading daily lab tasks...</div>
-            </div>
-          </div>
-
-          <!-- TAB 2: Class Recordings -->
-          <div id="otab-recordings" class="offline-tab-pane hidden">
-            <div id="offline-recordings-list" class="offline-recordings-grid">
-              <div class="loading-state">Loading lecture archives...</div>
-            </div>
-          </div>
-
-          <!-- TAB 3: Certification Exam & Alumni -->
-          <div id="otab-exam" class="offline-tab-pane hidden">
-            <div class="offline-exam-card">
-              <div class="offline-exam-intro">
-                <div class="exam-icon-large">🏆</div>
-                <div class="exam-intro-text">
-                  <h4>14-Week Master Class Official Certification Exam</h4>
-                  <p>10 Industry-standard MCQ questions on DaVinci Resolve color wheels, Premiere Pro timelines, Karizma album layouts &amp; audio mixing. Score 70% or more to instantly earn your verifiable certificate and appear in the Academy Alumni Directory.</p>
-                </div>
-              </div>
-
-              <!-- Interactive Exam Form / Result View -->
-              <div id="offline-exam-container" class="offline-exam-body">
-                <!-- Dynamically injected via portal.js -->
-              </div>
-            </div>
-          </div>
-        </div>
-
         <!-- Spotlight Continue Watching Card (dynamic) -->
         <div id="resume-spotlight-box" class="resume-spotlight-box hidden"></div>
 

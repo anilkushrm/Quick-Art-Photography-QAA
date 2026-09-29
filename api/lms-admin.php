@@ -92,8 +92,8 @@ function map_offline_course_id($courseTitle) {
     if (strpos($t, 'album') !== false) {
         return 'course-album-design';
     }
-    if (strpos($t, 'filmmaking') !== false || strpos($t, 'post-production') !== false || strpos($t, 'wedding') !== false || strpos($t, 'cinematic') !== false) {
-        return 'course-cinematic-wedding';
+    if (strpos($t, 'filmmaking') !== false || strpos($t, 'post-production') !== false || strpos($t, 'wedding') !== false || strpos($t, 'cinematic') !== false || strpos($t, '14-week') !== false || strpos($t, 'master') !== false || strpos($t, 'offline') !== false) {
+        return 'course-offline-masterclass';
     }
     if (strpos($t, 'marketing') !== false || strpos($t, 'studio') !== false) {
         return 'course-digital-marketing';
@@ -106,7 +106,7 @@ function map_offline_course_id($courseTitle) {
         }
     }
 
-    return 'course-cinematic-wedding';
+    return 'course-offline-masterclass';
 }
 
 // 1. Get Courses List

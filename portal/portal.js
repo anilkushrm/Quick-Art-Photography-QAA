@@ -504,14 +504,6 @@ async function loadDashboard() {
     // Check & Render Live Masterclasses & Sessions
     loadStudentLiveClasses();
 
-    // Check & Render Offline Studio Hub (Tasks, Recordings & Exam) - strictly for active enrolled students
-    if (enrolledCount > 0) {
-      loadOfflineStudioHub();
-    } else {
-      const hub = document.getElementById('offline-studio-hub');
-      if (hub) hub.style.display = 'none';
-    }
-
   } catch (err) {
     if (err.message.includes('login') || err.message.includes('expired')) {
       logoutStudent();
@@ -5088,64 +5080,10 @@ function switchOfflineTab(tabName) {
 
 async function loadOfflineStudioHub() {
   const hub = document.getElementById('offline-studio-hub');
-  if (!hub) return;
-
-  // RULE: If student has NO active courses, HIDE THIS HUB COMPLETELY!
-  const hasActiveCourses = window._allMyCourses && window._allMyCourses.length > 0;
-  if (!hasActiveCourses) {
-    hub.style.display = 'none';
-    return;
-  }
-
-  // Only show for active students who have an active course unlocked
-  const isOfflineBatchStudent = currentStudent && (
-    currentStudent.isPaid500 ||
-    currentStudent.paymentStatus === 'paid' ||
-    currentStudent.isOfflineStudent ||
-    (window._allMyCourses && window._allMyCourses.some(c => 
-      c.id === 'course-cinematic-wedding' || 
-      c.id === 'course-premiere-pro' || 
-      c.id === 'course-album-design' || 
-      c.id === 'course-digital-marketing'
-    ))
-  );
-
-  if (!isOfflineBatchStudent) {
-    hub.style.display = 'none';
-    return;
-  }
-
-  hub.style.display = 'block';
-
-  try {
-    const [tasksRes, recRes] = await Promise.all([
-      lmsApi('get-daily-tasks').catch(() => ({ tasks: [] })),
-      lmsApi('get-offline-recordings').catch(() => ({ recordings: [] }))
-    ]);
-
-    const tasks = tasksRes.tasks || [];
-    const recordings = recRes.recordings || [];
-
-    // Badge counts
-    const taskCountEl = document.getElementById('offline-tasks-badge-count');
-    if (taskCountEl) taskCountEl.textContent = tasks.length;
-
-    const recCountEl = document.getElementById('offline-rec-badge-count');
-    if (recCountEl) recCountEl.textContent = recordings.length;
-
-    // Render Daily Tasks
-    renderDailyTasksList(tasks);
-
-    // Render Class Recordings
-    renderOfflineRecordingsList(recordings);
-
-    // Render Exam
-    renderOfflineExam();
-
-  } catch (err) {
-    console.warn('Offline studio hub load note:', err);
-  }
+  if (hub) hub.style.display = 'none';
+  return;
 }
+
 
 function renderDailyTasksList(tasks) {
   const container = document.getElementById('offline-tasks-list');

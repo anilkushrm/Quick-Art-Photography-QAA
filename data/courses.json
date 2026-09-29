@@ -1765,5 +1765,513 @@
                 ]
             }
         ]
+    },
+    {
+        "id": "course-offline-masterclass",
+        "slug": "wedding-filmmaking-offline-masterclass",
+        "title": "Wedding Filmmaking & Post-Production Course",
+        "subtitle": "14-Week Hands-On Studio Lab Masterclass \u2022 Practical 4K Workstations & Free Hostel",
+        "category": "Offline Masterclass",
+        "level": "Beginner to Professional",
+        "duration": "14 Weeks",
+        "badge": "Offline On-Campus",
+        "price": 31500,
+        "originalPrice": 35000,
+        "thumbnail": "assets/cinematic-editing-workspace.webp",
+        "description": "14-Week Hands-On Practical Masterclass at Quick Art Photography Academy Siwan Studio Lab. Covers camera setups, lighting, gimbal moves, DaVinci Resolve color grading, Premiere Pro cinematic edits, Karizma album designing, AI automation, and studio business with free outstation hostel.",
+        "isInternalOnly": true,
+        "isAdmissionCourse": true,
+        "modules": [
+            {
+                "id": "mod-off-1",
+                "title": "Week 1: Camera Anatomy & Sensor Science",
+                "lessons": [
+                    {
+                        "id": "les-off-1-1",
+                        "title": "1.1 Sony FX3 / A7S III Dynamic Range & Dual Base ISO",
+                        "duration": "18:20",
+                        "videoId": "off-1-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                        "summary": "Configure Sony FX3 & A7S III cine sensors, understand Base ISO 800 vs 12800 in S-Log3, and protect highlights in harsh Indian wedding mandap lighting.",
+                        "resources": [
+                            {
+                                "name": "Camera Settings Cheat-Sheet (PDF)",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-1-2",
+                        "title": "1.2 Shutter Angle, Frame Rates (24p vs 60p vs 120p) & 180\u00b0 Rule",
+                        "duration": "16:45",
+                        "videoId": "off-1-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                        "summary": "Master the 180-degree shutter rule for organic motion blur, avoid LED screen flickering, and know when to shoot high frame rate slow-motion during bridal entry.",
+                        "resources": [
+                            {
+                                "name": "Shutter Angle Calculation Chart",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-1-3",
+                        "title": "1.3 Cinema Prime vs Zoom Lenses & Focal Length Storytelling",
+                        "duration": "21:10",
+                        "videoId": "off-1-3",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                        "summary": "Choose the right focal lengths (24mm, 35mm, 50mm, 85mm, 70-200mm) to separate bride & groom portraits and capture wide environmental ceremony ambiance.",
+                        "resources": [
+                            {
+                                "name": "Lens Selection Guide",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "mod-off-2",
+                "title": "Week 2: Dynamic Camera Movement & Gimbal Operation",
+                "lessons": [
+                    {
+                        "id": "les-off-2-1",
+                        "title": "2.1 DJI RS3 / RS4 Pro Calibration & Motor Tuning",
+                        "duration": "22:15",
+                        "videoId": "off-2-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+                        "summary": "Balance cinema setups with heavy zoom lenses on DJI RS3/RS4 gimbals, calibrate auto-tune parameters, and eliminate micro-jitters.",
+                        "resources": [
+                            {
+                                "name": "Gimbal Balancing Checklist",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-2-2",
+                        "title": "2.2 The Ninja Walk, Parallax & Orbit Movements",
+                        "duration": "19:40",
+                        "videoId": "off-2-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+                        "summary": "Execute buttery smooth parallax tracks, reveal shots around banquet columns, and 360-degree Varmala orbits without footsteps bouncing in frame.",
+                        "resources": [
+                            {
+                                "name": "Cinematic Movement Shotlist",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "mod-off-3",
+                "title": "Week 3: Studio Lighting & Field Illumination",
+                "lessons": [
+                    {
+                        "id": "les-off-3-1",
+                        "title": "3.1 Continuous COB Key, Fill & Backlight in Banquet Halls",
+                        "duration": "24:30",
+                        "videoId": "off-3-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+                        "summary": "Deploy Godox & Nanlite COB LEDs with parabolic softboxes to flatter bride & groom skin while cutting through harsh banquet multi-color wash lights.",
+                        "resources": [
+                            {
+                                "name": "Wedding Lighting Blueprints (PDF)",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-3-2",
+                        "title": "3.2 Wireless Off-Camera Flash & High Speed Sync for Stills",
+                        "duration": "20:15",
+                        "videoId": "off-3-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                        "summary": "Master Godox wireless triggers, grid reflectors, and rim lights to sculpt dramatic portrait silhouettes during couple photo shoots.",
+                        "resources": [
+                            {
+                                "name": "Flash Ratio Reference Card",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "mod-off-4",
+                "title": "Week 4: Multi-Channel Audio & Live Sound Recording",
+                "lessons": [
+                    {
+                        "id": "les-off-4-1",
+                        "title": "4.1 Sennheiser & Rode Wireless Pro Mic Placement on Sherwani & Lehenga",
+                        "duration": "17:50",
+                        "videoId": "off-4-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                        "summary": "Discreetly mic the groom and panditji with moleskin and magnetic mounts, preventing fabric rustle and wireless dropouts.",
+                        "resources": [
+                            {
+                                "name": "Audio Gear Field Checklist",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-4-2",
+                        "title": "4.2 Sound Board Line-Out Recording & 32-Bit Float Backup",
+                        "duration": "19:05",
+                        "videoId": "off-4-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                        "summary": "Patch into live DJ mixers and live singing audio feeds using attenuation pads and 32-bit float recorders without clipping.",
+                        "resources": [
+                            {
+                                "name": "Audio Patch Cables & Adapter Guide",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "mod-off-5",
+                "title": "Week 5: Footage Ingestion, Proxy Workflow & Multi-Cam Sync",
+                "lessons": [
+                    {
+                        "id": "les-off-5-1",
+                        "title": "5.1 4K Ingestion & Chronological Haldi, Mehndi, Varmala Bins",
+                        "duration": "18:45",
+                        "videoId": "off-5-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+                        "summary": "Organize 500GB+ multi-camera wedding data into chronological bins: Haldi, Mehndi, Varmala, Vidai, and Reception with color labeling.",
+                        "resources": [
+                            {
+                                "name": "Studio Project Folder Hierarchy Template",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-5-2",
+                        "title": "5.2 Lag-Free ProRes & CineForm Proxy Creation",
+                        "duration": "21:10",
+                        "videoId": "off-5-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+                        "summary": "Generate lightweight ProRes proxies via Adobe Media Encoder to edit buttery smooth on any laptop or desktop without timeline stutter.",
+                        "resources": [
+                            {
+                                "name": "Adobe Media Encoder Proxy Presets (.epr)",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "mod-off-6",
+                "title": "Week 6: Pacing, Rhythm & The Emotional Arc",
+                "lessons": [
+                    {
+                        "id": "les-off-6-1",
+                        "title": "6.1 Beat-Matching Cuts without Jump Cuts",
+                        "duration": "23:40",
+                        "videoId": "off-6-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+                        "summary": "Cut high-energy teaser clips precisely on percussion drops, sub-bass hits, and musical accents while preserving spatial continuity.",
+                        "resources": [
+                            {
+                                "name": "Rhythm & Marker Cheatsheet",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-6-2",
+                        "title": "6.2 The 5 Chapters of a Modern Indian Wedding Film",
+                        "duration": "25:15",
+                        "videoId": "off-6-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                        "summary": "Structure full wedding films: Hook, Emotional Family Interviews, Ritual Solemnity, High Energy Celebration, and Meaningful Finale.",
+                        "resources": [
+                            {
+                                "name": "Story Arc Blueprint (PDF)",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "mod-off-7",
+                "title": "Week 7: DaVinci Resolve \u2014 Color Space & Primary Balancing",
+                "lessons": [
+                    {
+                        "id": "les-off-7-1",
+                        "title": "7.1 DaVinci Color Management (RCM) vs ACES vs Node Trees",
+                        "duration": "28:10",
+                        "videoId": "off-7-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                        "summary": "Set up DaVinci YRGB Color Managed project settings, set camera input color spaces, and standardize Rec.709 2.4 output transforms.",
+                        "resources": [
+                            {
+                                "name": "DaVinci Color Management Cheat Sheet",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-7-2",
+                        "title": "7.2 Primary Wheels, Lift-Gamma-Gain & Offset Balancing",
+                        "duration": "26:30",
+                        "videoId": "off-7-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                        "summary": "Balance shadows, midtones, and highlights on Waveform and Parade scopes to neutralize color casts across 100+ shots in minutes.",
+                        "resources": [
+                            {
+                                "name": "DaVinci Primary Balancing Shortcuts",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "mod-off-8",
+                "title": "Week 8: Advanced Looks, Skin Tone Matching & Film Emulation",
+                "lessons": [
+                    {
+                        "id": "les-off-8-1",
+                        "title": "8.1 Indian Skin Tone Qualifier & Vectorscope Indicator",
+                        "duration": "24:20",
+                        "videoId": "off-8-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+                        "summary": "Isolate skin tones using HSL & 3D qualifiers, align hues exactly to the vectorscope skin line, and eliminate yellow jaundice or magenta casts.",
+                        "resources": [
+                            {
+                                "name": "Quick Art Gold Skin PowerGrade (.drx)",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-8-2",
+                        "title": "8.2 Film Halation, 35mm Grain & Kodak 2383 Emulation",
+                        "duration": "22:50",
+                        "videoId": "off-8-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+                        "summary": "Apply organic film grain, soft highlight roll-off, and subtle edge halation to give digital wedding footage a timeless cinema look.",
+                        "resources": [
+                            {
+                                "name": "Film Emulation LUT Pack (.cube)",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "mod-off-9",
+                "title": "Week 9: Sound Design, Foley & Dialogue Isolation",
+                "lessons": [
+                    {
+                        "id": "les-off-9-1",
+                        "title": "9.1 Cinematic Audio Stems, Risers, Whooshes & Impacts",
+                        "duration": "21:15",
+                        "videoId": "off-9-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+                        "summary": "Layer subtle sound effects: ghungroo jingles, wind sweeps, slow-motion bass drops, and crowd applause to enhance visual emotion.",
+                        "resources": [
+                            {
+                                "name": "Indian Wedding SFX Starter Pack (WAV)",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-9-2",
+                        "title": "9.2 AI Voice Isolation & Eliminating Loud Mandap DJ Distortion",
+                        "duration": "18:40",
+                        "videoId": "off-9-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                        "summary": "Use AI neural voice isolation to salvage garbled panditji mantras and bride speech even with blasting generators and speakers nearby.",
+                        "resources": [
+                            {
+                                "name": "Fairlight Dialogue EQ Presets",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "mod-off-10",
+                "title": "Week 10: High-End Karizma & Canvera Album Architecture",
+                "lessons": [
+                    {
+                        "id": "les-off-10-1",
+                        "title": "10.1 12x36 Spread Layouts & Grid Typography in Photoshop",
+                        "duration": "27:10",
+                        "videoId": "off-10-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                        "summary": "Build balanced, uncluttered 12x36 Karizma and Canvera spreads with safe margins, central crease clearance, and elegant serif typography.",
+                        "resources": [
+                            {
+                                "name": "5x Master PSD Album Templates (12x36)",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-10-2",
+                        "title": "10.2 High-Frequency Separation & Realistic Skin Retouching",
+                        "duration": "25:35",
+                        "videoId": "off-10-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                        "summary": "Clean skin blemishes, even out skin tone, and preserve natural pores using high-frequency separation without that fake plastic blur.",
+                        "resources": [
+                            {
+                                "name": "Frequency Separation Photoshop Action (.atn)",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "mod-off-11",
+                "title": "Week 11: AI Integration & Workflow Automation",
+                "lessons": [
+                    {
+                        "id": "les-off-11-1",
+                        "title": "11.1 Topaz Video AI & Neural Upscaling for Low-Light Wedding Shots",
+                        "duration": "20:45",
+                        "videoId": "off-11-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+                        "summary": "Remove sensor noise and upscale grainy night-time Barat shots into crisp, clean 4K footage using Topaz Video AI Proteus models.",
+                        "resources": [
+                            {
+                                "name": "Topaz Wedding Denoise Settings Profile",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-11-2",
+                        "title": "11.2 AI Culling & Batch Retouching",
+                        "duration": "19:15",
+                        "videoId": "off-11-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+                        "summary": "Cull 5,000+ wedding photos in 30 minutes using AI face detection, blink detection, and focus scores to deliver proofing galleries faster.",
+                        "resources": [
+                            {
+                                "name": "AI Culling Workflow Guide",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "mod-off-12",
+                "title": "Week 12: Studio Business, Pricing & Client Contracts",
+                "lessons": [
+                    {
+                        "id": "les-off-12-1",
+                        "title": "12.1 High-Ticket Wedding Packages: Quoting \u20b91.5L to \u20b95L+",
+                        "duration": "28:50",
+                        "videoId": "off-12-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+                        "summary": "Structure tiered packages (Classic, Cinematic, Royal Luxury) to attract high-budget clients and stop competing on discount pricing.",
+                        "resources": [
+                            {
+                                "name": "Studio Pricing & Quotation Template (Excel)",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-12-2",
+                        "title": "12.2 Professional Client Agreement & Deliverable Timeline Clauses",
+                        "duration": "22:30",
+                        "videoId": "off-12-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                        "summary": "Protect your studio against payment delays, endless revision demands, and force majeure events with an ironclad legal contract.",
+                        "resources": [
+                            {
+                                "name": "Indian Wedding Studio Client Agreement (Word/PDF)",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "mod-off-13",
+                "title": "Week 13: Capstone Wedding Film Production",
+                "lessons": [
+                    {
+                        "id": "les-off-13-1",
+                        "title": "13.1 Live Studio Simulation & Complete Wedding Edit Breakdown",
+                        "duration": "32:00",
+                        "videoId": "off-13-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                        "summary": "Full start-to-finish edit of a real wedding project: raw footage ingestion, storyline assembly, color pass, sound design, and master export.",
+                        "resources": [
+                            {
+                                "name": "Full 4K Practice Project Pack Link",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-13-2",
+                        "title": "13.2 Mentor Anil Sharma 1-on-1 Timeline Critique",
+                        "duration": "26:40",
+                        "videoId": "off-13-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                        "summary": "Review student project submissions, identify common cutting errors, fix audio ducking, and refine color balance before client handover.",
+                        "resources": [
+                            {
+                                "name": "Mentor Feedback Review Rubric",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "mod-off-14",
+                "title": "Week 14: Portfolio Review & Final Cut Showcase",
+                "lessons": [
+                    {
+                        "id": "les-off-14-1",
+                        "title": "14.1 Building a High-Converting Instagram & YouTube Portfolio",
+                        "duration": "24:10",
+                        "videoId": "off-14-1",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+                        "summary": "Package your best clips into showreel gems, craft captions that generate direct WhatsApp enquiries, and run targeted Instagram ads.",
+                        "resources": [
+                            {
+                                "name": "Showreel Creation Blueprint",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "les-off-14-2",
+                        "title": "14.2 Certification Assessment & Alumni Directory Induction",
+                        "duration": "20:00",
+                        "videoId": "off-14-2",
+                        "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+                        "summary": "Final capstone project verification, issuing official verifiable Academy Certification, and getting listed in the Quick Art Alumni Hall of Fame.",
+                        "resources": [
+                            {
+                                "name": "Course Completion & Alumni Onboarding Kit",
+                                "url": "downloads/course-details.pdf"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     }
 ]

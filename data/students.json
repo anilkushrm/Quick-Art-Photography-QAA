@@ -56,17 +56,17 @@
         "email": "unverified@example.com",
         "avatar": "",
         "enrolledCourses": [
-            "course-cinematic-wedding"
+            "course-offline-masterclass"
         ],
         "isOfflineStudent": true,
         "offlineAdmissionId": "QAA-OFF-2026-6F8CD",
-        "appliedCourse": "14-Week Master Class (Offline Lab)",
+        "appliedCourse": "Wedding Filmmaking & Post-Production Course",
         "paymentStatus": "paid",
         "isPaid500": true,
         "isApproved": true,
         "status": "active",
         "studioName": "",
-        "currentRole": "Student \/ Beginner",
+        "currentRole": "Student / Beginner",
         "workCity": "",
         "registeredAt": "2026-09-28T13:02:23+00:00"
     }

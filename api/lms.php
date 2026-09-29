@@ -143,7 +143,7 @@ function clean_phone($p) {
 // Helper to map offline admission program to LMS Course ID
 function map_offline_course_id($courseTitle) {
     $t = strtolower(trim((string)$courseTitle));
-    if (!$t) return 'course-cinematic-wedding';
+    if (!$t) return 'course-offline-masterclass';
 
     // 1. Direct ID or exact title match in courses.json
     $courses = load_courses();
@@ -160,8 +160,8 @@ function map_offline_course_id($courseTitle) {
     if (strpos($t, 'album') !== false) {
         return 'course-album-design';
     }
-    if (strpos($t, 'filmmaking') !== false || strpos($t, 'post-production') !== false || strpos($t, 'wedding') !== false || strpos($t, 'cinematic') !== false) {
-        return 'course-cinematic-wedding';
+    if (strpos($t, 'filmmaking') !== false || strpos($t, 'post-production') !== false || strpos($t, 'wedding') !== false || strpos($t, 'cinematic') !== false || strpos($t, '14-week') !== false || strpos($t, 'master') !== false || strpos($t, 'offline') !== false) {
+        return 'course-offline-masterclass';
     }
     if (strpos($t, 'marketing') !== false || strpos($t, 'studio') !== false) {
         return 'course-digital-marketing';
@@ -174,7 +174,7 @@ function map_offline_course_id($courseTitle) {
         }
     }
 
-    return 'course-cinematic-wedding';
+    return 'course-offline-masterclass';
 }
 
 function extract_youtube_id($input) {
@@ -1002,6 +1002,9 @@ if ($action === 'public-course-structure' && $method === 'GET') {
         }
     }
     if (!$course) json_err('Course not found', 404);
+    if (!empty($course['isInternalOnly']) || !empty($course['isAdmissionCourse'])) {
+        json_err('Course details are only accessible to enrolled students', 403);
+    }
 
     // Return only public-safe fields (no videoUrls, no student data)
     $totalLessons = 0;
@@ -1254,8 +1257,12 @@ if ($action === 'logout' && $method === 'POST') {
 // 9. Course Catalog (Public)
 if ($action === 'catalog' && $method === 'GET') {
     $courses = load_courses();
-    $publicList = array_map(function($c) {
-        return [
+    $publicList = [];
+    foreach ($courses as $c) {
+        if (!empty($c['isInternalOnly']) || !empty($c['isAdmissionCourse'])) {
+            continue; // Private admission-only courses are unlisted from public catalog
+        }
+        $publicList[] = [
             'id' => $c['id'],
             'slug' => $c['slug'] ?? '',
             'title' => $c['title'],
@@ -1269,7 +1276,7 @@ if ($action === 'catalog' && $method === 'GET') {
             'badge' => $c['badge'] ?? '',
             'modulesCount' => count($c['modules'] ?? [])
         ];
-    }, $courses);
+    }
     json_ok(['catalog' => $publicList]);
 }
 
@@ -1339,6 +1346,9 @@ if ($action === 'checkout-enroll' && $method === 'POST') {
         }
     }
     if (!$selectedCourse) json_err('Course not found', 404);
+    if (!empty($selectedCourse['isInternalOnly']) || !empty($selectedCourse['isAdmissionCourse'])) {
+        json_err('This offline course is only accessible via the admission form at /admission/.', 403);
+    }
 
     $basePrice = intval($selectedCourse['price'] ?? 4999);
     $finalAmount = $basePrice;
@@ -1480,6 +1490,9 @@ if ($action === 'create-razorpay-order' && $method === 'POST') {
         }
     }
     if (!$selectedCourse) json_err('Course not found', 404);
+    if (!empty($selectedCourse['isInternalOnly']) || !empty($selectedCourse['isAdmissionCourse'])) {
+        json_err('This offline course is only accessible via the admission form at /admission/.', 403);
+    }
 
     $basePrice = intval($selectedCourse['price'] ?? 4999);
     $finalAmount = $basePrice;

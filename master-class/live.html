@@ -28,67 +28,99 @@
 
   <!-- Schema.org Structured Data -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "EducationEvent",
-        "@id": "https://quickartphotography.in/master-class/live.html#event",
-        "name": "Wedding Video Editing Me AI का सही use - 2 Din Live Workshop",
-        "description": "Special Wedding Photographers & Video Editors ke liye 2 Din Ka Practical Live Workshop (Only ₹21 Me). Day 1: AI Photo Editing, Day 2: AI Video Editing.",
-        "eventStatus": "https://schema.org/EventScheduled",
-        "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
-        "location": {
-          "@type": "VirtualLocation",
-          "url": "https://quickartphotography.in/master-class/live.html"
-        },
-        "offers": {
-          "@type": "Offer",
-          "price": "21",
-          "priceCurrency": "INR",
-          "availability": "https://schema.org/InStock",
-          "url": "https://quickartphotography.in/master-class/live.html"
-        },
-        "performer": {
-          "@type": "Person",
-          "name": "Anil Sharma",
-          "jobTitle": "Lead Mentor & Filmmaker",
-          "sameAs": "https://maps.app.goo.gl/avp33qPyUnAKZuJa7"
-        },
-        "organizer": {
-          "@type": "EducationalOrganization",
-          "name": "Quick Art Photography Academy",
-          "url": "https://quickartphotography.in/",
-          "logo": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp"
-        }
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "EducationEvent",
+      "@id": "https://quickartphotography.in/master-class/live.html#event",
+      "name": "Wedding Video Editing Me AI का सही use - 2 Din Live Workshop",
+      "description": "Special Wedding Photographers & Video Editors ke liye 2 Din Ka Practical Live Workshop (Only ₹21 Me). Day 1: AI Photo Editing, Day 2: AI Video Editing.",
+      "eventStatus": "https://schema.org/EventScheduled",
+      "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+      "location": {
+        "@type": "VirtualLocation",
+        "url": "https://quickartphotography.in/master-class/live.html"
       },
-      {
-        "@type": "Course",
-        "@id": "https://quickartphotography.in/master-class/live.html#course",
-        "name": "Wedding Video Editing Me AI का सही use - 2 Din Live Workshop",
-        "description": "Learn 10x fast wedding video editing and photo retouching using cutting-edge AI tools with mentor Anil Sharma.",
-        "provider": {
-          "@type": "EducationalOrganization",
-          "name": "Quick Art Photography Academy",
-          "url": "https://quickartphotography.in/"
-        },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.9",
-          "bestRating": "5",
-          "worstRating": "1",
-          "ratingCount": "1800",
-          "reviewCount": "1800"
-        },
-        "offers": {
-          "@type": "Offer",
-          "price": "21",
-          "priceCurrency": "INR"
-        }
+      "offers": {
+        "@type": "Offer",
+        "price": "21",
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock",
+        "url": "https://quickartphotography.in/master-class/live.html"
+      },
+      "performer": {
+        "@type": "Person",
+        "name": "Anil Sharma",
+        "jobTitle": "Lead Mentor & Filmmaker",
+        "sameAs": "https://maps.app.goo.gl/avp33qPyUnAKZuJa7"
+      },
+      "organizer": {
+        "@type": "EducationalOrganization",
+        "name": "Quick Art Photography Academy",
+        "url": "https://quickartphotography.in/",
+        "logo": "https://quickartphotography.in/home-assets/ec55a6be3747a9.webp"
       }
-    ]
-  }
-  </script>
+    },
+    {
+      "@type": "Course",
+      "@id": "https://quickartphotography.in/master-class/live.html#course",
+      "name": "Wedding Video Editing Me AI का सही use - 2 Din Live Workshop",
+      "description": "Learn 10x fast wedding video editing and photo retouching using cutting-edge AI tools with mentor Anil Sharma.",
+      "provider": {
+        "@type": "EducationalOrganization",
+        "name": "Quick Art Photography Academy",
+        "url": "https://quickartphotography.in/"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": 4.9,
+        "bestRating": 5,
+        "worstRating": 1,
+        "ratingCount": 1800,
+        "reviewCount": 1800
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Karan Verma"
+          },
+          "datePublished": "2026-09-15",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": 5,
+            "bestRating": 5,
+            "worstRating": 1
+          },
+          "reviewBody": "AI se wedding photos aur videos edit karne ka practical workflow itne kam price me sikhna kamaal ka experience raha."
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Sunil Kumar"
+          },
+          "datePublished": "2026-09-22",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": 5,
+            "bestRating": 5,
+            "worstRating": 1
+          },
+          "reviewBody": "1-click me RAW photos retouching aur AI audio enhance ka live practical dekh kar maza aa gaya. 100% value for money!"
+        }
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "21",
+        "priceCurrency": "INR"
+      }
+    }
+  ]
+}
+    </script>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -624,9 +656,14 @@
       font-weight: 800;
       color: var(--gold);
       margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      display: block;
+      line-height: 1.45;
+    }
+
+    .bonuses-title .bonus-icon {
+      margin-right: 6px;
+      display: inline-block;
+      vertical-align: middle;
     }
 
     .bonus-pill {
@@ -672,19 +709,25 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
       margin-bottom: 16px;
     }
 
     .pass-type {
       font-size: 11px;
       font-weight: 800;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
       background: rgba(216, 161, 83, 0.2);
       color: var(--gold);
       border: 1px solid rgba(216, 161, 83, 0.4);
-      padding: 4px 10px;
-      border-radius: 6px;
+      padding: 5px 11px;
+      border-radius: 8px;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
     }
 
     .seats-left {
@@ -693,8 +736,12 @@
       color: #f87171;
       background: rgba(239, 68, 68, 0.15);
       border: 1px solid rgba(239, 68, 68, 0.35);
-      padding: 4px 10px;
-      border-radius: 6px;
+      padding: 5px 11px;
+      border-radius: 8px;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
     }
 
     .ticket-price-row {
@@ -805,29 +852,85 @@
       color: var(--gold);
     }
 
+    @keyframes btn-shimmer-sweep {
+      0% {
+        left: -120%;
+      }
+      25%, 100% {
+        left: 140%;
+      }
+    }
+
+    @keyframes btn-pulse-aura {
+      0%, 100% {
+        box-shadow: 0 8px 24px rgba(216, 161, 83, 0.42), 0 0 0 0 rgba(245, 158, 11, 0.5);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 12px 36px rgba(216, 161, 83, 0.7), 0 0 0 8px rgba(245, 158, 11, 0);
+        transform: scale(1.018);
+      }
+    }
+
+    @keyframes btn-ticket-wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      20% { transform: rotate(-10deg) scale(1.15); }
+      40% { transform: rotate(10deg) scale(1.15); }
+      60% { transform: rotate(-6deg); }
+      80% { transform: rotate(6deg); }
+    }
+
     .btn-checkout-pay {
       width: 100%;
-      padding: 15px;
-      background: linear-gradient(135deg, #f59e0b, #d8a153);
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 35%, #d8a153 100%);
       color: #080d18;
-      border: none;
-      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 14px;
       font-family: 'Outfit', sans-serif;
-      font-size: 17px;
+      font-size: 17.5px;
       font-weight: 800;
+      letter-spacing: 0.01em;
       cursor: pointer;
-      box-shadow: 0 8px 25px rgba(216, 161, 83, 0.4);
-      margin-top: 8px;
+      margin-top: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      transition: transform 0.2s, box-shadow 0.2s;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(216, 161, 83, 0.45);
+      animation: btn-pulse-aura 2.4s infinite ease-in-out;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-checkout-pay::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.5) 50%, transparent 100%);
+      transform: skewX(-25deg);
+      animation: btn-shimmer-sweep 3.2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
     }
 
     .btn-checkout-pay:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(216, 161, 83, 0.5);
+      transform: translateY(-2px) scale(1.025);
+      box-shadow: 0 16px 40px rgba(216, 161, 83, 0.75);
+      filter: brightness(1.06);
+    }
+
+    .btn-checkout-pay:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 4px 14px rgba(216, 161, 83, 0.4);
+    }
+
+    .btn-checkout-pay .btn-anim-icon {
+      display: inline-block;
+      animation: btn-ticket-wiggle 2.4s infinite ease-in-out;
     }
 
     .security-note {
@@ -1593,6 +1696,8 @@
       }
       .bonuses-title {
         font-size: 17px !important;
+        display: block !important;
+        line-height: 1.45 !important;
       }
       .bonus-pill {
         flex-direction: column !important;
@@ -1606,6 +1711,19 @@
       .ticket-card {
         padding: 20px 16px !important;
         border-radius: 18px !important;
+      }
+      .ticket-badge-row {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+      }
+      .pass-type, .seats-left {
+        justify-content: center !important;
+        text-align: center !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 6px 12px !important;
       }
       .ticket-price-val {
         font-size: 34px !important;
@@ -1668,20 +1786,39 @@
         font-weight: 700;
       }
       .btn-mobile-book {
-        background: linear-gradient(135deg, #f59e0b, #d8a153);
+        background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 35%, #d8a153 100%);
         color: #07090e;
-        border: none;
+        border: 1px solid rgba(255, 255, 255, 0.35);
         font-family: 'Outfit', sans-serif;
         font-size: 13.5px;
         font-weight: 800;
         padding: 10px 18px;
         border-radius: 10px;
         cursor: pointer;
-        box-shadow: 0 4px 14px rgba(216, 161, 83, 0.4);
+        box-shadow: 0 4px 16px rgba(216, 161, 83, 0.5);
         text-decoration: none;
         display: inline-flex;
         align-items: center;
         gap: 6px;
+        position: relative;
+        overflow: hidden;
+        animation: btn-pulse-aura 2.4s infinite ease-in-out;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .btn-mobile-book::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -120%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.5) 50%, transparent 100%);
+        transform: skewX(-25deg);
+        animation: btn-shimmer-sweep 3.2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+      }
+      .btn-mobile-book:active {
+        transform: scale(0.97);
       }
 
       /* Footer Mobile Polish */
@@ -1758,7 +1895,7 @@
 
   <!-- Top Announcement Bar -->
   <div class="top-announcement" id="lp-top-announcement">
-    <span>⚡ SPECIAL OFFER</span> 2 DIN KA LIVE WORKSHOP ONLY <span class="dynamic-ticket-price">₹21</span> MEIN! • BATCH STARTS HAR SUNDAY SHAAM 07:00 BAJE
+    <span>⚡ LIVE BATCH THIS SUNDAY @ 07:00 PM</span> • ONLY 17 SEATS LEFT AT <span class="dynamic-ticket-price">₹21</span> (PRICE INCREASES TO ₹999)
   </div>
 
   <div class="container">
@@ -1781,33 +1918,33 @@
     <section class="hero-section">
       <div class="live-badge-pill">
         <span class="live-dot"></span>
-        <span id="hero-badge-tag">🔴 2-DAY LIVE WORKSHOP • SPECIAL FOR WEDDING PHOTOGRAPHERS &amp; EDITORS</span>
+        <span id="hero-badge-tag">🔴 2-DAY PRACTICAL LIVE WORKSHOP • BATCH STARTS THIS SUNDAY 07:00 PM</span>
       </div>
 
       <h1 class="hero-title" id="masterclass-title">
-        Wedding Video Editing Me AI का सही use <br>
-        <span class="gold-gradient">AI Se 10x Fast Wedding Video कैसे Edit करे</span>
+        Wedding Photo &amp; Video Editing Me AI Ka Sahi Use <br>
+        <span class="gold-gradient">1-Click Me 500+ RAW Photos &amp; 10x Fast Cinematic Teaser Edit Karein</span>
       </h1>
 
       <p class="hero-sub" id="masterclass-sub">
-        Special Wedding Photographers &amp; Video Editors ke liye 2 Din Ka Practical Live Workshop (Only <span class="dynamic-ticket-price">₹21</span> Me). <br>
-        <strong>Day 01:</strong> AI Se Wedding Photo Editing &amp; Retouching &nbsp;|&nbsp; <strong>Day 02:</strong> AI Se Wedding Video Editing &amp; 10x Fast Timeline Workflow. Shaadi season me raat-raat bhar jagna band — ghanton ka manual kaam minton me finish karein!
+        Shaadi season me raat-raat bhar jagna band! Special Wedding Photographers &amp; Video Editors ke liye 2 Din Ka Practical Live Workshop (Only <span class="dynamic-ticket-price">₹21</span> Me). <br>
+        <strong>Day 01:</strong> 1-Click AI Wedding Photo Editing &amp; 500+ RAW Bulk Retouching &nbsp;|&nbsp; <strong>Day 02:</strong> AI Se Professional Video Editing (Teasers, Highlights &amp; Pre-Wedding).
       </p>
 
       <!-- Live Schedule Info Strip -->
       <div class="live-schedule-strip">
-        <div class="schedule-pill">
+        <div class="schedule-pill highlight-gold">
           <span class="sch-icon">🗓️</span>
           <div>
             <span class="sch-label">LIVE BATCH TIMING</span>
-            <strong class="sch-val">Har Sunday Shaam 07:00 PM Se Live</strong>
+            <strong class="sch-val">This Sunday @ 07:00 PM Sharp (Live)</strong>
           </div>
         </div>
         <div class="schedule-pill">
           <span class="sch-icon">⏳</span>
           <div>
-            <span class="sch-label">WORKSHOP FORMAT</span>
-            <strong class="sch-val">2 Days Live Workshop (Sun &amp; Mon)</strong>
+            <span class="sch-label">WORKSHOP DURATION</span>
+            <strong class="sch-val">2-Day Practical Masterclass (Sun &amp; Mon)</strong>
           </div>
         </div>
         <div class="schedule-pill highlight-gold">
@@ -1834,7 +1971,7 @@
       <!-- Countdown Timer Container -->
       <div class="timer-container" id="countdown-wrap">
         <div class="timer-kicker">
-          <span>⏳</span> NEXT LIVE CLASS STARTS IN (HAR SUNDAY SHAAM 07:00 BAJE)
+          <span>⏳</span> NEXT LIVE BATCH STARTS THIS SUNDAY AT 07:00 PM SHARP • LIMITED SEATS!
         </div>
         <div class="timer-wrap">
           <div class="timer-unit">
@@ -1858,7 +1995,7 @@
           </div>
         </div>
         <div class="timer-session-info">
-          📅 Next Live Session: <span id="next-session-date">Coming Sunday Shaam 07:00 PM (IST)</span> • Live on Zoom / Private HD Studio Stream
+          📅 Next Live Session: <span id="next-session-date">This Sunday Shaam 07:00 PM (IST)</span> • Live on Zoom / Private HD Studio Stream
         </div>
       </div>
 
@@ -1866,9 +2003,9 @@
       <div class="hook-chai-callout">
         <div class="hook-chai-icon">☕</div>
         <div>
-          <div class="hook-chai-title">Sirf Ek Chai Ki Keemat (<span class="dynamic-ticket-price">₹21</span>) Me 2 Din Ka Complete Live Workshop!</div>
+          <div class="hook-chai-title">Sirf Ek Cup Chai Ki Keemat (<span class="dynamic-ticket-price">₹21</span>) Me 2 Din Ka Complete Live Workshop!</div>
           <div class="hook-chai-desc">
-            Photoshop AI, Lightroom AI, Premiere Pro &amp; DaVinci Resolve ke secret workflows seekhein jisse aapka ghanton ka editing time 80% kam ho jaye. Shaadi ke season me time aur client dono bachayein!
+            Agle Sunday shaam 7 baje mere saath live timeline par baithiye. <strong>1-Click me poori wedding ki 500+ RAW photos edit karna</strong> aur <strong>Premiere Pro me Cinematic Teasers, Pre-Wedding Highlights &amp; Viral Reels AI se 30 minute me finish karna</strong> seekhein. Batch shuru hone ke baad price badh kar ₹999 ho jayegi!
           </div>
         </div>
       </div>
@@ -1933,14 +2070,22 @@
           </div>
 
           <h3 style="font-size:20px;margin-bottom:14px;">
-            <span>✨</span> Day 1: AI Se Wedding Photo Editing &amp; Retouching Mastery
+            <span>✨</span> Day 1: 1-Click AI Wedding Photo Editing &mdash; Poori Wedding Ke 500+ RAW Photos Edit Karein
           </h3>
           <p style="font-size:13.5px;color:#94a3b8;margin-bottom:20px;line-height:1.5;">
-            Special Wedding Photographers ke liye: Haldi, Mehendi, Sangeet &amp; Reception photos ko minton me Bollywood magazine level banana seekhein.
+            Special Wedding Photographers ke liye: 500+ RAW wedding photos ko 15 minute me 1-click bulk color grade, bridal skin retouch aur Haldi/Reception lighting balance seekhein.
           </p>
 
           <div class="module-item">
             <div class="module-num">1</div>
+            <div>
+              <div class="module-title">1-Click AI Bulk Photo Editing (500+ RAW Photos in 15 Mins)</div>
+              <div class="module-desc">Lightroom AI se poori shaadi ki gallery (Haldi, Mehendi, Jaimala, Reception) ko 1-click me consistent cinematic tones aur perfect exposure me batch edit karna.</div>
+            </div>
+          </div>
+
+          <div class="module-item">
+            <div class="module-num">2</div>
             <div>
               <div class="module-title">AI Bridal Skin Retouching &amp; Smooth Face Glow</div>
               <div class="module-desc">Bina plastic look ke natural skin texture retain karte hue blemishes, dark circles aur pimples 1-click me clean karna aur radiant bridal face glow add karna.</div>
@@ -1948,7 +2093,7 @@
           </div>
 
           <div class="module-item">
-            <div class="module-num">2</div>
+            <div class="module-num">3</div>
             <div>
               <div class="module-title">Haldi, Mehendi &amp; Sangeet Lighting AI Color Correction</div>
               <div class="module-desc">Haldi ke harsh yellow light, dark indoor hall aur mixed stage LED lights ko AI se auto-balance karke creamy natural tones lana.</div>
@@ -1956,25 +2101,17 @@
           </div>
 
           <div class="module-item">
-            <div class="module-num">3</div>
-            <div>
-              <div class="module-title">Generative AI Background Cleanup &amp; Crowd Removal</div>
-              <div class="module-desc">Mandap, jaimala stage ya couple portrait ke piche unwanted rishtedar, photographers aur electric wires ko Photoshop AI se 1-click me natural tareeqe se remove karna.</div>
-            </div>
-          </div>
-
-          <div class="module-item">
             <div class="module-num">4</div>
             <div>
-              <div class="module-title">500+ RAW Wedding Photos Bulk Auto Batch Editing</div>
-              <div class="module-desc">Ek-ek photo alag se edit karne ke badle poori shaadi ki gallery (500+ photos) ko Lightroom AI batch process karke 15 minute me client-ready deliver karna.</div>
+              <div class="module-title">Generative AI Background Crowd, People &amp; Wires Removal</div>
+              <div class="module-desc">Mandap, jaimala stage ya couple portrait ke piche unwanted rishtedar, photographers aur electric wires ko Photoshop AI se 1-click me natural tareeqe se remove karna.</div>
             </div>
           </div>
 
           <div class="module-item">
             <div class="module-num">5</div>
             <div>
-              <div class="module-title">AI Wedding Album Design &amp; Creative Layout Ideas</div>
+              <div class="module-title">AI Wedding Album Design &amp; Smart Fast Layouts</div>
               <div class="module-desc">Smart photo selection, auto composition grids aur print-ready color profiles jisse album design ka kaam 3 din ke badle 3 ghante me finish ho jaye.</div>
             </div>
           </div>
@@ -1992,14 +2129,30 @@
           </div>
 
           <h3 style="font-size:20px;margin-bottom:14px;">
-            <span>⚡</span> Day 2: AI Se Wedding Video Editing &amp; 10x Fast Timeline Workflow
+            <span>⚡</span> Day 2: AI Se Professional Video Editing &mdash; Teaser, Cinematic Highlight &amp; Pre-Wedding Video
           </h3>
           <p style="font-size:13.5px;color:#94a3b8;margin-bottom:20px;line-height:1.5;">
-            Special Wedding Video Editors ke liye: Premiere Pro &amp; DaVinci Resolve me teaser, highlight aur full wedding timeline ko 10x fast edit karna seekhein.
+            Special Wedding Video Editors ke liye: Premiere Pro &amp; DaVinci Resolve me Wedding Teasers, Cinematic Highlights aur Pre-Wedding Videos ko 10x Fast edit karna seekhein.
           </p>
 
           <div class="module-item">
             <div class="module-num">1</div>
+            <div>
+              <div class="module-title">30-Minute AI Wedding Teaser Cut (AI Beat Sync &amp; Text-Cut)</div>
+              <div class="module-desc">Music beat markers par auto cut sync karna aur text transcript se dead moments delete karke 8 ghante ka teaser kaam 30 minute me finish karna.</div>
+            </div>
+          </div>
+
+          <div class="module-item">
+            <div class="module-num">2</div>
+            <div>
+              <div class="module-title">Cinematic Wedding Highlight &amp; Pre-Wedding Storytelling</div>
+              <div class="module-desc">Emotional vows sync, slow-motion speed ramps aur cinematic transitions ke saath Bollywood trailer level wedding highlights aur pre-wedding video cut karna.</div>
+            </div>
+          </div>
+
+          <div class="module-item">
+            <div class="module-num">3</div>
             <div>
               <div class="module-title">1-Click AI Studio Voice &amp; Noise Clean</div>
               <div class="module-desc">Dholak, DJ sound, fan noise aur hawa ki kharab audio clips ko 1-click me clean karke bride/groom ki voice ko studio microphone jaisa crystal clear banana.</div>
@@ -2007,7 +2160,7 @@
           </div>
 
           <div class="module-item">
-            <div class="module-num">2</div>
+            <div class="module-num">4</div>
             <div>
               <div class="module-title">Low-Light &amp; Shaky Clips Topaz AI 4K Upscale</div>
               <div class="module-desc">Baraat ya stage par kharab roshni me aayi grainy, blur aur shaky handheld clips ko AI Neural Engine se ultra-sharp 4K cinematic footage me convert karna.</div>
@@ -2015,26 +2168,10 @@
           </div>
 
           <div class="module-item">
-            <div class="module-num">3</div>
-            <div>
-              <div class="module-title">AI Beat Sync &amp; 30-Minute Wedding Teaser Cut</div>
-              <div class="module-desc">Music beat markers par auto cut sync karna aur text transcript se dead moments delete karke 8 ghante ka teaser kaam 30 minute me finish karna.</div>
-            </div>
-          </div>
-
-          <div class="module-item">
-            <div class="module-num">4</div>
-            <div>
-              <div class="module-title">Multi-Camera 1-Click AI Color Match</div>
-              <div class="module-desc">Sony, Canon, Panasonic alag-alag cameras ke colors aur picture profiles ko 1 second me perfect Bollywood match karna.</div>
-            </div>
-          </div>
-
-          <div class="module-item">
             <div class="module-num">5</div>
             <div>
-              <div class="module-title">Viral 9:16 Instagram Reels Smart AI Reframe</div>
-              <div class="module-desc">Full 16:9 horizontal wedding video ko smart AI face tracking ke saath viral 9:16 vertical reels me export karna taaki client ke Instagram par dhoom mach jaye.</div>
+              <div class="module-title">Multi-Camera 1-Click AI Color Match &amp; Viral 9:16 Reels</div>
+              <div class="module-desc">Sony, Canon, Panasonic alag-alag cameras ke colors aur picture profiles ko 1 second me perfect Bollywood match karna aur 9:16 reels reframe karna.</div>
             </div>
           </div>
         </div>
@@ -2042,7 +2179,7 @@
         <!-- Exclusive Free Bonuses Included with Ticket -->
         <div class="bonuses-box">
           <div class="bonuses-title">
-            <span>🎁</span> Free Bonuses Included With Your <span class="dynamic-ticket-price">₹21</span> Ticket (<span id="lp-bonus-val">Worth ₹4,999</span>)
+            <span class="bonus-icon">🎁</span> Free Bonuses Included With Your <span class="dynamic-ticket-price">₹21</span> Ticket (<span id="lp-bonus-val">Worth ₹4,999</span>)
           </div>
 
           <div id="lp-bonuses-container">
@@ -2813,10 +2950,12 @@
           const verifyData = await verifyRes.json();
 
           if (verifyData.ok && verifyData.token) {
-            // Save session token so student is logged in automatically
+            // Save session token so student is logged in automatically across all portal systems
+            localStorage.setItem('qaa_student_token', verifyData.token);
             localStorage.setItem('qa_student_token', verifyData.token);
-            alert('🎉 Payment Successful! Your Live Masterclass Pass has been issued. Redirecting to your Live Studio...');
-            window.location.href = '../portal/index.html#live/' + encodeURIComponent(activeWorkshopId);
+            alert('🎉 Payment Successful! Your 2-Day Live Masterclass Pass has been issued.\nOpening your Student Dashboard & Live Studio...');
+            const targetLiveId = verifyData.liveId || activeWorkshopId || 'live_demo_01';
+            window.location.href = '../portal/index.html?token=' + encodeURIComponent(verifyData.token) + '#live/' + encodeURIComponent(targetLiveId);
           } else {
             throw new Error(verifyData.error || 'Payment verification failed');
           }

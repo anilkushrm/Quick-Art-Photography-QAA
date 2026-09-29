@@ -101,15 +101,36 @@ body.landing-page-body {
 @media (min-width: 1024px) { .lp-hero-title { font-size: 50px !important; line-height: 1.12 !important; } }
 @media (min-width: 1280px) { .lp-hero-title { font-size: 52px !important; line-height: 1.12 !important; } }
 
-/* Original Warm Gold for Hero Sub-heading */
+/* Animated Gold Shimmer Sweep for Hero Sub-heading */
+@keyframes textGoldShineFlow {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
 .lp-hero-title span.gold,
 .lp-hero-title span.lp-gold-text,
 .lp-gold-text {
-  background: linear-gradient(135deg, #d8a153 0%, #f6d389 100%) !important;
+  display: inline-block !important;
+  background: linear-gradient(
+    90deg,
+    #d8a153 0%,
+    #e8b96e 20%,
+    #ffffff 45%,
+    #fff9e6 55%,
+    #e8b96e 80%,
+    #d8a153 100%
+  ) !important;
+  background-size: 200% auto !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
+  animation: textGoldShineFlow 3.5s linear infinite !important;
   text-shadow: none !important;
+  filter: none !important;
 }
 
 /* 5. BADGE PILL — PULSE */
@@ -998,14 +1019,23 @@ body.landing-page-body {
 .lp-gold-text {
   font-family: inherit !important;
   font-weight: inherit !important;
-  background: linear-gradient(135deg, #d8a153 0%, #f6d389 100%) !important;
+  display: inline-block !important;
+  background: linear-gradient(
+    90deg,
+    #d8a153 0%,
+    #e8b96e 20%,
+    #ffffff 45%,
+    #fff9e6 55%,
+    #e8b96e 80%,
+    #d8a153 100%
+  ) !important;
+  background-size: 200% auto !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
-  animation: none !important;
+  animation: textGoldShineFlow 3.5s linear infinite !important;
   filter: none !important;
   text-shadow: none !important;
-  display: inline !important;
 }
 
 .lp-hero-sub, .lp-hero-desc {

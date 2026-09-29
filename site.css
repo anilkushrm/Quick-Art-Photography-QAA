@@ -6463,35 +6463,40 @@ html.qa-animations-active .qa-scroll-right.is-revealed {
   --qa-emerald-success: #22c55e;
 }
 
-/* 2. Button Light Sweep Shimmer Animation */
-:is(.qa-demo, .lp-btn-primary, .hub-btn-enroll, .btn-gold, .lp-btn-card, .btn-primary) {
+/* 2. Button Continuous Animated Light Sweep + Soft Golden Glow */
+@keyframes btnContinuousShine {
+  0% {
+    left: -130%;
+  }
+  35%, 100% {
+    left: 160%;
+  }
+}
+
+:is(.qa-demo, .lp-btn-primary, .hub-btn-enroll, .btn-gold, .lp-btn-card, .btn-primary, .cs-action-btn, .lp-sticky-btn, .lp-pricing-btn) {
   position: relative !important;
   overflow: hidden !important;
   z-index: 1 !important;
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease !important;
 }
 
-:is(.qa-demo, .lp-btn-primary, .hub-btn-enroll, .btn-gold, .lp-btn-card, .btn-primary)::after {
+:is(.qa-demo, .lp-btn-primary, .hub-btn-enroll, .btn-gold, .lp-btn-card, .btn-primary, .cs-action-btn, .lp-sticky-btn, .lp-pricing-btn)::after {
   content: '' !important;
   position: absolute !important;
   top: 0 !important;
-  left: -140% !important;
-  width: 60% !important;
+  left: -130% !important;
+  width: 55% !important;
   height: 100% !important;
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.38) 50%,
     rgba(255, 255, 255, 0) 100%
   ) !important;
   transform: skewX(-25deg) !important;
   pointer-events: none !important;
   z-index: 2 !important;
-}
-
-:is(.qa-demo, .lp-btn-primary, .hub-btn-enroll, .btn-gold, .lp-btn-card, .btn-primary):hover::after {
-  left: 150% !important;
-  transition: left 0.75s ease-in-out !important;
+  animation: btnContinuousShine 2.8s ease-in-out infinite !important;
 }
 
 /* 3. Smooth Card Hover Elevation with Warm Gold Aura */
@@ -6592,44 +6597,49 @@ body {
 
 /* ==========================================================================
    ANIMATED GOLD SHIMMER — Hero Heading Second Line
-   Applied to: .lp-gold-text, .lp-hero-title span.gold
-   A smooth flowing gold-to-light-gold color sweep animation
+   Applied to: .lp-gold-text, .lp-hero-title span.gold, .lp-hero-title span.lp-gold-text
+   A smooth flowing light gleam across gold text
    ========================================================================== */
 
-/* Keyframe: Gold color flows left-to-right like liquid gold */
-@keyframes qaGoldFlow {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* Keyframe: Seamless gold shimmer shine sweep across heading text */
+@keyframes textGoldShineFlow {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
 }
 
 /* Apply animated gradient to hero title gold spans */
 .lp-hero-title .lp-gold-text,
 .lp-hero-title span.gold,
+.lp-hero-title span.lp-gold-text,
 .lp-hero-title .gold {
-  /* Animated flowing gold gradient */
+  display: inline-block !important;
   background: linear-gradient(
     90deg,
-    #b87b2a 0%,
-    #d8a153 20%,
-    #f6d389 40%,
-    #ffe9a0 55%,
-    #f6d389 70%,
-    #d8a153 85%,
-    #b87b2a 100%
+    #d8a153 0%,
+    #e8b96e 20%,
+    #ffffff 45%,
+    #fff9e6 55%,
+    #e8b96e 80%,
+    #d8a153 100%
   ) !important;
-  background-size: 250% 100% !important;
+  background-size: 200% auto !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
-  animation: qaGoldFlow 4s ease-in-out infinite !important;
-  display: inline-block !important;
+  animation: textGoldShineFlow 3.5s linear infinite !important;
+  filter: none !important;
+  text-shadow: none !important;
 }
 
 /* Respect reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
   .lp-hero-title .lp-gold-text,
   .lp-hero-title span.gold,
+  .lp-hero-title span.lp-gold-text,
   .lp-hero-title .gold {
     background: linear-gradient(135deg, #d8a153 0%, #f6d389 100%) !important;
     background-size: 100% 100% !important;

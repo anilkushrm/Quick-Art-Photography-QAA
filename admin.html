@@ -2641,6 +2641,20 @@ fbq('track', 'PageView');
         </div>
       </div>
 
+      <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:14px;margin-bottom:16px">
+        <label style="font-size:13px;font-weight:700;color:#ef4444;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+          📡 Live Broadcast Status *
+        </label>
+        <select id="liveStatus" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:10px;font-size:13.5px;font-weight:600;box-sizing:border-box">
+          <option value="live">🔴 LIVE NOW (Students directly Live Stream me join kar sakte hain)</option>
+          <option value="scheduled">⏳ Scheduled (Upcoming Class • Countdown Timer chalega)</option>
+          <option value="completed">✓ Completed (Ended • Replay Mode)</option>
+        </select>
+        <div style="font-size:11.5px;color:#cbd5e1;margin-top:6px;line-height:1.4">
+          🔴 <strong>Zaroori:</strong> Agar aap stream kar rahe hain ya abhi start kar rahe hain, to status <strong>"🔴 LIVE NOW"</strong> rakhein taaki student portal par turant Live banner aur Join button show ho.
+        </div>
+      </div>
+
       <div class="grid" style="grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
         <div>
           <label style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:6px;display:block">Scheduled Date &amp; Time *</label>
@@ -2654,11 +2668,12 @@ fbq('track', 'PageView');
 
       <div style="background:rgba(216,161,83,0.08);border:1px solid rgba(216,161,83,0.3);border-radius:12px;padding:14px;margin-bottom:16px">
         <label style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:6px;display:flex;align-items:center;gap:6px">
-          🎥 YouTube Unlisted Live Stream ID / URL *
+          🎥 YouTube Unlisted Live Stream ID / Watch URL *
         </label>
-        <input type="text" id="liveStreamId" placeholder="Paste YouTube Live URL (e.g. https://youtu.be/xyz or Stream Video ID)" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box" />
+        <input type="text" id="liveStreamId" oninput="validateLiveStreamUrl(this.value)" placeholder="Paste YouTube Live URL (e.g. https://youtube.com/live/xxx or https://youtu.be/xxx)" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box" />
+        <div id="liveStreamWarning" style="display:none;background:rgba(239,68,68,0.15);border:1px solid #ef4444;color:#fca5a5;padding:8px 12px;border-radius:8px;font-size:12px;margin-top:8px;font-weight:600"></div>
         <div style="font-size:11.5px;color:#94a3b8;margin-top:6px;line-height:1.4">
-          💡 YouTube Studio me "Create Live Stream" karke <strong>Unlisted</strong> select karein, fir uska link yahan daalein. Website ke andar humara <strong>Anti-Leak Shield</strong> YouTube ka link aur controls student se hide rakhega.
+          💡 YouTube Studio me Live Stream shuru karke <strong>Share</strong> button par click karein aur Watch Link (jaise <code>https://youtube.com/live/...</code> ya <code>https://youtu.be/...</code>) copy karke yahan daalein. <strong>OBS ka RTMP URL yahan mat daalein</strong>.
         </div>
       </div>
 
@@ -6213,11 +6228,19 @@ function renderLiveClassesAdmin() {
         <td style="font-size:13px;color:#e2e8f0;white-space:nowrap">${formattedDate}</td>
         <td style="font-size:13px;color:#cbd5e1">${escapeHtml(c.duration || '90 Mins')}</td>
         <td>
-          <select onchange="updateLiveStatusAdmin('${c.id}', this.value)" style="padding:4px 8px;font-size:12px;background:#0f172a;color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:6px">
-            <option value="scheduled" ${c.status==='scheduled'?'selected':''}>⏳ Scheduled</option>
-            <option value="live" ${c.status==='live'?'selected':''}>🔴 Live Now</option>
-            <option value="completed" ${c.status==='completed'?'selected':''}>✓ Completed</option>
-          </select>
+          <div style="display:flex;align-items:center;gap:6px">
+            <select onchange="updateLiveStatusAdmin('${c.id}', this.value)" style="padding:4px 8px;font-size:12px;background:#0f172a;color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:6px">
+              <option value="scheduled" ${c.status==='scheduled'?'selected':''}>⏳ Scheduled</option>
+              <option value="live" ${c.status==='live'?'selected':''}>🔴 Live Now</option>
+              <option value="completed" ${c.status==='completed'?'selected':''}>✓ Completed</option>
+            </select>
+            <button onclick="updateLiveStatusAdmin('${c.id}', '${c.status==='live'?'scheduled':'live'}')" 
+              class="btn btn-sm" 
+              style="padding:4px 9px;font-size:11px;font-weight:700;border-radius:6px;${c.status==='live'?'background:#ef4444;color:#fff':'background:#10b981;color:#fff'}"
+              title="${c.status==='live'?'Stop Live Broadcast':'Go Live Now'}">
+              ${c.status==='live'?'⏹ End':'🔴 Live'}
+            </button>
+          </div>
           <div style="margin-top:4px">${statusBadge}</div>
         </td>
         <td style="font-size:13px">${priceText}</td>
@@ -6255,6 +6278,19 @@ function populateLiveCourseDropdown(selectedCourseId = '') {
     `).join('');
 }
 
+function validateLiveStreamUrl(val) {
+  const warn = document.getElementById('liveStreamWarning');
+  if (!warn) return;
+  val = (val || '').trim();
+  if (val.startsWith('rtmp://') || val.startsWith('rtmps://')) {
+    warn.style.display = 'block';
+    warn.innerHTML = '⚠️ <strong>RTMP Server URL Detected!</strong><br/>Yeh OBS ka RTMP streaming URL hai. Browser me live video play karne ke liye YouTube Studio me jakar Live Video ka "Share" Link (jaise <code>https://youtube.com/live/xxxx</code> ya Video ID) yahan paste karein.';
+  } else {
+    warn.style.display = 'none';
+    warn.innerHTML = '';
+  }
+}
+
 function openScheduleLiveModal() {
   document.getElementById('liveModalTitle').innerHTML = '<span style="color:#ef4444">🔴</span> Schedule Live Session / Masterclass';
   document.getElementById('liveSessionId').value = '';
@@ -6269,12 +6305,16 @@ function openScheduleLiveModal() {
   document.getElementById('liveResources').value = '';
   document.getElementById('liveChatEnabled').checked = true;
 
-  // Set default datetime to tomorrow 7:00 PM
-  const tmrw = new Date();
-  tmrw.setDate(tmrw.getDate() + 1);
-  tmrw.setHours(19, 0, 0, 0);
-  const isoDate = tmrw.toISOString().slice(0, 16);
-  document.getElementById('liveScheduledAt').value = isoDate;
+  const statusEl = document.getElementById('liveStatus');
+  if (statusEl) statusEl.value = 'live';
+
+  const warn = document.getElementById('liveStreamWarning');
+  if (warn) { warn.style.display = 'none'; warn.innerHTML = ''; }
+
+  // Set default datetime to now
+  const now = new Date();
+  const localIso = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  document.getElementById('liveScheduledAt').value = localIso;
 
   populateLiveCourseDropdown();
   onLiveTypeChange();
@@ -6300,6 +6340,11 @@ function editLiveClassAdmin(id) {
   document.getElementById('liveStreamId').value = c.streamId || '';
   document.getElementById('liveReplayUrl').value = c.replayUrl || '';
   document.getElementById('liveChatEnabled').checked = c.chatEnabled !== false;
+
+  const statusEl = document.getElementById('liveStatus');
+  if (statusEl) statusEl.value = c.status || 'scheduled';
+
+  validateLiveStreamUrl(c.streamId || '');
 
   if (c.scheduledAt) {
     try {
@@ -6330,6 +6375,13 @@ async function saveLiveClassAdmin() {
     return;
   }
 
+  const rawStreamVal = (document.getElementById('liveStreamId').value || '').trim();
+  if (rawStreamVal.startsWith('rtmp://') || rawStreamVal.startsWith('rtmps://')) {
+    alert("⚠️ Galat Stream Link!\n\nAapne OBS ka RTMP Server URL daala hai:\n" + rawStreamVal + "\n\nWeb browser me RTMP stream nahi chal sakti.\nKripya YouTube Studio me jakar Live Video ka 'Share' Link (jaise https://youtube.com/live/xxxx ya Video ID) yahan paste karein.");
+    document.getElementById('liveStreamId').focus();
+    return;
+  }
+
   const rawResources = document.getElementById('liveResources').value.trim();
   const resources = [];
   if (rawResources) {
@@ -6347,6 +6399,7 @@ async function saveLiveClassAdmin() {
   function cleanYtId(input) {
     if (!input) return '';
     input = input.trim();
+    if (input.startsWith('rtmp://') || input.startsWith('rtmps://')) return '';
     if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
     const mLive = input.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/i);
     if (mLive) return mLive[1];
@@ -6359,6 +6412,8 @@ async function saveLiveClassAdmin() {
     return input;
   }
 
+  const statusVal = document.getElementById('liveStatus') ? document.getElementById('liveStatus').value : 'scheduled';
+
   const liveClass = {
     id: document.getElementById('liveSessionId').value.trim(),
     title,
@@ -6369,7 +6424,8 @@ async function saveLiveClassAdmin() {
     originalPrice: parseInt(document.getElementById('liveOriginalPrice').value, 10) || 0,
     scheduledAt: document.getElementById('liveScheduledAt').value ? new Date(document.getElementById('liveScheduledAt').value).toISOString() : new Date().toISOString(),
     duration: document.getElementById('liveDuration').value.trim() || '90 Mins',
-    streamId: cleanYtId(document.getElementById('liveStreamId').value),
+    status: statusVal,
+    streamId: cleanYtId(rawStreamVal),
     replayUrl: cleanYtId(document.getElementById('liveReplayUrl').value),
     chatEnabled: document.getElementById('liveChatEnabled').checked,
     resources

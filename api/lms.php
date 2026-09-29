@@ -23,6 +23,11 @@ function get_all_live_classes() {
     return json_decode(file_get_contents(LMS_LIVE_CLASSES_FILE), true) ?: [];
 }
 
+function load_student_sessions() {
+    if (!defined('LMS_SESSIONS_FILE') || !file_exists(LMS_SESSIONS_FILE)) return [];
+    return json_decode(file_get_contents(LMS_SESSIONS_FILE), true) ?: [];
+}
+
 function get_all_live_chats() {
     if (!file_exists(LMS_LIVE_CHAT_FILE)) return [];
     return json_decode(file_get_contents(LMS_LIVE_CHAT_FILE), true) ?: [];
@@ -1893,9 +1898,12 @@ if ($action === 'get-live-classes' && $method === 'GET') {
         $sessions = load_student_sessions();
         $sess = $sessions[$token] ?? null;
         if ($sess && ($sess['expiresAt'] ?? 0) > time()) {
+            $sessIdent = strtolower(trim((string)($sess['phone'] ?? '')));
             $students = load_students();
             foreach ($students as $s) {
-                if ($s['phone'] === $sess['phone']) {
+                $sPhone = strtolower(trim((string)($s['phone'] ?? '')));
+                $sEmail = strtolower(trim((string)($s['email'] ?? '')));
+                if (($sPhone && $sPhone === $sessIdent) || ($sEmail && $sEmail === $sessIdent)) {
                     $stu = $s;
                     break;
                 }
@@ -1945,7 +1953,7 @@ if ($action === 'get-live-classes' && $method === 'GET') {
 
     json_ok([
         'liveClasses' => $results,
-        'hasLiveNow'  => count(array_filter($results, function($item) { return $item['status'] === 'live' && $item['isAuthorized']; })) > 0
+        'hasLiveNow'  => count(array_filter($results, function($item) { return $item['status'] === 'live'; })) > 0
     ]);
 }
 

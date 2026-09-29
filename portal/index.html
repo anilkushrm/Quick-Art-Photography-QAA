@@ -76,6 +76,15 @@
       <!-- User Menu (logged-in) -->
       <div id="header-user-nav" class="user-nav hidden">
 
+        <!-- Live Now Navbar Pill -->
+        <button id="nav-live-btn" class="nav-live-pill hidden" onclick="handleDashboardLiveClick()" type="button" title="Join Live Class">
+          <span class="live-radar-ping">
+            <span class="radar-ripple"></span>
+            <span class="radar-dot"></span>
+          </span>
+          <span class="nav-live-pill-text">🔴 LIVE NOW</span>
+        </button>
+
         <!-- Avatar trigger button -->
         <button id="user-menu-trigger" class="user-menu-trigger" onclick="toggleUserMenu()" aria-haspopup="true"
           aria-expanded="false" aria-label="User menu">
@@ -116,10 +125,15 @@
           </button>
           <button class="dropdown-item" onclick="handleDashboardLiveClick(); closeUserMenu();" role="menuitem">
             <span class="dropdown-item-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;color:#ef4444"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;color:#ef4444">
+                <path d="M23 7l-7 5 7 5V7z" />
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+              </svg>
             </span>
             <span>Join Live Class</span>
-            <span class="dropdown-item-badge" id="dd-live-badge" style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:10px;padding:2px 6px;border-radius:10px">OFFLINE</span>
+            <span class="dropdown-item-badge" id="dd-live-badge"
+              style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:10px;padding:2px 6px;border-radius:10px">OFFLINE</span>
           </button>
           <button class="dropdown-item" onclick="openMyCertificates(); closeUserMenu();" role="menuitem">
             <span class="dropdown-item-icon">🏆</span>
@@ -722,6 +736,13 @@
               <h2 id="mycourses-section-title">My Enrolled Courses</h2>
               <span class="muted" id="courses-count-label">Active Learning Programs</span>
             </div>
+            <!-- Master Live Class Indicator Button -->
+            <button id="mycourses-live-indicator-btn" class="mycourses-live-pill live-pill-offline" onclick="handleDashboardLiveClick()" type="button" title="Live Class Status &amp; Room">
+              <span id="mycourses-live-pill-text">
+                <span class="live-dot-dormant"></span>
+                <span class="live-pill-label">Live Class <span class="live-offline-pill">Offline</span></span>
+              </span>
+            </button>
           </div>
           <div class="view-switch-btns">
             <span class="student-perk-chip">✓ Lifetime Access</span>

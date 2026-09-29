@@ -4679,11 +4679,24 @@ async function loadStudentLiveClasses() {
 }
 
 let liveCountdownTimerInterval = null;
+let liveClassSyncInterval = null;
 
 function startLiveCountdownTimer() {
   if (liveCountdownTimerInterval) clearInterval(liveCountdownTimerInterval);
   updateLiveDashboardState();
   liveCountdownTimerInterval = setInterval(updateLiveDashboardState, 1000);
+
+  // Auto poll server every 10 seconds so student automatically gets Live state without manual refresh
+  if (liveClassSyncInterval) clearInterval(liveClassSyncInterval);
+  liveClassSyncInterval = setInterval(async () => {
+    try {
+      const res = await lmsApi('get-live-classes');
+      if (res && res.liveClasses) {
+        studentLiveClasses = res.liveClasses;
+        updateLiveDashboardState();
+      }
+    } catch(e) {}
+  }, 10000);
 }
 
 function updateLiveDashboardState() {
@@ -4707,11 +4720,52 @@ function updateLiveDashboardState() {
   upcomingList.sort((a, b) => new Date(a.scheduledAt || 0) - new Date(b.scheduledAt || 0));
   const earliestUpcoming = upcomingList[0];
 
-  // 1. Update Master Live Pill in My Courses Section Bar
+  // 1. Update Master Live Pill in My Courses Section Bar & Header Badges
   const masterBtn = document.getElementById('mycourses-live-indicator-btn');
   const masterText = document.getElementById('mycourses-live-pill-text');
   const ddLiveBadge = document.getElementById('dd-live-badge');
+  const navLiveBtn = document.getElementById('nav-live-btn');
 
+  // Update Header Live Pill
+  if (navLiveBtn) {
+    if (liveNow) {
+      navLiveBtn.classList.remove('hidden');
+    } else {
+      navLiveBtn.classList.add('hidden');
+    }
+  }
+
+  // Update Dropdown Live Badge independently
+  if (ddLiveBadge) {
+    if (liveNow) {
+      ddLiveBadge.style.background = '#dc2626';
+      ddLiveBadge.style.color = '#fff';
+      ddLiveBadge.textContent = 'LIVE NOW';
+    } else if (earliestUpcoming) {
+      const diff = new Date(earliestUpcoming.scheduledAt) - new Date();
+      if (diff > 0) {
+        const hours = Math.floor(diff / 3600000);
+        const mins = Math.floor((diff % 3600000) / 60000);
+        const secs = Math.floor((diff % 60000) / 1000);
+        const timeStr = hours > 24 
+          ? `${Math.floor(hours/24)}d ${hours%24}h`
+          : `${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+        ddLiveBadge.style.background = '#f59e0b';
+        ddLiveBadge.style.color = '#fff';
+        ddLiveBadge.textContent = timeStr;
+      } else {
+        ddLiveBadge.style.background = '#f59e0b';
+        ddLiveBadge.style.color = '#fff';
+        ddLiveBadge.textContent = 'STARTING';
+      }
+    } else {
+      ddLiveBadge.style.background = 'rgba(255,255,255,0.08)';
+      ddLiveBadge.style.color = '#94a3b8';
+      ddLiveBadge.textContent = 'OFFLINE';
+    }
+  }
+
+  // Update Master Live Pill in My Courses Section
   if (masterBtn && masterText) {
     if (liveNow) {
       masterBtn.className = 'mycourses-live-pill live-pill-active';
@@ -4724,11 +4778,6 @@ function updateLiveDashboardState() {
         <span class="live-pill-label">Join Live Class</span>
         <svg class="live-arrow-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       `;
-      if (ddLiveBadge) {
-        ddLiveBadge.style.background = '#dc2626';
-        ddLiveBadge.style.color = '#fff';
-        ddLiveBadge.textContent = 'LIVE NOW';
-      }
     } else if (earliestUpcoming) {
       const diff = new Date(earliestUpcoming.scheduledAt) - new Date();
       if (diff > 0) {
@@ -4744,11 +4793,6 @@ function updateLiveDashboardState() {
           <span class="live-status-badge-amber">UPCOMING</span>
           <span class="live-pill-label">Live in <b>${timeStr}</b></span>
         `;
-        if (ddLiveBadge) {
-          ddLiveBadge.style.background = '#f59e0b';
-          ddLiveBadge.style.color = '#fff';
-          ddLiveBadge.textContent = timeStr;
-        }
       } else {
         masterBtn.className = 'mycourses-live-pill live-pill-scheduled';
         masterText.innerHTML = `
@@ -4756,11 +4800,6 @@ function updateLiveDashboardState() {
           <span class="live-status-badge-amber">STARTING</span>
           <span class="live-pill-label">Live Starting Soon...</span>
         `;
-        if (ddLiveBadge) {
-          ddLiveBadge.style.background = '#f59e0b';
-          ddLiveBadge.style.color = '#fff';
-          ddLiveBadge.textContent = 'STARTING';
-        }
       }
     } else {
       masterBtn.className = 'mycourses-live-pill live-pill-offline';
@@ -4768,11 +4807,6 @@ function updateLiveDashboardState() {
         <span class="live-dot-dormant"></span>
         <span class="live-pill-label">Live Class <span class="live-offline-pill">Offline</span></span>
       `;
-      if (ddLiveBadge) {
-        ddLiveBadge.style.background = 'rgba(255,255,255,0.08)';
-        ddLiveBadge.style.color = '#94a3b8';
-        ddLiveBadge.textContent = 'OFFLINE';
-      }
     }
   }
 
@@ -4800,7 +4834,7 @@ function updateLiveDashboardState() {
 function handleDashboardLiveClick() {
   const enrolledIds = (window._currentStudent && window._currentStudent.enrolledCourses) || [];
 
-  // 1. Is any class live right now?
+  // 1. Is any class live right now for student?
   const liveNow = (studentLiveClasses || []).find(c => {
     if (c.status !== 'live') return false;
     if (c.courseId === 'all') return true;
@@ -4813,6 +4847,13 @@ function handleDashboardLiveClick() {
     return;
   }
 
+  // 1b. Fallback: If any class has status 'live' in academy, open it
+  const anyLive = (studentLiveClasses || []).find(c => c.status === 'live');
+  if (anyLive) {
+    openLiveStudio(anyLive.id);
+    return;
+  }
+
   // 2. Is any class scheduled?
   const upcomingList = (studentLiveClasses || []).filter(c => {
     if (c.status !== 'scheduled' || !c.scheduledAt) return false;
@@ -4822,9 +4863,21 @@ function handleDashboardLiveClick() {
   });
 
   if (upcomingList.length) {
-    upcomingList.sort((a, b) => new Date(a.scheduledAt || 0) - new Date(b.scheduledAt || 0));
+    // Sort closest to current time (favor today's / recent sessions)
+    const now = Date.now();
+    upcomingList.sort((a, b) => {
+      const diffA = Math.abs(new Date(a.scheduledAt).getTime() - now);
+      const diffB = Math.abs(new Date(b.scheduledAt).getTime() - now);
+      return diffA - diffB;
+    });
     const target = upcomingList[0];
     openLiveStudio(target.id);
+    return;
+  }
+
+  // 2b. Any class in list
+  if (studentLiveClasses && studentLiveClasses.length) {
+    openLiveStudio(studentLiveClasses[0].id);
     return;
   }
 
@@ -4974,6 +5027,10 @@ function initLiveWatermark(watermarkText) {
 function cleanYouTubeVideoId(input) {
   if (!input) return '';
   input = input.trim();
+  // Filter out RTMP URLs (used for OBS pushing, cannot be embedded in browser)
+  if (input.startsWith('rtmp://') || input.startsWith('rtmps://')) {
+    return '';
+  }
   if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
   const mLive = input.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/i);
   if (mLive) return mLive[1];
@@ -4983,7 +5040,7 @@ function cleanYouTubeVideoId(input) {
   if (mV) return mV[1];
   const mEmbed = input.match(/embed\/([a-zA-Z0-9_-]{11})/i);
   if (mEmbed) return mEmbed[1];
-  return input;
+  return '';
 }
 
 function embedLiveStream(streamId, replayUrl, status) {
@@ -4999,11 +5056,16 @@ function embedLiveStream(streamId, replayUrl, status) {
   const videoId = cleanYouTubeVideoId(rawId);
 
   if (!videoId) {
+    const isRtmp = rawId && (rawId.startsWith('rtmp://') || rawId.startsWith('rtmps://'));
     mount.innerHTML = `
       <div class="live-placeholder">
-        <div style="font-size:36px;margin-bottom:12px">⏳</div>
-        <div style="font-weight:700;font-size:16px;color:#fff">Stream Starting Soon</div>
-        <div class="muted" style="font-size:13px;margin-top:4px">Mentor Anil Sharma will start broadcasting shortly. Please keep this page open.</div>
+        <div style="font-size:36px;margin-bottom:12px">${isRtmp ? '⚠️' : '⏳'}</div>
+        <div style="font-weight:700;font-size:16px;color:#fff">${isRtmp ? 'RTMP Server URL Detected' : 'Stream Starting Soon'}</div>
+        <div class="muted" style="font-size:13px;margin-top:6px;max-width:480px;line-height:1.5">
+          ${isRtmp 
+            ? 'Admin Panel me OBS ka RTMP Server link daala gaya hai. Web browser me live stream dekhne ke liye YouTube Studio me jakar Live Video ka Watch Link (jaise https://youtube.com/live/xxxx ya Video ID) daalna zaroori hai.' 
+            : 'Mentor Anil Sharma will start broadcasting shortly. Please keep this page open.'}
+        </div>
       </div>
     `;
     return;

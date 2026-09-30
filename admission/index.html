@@ -429,7 +429,7 @@
                     <span>📷 Upload Passport Size Photo *</span>
                     <input type="file" id="adm-photo" name="photo_file" accept="image/png, image/jpeg, image/webp" required>
                   </label>
-                  <span class="adm-field-hint">JPG, PNG or WEBP (Max 500 KB). Professional formal picture recommended.</span>
+                  <span class="adm-field-hint">JPG, PNG or WEBP (Max 5 MB). Phone camera photos automatically optimized.</span>
                 </div>
               </div>
 
@@ -575,18 +575,18 @@
                     <input type="file" id="adm-aadhaar" name="aadhaar_file" accept="image/png, image/jpeg, image/webp, application/pdf" required>
                     <div class="adm-file-info">
                       <span class="adm-file-icon">🪪</span>
-                      <span class="adm-file-text" id="aadhaar-label">Click to upload Aadhaar photo/PDF (Max 1 MB)</span>
+                      <span class="adm-file-text" id="aadhaar-label">Click to upload Aadhaar photo/PDF (Max 10 MB)</span>
                     </div>
                   </div>
                 </div>
 
                 <div class="adm-field">
-                  <label for="adm-cert">Last Class / Education Certificate <span class="adm-req">*</span></label>
+                  <label for="adm-cert">Last Class / Education Certificate <small style="color:rgba(255,255,255,0.6); font-weight:normal;">(Optional)</small></label>
                   <div class="adm-file-box">
-                    <input type="file" id="adm-cert" name="cert_file" accept="image/png, image/jpeg, image/webp, application/pdf" required>
+                    <input type="file" id="adm-cert" name="cert_file" accept="image/png, image/jpeg, image/webp, application/pdf">
                     <div class="adm-file-info">
                       <span class="adm-file-icon">📜</span>
-                      <span class="adm-file-text" id="cert-label">Click to upload 10th/12th/Graduation/Course cert (Max 1 MB)</span>
+                      <span class="adm-file-text" id="cert-label">Click to upload 10th/12th/Graduation/Course cert (Max 10 MB)</span>
                     </div>
                   </div>
                 </div>
@@ -1153,6 +1153,6 @@
 
   <!-- Scripts -->
   <script src="html2canvas.min.js"></script>
-  <script src="admission.js?v=20260928_06"></script>
+  <script src="admission.js?v=20260930_submit_fix"></script>
 </body>
 </html>

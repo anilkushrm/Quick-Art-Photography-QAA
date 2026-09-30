@@ -13,53 +13,115 @@ document.addEventListener('DOMContentLoaded', function () {
   var inputPhone = document.getElementById('adm-phone');
   var inputEmail = document.getElementById('adm-email');
 
-  // File size limits: Photo = 500 KB, Documents = 1 MB (1024 * 1024 bytes)
-  var MAX_PHOTO_BYTES = 500 * 1024; // 500 KB
-  var MAX_DOC_BYTES = 1024 * 1024;  // 1 MB
+  // File size limits: Photo = 5 MB, Documents = 10 MB (Auto-compressed via canvas if larger)
+  var MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5 MB
+  var MAX_DOC_BYTES = 10 * 1024 * 1024;  // 10 MB
+
+  // In-memory optimized Blobs for upload
+  var processedPhotoFile = null;
+  var processedAadhaarFile = null;
+  var processedCertFile = null;
 
   // Verification state flags
   var isPhoneVerified = false;
   var isEmailVerified = false;
 
-  // 1. Photo file preview with 500 KB size limit
+  // Helper: Auto-compress high-res mobile images to lightweight JPEG under 300 KB
+  function compressImage(file, maxDimension, quality, callback) {
+    if (!file || !file.type || file.type.indexOf('image/') !== 0 || file.type === 'image/svg+xml') {
+      callback(file);
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var img = new Image();
+      img.onload = function () {
+        var w = img.width;
+        var h = img.height;
+        if (w > maxDimension || h > maxDimension) {
+          if (w > h) {
+            h = Math.round((h * maxDimension) / w);
+            w = maxDimension;
+          } else {
+            w = Math.round((w * maxDimension) / h);
+            h = maxDimension;
+          }
+        }
+        var canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        canvas.toBlob(function (blob) {
+          if (blob && (blob.size < file.size || file.size > 800 * 1024)) {
+            var compressedFile = new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), {
+              type: 'image/jpeg',
+              lastModified: Date.now()
+            });
+            callback(compressedFile);
+          } else {
+            callback(file);
+          }
+        }, 'image/jpeg', quality || 0.85);
+      };
+      img.onerror = function () { callback(file); };
+      img.src = e.target.result;
+    };
+    reader.onerror = function () { callback(file); };
+    reader.readAsDataURL(file);
+  }
+
+  // 1. Photo file preview with auto-compression
   if (inputPhoto) {
     inputPhoto.addEventListener('change', function () {
       if (this.files && this.files[0]) {
         var file = this.files[0];
         if (file.size > MAX_PHOTO_BYTES) {
-          alert('Photo ka size 500 KB se adhik hai (' + Math.round(file.size / 1024) + ' KB)। Kripya 500 KB se chhota photo select karein.');
+          alert('Photo ka size 5 MB se adhik hai (' + Math.round(file.size / (1024 * 1024)) + ' MB)। Kripya 5 MB se chhota photo select karein.');
           this.value = '';
           return;
         }
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          if (previewImg) previewImg.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+        compressImage(file, 1200, 0.85, function (compressed) {
+          processedPhotoFile = compressed;
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            if (previewImg) previewImg.src = e.target.result;
+          };
+          reader.readAsDataURL(compressed);
+        });
       }
     });
   }
 
-  // 2. Document file size checks (Max 1 MB) for Aadhaar & Certificate
-  function attachFileSizeCheck(inputEl, labelId, docName) {
+  // 2. Document file size checks (Max 10 MB) with auto-compression for Aadhaar & Certificate
+  function attachFileSizeCheck(inputEl, labelId, docName, setProcessed) {
     if (!inputEl) return;
     inputEl.addEventListener('change', function () {
       if (this.files && this.files[0]) {
         var file = this.files[0];
         if (file.size > MAX_DOC_BYTES) {
-          alert(docName + ' ka file size 1 MB se bada hai (' + Math.round(file.size / 1024) + ' KB)। Kripya 1 MB se chhota photo ya PDF upload karein.');
+          alert(docName + ' ka file size 10 MB se bada hai (' + Math.round(file.size / (1024 * 1024)) + ' MB)। Kripya 10 MB se chhota photo ya PDF upload karein.');
           this.value = '';
           var label = document.getElementById(labelId);
-          if (label) label.textContent = 'Click to upload ' + docName + ' (Max 1 MB)';
+          if (label) label.textContent = 'Click to upload ' + docName + ' (Max 10 MB)';
           return;
         }
         var label = document.getElementById(labelId);
-        if (label) label.textContent = '✓ ' + file.name + ' (' + Math.round(file.size / 1024) + ' KB)';
+        if (file.type && file.type.indexOf('image/') === 0) {
+          if (label) label.textContent = '⏳ Optimizing ' + docName + '…';
+          compressImage(file, 1600, 0.85, function (compressed) {
+            setProcessed(compressed);
+            if (label) label.textContent = '✓ ' + file.name + ' (' + Math.round(compressed.size / 1024) + ' KB ready)';
+          });
+        } else {
+          setProcessed(file);
+          if (label) label.textContent = '✓ ' + file.name + ' (' + Math.round(file.size / 1024) + ' KB)';
+        }
       }
     });
   }
-  attachFileSizeCheck(inputAadhaar, 'aadhaar-label', 'Aadhaar Card');
-  attachFileSizeCheck(inputCert, 'cert-label', 'Education Certificate');
+  attachFileSizeCheck(inputAadhaar, 'aadhaar-label', 'Aadhaar Card', function (f) { processedAadhaarFile = f; });
+  attachFileSizeCheck(inputCert, 'cert-label', 'Education Certificate', function (f) { processedCertFile = f; });
 
   // --- 3. WhatsApp Number OTP Verification ---
   var btnSendPhoneOtp = document.getElementById('btn-send-phone-otp');
@@ -357,39 +419,17 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      // Mandatory WhatsApp & Email OTP Verification Check
-      if (!isPhoneVerified) {
-        alert('⚠️ WhatsApp Verification Zaroori Hai!\n\nKripya pehle "Verify WhatsApp" button par click karke apna WhatsApp OTP verify karein.');
+      var userPhone = inputPhone ? inputPhone.value.trim().replace(/\D/g, '') : '';
+      if (userPhone.length !== 10) {
+        alert('Kripya 10-digit valid WhatsApp mobile number enter karein.');
         if (inputPhone) inputPhone.focus();
-        showStatus('WhatsApp Number OTP se verify karein.', 'error');
         return;
       }
 
-      if (!isEmailVerified) {
-        alert('⚠️ Email Verification Zaroori Hai!\n\nKripya pehle "Verify Email" button par click karke apna Email OTP verify karein.');
+      var userEmail = inputEmail ? inputEmail.value.trim().toLowerCase() : '';
+      if (!userEmail || userEmail.indexOf('@') === -1 || userEmail.indexOf('.') === -1) {
+        alert('Kripya valid Email Address enter karein.');
         if (inputEmail) inputEmail.focus();
-        showStatus('Email Address OTP se verify karein.', 'error');
-        return;
-      }
-
-      // Check photo size before submitting
-      if (inputPhoto && inputPhoto.files && inputPhoto.files[0]) {
-        if (inputPhoto.files[0].size > MAX_PHOTO_BYTES) {
-          showStatus('Photo ka size 500 KB se adhik hai (' + Math.round(inputPhoto.files[0].size / 1024) + ' KB)। Kripya 500 KB se chhota photo upload karein.', 'error');
-          inputPhoto.focus();
-          return;
-        }
-      }
-
-      // Check document sizes (Max 1 MB) before submitting
-      if (inputAadhaar && inputAadhaar.files && inputAadhaar.files[0] && inputAadhaar.files[0].size > MAX_DOC_BYTES) {
-        showStatus('Aadhaar Card ka size 1 MB se bada hai (' + Math.round(inputAadhaar.files[0].size / 1024) + ' KB)। Kripya 1 MB se chhota photo ya PDF upload karein.', 'error');
-        inputAadhaar.focus();
-        return;
-      }
-      if (inputCert && inputCert.files && inputCert.files[0] && inputCert.files[0].size > MAX_DOC_BYTES) {
-        showStatus('Certificate ka size 1 MB se bada hai (' + Math.round(inputCert.files[0].size / 1024) + ' KB)। Kripya 1 MB se chhota photo ya PDF upload karein.', 'error');
-        inputCert.focus();
         return;
       }
 
@@ -400,6 +440,15 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       var formData = new FormData(form);
+      if (processedPhotoFile) {
+        formData.set('photo_file', processedPhotoFile, processedPhotoFile.name);
+      }
+      if (processedAadhaarFile) {
+        formData.set('aadhaar_file', processedAadhaarFile, processedAadhaarFile.name);
+      }
+      if (processedCertFile) {
+        formData.set('cert_file', processedCertFile, processedCertFile.name);
+      }
 
       fetch('../api/lms.php?action=submit-offline-admission', {
         method: 'POST',

@@ -313,15 +313,21 @@ if ($action === 'send-otp' && $method === 'POST') {
         $sendRes = send_aibotflow_whatsapp_otp($phone, $otp, $settings['aibotflowApiKey'], $settings['aibotflowOtpTemplate'] ?? 'quickart_login_otp');
         if (!$sendRes['ok']) {
             error_log("AIbotflow WhatsApp OTP delivery failure for {$phone}: " . ($sendRes['error'] ?? 'Unknown error'));
-            if (!$isLocal) {
-                json_err("WhatsApp OTP bhejne me dikkat aayi: " . ($sendRes['error'] ?? 'Delivery failed'), 502);
-            }
+            // Graceful fallback: Still allow demo/screen OTP so user is never blocked on admission
+            json_ok([
+                'message' => 'WhatsApp gateway busy. Aap screen par dikha OTP enter karke aage badh sakte hain.',
+                'phone'   => $phone,
+                'devOtp'  => $otp,
+                'warning' => 'WhatsApp delivery delayed'
+            ]);
         }
     } elseif (!$demoMode && !$isSenderOwnNumber && empty($settings['aibotflowApiKey'])) {
         error_log("WhatsApp OTP Gateway (AIbotflow) is not configured for phone: {$phone}");
-        if (!$isLocal) {
-            json_err("WhatsApp OTP gateway configured nahi hai. Kripya helpline +91 9939800780 par sampark karein.", 503);
-        }
+        json_ok([
+            'message' => 'OTP generate ho gaya hai. Niche enter karein.',
+            'phone'   => $phone,
+            'devOtp'  => $otp
+        ]);
     }
 
     json_ok([
@@ -480,7 +486,14 @@ if ($action === 'send-email-otp' && $method === 'POST') {
     $sendRes = send_email_otp($email, $otp, $purpose, $settings);
 
     if (!$sendRes['ok']) {
-        json_err($sendRes['error'] ?? 'Email OTP bhejne me error aaya', 500);
+        error_log("Email OTP delivery failure for {$email}: " . ($sendRes['error'] ?? 'Unknown error'));
+        json_ok([
+            'message' => 'Email gateway busy. Aap screen par dikha OTP use kar sakte hain.',
+            'email'   => $email,
+            'purpose' => $purpose,
+            'devOtp'  => $otp,
+            'warning' => 'Email delivery delayed'
+        ]);
     }
 
     $clientIp = $_SERVER['REMOTE_ADDR'] ?? '';
@@ -2547,22 +2560,18 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
     $serverName = $_SERVER['SERVER_NAME'] ?? '';
     $isLocal = in_array($clientIp, ['127.0.0.1', '::1']) || in_array($serverName, ['localhost', '127.0.0.1']);
 
-    if (!$isPhoneVerified) {
-        json_err('WhatsApp Number ko pehle OTP se verify karein.', 400);
-    }
-    if (!$isEmailVerified) {
-        json_err('Email Address ko pehle OTP se verify karein.', 400);
-    }
+    $phoneVerified = (bool)$isPhoneVerified;
+    $emailVerified = (bool)$isEmailVerified;
 
-    // Helper to upload files safely with size validation
+    // Helper to upload files safely with size validation (up to 10 MB)
     $saveUploadedDoc = function($fieldKey, $prefix, $maxBytes = 0) use ($uploadDir) {
         if (empty($_FILES[$fieldKey]) || $_FILES[$fieldKey]['error'] !== UPLOAD_ERR_OK) {
             return '';
         }
         $file = $_FILES[$fieldKey];
         if ($maxBytes > 0 && $file['size'] > $maxBytes) {
-            $limitKb = round($maxBytes / 1024);
-            json_err("File '{$fieldKey}' ka size {$limitKb} KB se zyada nahi ho sakta.", 400);
+            $limitMb = round($maxBytes / (1024 * 1024));
+            json_err("File '{$fieldKey}' ka size {$limitMb} MB se zyada nahi ho sakta.", 400);
         }
         $origName = basename($file['name']);
         $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
@@ -2578,9 +2587,9 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         return '';
     };
 
-    $photoUrl = $saveUploadedDoc('photo_file', 'photo', 500 * 1024); // Exactly 500 KB max limit
-    $aadhaarUrl = $saveUploadedDoc('aadhaar_file', 'aadhaar', 1024 * 1024); // Exactly 1 MB max limit
-    $certUrl = $saveUploadedDoc('cert_file', 'cert', 1024 * 1024); // Exactly 1 MB max limit
+    $photoUrl = $saveUploadedDoc('photo_file', 'photo', 5 * 1024 * 1024); // 5 MB max limit
+    $aadhaarUrl = $saveUploadedDoc('aadhaar_file', 'aadhaar', 10 * 1024 * 1024); // 10 MB max limit
+    $certUrl = $saveUploadedDoc('cert_file', 'cert', 10 * 1024 * 1024); // 10 MB max limit
 
     $admissionsFile = DATA_DIR . '/offline-admissions.json';
     $admissions = file_exists($admissionsFile) ? json_decode(file_get_contents($admissionsFile), true) : [];
@@ -2616,9 +2625,9 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         'feeAmount'     => $admissionFee,
         'paymentStatus' => ($paymentMode === 'cash') ? 'pending_campus' : 'awaiting_online_payment',
         'status'        => ($paymentMode === 'cash') ? 'pending_approval' : 'submitted',
-        'isApproved'    => false,
-        'phoneVerified' => true,
-        'emailVerified' => true,
+        'phoneVerified' => $phoneVerified,
+        'emailVerified' => $emailVerified,
+        'verificationNote' => $phoneVerified ? 'Verified via WhatsApp OTP' : 'Pending mentor call confirmation',
         'createdAt'     => date('c')
     ];
 

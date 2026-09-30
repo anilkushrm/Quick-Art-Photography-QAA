@@ -87,6 +87,14 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
 
+        // 0. Synchronously set preview immediately (0ms) so there is zero delay
+        try {
+          var objectUrl = URL.createObjectURL(file);
+          if (previewImg) previewImg.src = objectUrl;
+          var issuedPhotoSync = document.getElementById('issued-id-photo');
+          if (issuedPhotoSync) issuedPhotoSync.src = objectUrl;
+        } catch (e) {}
+
         // 1. Immediately read user photo as base64 DataURL for instant live preview on UI & ID card
         var instantReader = new FileReader();
         instantReader.onload = function (e) {
@@ -94,6 +102,9 @@ document.addEventListener('DOMContentLoaded', function () {
           if (previewImg) previewImg.src = e.target.result;
           var issuedPhoto = document.getElementById('issued-id-photo');
           if (issuedPhoto) issuedPhoto.src = e.target.result;
+          try {
+            localStorage.setItem('qaa_student_avatar', e.target.result);
+          } catch (err) {}
         };
         instantReader.readAsDataURL(file);
 
@@ -669,13 +680,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Set student photo on the issued ID Card
     if (issuedPhoto) {
-      if (studentUploadedPhotoDataUrl) {
-        issuedPhoto.src = studentUploadedPhotoDataUrl;
-      } else if (data && data.photoUrl) {
-        issuedPhoto.src = data.photoUrl;
-      } else if (previewImg && previewImg.src && previewImg.src.indexOf('default-student-avatar') === -1 && previewImg.src.indexOf('anil-sharma') === -1) {
-        issuedPhoto.src = previewImg.src;
-      }
+      var photoSource = studentUploadedPhotoDataUrl ||
+                        (data && (data.photoUrl || data.avatar || data.avatarUrl)) ||
+                        localStorage.getItem('qaa_student_avatar') ||
+                        (previewImg && previewImg.src && previewImg.src.indexOf('default-student-avatar') === -1 && previewImg.src.indexOf('anil-sharma') === -1 ? previewImg.src : '') ||
+                        '../assets/default-student-avatar.svg';
+      issuedPhoto.src = photoSource;
+      try {
+        if (studentUploadedPhotoDataUrl) {
+          localStorage.setItem('qaa_student_avatar', studentUploadedPhotoDataUrl);
+        } else if (data && (data.photoUrl || data.avatar)) {
+          localStorage.setItem('qaa_student_avatar', data.photoUrl || data.avatar);
+        }
+      } catch (e) {}
     }
 
     // Generate Verification URL & Scannable QR Code

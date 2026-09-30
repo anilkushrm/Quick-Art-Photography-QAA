@@ -872,9 +872,12 @@ if ($action === 'me' && $method === 'GET') {
                 if (empty($student['bloodGroup'])) $student['bloodGroup'] = $a['bloodGroup'] ?? 'B+';
                 if (empty($student['studioName'])) $student['studioName'] = $a['studioName'] ?? '';
                 if (empty($student['workCity'])) $student['workCity'] = $a['workCity'] ?? ($a['city'] ?? '');
-                if (empty($student['city'])) $student['city'] = $a['city'] ?? ($a['workCity'] ?? '');
                 if (empty($student['appliedCourse'])) $student['appliedCourse'] = $a['courseTitle'] ?? '';
-                if (empty($student['avatar']) && !empty($a['photoUrl'])) $student['avatar'] = $a['photoUrl'];
+                if (!empty($a['photoUrl'])) {
+                    $student['avatar'] = $a['photoUrl'];
+                    $student['avatarUrl'] = $a['photoUrl'];
+                    $student['photoUrl'] = $a['photoUrl'];
+                }
                 if (($a['paymentStatus'] ?? '') === 'paid') {
                     $student['isPaid500'] = true;
                     $student['paymentStatus'] = 'paid';
@@ -2703,7 +2706,11 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
     if ($existingStudent) {
         $existingStudent['name'] = $fullName;
         if ($email) $existingStudent['email'] = $email;
-        if ($photoUrl) $existingStudent['avatar'] = $photoUrl;
+        if ($photoUrl) {
+            $existingStudent['avatar'] = $photoUrl;
+            $existingStudent['avatarUrl'] = $photoUrl;
+            $existingStudent['photoUrl'] = $photoUrl;
+        }
         $existingStudent['isOfflineStudent'] = true;
         $existingStudent['offlineAdmissionId'] = $admissionId;
         $existingStudent['appliedCourse'] = $courseTitle;
@@ -2723,6 +2730,8 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
             'phone'              => $phone,
             'email'              => $email,
             'avatar'             => $photoUrl,
+            'avatarUrl'          => $photoUrl,
+            'photoUrl'           => $photoUrl,
             'enrolledCourses'    => [], // Clean! Strictly empty until Admin approves
             'isOfflineStudent'   => true,
             'offlineAdmissionId' => $admissionId,

@@ -421,7 +421,7 @@ async function loadDashboard() {
     // ── Header / Nav Dropdown & Dashboard Hero User Details ──
     const shortName = currentStudent.name.split(' ')[0];
     const initials  = currentStudent.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
-    const avatarUrl = currentStudent.avatarUrl || localStorage.getItem('qaa_avatar_' + currentStudent.id) || '';
+    const avatarUrl = currentStudent.avatar || currentStudent.avatarUrl || currentStudent.photoUrl || localStorage.getItem('qaa_avatar_' + currentStudent.id) || localStorage.getItem('qaa_student_avatar') || '';
 
     // Set name in nav and hero
     const elName = document.getElementById('nav-user-name');
@@ -3963,7 +3963,7 @@ function openMyProfile() {
   if (existing) existing.remove();
 
   const stu = window._currentStudent || {};
-  const avatarUrl = stu.avatarUrl || localStorage.getItem('qaa_avatar_' + stu.id) || '';
+  const avatarUrl = stu.avatar || stu.avatarUrl || stu.photoUrl || localStorage.getItem('qaa_avatar_' + stu.id) || localStorage.getItem('qaa_student_avatar') || '';
   const initials  = (stu.name || 'S').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
 
   const overlay = document.createElement('div');
@@ -4059,7 +4059,7 @@ function openMyIdCardModal() {
   const stuStudio = stu.studioName || 'Quick Art Photography';
   const stuCity = stu.workCity || stu.city || 'Patna, Bihar';
   const stuBlood = stu.bloodGroup || 'O+';
-  const stuAvatar = stu.avatarUrl || localStorage.getItem('qaa_avatar_' + stu.id) || '../assets/anil-sharma.webp';
+  const stuAvatar = stu.avatar || stu.avatarUrl || stu.photoUrl || localStorage.getItem('qaa_avatar_' + stu.id) || localStorage.getItem('qaa_student_avatar') || '../assets/default-student-avatar.svg';
   const verifyUrl = `https://quickartphotography.com/verify/?id=${encodeURIComponent(stuId)}&phone=${encodeURIComponent(stu.phone || '')}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(verifyUrl)}`;
 
@@ -4089,7 +4089,7 @@ function openMyIdCardModal() {
           </div>
 
           <div class="adm-card-photo-wrapper">
-            <img src="${stuAvatar}" alt="${escapeHtml(stuName)}" onerror="this.src='../assets/anil-sharma.webp'" />
+            <img src="${stuAvatar}" alt="${escapeHtml(stuName)}" onerror="this.src='../assets/default-student-avatar.svg'" />
             <div class="adm-card-photo-ribbon">VERIFIED STUDENT</div>
           </div>
 
@@ -4697,7 +4697,7 @@ async function loadStudentLiveClasses() {
       banner.classList.remove('hidden');
       const bTitle = document.getElementById('live-banner-title');
       const bSub = document.getElementById('live-banner-sub');
-      if (bTitle) bTitle.textContent = `🔴 LIVE NOW: ${liveNowSession.title}`;
+      if (bTitle) bTitle.textContent = liveNowSession.title;
       if (bSub) {
         bSub.textContent = liveNowSession.isAuthorized 
           ? 'Mentor Anil Sharma is broadcasting live on timeline • Click to Join Live Classroom'

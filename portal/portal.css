@@ -164,12 +164,12 @@ a {
 
 /* ================= Header ================= */
 .portal-header {
-  background: rgba(10, 10, 12, 0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+  background: #090a0f !important;
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
   padding: 4px 0;
 }
 
@@ -9893,6 +9893,64 @@ video::-webkit-media-controls-download-button {
   .nav-live-pill {
     padding: 5px 10px;
     font-size: 11px;
+  }
+
+  /* 🔴 Live Banner Mobile Alignment Fix */
+  .live-banner {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    padding: 16px !important;
+    margin-bottom: 20px !important;
+  }
+  .live-banner-pulse {
+    align-self: flex-start !important;
+  }
+  .live-banner-content {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .live-banner-title {
+    font-size: 15.5px !important;
+    line-height: 1.35 !important;
+    word-break: normal !important;
+    margin-bottom: 4px !important;
+  }
+  .live-banner-sub {
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    margin-top: 4px !important;
+  }
+  .live-banner-btn {
+    width: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+    padding: 12px 18px !important;
+    font-size: 13.5px !important;
+    border-radius: 10px !important;
+    box-sizing: border-box !important;
+    display: block !important;
+  }
+
+  /* 📺 Live Shelf Container & Cards Grid Mobile Alignment Fix */
+  .live-shelf-container {
+    padding: 16px 14px !important;
+    margin-bottom: 24px !important;
+    border-radius: 16px !important;
+  }
+  .live-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    width: 100% !important;
+  }
+  .live-card {
+    min-width: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .live-card-badge-row {
+    flex-wrap: wrap;
+    gap: 6px;
   }
 }
 

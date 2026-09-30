@@ -7122,13 +7122,9 @@ video::-webkit-media-controls-download-button {
   opacity: 0.92;
 }
 
-/* ── Live Sessions Shelf on Dashboard ── */
+/* ── Live Sessions Shelf on Dashboard (Disabled/Removed) ── */
 .live-shelf-container {
-  margin-bottom: 32px;
-  padding: 22px;
-  background: rgba(15, 23, 42, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
+  display: none !important;
 }
 .live-shelf-hdr {
   display: flex;

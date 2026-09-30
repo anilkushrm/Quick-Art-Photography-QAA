@@ -4756,74 +4756,16 @@ async function loadStudentLiveClasses() {
       banner.classList.add('hidden');
     }
 
-    // 2. Render Cards Shelf
-    if (!studentLiveClasses.length) {
-      if (shelf) shelf.classList.add('hidden');
-      return;
-    }
-
-    if (shelf) shelf.classList.remove('hidden');
-    if (grid) {
-      grid.innerHTML = studentLiveClasses.map(c => {
-        let statusBadge = '';
-        if (c.status === 'live') {
-          statusBadge = '<span class="live-card-badge status-live">🔴 Live Now</span>';
-        } else if (c.status === 'completed') {
-          statusBadge = '<span class="live-card-badge status-completed">✓ Completed Replay</span>';
-        } else {
-          statusBadge = '<span class="live-card-badge status-scheduled">⏳ Scheduled</span>';
-        }
-
-        const dateStr = c.scheduledAt ? new Date(c.scheduledAt).toLocaleString('en-IN', {
-          day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
-        }) : 'Coming Soon';
-
-        let actionBtn = '';
-        if (c.isAuthorized) {
-          if (c.status === 'live') {
-            actionBtn = `<button type="button" class="btn btn-gold btn-block" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-weight:700" onclick="openLiveStudio('${c.id}')">🔴 Enter Live Studio</button>`;
-          } else if (c.status === 'completed') {
-            actionBtn = `<button type="button" class="btn btn-outline btn-block" onclick="openLiveStudio('${c.id}')">▶ Watch Replay</button>`;
-          } else {
-            actionBtn = `<button type="button" class="btn btn-outline btn-block" onclick="openLiveStudio('${c.id}')">⏳ Waiting Room / Details</button>`;
-          }
-        } else {
-          if (c.type === 'workshop') {
-            actionBtn = `<a href="/master-class/live.html" class="btn btn-gold btn-block" style="text-decoration:none;display:block;text-align:center">🎟️ Book Ticket (₹${Number(c.ticketPrice||299).toLocaleString()})</a>`;
-          } else {
-            actionBtn = `<a href="../online/" class="btn btn-gold-outline btn-block" style="text-decoration:none;display:block;text-align:center">🔒 Enroll in Course</a>`;
-          }
-        }
-
-        return `
-          <div class="live-card">
-            <div>
-              <div class="live-card-badge-row">
-                ${statusBadge}
-                <span style="font-size:11px;color:#94a3b8">${escapeHtml(c.duration || '90 Mins')}</span>
-              </div>
-              <h4 class="live-card-title">${escapeHtml(c.title)}</h4>
-              <p class="live-card-desc">${escapeHtml(c.description || 'Live hands-on color grading timeline session.')}</p>
-            </div>
-            <div>
-              <div class="live-card-meta">
-                <span>🗓️ ${dateStr}</span>
-                <span>${c.isAuthorized ? '<strong style="color:#10b981">✓ Unlocked</strong>' : (c.type === 'workshop' ? `₹${c.ticketPrice}` : 'Course Batch')}</span>
-              </div>
-              <div style="margin-top:12px">
-                ${actionBtn}
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
+    // 2. Live Sessions Shelf removed per user request
+    if (shelf) {
+      shelf.remove();
     }
 
     // 3. Start Live Countdown & State Sync
     startLiveCountdownTimer();
 
   } catch (err) {
-    if (shelf) shelf.classList.add('hidden');
+    if (shelf) shelf.remove();
     startLiveCountdownTimer();
   }
 }

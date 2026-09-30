@@ -7564,6 +7564,8 @@ video::-webkit-media-controls-download-button {
   border: none;
   outline: none;
   pointer-events: none !important; /* Zero click-through to YouTube: prevents pause/play, seekbar, and external redirects */
+  transform: scale(1.04);
+  transform-origin: center center;
 }
 
 /* ── Enhanced HTML5 & Mobile/Tablet Fullscreen Support ── */
@@ -7749,42 +7751,7 @@ body.live-fs-open {
   }
 }
 
-/* ── Mobile Autoplay Unmute Badge ── */
-.live-unmute-tap-badge {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 25;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(15, 23, 42, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(216, 161, 83, 0.5);
-  color: #fff;
-  padding: 8px 18px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 700;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 15px rgba(216, 161, 83, 0.25);
-  cursor: pointer;
-  pointer-events: auto;
-  animation: pulseUnmuteBadge 1.8s infinite alternate ease-in-out;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  user-select: none;
-  -webkit-user-select: none;
-}
-.live-unmute-tap-badge.faded {
-  opacity: 0;
-  transform: translate(-50%, -10px);
-  pointer-events: none;
-}
-@keyframes pulseUnmuteBadge {
-  0% { transform: translateX(-50%) scale(1); }
-  100% { transform: translateX(-50%) scale(1.06); }
-}
+
 
 /* ── Video Overlay Interactive Controls (Comments & Fullscreen) ── */
 .live-video-overlay-fs,

@@ -2709,8 +2709,11 @@ fbq('track', 'PageView');
           <span>💬</span> Live Doubts &amp; Student Interaction
         </h2>
         <div id="doubtsModalSub" class="muted" style="font-size:12px;margin-top:2px">—</div>
+        <div style="font-size:11.5px;color:#38bdf8;margin-top:3px">💡 OBS Studio me dekhne ke liye <strong>📋 OBS Link</strong> copy karein ya <strong>🎥 OBS Dock</strong> open karein</div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;gap:6px">
+        <button onclick="copyObsDockLinkAdmin()" class="icon-btn" title="Copy OBS Dock URL" style="color:#d8a153;font-size:11px;font-weight:700;width:auto;padding:0 9px;gap:4px">📋 OBS Link</button>
+        <button onclick="openObsDockPopout()" class="icon-btn" title="Open in Popout / OBS" style="color:#38bdf8;font-size:11px;font-weight:700;width:auto;padding:0 9px;gap:4px">🎥 OBS Dock ⧉</button>
         <button onclick="pollLiveDoubtsAdmin()" class="icon-btn" title="Refresh Messages">🔄</button>
         <button onclick="clearLiveChatAdmin()" class="icon-btn" title="Clear Chat" style="color:#ef4444">🗑️</button>
         <button onclick="closeLiveDoubtsModal()" class="icon-btn">✕</button>
@@ -3537,7 +3540,14 @@ let allLmsStudents = [];
 let allLmsCoupons = [];
 
 async function lmsAdmin(action, opts = {}) {
-  const url = `${API_HOST}api/lms-admin.php?action=${encodeURIComponent(action)}`;
+  let url = `${API_HOST}api/lms-admin.php?`;
+  if (action.startsWith('?') || action.startsWith('&')) {
+    url += action.replace(/^[?&]/, '');
+  } else if (action.includes('&') || action.includes('=')) {
+    url += action.startsWith('action=') ? action : `action=${action}`;
+  } else {
+    url += `action=${encodeURIComponent(action)}`;
+  }
   const headers = {
     'Content-Type': 'application/json',
     'X-Admin-Token': token || '',
@@ -6496,6 +6506,26 @@ function closeLiveDoubtsModal() {
   if (modal) modal.classList.remove('show');
 }
 
+function getObsDockUrl() {
+  const base = window.location.origin;
+  const t = token ? `&token=${encodeURIComponent(token)}` : '';
+  return `${base}/portal/obs-doubts.html?liveId=${encodeURIComponent(activeDoubtsLiveId || '')}${t}`;
+}
+
+function openObsDockPopout() {
+  const url = getObsDockUrl();
+  window.open(url, 'QAA_OBS_Doubts', 'width=440,height=720,menubar=no,toolbar=no,location=no,status=no');
+}
+
+function copyObsDockLinkAdmin() {
+  const url = getObsDockUrl();
+  navigator.clipboard.writeText(url).then(() => {
+    alert('✓ OBS Dock Link Copied!\n\nOBS Studio me add karne ke liye:\n1. OBS Studio open karein\n2. Menu me Docks ➔ Custom Browser Docks... pe click karein\n3. Dock Name me "Quick Art Doubts" likhein\n4. URL me ye copied link paste karein aur Apply dabayein!\n\nYe chat window OBS me ek panel ki tarah hamesha dikhti rahegi!');
+  }).catch(() => {
+    prompt('OBS Dock Link (OBS Studio -> Docks -> Custom Browser Docks me paste karein):', url);
+  });
+}
+
 async function pollLiveDoubtsAdmin() {
   if (!activeDoubtsLiveId) return;
   const container = document.getElementById('doubtsListContainer');
@@ -6533,7 +6563,12 @@ async function pollLiveDoubtsAdmin() {
 
     // Scroll to bottom
     container.scrollTop = container.scrollHeight;
-  } catch(e){}
+  } catch(e) {
+    console.error('Error polling live doubts in admin:', e);
+    if (container && container.innerHTML.includes('Loading live doubts')) {
+      container.innerHTML = `<div style="text-align:center;color:#ef4444;padding:32px;font-size:13px">Live Doubts load nahi ho sake: ${escapeHtml(e.message)}<br><button onclick="pollLiveDoubtsAdmin()" class="btn btn-sm btn-outline" style="margin-top:10px;padding:4px 12px;font-size:12px">Retry 🔄</button></div>`;
+    }
+  }
 }
 
 async function sendMentorDoubtReply() {
@@ -6758,6 +6793,6 @@ if (token) {
 }
 </script>
 
-<script defer src="/meta-events.js"></script>
+<script src="/meta-events.js?v=5" defer></script>
         </body>
 </html>

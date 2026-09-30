@@ -5167,10 +5167,49 @@ function hideLiveOverlayControls() {
 
 function handleLiveShieldClick(e) {
   revealLiveOverlayControls(5000);
+  attemptLiveAudioUnmute();
 }
 
+let lastLiveShieldTouchTime = 0;
 function handleLiveShieldTouch(e) {
+  const now = Date.now();
+  if (now - lastLiveShieldTouchTime < 320) {
+    e.preventDefault();
+    toggleLiveCinemaFullscreen();
+    lastLiveShieldTouchTime = 0;
+    return;
+  }
+  lastLiveShieldTouchTime = now;
   revealLiveOverlayControls(5000);
+  attemptLiveAudioUnmute();
+}
+
+function attemptLiveAudioUnmute() {
+  const iframe = document.getElementById('live-stream-iframe');
+  const soundBtn = document.getElementById('live-sound-btn');
+  const isMuted = soundBtn && soundBtn.getAttribute('data-muted') === '1';
+
+  if (iframe && iframe.contentWindow) {
+    try {
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute' }), '*');
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [100] }), '*');
+    } catch (_) {}
+  }
+  if (soundBtn && isMuted) {
+    soundBtn.setAttribute('data-muted', '0');
+    soundBtn.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      </svg>
+    `;
+    soundBtn.title = "Mute Audio";
+  }
+  const badge = document.getElementById('live-unmute-tap-badge');
+  if (badge) {
+    badge.classList.add('faded');
+    setTimeout(() => badge.remove(), 350);
+  }
 }
 
 function cleanYouTubeVideoId(input) {
@@ -5220,18 +5259,14 @@ function embedLiveStream(streamId, replayUrl, status) {
     return;
   }
 
-  // Pure Anti-Leak Zero-Pause Broadcast Embed:
-  // - controls=0 : completely disables pause/play bar, scrubber, and YouTube branding
-  // - autoplay=1 : automatically plays live stream
-  // - modestbranding=1 : hides YouTube logo
-  // - rel=0 : does not show external recommended videos
-  // - showinfo=0 : hides video title/channel links
-  // - iv_load_policy=3 : hides video annotations
-  // - disablekb=1 : disables keyboard shortcuts (space/k/j/l) from pausing or seeking
-  // - playsinline=1 : prevents iOS native fullscreen takeover
-  // - enablejsapi=1 : enables iframe API for audio mute/unmute control
+  // Detect mobile viewport or touch device
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (window.innerWidth <= 768);
   const originStr = encodeURIComponent(window.location.origin);
-  const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&playsinline=1&enablejsapi=1&origin=${originStr}`;
+  
+  // Mobile browsers strictly require mute=1 for guaranteed zero-delay autoplay on initial load.
+  // Desktop PC autoplays unmuted directly.
+  const muteParam = isMobile ? '&mute=1' : '';
+  const embedUrl = `https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1${muteParam}&controls=0&disablekb=1&fs=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&enablejsapi=1`;
 
   mount.innerHTML = `
     <iframe 
@@ -5239,13 +5274,62 @@ function embedLiveStream(streamId, replayUrl, status) {
       src="${embedUrl}" 
       title="Quick Art Photography Academy Live Stream" 
       frameborder="0" 
-      sandbox="allow-scripts allow-same-origin allow-presentation"
       tabindex="-1"
       style="pointer-events:none !important;"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
+      playsinline="1"
+      webkit-playsinline="1"
       allowfullscreen>
     </iframe>
   `;
+
+  // Synchronize audio state to unmuted default for all devices
+  const soundBtn = document.getElementById('live-sound-btn');
+  const oldBadge = document.getElementById('live-unmute-tap-badge');
+  if (oldBadge) oldBadge.remove();
+
+  if (soundBtn) {
+    soundBtn.setAttribute('data-muted', '0');
+    soundBtn.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      </svg>
+    `;
+    soundBtn.title = "Mute Audio";
+  }
+
+  // Force unMute & play commands on iframe load & repeated intervals to guarantee instant audio play
+  const iframeEl = document.getElementById('live-stream-iframe');
+  if (iframeEl) {
+    const triggerPlayAndUnmute = () => {
+      try {
+        if (iframeEl.contentWindow) {
+          iframeEl.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute' }), '*');
+          iframeEl.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [100] }), '*');
+          iframeEl.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo' }), '*');
+        }
+      } catch (_) {}
+    };
+    iframeEl.addEventListener('load', () => {
+      triggerPlayAndUnmute();
+      setTimeout(triggerPlayAndUnmute, 200);
+      setTimeout(triggerPlayAndUnmute, 600);
+      setTimeout(triggerPlayAndUnmute, 1200);
+      setTimeout(triggerPlayAndUnmute, 2500);
+    });
+  }
+
+  // Touch anywhere on screen also guarantees unmuted audio
+  if (isMobile) {
+    const onMobileFirstTouch = () => {
+      attemptLiveAudioUnmute();
+      window.removeEventListener('touchstart', onMobileFirstTouch, true);
+      window.removeEventListener('click', onMobileFirstTouch, true);
+    };
+    window.addEventListener('touchstart', onMobileFirstTouch, { once: true, passive: true });
+    window.addEventListener('click', onMobileFirstTouch, { once: true });
+  }
 
   // Start 5-second initial intro for Comment & Fullscreen controls and anti-branding mask
   revealLiveOverlayControls(5000, true);
@@ -5268,6 +5352,19 @@ window.addEventListener('message', (event) => {
   } catch (e) {}
 });
 
+// Resume playback automatically when mobile user switches back to browser tab
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    const liveStudio = document.getElementById('view-live-studio');
+    if (liveStudio && !liveStudio.classList.contains('hidden')) {
+      const iframe = document.getElementById('live-stream-iframe');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo' }), '*');
+      }
+    }
+  }
+});
+
 function toggleLiveAudioMute() {
   const iframe = document.getElementById('live-stream-iframe');
   if (!iframe || !iframe.contentWindow) return;
@@ -5275,18 +5372,7 @@ function toggleLiveAudioMute() {
   const isMuted = soundBtn && soundBtn.getAttribute('data-muted') === '1';
 
   if (isMuted) {
-    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute' }), '*');
-    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [100] }), '*');
-    if (soundBtn) {
-      soundBtn.setAttribute('data-muted', '0');
-      soundBtn.innerHTML = `
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-        </svg>
-      `;
-      soundBtn.title = "Mute Audio";
-    }
+    attemptLiveAudioUnmute();
     toast('🔊 Audio unmuted');
   } else {
     iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'mute' }), '*');
@@ -5369,42 +5455,84 @@ function reloadLivePlayer() {
   }
 }
 
+function isLiveFullscreenActive() {
+  const box = document.getElementById('live-video-box');
+  const isNative = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+  const isCss = box ? box.classList.contains('is-fullscreen') : false;
+  return isNative || isCss;
+}
+
 function toggleLiveCinemaFullscreen() {
   const box = document.getElementById('live-video-box');
   if (!box) return;
 
-  const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+  const isFs = isLiveFullscreenActive();
 
-  if (!isFullscreen) {
-    if (box.requestFullscreen) {
-      box.requestFullscreen().catch(err => console.warn('Fullscreen request failed:', err));
-    } else if (box.webkitRequestFullscreen) {
-      box.webkitRequestFullscreen();
-    } else if (box.mozRequestFullScreen) {
-      box.mozRequestFullScreen();
-    } else if (box.msRequestFullscreen) {
-      box.msRequestFullscreen();
-    }
+  if (!isFs) {
+    // 1. Instantly activate CSS Fullscreen (Works on 100% of devices: iOS Safari, iPhone, iPad, Android Chrome, in-app webviews)
+    box.classList.add('is-fullscreen');
+    document.body.classList.add('live-fs-open');
+
+    // 2. Also invoke native fullscreen if available (PC desktop, Android Chrome, Mac Safari)
+    try {
+      if (box.requestFullscreen) {
+        box.requestFullscreen().catch(() => {});
+      } else if (box.webkitRequestFullscreen) {
+        box.webkitRequestFullscreen();
+      } else if (box.mozRequestFullScreen) {
+        box.mozRequestFullScreen();
+      } else if (box.msRequestFullscreen) {
+        box.msRequestFullscreen();
+      }
+    } catch (_) {}
+
+    // 3. For mobile / tablet: lock to landscape orientation for cinema view if supported
+    try {
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {});
+      }
+    } catch (_) {}
+
+    revealLiveOverlayControls(4000);
   } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen().catch(err => console.warn('Exit fullscreen failed:', err));
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
-    }
+    // Exit fullscreen
+    box.classList.remove('is-fullscreen');
+    document.body.classList.remove('live-fs-open');
+
+    try {
+      const isNative = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+      if (isNative) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    } catch (_) {}
+
+    try {
+      if (screen.orientation && screen.orientation.unlock) {
+        screen.orientation.unlock();
+      }
+    } catch (_) {}
   }
+
+  updateLiveFullscreenUI();
 }
 
 function updateLiveFullscreenUI() {
-  const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+  const isFs = isLiveFullscreenActive();
   const btns = document.querySelectorAll('.live-fs-btn');
   btns.forEach(btn => {
     if (btn.classList.contains('live-video-overlay-fs')) {
       btn.innerHTML = isFs ? '✕' : '⛶';
       btn.title = isFs ? 'Exit Fullscreen (Esc / Press F)' : 'Fullscreen Mode (Press F)';
+      if (isFs) btn.classList.add('active-fs');
+      else btn.classList.remove('active-fs');
     } else if (btn.classList.contains('live-icon-btn')) {
       btn.title = isFs ? 'Exit Fullscreen (Esc / Press F)' : 'Fullscreen Mode (Press F)';
       if (isFs) {
@@ -5423,7 +5551,18 @@ function updateLiveFullscreenUI() {
 }
 
 ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
-  document.addEventListener(evt, updateLiveFullscreenUI);
+  document.addEventListener(evt, () => {
+    const isNative = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+    const box = document.getElementById('live-video-box');
+    if (!isNative && box) {
+      box.classList.remove('is-fullscreen');
+      document.body.classList.remove('live-fs-open');
+      try {
+        if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+      } catch (_) {}
+    }
+    updateLiveFullscreenUI();
+  });
 });
 
 function toggleLiveTheaterMode() {
@@ -5602,7 +5741,12 @@ function exitLiveStudio() {
     liveOverlayHideTimeout = null;
   }
   const box = document.getElementById('live-video-box');
-  if (box) box.classList.remove('show-controls');
+  if (box) {
+    box.classList.remove('show-controls');
+    box.classList.remove('is-fullscreen');
+  }
+  document.body.classList.remove('live-fs-open');
+  try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch(_) {}
 
   if (liveDoubtsPollTimer) {
     clearInterval(liveDoubtsPollTimer);

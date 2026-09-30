@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Art Academy • OBS Live Doubts &amp; Comments Stream</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-dark: #070b14;
+      --panel-bg: #0c1220;
+      --card-bg: #111a2e;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --gold: #d8a153;
+      --gold-glow: rgba(216, 161, 83, 0.25);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --live-red: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* OBS Transparent Overlay Mode */
+    body.mode-overlay {
+      background: transparent !important;
+    }
+    body.mode-overlay .obs-header,
+    body.mode-overlay .obs-reply-bar {
+      display: none !important;
+    }
+    body.mode-overlay .obs-chat-list {
+      padding: 12px;
+      gap: 12px;
+    }
+    body.mode-overlay .msg-card {
+      background: rgba(10, 15, 28, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(216, 161, 83, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      animation: popIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Top OBS Control Header */
+    .obs-header {
+      background: #090e1a;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .obs-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .live-dot-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(239, 68, 68, 0.16);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--live-red);
+      box-shadow: 0 0 8px var(--live-red);
+      animation: pulseDot 1.5s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .obs-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+
+    .obs-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    .btn-icon.active {
+      background: rgba(216, 161, 83, 0.25);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* Chat Messages Stream Area */
+    .obs-chat-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scroll-behavior: smooth;
+    }
+
+    .obs-chat-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .obs-chat-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .obs-chat-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+    }
+
+    /* Message Cards */
+    .msg-card {
+      padding: 10px 12px;
+      border-radius: 10px;
+      position: relative;
+      animation: popIn 0.25s ease;
+      line-height: 1.45;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Student Message Style */
+    .msg-card.student {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-left: 3px solid var(--accent-blue);
+    }
+
+    /* Mentor Message Style */
+    .msg-card.mentor {
+      background: linear-gradient(135deg, rgba(216, 161, 83, 0.2), rgba(216, 161, 83, 0.08));
+      border: 1px solid rgba(216, 161, 83, 0.4);
+      border-left: 3px solid var(--gold);
+    }
+
+    .msg-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 5px;
+      font-size: 11px;
+    }
+
+    .msg-author {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .msg-card.student .msg-author {
+      color: var(--accent-blue);
+    }
+
+    .msg-card.mentor .msg-author {
+      color: var(--gold);
+    }
+
+    .msg-time {
+      color: var(--text-muted);
+      font-size: 10.5px;
+    }
+
+    .msg-text {
+      font-size: 13px;
+      color: #f1f5f9;
+      word-break: break-word;
+    }
+
+    .msg-card.mentor .msg-text {
+      color: #fff;
+      font-weight: 500;
+    }
+
+    /* Empty State */
+    .empty-state {
+      margin: auto;
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state .icon {
+      font-size: 36px;
+      margin-bottom: 8px;
+    }
+    .empty-state p {
+      font-size: 12.5px;
+      line-height: 1.5;
+      max-width: 260px;
+    }
+
+    /* Bottom Reply Deck */
+    .obs-reply-bar {
+      background: #090e1a;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px 12px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .reply-input {
+      flex: 1;
+      padding: 9px 12px;
+      background: #050811;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 12.5px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .reply-input:focus {
+      border-color: var(--gold);
+    }
+
+    .btn-send {
+      padding: 9px 14px;
+      background: linear-gradient(135deg, #d8a153 0%, #b88628 100%);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .btn-send:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+    .btn-send:active {
+      transform: translateY(0);
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(216, 161, 83, 0.4);
+      color: #fde68a;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 600;
+      z-index: 999;
+      pointer-events: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -6px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Deck -->
+  <header class="obs-header">
+    <div class="obs-brand">
+      <span class="live-dot-tag">
+        <span class="live-dot"></span>
+        <span>OBS LIVE</span>
+      </span>
+      <span class="obs-title" id="obsStreamTitle">Student Doubts &amp; Q&amp;A</span>
+    </div>
+    <div class="obs-actions">
+      <button type="button" class="btn-icon" id="btnSoundToggle" onclick="toggleSoundAlert()" title="Toggle Sound Alert on New Doubt">
+        🔔
+      </button>
+      <button type="button" class="btn-icon" onclick="fetchLiveDoubts(true)" title="Force Refresh">
+        🔄
+      </button>
+      <button type="button" class="btn-icon" onclick="copyObsDockLink()" title="Copy OBS Dock URL">
+        📋
+      </button>
+    </div>
+  </header>
+
+  <!-- Chat Messages Container -->
+  <main class="obs-chat-list" id="obsChatList">
+    <div class="empty-state">
+      <div class="icon">💬</div>
+      <p>Connecting to Live Doubts stream… Questions from students will appear here in real time.</p>
+    </div>
+  </main>
+
+  <!-- Bottom Reply Deck (Direct Mentor Answers inside OBS) -->
+  <footer class="obs-reply-bar">
+    <input 
+      type="text" 
+      id="obsReplyInput" 
+      class="reply-input" 
+      placeholder="Reply or announcement as Mentor Anil Sharma..." 
+      maxlength="300"
+      onkeydown="if(event.key==='Enter')sendMentorReply()"
+    />
+    <button type="button" class="btn-send" onclick="sendMentorReply()" id="btnSendReply">
+      <span>Send</span> ➔
+    </button>
+  </footer>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    let liveId = urlParams.get('liveId') || '';
+    const isOverlayMode = urlParams.get('overlay') === '1' || urlParams.get('mode') === 'overlay';
+    const urlToken = urlParams.get('token');
+    if (urlToken) {
+      localStorage.setItem('qa_admin_token', urlToken);
+    }
+    let soundEnabled = localStorage.getItem('qa_obs_sound') !== '0';
+    let previousMsgCount = 0;
+    let pollTimer = null;
+    let isFirstLoad = true;
+
+    if (isOverlayMode) {
+      document.body.classList.add('mode-overlay');
+    }
+
+    // Audio chime for new doubt
+    function playChime() {
+      if (!soundEnabled) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12); // A5
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.28);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.28);
+      } catch (_) {}
+    }
+
+    function toggleSoundAlert() {
+      soundEnabled = !soundEnabled;
+      localStorage.setItem('qa_obs_sound', soundEnabled ? '1' : '0');
+      const btn = document.getElementById('btnSoundToggle');
+      if (btn) {
+        btn.textContent = soundEnabled ? '🔔' : '🔕';
+        btn.classList.toggle('active', soundEnabled);
+      }
+      showToast(soundEnabled ? '🔔 Sound alert enabled' : '🔕 Sound alert muted');
+    }
+
+    function showToast(msg) {
+      const old = document.querySelector('.toast-pill');
+      if (old) old.remove();
+      const t = document.createElement('div');
+      t.className = 'toast-pill';
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2500);
+    }
+
+    function copyObsDockLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        showToast('✓ OBS Dock URL Copied! Paste into OBS Docks');
+      }).catch(() => {
+        prompt('Copy this OBS Dock URL:', window.location.href);
+      });
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, s => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[s]));
+    }
+
+    // Auto-detect current active live class if liveId not in query
+    async function resolveLiveId() {
+      if (liveId) return;
+      try {
+        const res = await fetch('../api/lms.php?action=get-live-classes').then(r => r.json());
+        const list = res.liveClasses || [];
+        const liveNow = list.find(c => c.status === 'live');
+        if (liveNow) {
+          liveId = liveNow.id;
+          document.getElementById('obsStreamTitle').textContent = liveNow.title || 'Live Stream Doubts';
+        } else if (list.length) {
+          liveId = list[0].id;
+          document.getElementById('obsStreamTitle').textContent = list[0].title || 'Live Stream Doubts';
+        } else {
+          liveId = 'live_demo_01';
+        }
+      } catch (_) {
+        liveId = 'live_demo_01';
+      }
+    }
+
+    async function fetchLiveDoubts(manual = false) {
+      if (!liveId) await resolveLiveId();
+      if (!liveId) return;
+
+      const container = document.getElementById('obsChatList');
+      try {
+        const res = await fetch(`../api/lms.php?action=fetch-live-doubts&liveId=${encodeURIComponent(liveId)}`).then(r => r.json());
+        const messages = res.messages || [];
+
+        if (messages.length > previousMsgCount && !isFirstLoad) {
+          playChime();
+        }
+        previousMsgCount = messages.length;
+        isFirstLoad = false;
+
+        if (!messages.length) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="icon">💬</div>
+              <p>No questions received yet. When students post doubts from the live portal, they appear here instantly.</p>
+            </div>
+          `;
+          return;
+        }
+
+        const isNearBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 100;
+
+        container.innerHTML = messages.map(m => {
+          const time = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+          const isMentor = !!m.isMentor;
+          return `
+            <div class="msg-card ${isMentor ? 'mentor' : 'student'}">
+              <div class="msg-meta">
+                <span class="msg-author">
+                  ${isMentor ? '⭐ ' + escapeHtml(m.studentName || 'Mentor Anil Sharma') : '🎓 ' + escapeHtml(m.studentName || 'Student')}
+                </span>
+                <span class="msg-time">${time}</span>
+              </div>
+              <div class="msg-text">${escapeHtml(m.message)}</div>
+            </div>
+          `;
+        }).join('');
+
+        if (isNearBottom || manual) {
+          container.scrollTop = container.scrollHeight;
+        }
+      } catch (err) {
+        console.warn('OBS doubts fetch warning:', err);
+      }
+    }
+
+    async function sendMentorReply() {
+      if (!liveId) await resolveLiveId();
+      const input = document.getElementById('obsReplyInput');
+      const btn = document.getElementById('btnSendReply');
+      const msg = input ? input.value.trim() : '';
+      if (!msg) return;
+
+      input.value = '';
+      if (btn) btn.disabled = true;
+
+      try {
+        // Check for admin token in localStorage
+        const adminToken = localStorage.getItem('qa_admin_token') || sessionStorage.getItem('qa_admin_token') || '';
+        const res = await fetch('../api/lms-admin.php?action=reply-live-doubt', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Token': adminToken,
+            'X-Admin-Pass': adminToken
+          },
+          body: JSON.stringify({ liveId, message: msg })
+        }).then(r => r.json());
+
+        if (!res.ok) {
+          // If unauthorized, prompt for Admin Password once and save for future OBS sessions
+          const pwd = prompt('Academy Admin Password enter karein (Jo Website Admin Panel login karne ke liye use karte hain):');
+          if (pwd) {
+            localStorage.setItem('qa_admin_token', pwd);
+            // Attempt login to get session token
+            try {
+              const loginRes = await fetch('../api/admin.php?action=login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: pwd })
+              }).then(r => r.json());
+              if (loginRes.ok && loginRes.token) {
+                localStorage.setItem('qa_admin_token', loginRes.token);
+              }
+            } catch (_) {}
+
+            const activeTok = localStorage.getItem('qa_admin_token') || pwd;
+            const retryRes = await fetch('../api/lms-admin.php?action=reply-live-doubt', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Admin-Token': activeTok,
+                'X-Admin-Pass': activeTok
+              },
+              body: JSON.stringify({ liveId, message: msg })
+            }).then(r => r.json());
+
+            if (retryRes.ok) {
+              fetchLiveDoubts(true);
+              showToast('✓ Answer sent to student stream');
+            } else {
+              alert('Admin password galat hai: ' + (retryRes.error || 'Access denied'));
+            }
+          }
+        } else {
+          fetchLiveDoubts(true);
+          showToast('✓ Answer sent to student stream');
+        }
+      } catch (err) {
+        showToast('Failed to send: ' + err.message);
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    // Initialize
+    (async function init() {
+      const btnSound = document.getElementById('btnSoundToggle');
+      if (btnSound) {
+        btnSound.textContent = soundEnabled ? '🔔' : '🔕';
+        btnSound.classList.toggle('active', soundEnabled);
+      }
+      await resolveLiveId();
+      fetchLiveDoubts(true);
+      // Fast polling every 2.5s for seamless real-time OBS interaction
+      pollTimer = setInterval(fetchLiveDoubts, 2500);
+    })();
+  </script>
+</body>
+</html>

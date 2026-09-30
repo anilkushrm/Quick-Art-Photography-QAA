@@ -35,10 +35,30 @@ function save_all_live_chats($chats) {
     file_put_contents(LMS_LIVE_CHAT_FILE, json_encode($chats, JSON_PRETTY_PRINT), LOCK_EX);
 }
 
-// Ensure admin is logged in
-$settings = require_admin();
+// Ensure admin is logged in (via session token or direct admin password)
+$tok = $_SERVER['HTTP_X_ADMIN_TOKEN'] ?? ($_SERVER['HTTP_X_ADMIN_PASS'] ?? '');
+if (is_valid_session($tok)) {
+    $settings = load_settings();
+} else {
+    $settings = load_settings();
+    if (!empty($tok) && !empty($settings['adminPasswordHash']) && password_verify($tok, $settings['adminPasswordHash'])) {
+        // Password verified successfully
+    } else {
+        json_err('Unauthorized', 401);
+    }
+}
 
-$action = $_GET['action'] ?? '';
+$action = trim($_GET['action'] ?? ($_POST['action'] ?? ''));
+if (strpos($action, '&') !== false) {
+    parse_str($action, $extraParams);
+    if (!empty($extraParams['action'])) {
+        $action = trim($extraParams['action']);
+    }
+    foreach ($extraParams as $k => $v) {
+        if (!isset($_GET[$k])) $_GET[$k] = $v;
+        if (!isset($_REQUEST[$k])) $_REQUEST[$k] = $v;
+    }
+}
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Helper functions

@@ -9353,27 +9353,45 @@ video::-webkit-media-controls-download-button {
 
 .adm-card-barcode-box {
   margin-top: auto;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 7px;
   text-align: center;
   position: relative;
   z-index: 2;
 }
 
 .adm-card-barcode-graphic {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 210px;
+}
+
+.adm-card-barcode-svg {
+  width: 100%;
+  height: 22px;
+  display: block;
+}
+
+.adm-card-barcode-number {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 15px;
-  letter-spacing: 5px;
-  color: #ffffff;
-  opacity: 0.9;
-  line-height: 1;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #e2e8f0;
+  margin-top: 3px;
+  text-transform: uppercase;
 }
 
 .adm-card-return-notice {
   font-size: 7px;
-  color: #64748b;
+  color: #94a3b8;
   margin: 4px 0 0;
-  line-height: 1.3;
+  line-height: 1.35;
+  text-align: center;
+  padding: 0 4px;
 }
 
 .idcard-actions-bar {

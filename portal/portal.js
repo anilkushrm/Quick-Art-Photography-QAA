@@ -4192,15 +4192,63 @@ function openMyIdCardModal() {
             <div class="adm-card-campus-heading">📍 Academy HQ &amp; Master Studio:</div>
             <div class="adm-card-campus-detail">
               <strong>Quick Art Photography Academy</strong><br>
-              Opp. High School, Main Market Road, Bihar, India.<br>
-              Online Campus: <strong>quickartphotography.com</strong>
+              Ayodhya Puri, Near Lalit Bus Stand, Siwan, Bihar - 841226<br>
+              Online Campus: <strong>quickartphotography.in</strong>
             </div>
           </div>
 
           <div class="adm-card-barcode-box">
-            <div class="adm-card-barcode-graphic">||| | ||||| || |||| |||| |||</div>
+            <div class="adm-card-barcode-graphic">
+              <svg class="adm-card-barcode-svg" viewBox="0 0 220 28" preserveAspectRatio="none">
+                <rect x="0" y="0" width="3" height="28" fill="#ffffff" />
+                <rect x="5" y="0" width="1.5" height="28" fill="#ffffff" />
+                <rect x="8" y="0" width="4.5" height="28" fill="#ffffff" />
+                <rect x="14" y="0" width="1.5" height="28" fill="#ffffff" />
+                <rect x="17" y="0" width="3" height="28" fill="#ffffff" />
+                <rect x="22" y="0" width="6" height="28" fill="#ffffff" />
+                <rect x="30" y="0" width="2" height="28" fill="#ffffff" />
+                <rect x="34" y="0" width="4" height="28" fill="#ffffff" />
+                <rect x="40" y="0" width="1.5" height="28" fill="#ffffff" />
+                <rect x="43" y="0" width="5" height="28" fill="#ffffff" />
+                <rect x="50" y="0" width="2" height="28" fill="#ffffff" />
+                <rect x="54" y="0" width="3.5" height="28" fill="#ffffff" />
+                <rect x="59" y="0" width="1.5" height="28" fill="#ffffff" />
+                <rect x="63" y="0" width="6" height="28" fill="#ffffff" />
+                <rect x="71" y="0" width="2" height="28" fill="#ffffff" />
+                <rect x="75" y="0" width="3" height="28" fill="#ffffff" />
+                <rect x="80" y="0" width="4.5" height="28" fill="#ffffff" />
+                <rect x="86" y="0" width="2" height="28" fill="#ffffff" />
+                <rect x="90" y="0" width="1.5" height="28" fill="#ffffff" />
+                <rect x="94" y="0" width="5" height="28" fill="#ffffff" />
+                <rect x="101" y="0" width="2" height="28" fill="#ffffff" />
+                <rect x="105" y="0" width="4" height="28" fill="#ffffff" />
+                <rect x="111" y="0" width="2" height="28" fill="#ffffff" />
+                <rect x="115" y="0" width="5.5" height="28" fill="#ffffff" />
+                <rect x="122" y="0" width="1.5" height="28" fill="#ffffff" />
+                <rect x="126" y="0" width="3" height="28" fill="#ffffff" />
+                <rect x="131" y="0" width="4.5" height="28" fill="#ffffff" />
+                <rect x="137" y="0" width="2" height="28" fill="#ffffff" />
+                <rect x="141" y="0" width="5" height="28" fill="#ffffff" />
+                <rect x="148" y="0" width="1.5" height="28" fill="#ffffff" />
+                <rect x="152" y="0" width="3.5" height="28" fill="#ffffff" />
+                <rect x="157" y="0" width="2" height="28" fill="#ffffff" />
+                <rect x="161" y="0" width="6" height="28" fill="#ffffff" />
+                <rect x="169" y="0" width="2" height="28" fill="#ffffff" />
+                <rect x="173" y="0" width="4" height="28" fill="#ffffff" />
+                <rect x="179" y="0" width="1.5" height="28" fill="#ffffff" />
+                <rect x="182" y="0" width="5" height="28" fill="#ffffff" />
+                <rect x="189" y="0" width="2" height="28" fill="#ffffff" />
+                <rect x="193" y="0" width="1.5" height="28" fill="#ffffff" />
+                <rect x="196" y="0" width="4.5" height="28" fill="#ffffff" />
+                <rect x="202" y="0" width="2" height="28" fill="#ffffff" />
+                <rect x="206" y="0" width="5" height="28" fill="#ffffff" />
+                <rect x="213" y="0" width="1.5" height="28" fill="#ffffff" />
+                <rect x="217" y="0" width="3" height="28" fill="#ffffff" />
+              </svg>
+            </div>
+            <div class="adm-card-barcode-number">* ${escapeHtml(stuId)} *</div>
             <p class="adm-card-return-notice">
-              If found, please return to Quick Art Photography Academy or drop into any local post box.
+              If found, please return to Quick Art Photography Academy, Ayodhya Puri, Near Lalit Bus Stand, Siwan, Bihar - 841226.
             </p>
           </div>
 

@@ -675,8 +675,10 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
     if (backCityEl) backCityEl.textContent = sCity + ' (IN)';
-    if (backBarcodeEl) backBarcodeEl.textContent = '*' + sId.replace(/[^a-zA-Z0-9-]/g, '') + '*';
-    if (backIdTextEl) backIdTextEl.textContent = sId;
+    if (backBarcodeEl && !backBarcodeEl.querySelector('svg') && backBarcodeEl.tagName !== 'svg') {
+      backBarcodeEl.textContent = '*' + sId.replace(/[^a-zA-Z0-9-]/g, '') + '*';
+    }
+    if (backIdTextEl) backIdTextEl.textContent = '*' + sId + '*';
 
     // Set student photo on the issued ID Card
     if (issuedPhoto) {

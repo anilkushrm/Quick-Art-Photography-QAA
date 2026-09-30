@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="avatarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#64748b"/>
+    </linearGradient>
+    <linearGradient id="goldRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f6d389"/>
+      <stop offset="100%" stop-color="#d8a153"/>
+    </linearGradient>
+  </defs>
+  <rect width="160" height="160" rx="16" fill="url(#bgGrad)"/>
+  <rect x="2" y="2" width="156" height="156" rx="14" fill="none" stroke="url(#goldRing)" stroke-width="2" stroke-opacity="0.4"/>
+  <!-- Head -->
+  <circle cx="80" cy="58" r="28" fill="url(#avatarGrad)"/>
+  <!-- Shoulders / Torso -->
+  <path d="M36 136 C36 102 54 94 80 94 C106 94 124 102 124 136 Z" fill="url(#avatarGrad)"/>
+  <!-- Camera Accent badge -->
+  <circle cx="118" cy="118" r="18" fill="#d8a153"/>
+  <path d="M110 114 L113 111 H123 L126 114 H129 C130.5 114 131.5 115 131.5 116.5 V125 C131.5 126.5 130.5 127.5 129 127.5 H107 C105.5 127.5 104.5 126.5 104.5 125 V116.5 C104.5 115 105.5 114 107 114 Z" fill="#0f172a"/>
+  <circle cx="118" cy="120" r="3.5" fill="#d8a153"/>
+</svg>

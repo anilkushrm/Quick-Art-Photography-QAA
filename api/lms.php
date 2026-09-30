@@ -2743,6 +2743,7 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         'admissionId'  => $admissionId,
         'fullName'     => $fullName,
         'phone'        => $phone,
+        'photoUrl'     => $photoUrl,
         'bloodGroup'   => $bloodGroup,
         'feeAmount'    => $admissionFee,
         'paymentMode'  => $paymentMode,

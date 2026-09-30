@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var processedPhotoFile = null;
   var processedAadhaarFile = null;
   var processedCertFile = null;
+  var studentUploadedPhotoDataUrl = null;
 
   // Verification state flags
   var isPhoneVerified = false;
@@ -75,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
     reader.readAsDataURL(file);
   }
 
-  // 1. Photo file preview with auto-compression
+  // 1. Photo file preview with instant base64 reader & auto-compression
   if (inputPhoto) {
     inputPhoto.addEventListener('change', function () {
       if (this.files && this.files[0]) {
@@ -85,13 +86,20 @@ document.addEventListener('DOMContentLoaded', function () {
           this.value = '';
           return;
         }
+
+        // 1. Immediately read user photo as base64 DataURL for instant live preview on UI & ID card
+        var instantReader = new FileReader();
+        instantReader.onload = function (e) {
+          studentUploadedPhotoDataUrl = e.target.result;
+          if (previewImg) previewImg.src = e.target.result;
+          var issuedPhoto = document.getElementById('issued-id-photo');
+          if (issuedPhoto) issuedPhoto.src = e.target.result;
+        };
+        instantReader.readAsDataURL(file);
+
+        // 2. Also compress in background for lightweight server upload
         compressImage(file, 1200, 0.85, function (compressed) {
           processedPhotoFile = compressed;
-          var reader = new FileReader();
-          reader.onload = function (e) {
-            if (previewImg) previewImg.src = e.target.result;
-          };
-          reader.readAsDataURL(compressed);
         });
       }
     });
@@ -661,7 +669,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Set student photo on the issued ID Card
     if (issuedPhoto) {
-      if (previewImg && previewImg.src && previewImg.src.indexOf('anil-sharma') === -1) {
+      if (studentUploadedPhotoDataUrl) {
+        issuedPhoto.src = studentUploadedPhotoDataUrl;
+      } else if (data && data.photoUrl) {
+        issuedPhoto.src = data.photoUrl;
+      } else if (previewImg && previewImg.src && previewImg.src.indexOf('default-student-avatar') === -1 && previewImg.src.indexOf('anil-sharma') === -1) {
         issuedPhoto.src = previewImg.src;
       }
     }

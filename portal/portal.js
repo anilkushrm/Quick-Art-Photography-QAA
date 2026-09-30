@@ -5256,21 +5256,34 @@ function embedLiveStream(streamId, replayUrl, status) {
     </iframe>
   `;
 
-  // Start 5-second initial intro for Comment & Fullscreen controls and anti-branding mask
-  revealLiveOverlayControls(5000, true);
+  // Keep cinematic black bars covering top & bottom during startup
+  revealLiveOverlayControls(6500, true);
+
+  const iframeEl = document.getElementById('live-stream-iframe');
+  if (iframeEl) {
+    iframeEl.addEventListener('load', () => {
+      revealLiveOverlayControls(5500, true);
+    });
+  }
 }
 
-// Zero-Pause Continuous Broadcast Guard:
-// If YouTube iframe emits state 2 (paused) for any reason, immediately resume playback
+// Zero-Pause Continuous Broadcast Guard & Cinematic Branding Cover Sync:
 window.addEventListener('message', (event) => {
   try {
     const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-    if (data && data.event === 'onStateChange' && data.info === 2) {
-      const liveStudio = document.getElementById('view-live-studio');
-      if (liveStudio && !liveStudio.classList.contains('hidden')) {
-        const iframe = document.getElementById('live-stream-iframe');
-        if (iframe && iframe.contentWindow) {
-          iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo' }), '*');
+    if (data && data.event === 'onStateChange') {
+      if (data.info === 1) {
+        // Video started PLAYING: YouTube displays title & logo for 3.5s.
+        // Keep black bars covering them until YouTube overlays naturally fade out!
+        revealLiveOverlayControls(4200, true);
+      } else if (data.info === 2) {
+        // If YouTube emits paused state, immediately resume playback
+        const liveStudio = document.getElementById('view-live-studio');
+        if (liveStudio && !liveStudio.classList.contains('hidden')) {
+          const iframe = document.getElementById('live-stream-iframe');
+          if (iframe && iframe.contentWindow) {
+            iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo' }), '*');
+          }
         }
       }
     }

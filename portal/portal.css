@@ -7564,8 +7564,6 @@ video::-webkit-media-controls-download-button {
   border: none;
   outline: none;
   pointer-events: none !important; /* Zero click-through to YouTube: prevents pause/play, seekbar, and external redirects */
-  transform: scale(1.04);
-  transform-origin: center center;
 }
 
 /* ── Enhanced HTML5 & Mobile/Tablet Fullscreen Support ── */
@@ -7675,14 +7673,14 @@ body.live-fs-open {
   top: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: 72px;
   background: #05080f;
-  background: linear-gradient(to bottom, #04070d 0%, #05080f 75%, rgba(5, 8, 15, 0.92) 100%);
+  background: linear-gradient(to bottom, #04070d 0%, #05080f 80%, rgba(5, 8, 15, 0.95) 100%);
   display: flex;
   align-items: center;
   padding: 0 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.75);
   transform: translateY(0);
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
@@ -7717,11 +7715,11 @@ body.live-fs-open {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: 68px;
   background: #05080f;
-  background: linear-gradient(to top, #04070d 0%, #05080f 75%, rgba(5, 8, 15, 0.92) 100%);
+  background: linear-gradient(to top, #04070d 0%, #05080f 80%, rgba(5, 8, 15, 0.95) 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.75);
   transform: translateY(0);
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
@@ -7738,11 +7736,11 @@ body.live-fs-open {
 
 @media (max-width: 640px) {
   .live-cinematic-bar-top {
-    height: 48px;
+    height: 54px;
     padding: 0 12px;
   }
   .live-cinematic-bar-bottom {
-    height: 48px;
+    height: 52px;
   }
   .cinematic-bar-tag {
     font-size: 10.5px;

@@ -7,11 +7,15 @@ document.addEventListener('DOMContentLoaded', function () {
   var statusBox = document.getElementById('adm-status-msg');
 
   var previewImg = document.getElementById('photo-preview-img');
+  var inputName = document.getElementById('adm-name');
   var inputPhoto = document.getElementById('adm-photo');
   var inputAadhaar = document.getElementById('adm-aadhaar');
   var inputCert = document.getElementById('adm-cert');
   var inputPhone = document.getElementById('adm-phone');
   var inputEmail = document.getElementById('adm-email');
+  var inputStudio = document.getElementById('adm-studio');
+  var inputCity = document.getElementById('adm-city');
+  var inputBlood = document.getElementById('adm-bloodgroup');
 
   // File size limits: Photo = 5 MB, Documents = 10 MB (Auto-compressed via canvas if larger)
   var MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5 MB
@@ -604,14 +608,20 @@ document.addEventListener('DOMContentLoaded', function () {
     var modal = document.getElementById('adm-success-modal');
     if (!modal) return;
 
-    var sName = data.fullName || (inputName ? inputName.value.trim() : '') || 'Student';
-    var sId = data.admissionId || 'QAA-OFF-2026-LIVE';
-    var sPhone = data.phone || (inputPhone ? inputPhone.value.trim() : '');
-    var sCourse = (document.getElementById('adm-course') ? document.getElementById('adm-course').value : '') || 'Wedding Filmmaking & Post-Production Course';
-    var sStudio = (inputStudio ? inputStudio.value.trim() : '') || 'Independent Studio';
-    var sCity = (inputCity ? inputCity.value.trim() : '') || 'Siwan, Bihar';
+    var inputNameEl = inputName || document.getElementById('adm-name');
+    var inputPhoneEl = inputPhone || document.getElementById('adm-phone');
+    var inputStudioEl = inputStudio || document.getElementById('adm-studio');
+    var inputCityEl = inputCity || document.getElementById('adm-city');
+    var inputBloodEl = inputBlood || document.getElementById('adm-bloodgroup');
 
-    var sBlood = data.bloodGroup || (inputBlood ? inputBlood.value : '') || 'B+';
+    var sName = (data && data.fullName) || (inputNameEl ? inputNameEl.value.trim() : '') || 'Student';
+    var sId = (data && data.admissionId) || 'QAA-OFF-2026-LIVE';
+    var sPhone = (data && data.phone) || (inputPhoneEl ? inputPhoneEl.value.trim() : '');
+    var sCourse = (document.getElementById('adm-course') ? document.getElementById('adm-course').value : '') || 'Wedding Filmmaking & Post-Production Course';
+    var sStudio = (inputStudioEl ? inputStudioEl.value.trim() : '') || 'Independent Studio';
+    var sCity = (inputCityEl ? inputCityEl.value.trim() : '') || 'Siwan, Bihar';
+
+    var sBlood = (data && data.bloodGroup) || (inputBloodEl ? inputBloodEl.value : '') || 'B+';
 
     var idEl = document.getElementById('modal-app-id');
     var nameEl = document.getElementById('modal-student-name');
@@ -653,8 +663,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (issuedPhoto) {
       if (previewImg && previewImg.src && previewImg.src.indexOf('anil-sharma') === -1) {
         issuedPhoto.src = previewImg.src;
-      } else if (badgePhoto && badgePhoto.src) {
-        issuedPhoto.src = badgePhoto.src;
       }
     }
 

@@ -257,6 +257,107 @@ function generate_bunny_video_url($libraryId, $videoId, $tokenKey) {
     return "https://iframe.mediadelivery.net/embed/{$libraryId}/{$videoId}?token={$token}&expires={$expires}";
 }
 
+/**
+ * Automatically transforms submitted offline admissions into live alumni profiles.
+ * Any student who submits the admission form will automatically appear on the alumni page.
+ */
+function sync_offline_admissions_to_alumni() {
+    $admissionsFile = DATA_DIR . '/offline-admissions.json';
+    $admissions = file_exists($admissionsFile) ? json_decode(file_get_contents($admissionsFile), true) : [];
+    if (!is_array($admissions)) $admissions = [];
+
+    // Deduplicate by 10-digit phone (keep latest submission with valid details/photo)
+    $byPhone = [];
+    foreach ($admissions as $adm) {
+        $name = trim($adm['fullName'] ?? '');
+        $phone = preg_replace('/[^0-9]/', '', $adm['phone'] ?? '');
+        if (empty($name) || strlen($name) < 2) continue;
+        if (empty($phone) || strlen($phone) < 10) continue;
+        // Skip incomplete blank test submissions
+        if (empty($adm['photoUrl']) && empty($adm['city']) && empty($adm['studioName'])) continue;
+        
+        $key = substr($phone, -10);
+        if (!isset($byPhone[$key])) {
+            $byPhone[$key] = $adm;
+        } else {
+            $hasPhotoNow = !empty($adm['photoUrl']);
+            $hasPhotoPrev = !empty($byPhone[$key]['photoUrl']);
+            $tNow = strtotime($adm['createdAt'] ?? '2020-01-01');
+            $tPrev = strtotime($byPhone[$key]['createdAt'] ?? '2020-01-01');
+            // Prefer submission with photo, or newest
+            if (($hasPhotoNow && !$hasPhotoPrev) || ($tNow >= $tPrev)) {
+                $byPhone[$key] = $adm;
+            }
+        }
+    }
+
+    // Sort newest submission first
+    uasort($byPhone, function($a, $b) {
+        $tA = strtotime($a['createdAt'] ?? '2026-01-01');
+        $tB = strtotime($b['createdAt'] ?? '2026-01-01');
+        return $tB <=> $tA;
+    });
+
+    $alumni = [];
+    foreach ($byPhone as $adm) {
+        $photo = trim($adm['photoUrl'] ?? '');
+        if (!empty($photo) && $photo[0] !== '/' && !str_starts_with($photo, 'http')) {
+            $photo = '/' . $photo;
+        }
+        if (empty($photo)) {
+            $photo = '/home-assets/6a62e4eb3643ad.jpeg';
+        }
+
+        $studio = trim($adm['studioName'] ?? '');
+        if (empty($studio)) {
+            $studio = 'Independent Creative Studio';
+        }
+
+        $role = trim($adm['currentRole'] ?? '');
+        if (empty($role) || strtolower($role) === 'student / beginner' || strtolower($role) === 'student / complete beginner') {
+            $role = 'Creative Video Editor & Filmmaker';
+        }
+
+        $city = trim($adm['city'] ?? '');
+        if (empty($city)) {
+            $city = trim($adm['workCity'] ?? 'Bihar');
+        }
+
+        $state = trim($adm['state'] ?? 'Bihar');
+        $course = trim($adm['courseTitle'] ?? 'Wedding Filmmaking & Video Editing');
+        $createdTime = strtotime($adm['createdAt'] ?? 'now');
+        $batch = 'Studio Batch ' . date('Y', $createdTime);
+        $highlight = trim($adm['careerGoal'] ?? '');
+        if (empty($highlight)) {
+            $highlight = $studio . ' — Quick Art Photography Academy certified video editor & filmmaker.';
+        }
+
+        $alumni[] = [
+            'id'          => $adm['id'] ?? ('QAA-' . rand(1000, 9999)),
+            'name'        => trim($adm['fullName']),
+            'photo'       => $photo,
+            'studioName'  => $studio,
+            'role'        => $role,
+            'city'        => $city,
+            'state'       => $state,
+            'batch'       => $batch,
+            'course'      => $course,
+            'certId'      => $adm['id'] ?? ('QAA-' . rand(1000, 9999)),
+            'instagram'   => trim($adm['instagram'] ?? ''),
+            'highlight'   => $highlight,
+            'featured'    => !empty($adm['photoUrl']),
+            'createdAt'   => $adm['createdAt'] ?? date('c')
+        ];
+    }
+
+    // Save to data/alumni.json for caching & static fallback
+    $alumniFile = DATA_DIR . '/alumni.json';
+    if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+    file_put_contents($alumniFile, json_encode($alumni, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+    return $alumni;
+}
+
 // ---------- Request Routing ----------
 
 $action = $_GET['action'] ?? '';
@@ -2692,6 +2793,9 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
     $admissions[] = $newAdmission;
     file_put_contents($admissionsFile, json_encode($admissions, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
 
+    // Auto-sync submitted admission to alumni showcase immediately
+    sync_offline_admissions_to_alumni();
+
     // Auto-create or update student in students.json for portal access
     $students = get_all_students();
     $existingStudent = null;
@@ -2888,139 +2992,9 @@ if ($action === 'verify-offline-admission-payment' && $method === 'POST') {
     json_err('Admission record nahi mila.', 404);
 }
 
-// 24. Public Alumni Showcase API
+// 24. Public Alumni Showcase API (Driven dynamically by real admission submissions)
 if ($action === 'get-alumni' && ($method === 'GET' || $method === 'POST')) {
-    $alumniFile = DATA_DIR . '/alumni.json';
-    $alumni = file_exists($alumniFile) ? json_decode(file_get_contents($alumniFile), true) : [];
-
-    // Fallback/Seed Real Alumni if file is empty
-    if (!is_array($alumni) || empty($alumni)) {
-        $alumni = [
-            [
-                'id'          => 'alm_001',
-                'name'        => 'Rahul Kumar',
-                'photo'       => '/assets/alumni/alumni_rahul_kumar.jpg',
-                'studioName'  => 'Sharma Digital Studio & Films',
-                'role'        => 'Founder & Lead Editor',
-                'city'        => 'Siwan',
-                'state'       => 'Bihar',
-                'batch'       => '14-Week Offline Studio Batch 2025',
-                'course'      => '14-Week Wedding Filmmaking & Color Grading',
-                'certId'      => 'QAA-2025-0914',
-                'instagram'   => 'https://instagram.com/',
-                'highlight'   => 'Siwan station road par apna full 4K editing studio setup kiya. Monthly 40+ wedding teasers deliver karte hain signature cinematic skin tones ke sath.',
-                'featured'    => true
-            ],
-            [
-                'id'          => 'alm_002',
-                'name'        => 'Vikas Singh',
-                'photo'       => '/assets/alumni/alumni_vikas_singh.jpg',
-                'studioName'  => 'Maa Sharda Cine Production',
-                'role'        => 'Cinematographer & Colorist',
-                'city'        => 'Gopalganj',
-                'state'       => 'Bihar',
-                'batch'       => 'Offline Lab Batch 2025',
-                'course'      => 'Cinematic Camera Shoot & DaVinci Resolve',
-                'certId'      => 'QAA-2025-0428',
-                'instagram'   => 'https://instagram.com/',
-                'highlight'   => 'Sony FX3 & A7M4 multi-cam setup ke master. Gorakhpur aur Gopalganj me premium destination wedding shoots handle karte hain.',
-                'featured'    => true
-            ],
-            [
-                'id'          => 'alm_003',
-                'name'        => 'Pooja Kumari',
-                'photo'       => '/assets/alumni/alumni_pooja_kumari.jpg',
-                'studioName'  => 'Creative Pixel Album Studio',
-                'role'        => 'Senior Album Designer & Retoucher',
-                'city'        => 'Patna',
-                'state'       => 'Bihar',
-                'batch'       => 'Offline Lab Batch 2024',
-                'course'      => 'Karizma & Canvera Album Designing',
-                'certId'      => 'QAA-2024-1102',
-                'instagram'   => 'https://instagram.com/',
-                'highlight'   => 'Patna me leading photo printing labs ke sath tie-up. 12x36 metallic spread aur high-end frequency separation retouching me expert.',
-                'featured'    => true
-            ],
-            [
-                'id'          => 'alm_004',
-                'name'        => 'Amit Tiwari',
-                'photo'       => '/assets/alumni/alumni_amit_tiwari.jpg',
-                'studioName'  => 'Tiwari Digital Media',
-                'role'        => 'Lead Video Editor & Drone Pilot',
-                'city'        => 'Chapra',
-                'state'       => 'Bihar',
-                'batch'       => 'Master Class Batch 2024',
-                'course'      => 'Premiere Pro, Edius & Wedding Video Editing',
-                'certId'      => 'QAA-2024-0618',
-                'instagram'   => 'https://instagram.com/',
-                'highlight'   => 'Chapra market me top studio run kar rahe hain. Har lagan season me high-speed fast teaser cut and wedding documentary deliver karte hain.',
-                'featured'    => true
-            ],
-            [
-                'id'          => 'alm_005',
-                'name'        => 'Manish Pandey',
-                'photo'       => '/assets/alumni/alumni_manish_pandey.jpg',
-                'studioName'  => 'Shree Wedding Photography',
-                'role'        => 'Studio Owner & Director',
-                'city'        => 'Muzaffarpur',
-                'state'       => 'Bihar',
-                'batch'       => 'Master Class Batch 2024',
-                'course'      => 'Wedding Album Design & Commercial Filmmaking',
-                'certId'      => 'QAA-2024-0230',
-                'instagram'   => 'https://instagram.com/',
-                'highlight'   => 'Purani traditional photography lab ko upgrade karke modern 4K multi-cam production unit me convert kiya. 5 editors ki team lead kar rahe hain.',
-                'featured'    => false
-            ],
-            [
-                'id'          => 'alm_006',
-                'name'        => 'Rohit Verma',
-                'photo'       => '/assets/alumni/alumni_rohit_verma.jpg',
-                'studioName'  => 'CineCraft Digital Ballia',
-                'role'        => 'Senior Video Editor',
-                'city'        => 'Ballia',
-                'state'       => 'Uttar Pradesh',
-                'batch'       => 'Master Class Batch 2025',
-                'course'      => 'Video Editing & AI Automation',
-                'certId'      => 'QAA-2025-0955',
-                'instagram'   => 'https://instagram.com/',
-                'highlight'   => 'Academy ke hostel me rahkar course kiya. Ballia aur Varanasi wedding market me top video editor ke roop me high-ticket shoots edit kar rahe hain.',
-                'featured'    => false
-            ],
-            [
-                'id'          => 'alm_007',
-                'name'        => 'Suraj Sharma',
-                'photo'       => '/assets/alumni/alumni_suraj_raxaul.jpg',
-                'studioName'  => 'Suraj Digital Cine World',
-                'role'        => 'Lead Wedding Filmmaker',
-                'city'        => 'Raxaul',
-                'state'       => 'Bihar',
-                'batch'       => 'Offline Lab Batch 2024',
-                'course'      => '14-Week Wedding Filmmaking & Color Grading',
-                'certId'      => 'QAA-2024-0812',
-                'instagram'   => 'https://instagram.com/',
-                'highlight'   => 'Raxaul aur Indo-Nepal border area me sabse popular wedding film creator. Slow-motion gimbal shots aur high-end color grading expert.',
-                'featured'    => true
-            ],
-            [
-                'id'          => 'alm_008',
-                'name'        => 'Ravi Raj',
-                'photo'       => '/assets/alumni/alumni_ravi_gaya.jpg',
-                'studioName'  => 'Magadh Motion Pictures',
-                'role'        => 'Founder & DaVinci Colorist',
-                'city'        => 'Gaya',
-                'state'       => 'Bihar',
-                'batch'       => 'Offline Studio Batch 2025',
-                'course'      => 'Cinematic Camera Shoot & DaVinci Resolve',
-                'certId'      => 'QAA-2025-0319',
-                'instagram'   => 'https://instagram.com/',
-                'highlight'   => 'Gaya se Siwan campus aakar seekha. Aaj Bodh Gaya aur Patna ke luxury weddings ke liye full cinema-style teasers bana rahe hain.',
-                'featured'    => true
-            ]
-        ];
-        if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
-        file_put_contents($alumniFile, json_encode($alumni, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
-    }
-
+    $alumni = sync_offline_admissions_to_alumni();
     json_ok(['alumni' => $alumni]);
 }
 

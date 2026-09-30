@@ -24,3 +24,4 @@ data/*sessions.json
 data/rate-limit.json
 data/verified-admissions.json
 scratch/
+uploads/

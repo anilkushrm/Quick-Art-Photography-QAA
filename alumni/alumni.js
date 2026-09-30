@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var card = document.createElement('div');
       card.className = 'alm-card';
 
-      var photoSrc = alm.photo || '../assets/alumni/alumni_rahul_kumar.jpg';
+      var photoSrc = alm.photo || '../home-assets/6a62e4eb3643ad.jpeg';
       var studioText = alm.studioName ? escapeHtml(alm.studioName) : 'Independent Creative Studio';
       var roleText = alm.role ? escapeHtml(alm.role) : 'Certified Editor';
       var cityText = (alm.city ? escapeHtml(alm.city) : 'Siwan') + (alm.state ? ', ' + escapeHtml(alm.state) : '');
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function createCardHtml(alm, isAccent) {
-      var photo = alm.photo || '../assets/alumni/alumni_rahul_kumar.jpg';
+      var photo = alm.photo || '../home-assets/6a62e4eb3643ad.jpeg';
       var name = escapeHtml(alm.name || 'Alumnus');
       var studio = escapeHtml(alm.studioName || 'Creative Studio');
       var loc = escapeHtml(alm.city || 'Bihar');
@@ -261,127 +261,127 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-// Fallback alumni records
+// Real admitted student alumni records
 function getDefaultAlumniList() {
   return [
     {
-      id: "alm_001",
-      name: "Rahul Kumar",
-      photo: "../assets/alumni/alumni_rahul_kumar.jpg",
-      studioName: "Sharma Digital Studio & Films",
-      role: "Founder & Lead Colorist",
-      city: "Siwan",
+      id: "QAA-OFF-2026-B6D2C",
+      name: "Vivek Kumar",
+      photo: "/uploads/admissions/photo_0441ed2e48.jpg",
+      studioName: "Vivek visual Studio",
+      role: "Wedding Videographer / Cameraman",
+      city: "Banka",
       state: "Bihar",
-      batch: "14-Week Offline Studio Batch 2025",
-      course: "14-Week Wedding Filmmaking & Color Grading",
-      certId: "QAA-2025-0914",
-      instagram: "https://instagram.com/",
-      highlight: "Siwan station road par apna full 4K editing studio setup kiya. Monthly 40+ wedding teasers deliver karte hain signature cinematic skin tones ke sath.",
+      batch: "Studio Batch 2026",
+      course: "Wedding Filmmaking & Post-Production Course",
+      certId: "QAA-OFF-2026-B6D2C",
+      instagram: "https://www.instagram.com/vivekvisualstudio?stkn=MTIxMHNrMnRscHR5Zw=",
+      highlight: "I want to learn professional photography, videography, video editing, and cinematic shooting from Quick Art Academy and develop my skills for a successful career in the creative field.",
       featured: true
     },
     {
-      id: "alm_002",
-      name: "Vikas Singh",
-      photo: "../assets/alumni/alumni_vikas_singh.jpg",
-      studioName: "Maa Sharda Cine Production",
-      role: "Cinematographer & Colorist",
-      city: "Gopalganj",
-      state: "Bihar",
-      batch: "Offline Lab Batch 2025",
-      course: "Cinematic Camera Shoot & DaVinci Resolve",
-      certId: "QAA-2025-0428",
-      instagram: "https://instagram.com/",
-      highlight: "Sony FX3 & A7M4 multi-cam setup ke master. Gorakhpur aur Gopalganj me premium destination wedding shoots handle karte hain.",
-      featured: true
-    },
-    {
-      id: "alm_003",
-      name: "Pooja Kumari",
-      photo: "../assets/alumni/alumni_pooja_kumari.jpg",
-      studioName: "Creative Pixel Album Studio",
-      role: "Senior Album Designer & Retoucher",
-      city: "Patna",
-      state: "Bihar",
-      batch: "Offline Lab Batch 2024",
-      course: "Karizma & Canvera Album Designing",
-      certId: "QAA-2024-1102",
-      instagram: "https://instagram.com/",
-      highlight: "Patna me leading photo printing labs ke sath tie-up. 12x36 metallic spread aur high-end frequency separation retouching me expert.",
-      featured: true
-    },
-    {
-      id: "alm_004",
-      name: "Amit Tiwari",
-      photo: "../assets/alumni/alumni_amit_tiwari.jpg",
-      studioName: "Tiwari Digital Media",
-      role: "Lead Video Editor & Drone Pilot",
-      city: "Chapra",
-      state: "Bihar",
-      batch: "Master Class Batch 2024",
-      course: "Premiere Pro, Edius & Wedding Video Editing",
-      certId: "QAA-2024-0618",
-      instagram: "https://instagram.com/",
-      highlight: "Chapra market me top studio run kar rahe hain. Har lagan season me high-speed fast teaser cut and wedding documentary deliver karte hain.",
-      featured: true
-    },
-    {
-      id: "alm_005",
-      name: "Manish Pandey",
-      photo: "../assets/alumni/alumni_manish_pandey.jpg",
-      studioName: "Shree Wedding Photography",
-      role: "Studio Owner & Director",
+      id: "QAA-OFF-2026-DB3F8",
+      name: "Santosh kumar mahto",
+      photo: "/uploads/admissions/photo_878dc7e226.jpg",
+      studioName: "Viraj Film 🎥",
+      role: "Wedding Videographer / Cameraman",
       city: "Muzaffarpur",
       state: "Bihar",
-      batch: "Master Class Batch 2024",
-      course: "Wedding Album Design & Commercial Filmmaking",
-      certId: "QAA-2024-0230",
-      instagram: "https://instagram.com/",
-      highlight: "Purani traditional photography lab ko upgrade karke modern 4K multi-cam production unit me convert kiya. 5 editors ki team lead kar rahe hain.",
-      featured: false
-    },
-    {
-      id: "alm_006",
-      name: "Rohit Verma",
-      photo: "../assets/alumni/alumni_rohit_verma.jpg",
-      studioName: "CineCraft Digital Ballia",
-      role: "Senior Video Editor",
-      city: "Ballia",
-      state: "Uttar Pradesh",
-      batch: "Master Class Batch 2025",
-      course: "Video Editing & AI Automation",
-      certId: "QAA-2025-0955",
-      instagram: "https://instagram.com/",
-      highlight: "Academy ke hostel me rahkar course kiya. Ballia aur Varanasi wedding market me top video editor ke roop me high-ticket shoots edit kar rahe hain.",
-      featured: false
-    },
-    {
-      id: "alm_007",
-      name: "Suraj Sharma",
-      photo: "../assets/alumni/alumni_suraj_raxaul.jpg",
-      studioName: "Suraj Digital Cine World",
-      role: "Lead Wedding Filmmaker",
-      city: "Raxaul",
-      state: "Bihar",
-      batch: "Offline Lab Batch 2024",
-      course: "14-Week Wedding Filmmaking & Color Grading",
-      certId: "QAA-2024-0812",
-      instagram: "https://instagram.com/",
-      highlight: "Raxaul aur Indo-Nepal border area me sabse popular wedding film creator. Slow-motion gimbal shots aur high-end color grading expert.",
+      batch: "Studio Batch 2026",
+      course: "Wedding Filmmaking & Post-Production Course",
+      certId: "QAA-OFF-2026-DB3F8",
+      instagram: "https://www.instagram.com/santosh_chaudhary_86?stkn=dHdyenU3NmlubTJ1",
+      highlight: "Viraj Film ko next level tak le jana hai",
       featured: true
     },
     {
-      id: "alm_008",
-      name: "Ravi Raj",
-      photo: "../assets/alumni/alumni_ravi_gaya.jpg",
-      studioName: "Magadh Motion Pictures",
-      role: "Founder & DaVinci Colorist",
-      city: "Gaya",
+      id: "QAA-OFF-2026-9131C",
+      name: "Ibadat Hussian",
+      photo: "/uploads/admissions/photo_13e9901e5d.jpg",
+      studioName: "Vision2hell",
+      role: "Creative Video Editor & Filmmaker",
+      city: "Hathua Gopalganj",
       state: "Bihar",
-      batch: "Offline Studio Batch 2025",
-      course: "Cinematic Camera Shoot & DaVinci Resolve",
-      certId: "QAA-2025-0319",
-      instagram: "https://instagram.com/",
-      highlight: "Gaya se Siwan campus aakar seekha. Aaj Bodh Gaya aur Patna ke luxury weddings ke liye full cinema-style teasers bana rahe hain.",
+      batch: "Studio Batch 2026",
+      course: "Wedding Filmmaking & Post-Production Course",
+      certId: "QAA-OFF-2026-9131C",
+      instagram: "https://www.instagram.com/ibadattt____47?stkn=dzlvMnl3aTNxdHly&utm_source=qr",
+      highlight: "My career goal is to become a professional Video Editor and Cinematographer, creating high-quality, creative and impactful visual content while continuously improving my technical and creative skills.",
+      featured: true
+    },
+    {
+      id: "QAA-OFF-2026-7D0F5",
+      name: "ADITYA KUMAR DUBEY",
+      photo: "/uploads/admissions/photo_034ec0dec5.jpg",
+      studioName: "DUBEY STUDIO",
+      role: "Wedding Videographer / Cameraman",
+      city: "HATHUA",
+      state: "Bihar",
+      batch: "Studio Batch 2026",
+      course: "Wedding Filmmaking & Post-Production Course",
+      certId: "QAA-OFF-2026-7D0F5",
+      instagram: "https://www.instagram.com/bittu_dubey_33?stkn=MWVoOWxqaDFmdDQyaw==",
+      highlight: "Me yaha se complete photography ka kam sikhna chahta hu photo editing video editing etc.",
+      featured: true
+    },
+    {
+      id: "QAA-OFF-2026-16431",
+      name: "Aditya Kumar",
+      photo: "/uploads/admissions/photo_2631dbb6ef.jpg",
+      studioName: "Divya Films",
+      role: "Studio Owner / Founder",
+      city: "Gopalganj",
+      state: "Bihar",
+      batch: "Studio Batch 2026",
+      course: "Wedding Filmmaking & Post-Production Course",
+      certId: "QAA-OFF-2026-16431",
+      instagram: "https://www.instagram.com/divya_films_1?igsh=amR6eDJhN2owMHE5",
+      highlight: "Divya Films Photography Ko Bihar Ka best Photography/Filmmaking Studio Banana h",
+      featured: true
+    },
+    {
+      id: "QAA-OFF-2026-68143",
+      name: "Raj Aryan Gupta",
+      photo: "/uploads/admissions/photo_7a5fecc291.jpg",
+      studioName: "Sanam Film Siwan",
+      role: "Wedding Videographer / Cameraman",
+      city: "Siwan",
+      state: "Bihar",
+      batch: "Studio Batch 2026",
+      course: "Wedding Filmmaking & Post-Production Course",
+      certId: "QAA-OFF-2026-68143",
+      instagram: "https://www.instagram.com/sanam_films_siwan09?stkn=MWMycGc5bmxpcXEx",
+      highlight: "Sanam FIlm Ko Bihar ke Best Wedding Photography Company Bana Hai",
+      featured: true
+    },
+    {
+      id: "QAA-OFF-2026-06BEC",
+      name: "Subhash Kumar",
+      photo: "/uploads/admissions/photo_638fd8481a.jpg",
+      studioName: "Maa sharda wedding film's",
+      role: "Creative Video Editor & Filmmaker",
+      city: "Jamui",
+      state: "Bihar",
+      batch: "Studio Batch 2026",
+      course: "Wedding Filmmaking & Post-Production Course",
+      certId: "QAA-OFF-2026-06BEC",
+      instagram: "https://www.instagram.com/m.s_weddings_films?stkn=MTJzYm42cXBqY3l3bA==",
+      highlight: "Cinematic video editing.album designing",
+      featured: true
+    },
+    {
+      id: "QAA-OFF-2026-50C77",
+      name: "Vipin",
+      photo: "/uploads/admissions/photo_0e4e54bcce.jpg",
+      studioName: "Vipnesh films production",
+      role: "Freelance Video Editor",
+      city: "Faizabad ayodhya",
+      state: "Uttar Pradesh",
+      batch: "Studio Batch 2026",
+      course: "Wedding Filmmaking & Post-Production Course",
+      certId: "QAA-OFF-2026-50C77",
+      instagram: "https://www.instagram.com/official.vipnesh01?stkn=bzZpcXFrM3didWdl",
+      highlight: "Mujhe academy se yahi sikhna chahta hun music video editing professional colour grading client manage karna",
       featured: true
     }
   ];

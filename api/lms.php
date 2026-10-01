@@ -158,6 +158,18 @@ function map_offline_course_id($courseTitle) {
         }
     }
 
+    // 1.5 Match by batch number (e.g. "batch 114" or "batch-114" or "114")
+    if (preg_match('/batch\s*[-_]?\s*(\d+)/i', $t, $m)) {
+        $bNum = $m[1];
+        foreach ($courses as $c) {
+            if (stripos($c['title'] ?? '', "batch $bNum") !== false || 
+                stripos($c['id'] ?? '', "batch-$bNum") !== false || 
+                stripos($c['id'] ?? '', "batch$bNum") !== false) {
+                return $c['id'];
+            }
+        }
+    }
+
     // 2. Program keywords mapping
     if (strpos($t, 'advance video') !== false || strpos($t, 'video editing') !== false || strpos($t, 'premiere') !== false) {
         return 'course-premiere-pro';
@@ -1130,16 +1142,38 @@ if ($action === 'my-courses' && $method === 'GET') {
     foreach ($allLive as $live) {
         $liveId = $live['id'];
         $courseRef = $live['courseId'] ?? '';
-        $isLiveEnrolled = in_array($liveId, $enrolledIds)
-                       || in_array('all-access', $enrolledIds)
-                       || in_array('masterclass-live', $enrolledIds)
-                       || ($live['type'] === 'workshop' && in_array('live_demo_01', $enrolledIds));
+        $liveType = $live['type'] ?? 'workshop';
+
+        $isLiveEnrolled = false;
+        if ($stuPhone === '9939800780') {
+            $isLiveEnrolled = true;
+        } elseif ($liveType === 'course') {
+            // STRICT: Must be enrolled in this specific course/batch or have all-access
+            if (in_array('all-access', $enrolledIds)) {
+                $isLiveEnrolled = true;
+            } elseif (!empty($courseRef) && ($courseRef === 'all' || in_array($courseRef, $enrolledIds))) {
+                $isLiveEnrolled = true;
+            } elseif (in_array($liveId, $enrolledIds)) {
+                $isLiveEnrolled = true;
+            }
+        } else {
+            // Workshop (e.g. ₹21 masterclass)
+            if (in_array($liveId, $enrolledIds)
+                || in_array('all-access', $enrolledIds)
+                || in_array('masterclass-live', $enrolledIds)
+                || in_array('live_demo_01', $enrolledIds)) {
+                $isLiveEnrolled = true;
+            }
+        }
 
         // Also check completed transactions
         if (!$isLiveEnrolled && !empty($stuPhone)) {
             foreach ($txList as $tx) {
                 if (clean_phone($tx['studentPhone'] ?? '') === $stuPhone && in_array(strtoupper($tx['status'] ?? ''), ['SUCCESS', 'COMPLETED', 'PAID'])) {
-                    if (($tx['liveId'] ?? '') === $liveId || ($live['type'] === 'workshop' && !empty($tx['liveId']))) {
+                    if (($tx['liveId'] ?? '') === $liveId) {
+                        $isLiveEnrolled = true;
+                        break;
+                    } elseif ($liveType === 'workshop' && !empty($tx['liveId'])) {
                         $isLiveEnrolled = true;
                         break;
                     }
@@ -1283,7 +1317,10 @@ if ($action === 'course-details' && $method === 'GET') {
         $allLive = get_all_live_classes();
         $targetLive = null;
         foreach ($allLive as $lc) {
-            if ($lc['id'] === $courseId || $courseId === 'masterclass-live') {
+            if ($lc['id'] === $courseId) {
+                $targetLive = $lc;
+                break;
+            } elseif ($courseId === 'masterclass-live' && (($lc['type'] ?? '') === 'workshop' || $lc['id'] === 'live_demo_01')) {
                 $targetLive = $lc;
                 break;
             }
@@ -2173,29 +2210,57 @@ if ($action === 'get-live-classes' && $method === 'GET') {
     $results = [];
     foreach ($allClasses as $c) {
         $isAuth = false;
+        $cType = $c['type'] ?? 'workshop';
+        $courseRef = $c['courseId'] ?? '';
+
         if ($stu) {
             $stuPhone = clean_phone($stu['phone'] ?? '');
-            if (in_array($c['id'], $enrolledList) || in_array('all-access', $enrolledList) || in_array('masterclass-live', $enrolledList)) {
+
+            if ($stuPhone === '9939800780') {
                 $isAuth = true;
-            } elseif (!empty($c['courseId']) && ($c['courseId'] === 'all' || in_array($c['courseId'], $enrolledList))) {
-                $isAuth = true;
-            } elseif (($c['type'] ?? '') === 'workshop' && (in_array('live_demo_01', $enrolledList) || in_array('masterclass-live', $enrolledList))) {
-                $isAuth = true;
-            } elseif ($stuPhone === '9939800780') {
-                $isAuth = true;
+            } elseif ($cType === 'course') {
+                // Course Specific Batch:
+                // Strictly restricted to students enrolled in this course batch or all-access.
+                // Workshop students ('masterclass-live', 'live_demo_01') ARE NEVER AUTHORIZED!
+                if (in_array('all-access', $enrolledList)) {
+                    $isAuth = true;
+                } elseif (!empty($courseRef) && ($courseRef === 'all' || in_array($courseRef, $enrolledList))) {
+                    $isAuth = true;
+                } elseif (in_array($c['id'], $enrolledList)) {
+                    $isAuth = true;
+                }
+            } else {
+                // Workshop (e.g. ₹21 masterclass)
+                if (in_array($c['id'], $enrolledList)
+                    || in_array('all-access', $enrolledList)
+                    || in_array('masterclass-live', $enrolledList)
+                    || in_array('live_demo_01', $enrolledList)) {
+                    $isAuth = true;
+                } elseif (!empty($courseRef) && ($courseRef === 'all' || in_array($courseRef, $enrolledList))) {
+                    $isAuth = true;
+                }
             }
 
             if (!$isAuth && !empty($stuPhone)) {
                 $txList = file_exists(LMS_TRANSACTIONS_FILE) ? (json_decode(file_get_contents(LMS_TRANSACTIONS_FILE), true) ?: []) : [];
                 foreach ($txList as $tx) {
                     if (clean_phone($tx['studentPhone'] ?? '') === $stuPhone && in_array(strtoupper($tx['status'] ?? ''), ['SUCCESS', 'COMPLETED', 'PAID'])) {
-                        if (($tx['liveId'] ?? '') === $c['id'] || (($c['type'] ?? '') === 'workshop' && !empty($tx['liveId']))) {
+                        if (($tx['liveId'] ?? '') === $c['id']) {
+                            $isAuth = true;
+                            break;
+                        } elseif ($cType === 'workshop' && !empty($tx['liveId'])) {
                             $isAuth = true;
                             break;
                         }
                     }
                 }
             }
+        }
+
+        // If it's a private course batch and student is not enrolled/authorized,
+        // hide it completely so other students don't see banner or enter classroom
+        if ($cType === 'course' && !$isAuth) {
+            continue;
         }
 
         $safeItem = [
@@ -2253,7 +2318,7 @@ if ($action === 'get-live-session' && ($method === 'GET' || $method === 'POST'))
                 break;
             }
         }
-        if (!$target && !empty($allClasses)) {
+        if (!$target && !empty($allClasses) && ($allClasses[0]['type'] ?? '') === 'workshop') {
             $target = $allClasses[0];
         }
     }
@@ -2264,15 +2329,32 @@ if ($action === 'get-live-session' && ($method === 'GET' || $method === 'POST'))
     $enrolledList = $stu['enrolledCourses'] ?? [];
     $isAuth = false;
     $stuPhone = clean_phone($stu['phone'] ?? '');
+    $targetType = $target['type'] ?? 'workshop';
+    $targetCourseId = $target['courseId'] ?? '';
 
-    if (in_array($target['id'], $enrolledList) || in_array('all-access', $enrolledList) || in_array('masterclass-live', $enrolledList)) {
+    if ($stuPhone === '9939800780') {
         $isAuth = true;
-    } elseif (!empty($target['courseId']) && ($target['courseId'] === 'all' || in_array($target['courseId'], $enrolledList))) {
-        $isAuth = true;
-    } elseif (($target['type'] ?? '') === 'workshop' && (in_array('live_demo_01', $enrolledList) || in_array('masterclass-live', $enrolledList))) {
-        $isAuth = true;
-    } elseif ($stuPhone === '9939800780') {
-        $isAuth = true;
+    } elseif ($targetType === 'course') {
+        // STRICT COURSE BATCH AUTHORIZATION:
+        // Must be enrolled in this course batch or have all-access.
+        // 'masterclass-live' or 'live_demo_01' CANNOT access!
+        if (in_array('all-access', $enrolledList)) {
+            $isAuth = true;
+        } elseif (!empty($targetCourseId) && ($targetCourseId === 'all' || in_array($targetCourseId, $enrolledList))) {
+            $isAuth = true;
+        } elseif (in_array($target['id'], $enrolledList)) {
+            $isAuth = true;
+        }
+    } else {
+        // Workshop (e.g. ₹21 masterclass)
+        if (in_array($target['id'], $enrolledList)
+            || in_array('all-access', $enrolledList)
+            || in_array('masterclass-live', $enrolledList)
+            || in_array('live_demo_01', $enrolledList)) {
+            $isAuth = true;
+        } elseif (!empty($targetCourseId) && ($targetCourseId === 'all' || in_array($targetCourseId, $enrolledList))) {
+            $isAuth = true;
+        }
     }
 
     // Reconcile with completed transactions if not yet authorized
@@ -2280,9 +2362,27 @@ if ($action === 'get-live-session' && ($method === 'GET' || $method === 'POST'))
         $txList = file_exists(LMS_TRANSACTIONS_FILE) ? (json_decode(file_get_contents(LMS_TRANSACTIONS_FILE), true) ?: []) : [];
         foreach ($txList as $tx) {
             if (clean_phone($tx['studentPhone'] ?? '') === $stuPhone && in_array(strtoupper($tx['status'] ?? ''), ['SUCCESS', 'COMPLETED', 'PAID'])) {
-                if (($tx['liveId'] ?? '') === $target['id'] || (($target['type'] ?? '') === 'workshop' && !empty($tx['liveId']))) {
+                if (($tx['liveId'] ?? '') === $target['id']) {
                     $isAuth = true;
                     // Auto-sync into student enrolledCourses
+                    if (!in_array($target['id'], $enrolledList)) {
+                        $enrolledList[] = $target['id'];
+                        $allStudents = load_students();
+                        foreach ($allStudents as &$s) {
+                            if (clean_phone($s['phone'] ?? '') === $stuPhone) {
+                                if (!in_array($target['id'], $s['enrolledCourses'] ?? [])) {
+                                    $s['enrolledCourses'][] = $target['id'];
+                                }
+                                break;
+                            }
+                        }
+                        unset($s);
+                        save_students($allStudents);
+                    }
+                    break;
+                } elseif ($targetType === 'workshop' && !empty($tx['liveId'])) {
+                    $isAuth = true;
+                    // Auto-sync for workshop only
                     if (!in_array($target['id'], $enrolledList)) {
                         $enrolledList[] = $target['id'];
                         $allStudents = load_students();
@@ -2304,7 +2404,11 @@ if ($action === 'get-live-session' && ($method === 'GET' || $method === 'POST'))
     }
 
     if (!$isAuth) {
-        json_err('Aap is Live Session ke liye enrolled nahi hain. Kripya course ya workshop pass unlock karein.', 403);
+        if ($targetType === 'course') {
+            json_err('Aap is Live Session ke liye enrolled nahi hain. Yeh live class sirf specific batch ke enrolled students ke liye hai.', 403);
+        } else {
+            json_err('Aap is Live Session ke liye enrolled nahi hain. Kripya workshop pass unlock karein.', 403);
+        }
     }
 
     // Dynamic Anti-Piracy Watermark String
@@ -2691,9 +2795,9 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         return '';
     };
 
-    $photoUrl = $saveUploadedDoc('photo_file', 'photo', 5 * 1024 * 1024); // 5 MB max limit
-    $aadhaarUrl = $saveUploadedDoc('aadhaar_file', 'aadhaar', 10 * 1024 * 1024); // 10 MB max limit
-    $certUrl = $saveUploadedDoc('cert_file', 'cert', 10 * 1024 * 1024); // 10 MB max limit
+    $photoUrl = $saveUploadedDoc('photo_file', 'photo', 2 * 1024 * 1024); // 2 MB max limit
+    $aadhaarUrl = $saveUploadedDoc('aadhaar_file', 'aadhaar', 2 * 1024 * 1024); // 2 MB max limit
+    $certUrl = $saveUploadedDoc('cert_file', 'cert', 2 * 1024 * 1024); // 2 MB max limit
 
     $admissionsFile = DATA_DIR . '/offline-admissions.json';
     $admissions = file_exists($admissionsFile) ? json_decode(file_get_contents($admissionsFile), true) : [];

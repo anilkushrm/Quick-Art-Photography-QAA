@@ -4740,7 +4740,12 @@ async function loadStudentLiveClasses() {
     }
 
     // 1. Check if any class is LIVE NOW
-    const liveNowSession = studentLiveClasses.find(c => c.status === 'live');
+    const liveNowSession = studentLiveClasses.find(c => {
+      if (c.status !== 'live') return false;
+      // Private course batch sessions must ONLY be shown to enrolled authorized students
+      if (c.type === 'course') return !!c.isAuthorized;
+      return true;
+    });
     if (liveNowSession && banner) {
       banner.classList.remove('hidden');
       const bTitle = document.getElementById('live-banner-title');
@@ -4926,9 +4931,10 @@ function updateLiveDashboardState() {
 function handleDashboardLiveClick() {
   const enrolledIds = (window._currentStudent && window._currentStudent.enrolledCourses) || [];
 
-  // 1. Is any class live right now for student?
+  // 1. Is any class live right now that student is authorized for?
   const liveNow = (studentLiveClasses || []).find(c => {
     if (c.status !== 'live') return false;
+    if (c.type === 'course') return !!c.isAuthorized;
     if (c.courseId === 'all') return true;
     if (c.type === 'workshop') return true;
     return enrolledIds.includes(c.courseId);
@@ -4939,23 +4945,23 @@ function handleDashboardLiveClick() {
     return;
   }
 
-  // 1b. Fallback: If any class has status 'live' in academy, open it
-  const anyLive = (studentLiveClasses || []).find(c => c.status === 'live');
-  if (anyLive) {
-    openLiveStudio(anyLive.id);
+  // 1b. Fallback: If any workshop has status 'live', open it
+  const anyLiveWorkshop = (studentLiveClasses || []).find(c => c.status === 'live' && c.type === 'workshop');
+  if (anyLiveWorkshop) {
+    openLiveStudio(anyLiveWorkshop.id);
     return;
   }
 
-  // 2. Is any class scheduled?
+  // 2. Is any authorized class scheduled?
   const upcomingList = (studentLiveClasses || []).filter(c => {
     if (c.status !== 'scheduled' || !c.scheduledAt) return false;
+    if (c.type === 'course') return !!c.isAuthorized;
     if (c.courseId === 'all') return true;
     if (c.type === 'workshop') return true;
     return enrolledIds.includes(c.courseId);
   });
 
   if (upcomingList.length) {
-    // Sort closest to current time (favor today's / recent sessions)
     const now = Date.now();
     upcomingList.sort((a, b) => {
       const diffA = Math.abs(new Date(a.scheduledAt).getTime() - now);
@@ -4967,14 +4973,15 @@ function handleDashboardLiveClick() {
     return;
   }
 
-  // 2b. Any class in list
-  if (studentLiveClasses && studentLiveClasses.length) {
-    openLiveStudio(studentLiveClasses[0].id);
+  // 2b. Any workshop in list
+  const anyWorkshop = (studentLiveClasses || []).find(c => c.type === 'workshop');
+  if (anyWorkshop) {
+    openLiveStudio(anyWorkshop.id);
     return;
   }
 
-  // 3. No live class active
-  toast('Filhal koi live class schedule nahi hai. Agli class schedule hote hi notification aur timer shuru ho jayega.');
+  // 3. No live class active for this student
+  toast('Filhal aapke course / batch ke liye koi live class schedule nahi hai. Agli class schedule hote hi notification aur live countdown shuru ho jayega.');
 }
 
 function scrollToLiveClasses() {
@@ -5000,7 +5007,11 @@ async function renderLoginLivePreview() {
 
 function openLiveStudioFromBanner(liveId = null, isAuth = true) {
   if (!liveId) {
-    const liveNow = studentLiveClasses.find(c => c.status === 'live');
+    const liveNow = studentLiveClasses.find(c => {
+      if (c.status !== 'live') return false;
+      if (c.type === 'course') return !!c.isAuthorized;
+      return true;
+    });
     if (liveNow) {
       liveId = liveNow.id;
       isAuth = liveNow.isAuthorized;
@@ -5008,6 +5019,11 @@ function openLiveStudioFromBanner(liveId = null, isAuth = true) {
   }
 
   if (!isAuth) {
+    const session = (studentLiveClasses || []).find(c => c.id === liveId);
+    if (session && session.type === 'course') {
+      toast('Yeh live session sirf is batch ke enrolled students ke liye reserved hai.', false);
+      return;
+    }
     window.location.href = '/master-class/live.html';
     return;
   }

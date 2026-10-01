@@ -705,14 +705,144 @@ function renderMyCoursesGrid() {
     if (c.isLiveWorkshop) {
       const isLiveNow = c.liveStatus === 'live';
       const isCompleted = c.isCompleted || c.liveStatus === 'completed';
+      const isCourseBatch = c.liveType === 'course' || (c.type === 'course') || (c.courseId && c.courseId !== 'live_demo_01' && c.courseId !== 'all');
 
+      // 1. Header Top Badge:
+      // Remove "2-DAY". Only show red LIVE NOW when broadcast is live, otherwise show LIVE WORKSHOP or BATCH CLASS
+      let badgeTopHtml = '';
+      if (isLiveNow) {
+        badgeTopHtml = `<span class="course-badge-top" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-weight:800;box-shadow:0 4px 12px rgba(239,68,68,0.4);">🔴 LIVE NOW</span>`;
+      } else if (isCompleted) {
+        badgeTopHtml = `<span class="course-badge-top" style="background:#334155;color:#94a3b8;font-weight:700;">✓ REPLAY READY</span>`;
+      } else if (isCourseBatch) {
+        badgeTopHtml = `<span class="course-badge-top" style="background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;font-weight:800;box-shadow:0 4px 12px rgba(2,132,199,0.35);">🎓 BATCH CLASS</span>`;
+      } else {
+        badgeTopHtml = `<span class="course-badge-top" style="background:linear-gradient(135deg,#d97706,#b45309);color:#fff;font-weight:800;box-shadow:0 4px 12px rgba(217,119,6,0.35);">LIVE WORKSHOP</span>`;
+      }
+
+      // 2. Status Pill (Top Right)
       let statusHtml = '';
       if (isLiveNow) {
-        statusHtml = `<span class="course-status-pill in-progress" style="background:rgba(239,68,68,0.22);color:#f87171;border:1px solid rgba(239,68,68,0.5);">🟢 LIVE NOW</span>`;
+        statusHtml = `<span class="course-status-pill in-progress" style="background:rgba(239,68,68,0.22);color:#f87171;border:1px solid rgba(239,68,68,0.5);">🟢 BROADCAST ACTIVE</span>`;
       } else if (isCompleted) {
         statusHtml = `<span class="course-status-pill completed">✓ Replay Available</span>`;
       } else {
-        statusHtml = `<span class="course-status-pill not-started" style="background:rgba(216,161,83,0.18);color:#fde68a;border:1px solid rgba(216,161,83,0.4);">🎟️ Pass Unlocked</span>`;
+        statusHtml = `<span class="course-status-pill not-started" style="background:rgba(216,161,83,0.18);color:#fde68a;border:1px solid rgba(216,161,83,0.4);">${isCourseBatch ? '🎓 Batch Enrolled' : '🎟️ Pass Unlocked'}</span>`;
+      }
+
+      // 3. Live Chip (Bottom Overlay)
+      let chipHtml = '';
+      if (isLiveNow) {
+        chipHtml = `<span class="course-live-chip live-now">🔴 LIVE STREAM</span>`;
+      } else if (isCompleted) {
+        chipHtml = `<span class="course-live-chip" style="background:rgba(15,23,42,0.85);color:#94a3b8;">📼 REPLAY</span>`;
+      } else {
+        chipHtml = `<span class="course-live-chip live-scheduled" style="background:rgba(15,23,42,0.85);color:#fde68a;border:1px solid rgba(216,161,83,0.35);">⏳ SCHEDULED</span>`;
+      }
+
+      // 4. Formatted Schedule Date
+      let scheduleText = '';
+      if (c.scheduledAt) {
+        try {
+          const d = new Date(c.scheduledAt);
+          scheduleText = d.toLocaleString('en-IN', {
+            weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+          });
+        } catch(e) {}
+      }
+
+      // 5. Middle Feature Box with Live Countdown
+      let boxHtml = '';
+      if (isLiveNow) {
+        boxHtml = `
+          <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:11px 13px;margin:12px 0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;">
+              <span style="color:#f87171;display:flex;align-items:center;gap:6px;">
+                <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444;box-shadow:0 0 10px #ef4444;"></span>
+                Interactive Live Classroom
+              </span>
+              <span style="color:#10b981;font-size:11.5px;font-weight:750;">✓ Access Verified</span>
+            </div>
+            <div style="font-size:11.5px;color:#cbd5e1;margin-top:6px;line-height:1.45;">
+              Mentor Anil Sharma is broadcasting live on timeline • Click below to join live interactive studio.
+            </div>
+          </div>
+        `;
+      } else if (isCompleted) {
+        boxHtml = `
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(148,163,184,0.2);border-radius:12px;padding:11px 13px;margin:12px 0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;">
+              <span style="color:#94a3b8;">✓ Session Completed</span>
+              <span style="color:#38bdf8;font-size:11.5px;font-weight:750;">Replay Ready</span>
+            </div>
+            <div style="font-size:11.5px;color:#94a3b8;margin-top:6px;line-height:1.45;">
+              Full recorded broadcast with practice resources is unlocked.
+            </div>
+          </div>
+        `;
+      } else {
+        // SCHEDULED: Countdown Timer display
+        boxHtml = `
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(216,161,83,0.22);border-radius:12px;padding:11px 13px;margin:12px 0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;">
+              <span style="color:#fde68a;display:flex;align-items:center;gap:6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fde68a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Scheduled Class
+              </span>
+              <span style="color:#10b981;font-size:11.5px;font-weight:750;">${isCourseBatch ? '✓ Batch Enrolled' : '✓ Pass Unlocked'}</span>
+            </div>
+            <div style="font-size:11.5px;color:#94a3b8;margin-top:5px;line-height:1.45;">
+              ${scheduleText ? `📅 Date: <b style="color:#f1f5f9;">${scheduleText}</b> • ` : ''}1080p HD Stream, Doubts &amp; Assets.
+            </div>
+            <div class="live-card-countdown-box" data-live-card-countdown="${c.scheduledAt || ''}" style="margin-top:9px;background:rgba(0,0,0,0.4);border:1px solid rgba(216,161,83,0.3);border-radius:8px;padding:7px 11px;display:flex;align-items:center;justify-content:space-between;">
+              <span style="color:#94a3b8;font-size:11px;font-weight:700;display:flex;align-items:center;gap:5px;">
+                <span>⏳</span> STARTS IN:
+              </span>
+              <span class="live-card-countdown-timer" style="color:#fde68a;font-weight:800;font-size:13px;letter-spacing:0.8px;font-family:monospace;">Calculating...</span>
+            </div>
+          </div>
+        `;
+      }
+
+      // 6. Action Button (Scheduled vs Live)
+      let actionBtnHtml = '';
+      if (isLiveNow) {
+        actionBtnHtml = `
+          <button type="button" class="btn btn-gold" style="flex:1;background:linear-gradient(135deg,#ef4444 0%,#dc2626 50%,#b91c1c 100%);color:#fff;font-weight:800;border:none;box-shadow:0 4px 18px rgba(239,68,68,0.45);display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;" onclick="event.stopPropagation(); openLiveStudio('${c.liveSessionId || c.id || 'live_demo_01'}')">
+            <span>🔴</span> <span>Enter Live Class ➔</span>
+          </button>
+        `;
+      } else if (isCompleted) {
+        actionBtnHtml = `
+          <button type="button" class="btn btn-outline" style="flex:1;border-color:#38bdf8;color:#38bdf8;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;" onclick="event.stopPropagation(); openLiveStudio('${c.liveSessionId || c.id || 'live_demo_01'}')">
+            <span>▶</span> <span>Watch Replay ➔</span>
+          </button>
+        `;
+      } else {
+        // Scheduled: Gold button, NO RED!
+        actionBtnHtml = `
+          <button type="button" class="btn btn-gold" style="flex:1;background:linear-gradient(135deg,#d8a153 0%,#c48b3b 100%);color:#0b0d17;font-weight:800;border:none;box-shadow:0 4px 16px rgba(216,161,83,0.3);display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;" onclick="event.stopPropagation(); openLiveStudio('${c.liveSessionId || c.id || 'live_demo_01'}')">
+            <span>⏳</span> <span>Join Waiting Room ➔</span>
+          </button>
+        `;
+      }
+
+      // 7. Syllabus Button (Accurate per type):
+      // Course Batch -> /curriculum/index.html
+      // Workshop -> /master-class/live.html
+      let syllabusBtnHtml = '';
+      if (isCourseBatch) {
+        syllabusBtnHtml = `
+          <a href="/curriculum/index.html" target="_blank" onclick="event.stopPropagation();" class="btn btn-outline" style="border-color:rgba(216,161,83,0.4);color:#d8a153;font-size:12px;padding:10px 14px;text-decoration:none;font-weight:600;" title="View Course Curriculum &amp; Modules">
+            ℹ️ Syllabus
+          </a>
+        `;
+      } else {
+        syllabusBtnHtml = `
+          <a href="/master-class/live.html" target="_blank" onclick="event.stopPropagation();" class="btn btn-outline" style="border-color:rgba(216,161,83,0.4);color:#d8a153;font-size:12px;padding:10px 14px;text-decoration:none;font-weight:600;" title="View Workshop Schedule &amp; Bonuses">
+            ℹ️ Syllabus
+          </a>
+        `;
       }
 
       return `
@@ -720,40 +850,25 @@ function renderMyCoursesGrid() {
           <div class="course-thumb-wrap">
             <img src="../${c.thumbnail || 'assets/editing-timeline.jpg'}" alt="${escapeHtml(c.title)}" loading="lazy" />
             <div class="course-thumb-overlay" style="background:linear-gradient(to top, rgba(12,15,24,0.95) 0%, rgba(12,15,24,0.25) 60%, transparent 100%);"></div>
-            <span class="course-badge-top" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-weight:800;box-shadow:0 4px 12px rgba(239,68,68,0.4);">🔴 2-DAY LIVE WORKSHOP</span>
+            ${badgeTopHtml}
             ${statusHtml}
-            <span class="course-live-chip ${isLiveNow ? 'live-now' : 'live-scheduled'}">${isLiveNow ? '🟢 BROADCAST ACTIVE' : '📡 LIVE STUDIO'}</span>
+            ${chipHtml}
           </div>
 
           <div class="course-card-body" style="display:flex;flex-direction:column;flex:1;">
             <div class="course-meta-row">
-              <span class="course-cat" style="color:#fde68a;font-weight:800;">LIVE MASTERCLASS</span>
-              <span class="course-duration-pill">⏱ ${escapeHtml(c.duration || '2 Days Live (7:00 PM)')}</span>
+              <span class="course-cat" style="color:#fde68a;font-weight:800;">${isCourseBatch ? 'BATCH MASTERCLASS' : 'LIVE WORKSHOP'}</span>
+              <span class="course-duration-pill">⏱ ${escapeHtml(c.duration || '90 Mins')}</span>
             </div>
 
             <h3 class="course-card-title" title="${escapeHtml(c.title)}">${escapeHtml(c.title)}</h3>
-            <p class="course-card-sub">${escapeHtml(c.subtitle || 'Poori wedding ki 500+ RAW photos ko 15 min me 1-click bulk color grade aur retouch karna • AI Beat Sync se Cinematic Teaser cut karna.')}</p>
+            <p class="course-card-sub">${escapeHtml(c.subtitle || 'Practical hands-on session with Lead Mentor Anil Sharma.')}</p>
 
-            <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(216,161,83,0.22);border-radius:12px;padding:11px 13px;margin:12px 0;">
-              <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;">
-                <span style="color:#fde68a;display:flex;align-items:center;gap:6px;">
-                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444;box-shadow:0 0 8px #ef4444;"></span>
-                  Interactive Live Classroom
-                </span>
-                <span style="color:#10b981;font-size:11.5px;font-weight:750;">✓ ₹21 Pass Unlocked</span>
-              </div>
-              <div style="font-size:11.5px;color:#94a3b8;margin-top:5px;line-height:1.45;">
-                Day 1 (Sun 7 PM): 1-Click AI Photo Retouch • Day 2 (Mon 7 PM): AI Video Editing. 1080p Stream, Live Doubts &amp; RAW Files.
-              </div>
-            </div>
+            ${boxHtml}
 
             <div class="course-card-footer" style="display:flex;gap:10px;align-items:center;margin-top:auto;padding-top:12px;">
-              <button type="button" class="btn btn-gold" style="flex:1;background:linear-gradient(135deg,#ef4444 0%,#dc2626 50%,#b91c1c 100%);color:#fff;font-weight:800;border:none;box-shadow:0 4px 18px rgba(239,68,68,0.35);display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;" onclick="event.stopPropagation(); openLiveStudio('${c.liveSessionId || c.id || 'live_demo_01'}')">
-                <span>🔴</span> <span>Enter Live Class ➔</span>
-              </button>
-              <a href="/master-class/live.html" target="_blank" onclick="event.stopPropagation();" class="btn btn-outline" style="border-color:rgba(216,161,83,0.4);color:#d8a153;font-size:12px;padding:10px 14px;text-decoration:none;font-weight:600;" title="View Workshop Schedule &amp; Bonuses">
-                ℹ️ Syllabus
-              </a>
+              ${actionBtnHtml}
+              ${syllabusBtnHtml}
             </div>
           </div>
         </article>
@@ -4924,6 +5039,32 @@ function updateLiveDashboardState() {
       } else {
         lbl.textContent = 'Live Starting Soon...';
       }
+    }
+  });
+
+  // 3. Update Course-Card Live Countdown Timers
+  document.querySelectorAll('[data-live-card-countdown]').forEach(el => {
+    const scheduledAt = el.getAttribute('data-live-card-countdown');
+    if (!scheduledAt) return;
+    const diff = new Date(scheduledAt) - new Date();
+    const timerEl = el.querySelector('.live-card-countdown-timer');
+    if (!timerEl) return;
+
+    if (diff > 0) {
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+
+      if (days > 0) {
+        timerEl.textContent = `${days}d ${String(hours).padStart(2,'0')}h ${String(mins).padStart(2,'0')}m ${String(secs).padStart(2,'0')}s`;
+      } else {
+        timerEl.textContent = `${String(hours).padStart(2,'0')}h ${String(mins).padStart(2,'0')}m ${String(secs).padStart(2,'0')}s`;
+      }
+      timerEl.style.color = '#fde68a';
+    } else {
+      timerEl.textContent = 'Starting Any Second...';
+      timerEl.style.color = '#ef4444';
     }
   });
 }

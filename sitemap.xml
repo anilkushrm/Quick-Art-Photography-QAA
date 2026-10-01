@@ -244,13 +244,35 @@
   </url>
   <url>
     <loc>https://quickartphotography.in/blog/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
     <image:image>
       <image:loc>https://quickartphotography.in/assets/editing-timeline.jpg</image:loc>
       <image:title>Quick Art Photography Academy Blog</image:title>
       <image:caption>Video editing guides, tutorials and photography industry insights</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/blog/ai-video-editing-classes-in-patna/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/ai-video-editing-classes-in-patna.jpg</image:loc>
+      <image:title>AI Video Editing Classes in Patna - Next-Gen AI Editing Course</image:title>
+      <image:caption>Next-gen AI video editing classes and training at Quick Art Photography Academy</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/blog/cinematic-video-editing-course-in-patna/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/cinematic-video-editing-course-in-patna.jpg</image:loc>
+      <image:title>Cinematic Video Editing Course in Patna - Quick Art Photography Academy</image:title>
+      <image:caption>Professional cinematic and wedding video editing course in Patna at Quick Art Photography Academy</image:caption>
     </image:image>
   </url>
   <url>
@@ -372,6 +394,28 @@
       <image:loc>https://quickartphotography.in/assets/blog-video-editing-course-ballia-hero.webp</image:loc>
       <image:title>Best Video Editing Course in Ballia | Video Editing Training in Ballia UP</image:title>
       <image:caption>Practical wedding video editing course, Premiere Pro, DaVinci Resolve &amp; free hostel for Ballia UP students</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/blog/wedding-album-design-course-in-patna/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/wedding-album-design-course-in-patna-hero.webp</image:loc>
+      <image:title>Wedding Album Design Course in Patna - Quick Art Photography Academy</image:title>
+      <image:caption>Professional wedding photo album design course in Patna Bihar. Photoshop CC training, Karizma and Canvera photobook layouts, skin retouching and background creation.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://quickartphotography.in/blog/premiere-pro-course-in-patna/</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.88</priority>
+    <image:image>
+      <image:loc>https://quickartphotography.in/assets/premiere-pro-course-in-patna-hero.webp</image:loc>
+      <image:title>Premiere Pro Course in Patna - Professional Video Editing Training</image:title>
+      <image:caption>Adobe Premiere Pro training, wedding cinematic editing, Lumetri color grading and multicam classes in Patna Bihar</image:caption>
     </image:image>
   </url>
   <url>

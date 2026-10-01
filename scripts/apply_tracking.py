@@ -20,7 +20,7 @@ GTM_NOSCRIPT = """<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WNW4XH72" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->"""
 
-META_EVENTS_SCRIPT = """<script defer src="/meta-events.js"></script>"""
+META_EVENTS_SCRIPT = """<script src="/meta-events.js?v=5" defer></script>"""
 
 GTM_HEAD_SNIPPET = """<!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

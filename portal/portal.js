@@ -804,44 +804,26 @@ function renderMyCoursesGrid() {
         `;
       }
 
-      // 6. Action Button (Scheduled vs Live)
+      // 6. Action Button (Scheduled vs Live) - Full Width
       let actionBtnHtml = '';
       if (isLiveNow) {
         actionBtnHtml = `
-          <button type="button" class="btn btn-gold" style="flex:1;background:linear-gradient(135deg,#ef4444 0%,#dc2626 50%,#b91c1c 100%);color:#fff;font-weight:800;border:none;box-shadow:0 4px 18px rgba(239,68,68,0.45);display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;" onclick="event.stopPropagation(); openLiveStudio('${c.liveSessionId || c.id || 'live_demo_01'}')">
+          <button type="button" class="btn btn-gold" style="width:100%;background:linear-gradient(135deg,#ef4444 0%,#dc2626 50%,#b91c1c 100%);color:#fff;font-weight:800;border:none;box-shadow:0 4px 18px rgba(239,68,68,0.45);display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:10px;" onclick="event.stopPropagation(); openLiveStudio('${c.liveSessionId || c.id || 'live_demo_01'}')">
             <span>🔴</span> <span>Enter Live Class ➔</span>
           </button>
         `;
       } else if (isCompleted) {
         actionBtnHtml = `
-          <button type="button" class="btn btn-outline" style="flex:1;border-color:#38bdf8;color:#38bdf8;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;" onclick="event.stopPropagation(); openLiveStudio('${c.liveSessionId || c.id || 'live_demo_01'}')">
+          <button type="button" class="btn btn-outline" style="width:100%;border-color:#38bdf8;color:#38bdf8;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:10px;" onclick="event.stopPropagation(); openLiveStudio('${c.liveSessionId || c.id || 'live_demo_01'}')">
             <span>▶</span> <span>Watch Replay ➔</span>
           </button>
         `;
       } else {
         // Scheduled: Gold button, NO RED!
         actionBtnHtml = `
-          <button type="button" class="btn btn-gold" style="flex:1;background:linear-gradient(135deg,#d8a153 0%,#c48b3b 100%);color:#0b0d17;font-weight:800;border:none;box-shadow:0 4px 16px rgba(216,161,83,0.3);display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;" onclick="event.stopPropagation(); openLiveStudio('${c.liveSessionId || c.id || 'live_demo_01'}')">
+          <button type="button" class="btn btn-gold" style="width:100%;background:linear-gradient(135deg,#d8a153 0%,#c48b3b 100%);color:#0b0d17;font-weight:800;border:none;box-shadow:0 4px 16px rgba(216,161,83,0.3);display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:10px;" onclick="event.stopPropagation(); openLiveStudio('${c.liveSessionId || c.id || 'live_demo_01'}')">
             <span>⏳</span> <span>Join Waiting Room ➔</span>
           </button>
-        `;
-      }
-
-      // 7. Syllabus Button (Accurate per type):
-      // Course Batch -> /curriculum/index.html
-      // Workshop -> /master-class/live.html
-      let syllabusBtnHtml = '';
-      if (isCourseBatch) {
-        syllabusBtnHtml = `
-          <a href="/curriculum/index.html" target="_blank" onclick="event.stopPropagation();" class="btn btn-outline" style="border-color:rgba(216,161,83,0.4);color:#d8a153;font-size:12px;padding:10px 14px;text-decoration:none;font-weight:600;" title="View Course Curriculum &amp; Modules">
-            ℹ️ Syllabus
-          </a>
-        `;
-      } else {
-        syllabusBtnHtml = `
-          <a href="/master-class/live.html" target="_blank" onclick="event.stopPropagation();" class="btn btn-outline" style="border-color:rgba(216,161,83,0.4);color:#d8a153;font-size:12px;padding:10px 14px;text-decoration:none;font-weight:600;" title="View Workshop Schedule &amp; Bonuses">
-            ℹ️ Syllabus
-          </a>
         `;
       }
 
@@ -866,9 +848,8 @@ function renderMyCoursesGrid() {
 
             ${boxHtml}
 
-            <div class="course-card-footer" style="display:flex;gap:10px;align-items:center;margin-top:auto;padding-top:12px;">
+            <div class="course-card-footer" style="display:flex;align-items:center;margin-top:auto;padding-top:12px;">
               ${actionBtnHtml}
-              ${syllabusBtnHtml}
             </div>
           </div>
         </article>
@@ -4925,12 +4906,15 @@ function updateLiveDashboardState() {
   // Check upcoming scheduled classes
   const upcomingList = (studentLiveClasses || []).filter(c => {
     if (c.status !== 'scheduled' || !c.scheduledAt) return false;
+    if (c.type === 'course' && !c.isAuthorized) return false;
     if (c.courseId === 'all') return true;
     if (c.type === 'workshop') return true;
     return enrolledIds.includes(c.courseId);
   });
   upcomingList.sort((a, b) => new Date(a.scheduledAt || 0) - new Date(b.scheduledAt || 0));
-  const earliestUpcoming = upcomingList[0];
+  const nowMs = Date.now();
+  const futureUpcoming = upcomingList.find(c => new Date(c.scheduledAt).getTime() > nowMs) || upcomingList[0];
+  const earliestUpcoming = futureUpcoming;
 
   // 1. Update Master Live Pill in My Courses Section Bar & Header Badges
   const masterBtn = document.getElementById('mycourses-live-indicator-btn');

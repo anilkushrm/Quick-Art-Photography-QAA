@@ -57,6 +57,8 @@ if (!function_exists('clean_phone')) {
         $num = preg_replace('/[^0-9]/', '', (string)$p);
         if (strlen($num) === 12 && substr($num, 0, 2) === '91') {
             $num = substr($num, 2);
+        } elseif (strlen($num) === 11 && substr($num, 0, 1) === '0') {
+            $num = substr($num, 1);
         }
         return $num;
     }

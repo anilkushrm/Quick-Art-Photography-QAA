@@ -142,6 +142,8 @@ if (!function_exists('clean_phone')) {
         $num = preg_replace('/[^0-9]/', '', (string)$p);
         if (strlen($num) === 12 && substr($num, 0, 2) === '91') {
             $num = substr($num, 2);
+        } elseif (strlen($num) === 11 && substr($num, 0, 1) === '0') {
+            $num = substr($num, 1);
         }
         return $num;
     }
@@ -486,30 +488,77 @@ if ($action === 'verify-otp' && $method === 'POST') {
     $found = false;
 
     foreach ($students as &$stu) {
-        if ($stu['phone'] === $phone) {
+        if (clean_phone($stu['phone'] ?? '') === $phone) {
             $stu['lastActive'] = date('c');
-            $currentStudent = $stu;
+            $currentStudent = &$stu;
             $found = true;
             break;
         }
     }
     unset($stu);
 
+    // Cross-reference offline admissions data to enrich profile & avatar
+    $admFile = DATA_DIR . '/offline-admissions.json';
+    $admRec = null;
+    if (file_exists($admFile)) {
+        $allAdms = json_decode(file_get_contents($admFile), true) ?: [];
+        foreach ($allAdms as $a) {
+            if (clean_phone($a['phone'] ?? '') === $phone) {
+                $admRec = $a;
+                break;
+            }
+        }
+    }
+
     if (!$found) {
-        // Auto-create new student profile with zero enrolled courses (must be purchased or assigned)
         $newStudent = [
             'id' => 'stu_' . substr(md5(uniqid($phone, true)), 0, 8),
             'phone' => $phone,
-            'name' => 'Student ' . substr($phone, -4),
-            'email' => '',
-            'city' => '',
+            'name' => ($admRec && !empty($admRec['fullName'])) ? $admRec['fullName'] : ('Student ' . substr($phone, -4)),
+            'email' => $admRec['email'] ?? '',
+            'city' => $admRec['city'] ?? '',
             'enrolledAt' => date('c'),
             'enrolledCourses' => [],
             'completedLessons' => [],
             'lastActive' => date('c')
         ];
+        if ($admRec) {
+            if (!empty($admRec['photoUrl'])) {
+                $newStudent['avatar'] = $admRec['photoUrl'];
+                $newStudent['avatarUrl'] = $admRec['photoUrl'];
+                $newStudent['photoUrl'] = $admRec['photoUrl'];
+            }
+            if (!empty($admRec['id'])) {
+                $newStudent['offlineAdmissionId'] = $admRec['id'];
+                $newStudent['enrollmentNo'] = $admRec['id'];
+            }
+            if (!empty($admRec['courseTitle'])) {
+                $newStudent['appliedCourse'] = $admRec['courseTitle'];
+            }
+            if (!empty($admRec['bloodGroup'])) $newStudent['bloodGroup'] = $admRec['bloodGroup'];
+            if (!empty($admRec['studioName'])) $newStudent['studioName'] = $admRec['studioName'];
+            if (!empty($admRec['address'])) $newStudent['address'] = $admRec['address'];
+            $newStudent['isOfflineStudent'] = true;
+        }
         $students[] = $newStudent;
         $currentStudent = $newStudent;
+    } else if ($admRec && $currentStudent) {
+        if (empty($currentStudent['avatar']) && !empty($admRec['photoUrl'])) {
+            $currentStudent['avatar'] = $admRec['photoUrl'];
+            $currentStudent['avatarUrl'] = $admRec['photoUrl'];
+            $currentStudent['photoUrl'] = $admRec['photoUrl'];
+        }
+        if (empty($currentStudent['offlineAdmissionId']) && !empty($admRec['id'])) {
+            $currentStudent['offlineAdmissionId'] = $admRec['id'];
+            $currentStudent['enrollmentNo'] = $admRec['id'];
+        }
+        if (empty($currentStudent['appliedCourse']) && !empty($admRec['courseTitle'])) {
+            $currentStudent['appliedCourse'] = $admRec['courseTitle'];
+        }
+        if (empty($currentStudent['bloodGroup']) && !empty($admRec['bloodGroup'])) $currentStudent['bloodGroup'] = $admRec['bloodGroup'];
+        if (empty($currentStudent['studioName']) && !empty($admRec['studioName'])) $currentStudent['studioName'] = $admRec['studioName'];
+        if (empty($currentStudent['address']) && !empty($admRec['address'])) $currentStudent['address'] = $admRec['address'];
+        $currentStudent['isOfflineStudent'] = true;
     }
 
     save_students($students);
@@ -521,8 +570,16 @@ if ($action === 'verify-otp' && $method === 'POST') {
             'id' => $currentStudent['id'],
             'phone' => $currentStudent['phone'],
             'name' => $currentStudent['name'],
+            'email' => $currentStudent['email'] ?? '',
+            'city' => $currentStudent['city'] ?? '',
+            'avatar' => $currentStudent['avatar'] ?? ($currentStudent['photoUrl'] ?? ''),
+            'avatarUrl' => $currentStudent['avatarUrl'] ?? ($currentStudent['photoUrl'] ?? ''),
+            'photoUrl' => $currentStudent['photoUrl'] ?? ($currentStudent['avatar'] ?? ''),
             'enrollmentNo' => $currentStudent['offlineAdmissionId'] ?? ($currentStudent['enrollmentNo'] ?? ('QAA-' . date('Y') . '-' . substr(preg_replace('/[^0-9]/', '', $currentStudent['phone'] ?? '9999'), -4))),
-            'enrolledCourses' => $currentStudent['enrolledCourses'] ?? []
+            'enrolledCourses' => $currentStudent['enrolledCourses'] ?? [],
+            'appliedCourse' => $currentStudent['appliedCourse'] ?? '',
+            'studioName' => $currentStudent['studioName'] ?? '',
+            'bloodGroup' => $currentStudent['bloodGroup'] ?? 'B+'
         ]
     ]);
 }
@@ -1150,20 +1207,34 @@ if ($action === 'my-courses' && $method === 'GET') {
         if ($stuPhone === '9939800780') {
             $isLiveEnrolled = true;
         } elseif ($liveType === 'course') {
-            // STRICT: Must be enrolled in this specific course/batch or have all-access
+            // STRICT: Must be enrolled in this specific course/batch or have explicit liveId
+            $isBatchClass = (bool)preg_match('/batch\s*[-_]?\s*\d+/i', ($live['title'] ?? '') . ' ' . $liveId);
+            $hasRealCourse = false;
+            foreach ($enrolledIds as $eid) {
+                if (str_starts_with($eid, 'course-')) {
+                    $hasRealCourse = true;
+                    break;
+                }
+            }
+
+            // If it's a batch class and courseRef is empty or 'all', auto-resolve to the batch course ID
+            $effCourseRef = $courseRef;
+            if ($isBatchClass && (empty($effCourseRef) || $effCourseRef === 'all')) {
+                $effCourseRef = map_offline_course_id($live['title'] ?? '');
+            }
+
             if (in_array('all-access', $enrolledIds)) {
-                $isLiveEnrolled = true;
-            } elseif (!empty($courseRef) && ($courseRef === 'all' || in_array($courseRef, $enrolledIds))) {
                 $isLiveEnrolled = true;
             } elseif (in_array($liveId, $enrolledIds)) {
                 $isLiveEnrolled = true;
+            } elseif (!empty($effCourseRef) && $effCourseRef !== 'all' && in_array($effCourseRef, $enrolledIds)) {
+                $isLiveEnrolled = true;
+            } elseif ($effCourseRef === 'all' && !$isBatchClass && $hasRealCourse) {
+                $isLiveEnrolled = true;
             }
         } else {
-            // Workshop (e.g. ₹21 masterclass)
-            if (in_array($liveId, $enrolledIds)
-                || in_array('all-access', $enrolledIds)
-                || in_array('masterclass-live', $enrolledIds)
-                || in_array('live_demo_01', $enrolledIds)) {
+            // Workshop (e.g. ₹21 masterclass) - strictly restricted to the specific workshop liveId or all-access
+            if (in_array($liveId, $enrolledIds) || in_array('all-access', $enrolledIds)) {
                 $isLiveEnrolled = true;
             }
         }
@@ -1989,6 +2060,65 @@ if ($action === 'verify-razorpay-payment' && $method === 'POST') {
     ]);
 }
 
+// 10.9 Public Student Admission & ID Card Verification
+if ($action === 'verify-student-admission' && ($method === 'GET' || $method === 'POST')) {
+    $searchId = trim($_GET['id'] ?? ($_POST['id'] ?? ''));
+    $phone = clean_phone($_GET['phone'] ?? ($_POST['phone'] ?? ''));
+
+    $admFile = DATA_DIR . '/offline-admissions.json';
+    $allAdms = file_exists($admFile) ? json_decode(file_get_contents($admFile), true) ?: [] : [];
+    $foundAdm = null;
+
+    foreach ($allAdms as $a) {
+        if ($searchId && (($a['id'] ?? '') === $searchId || ($a['offlineAdmissionId'] ?? '') === $searchId)) {
+            $foundAdm = $a;
+            break;
+        }
+        if ($phone && clean_phone($a['phone'] ?? '') === $phone) {
+            $foundAdm = $a;
+            break;
+        }
+    }
+
+    if (!$foundAdm) {
+        $students = load_students();
+        foreach ($students as $s) {
+            if ($searchId && (($s['id'] ?? '') === $searchId || ($s['offlineAdmissionId'] ?? '') === $searchId || ($s['enrollmentNo'] ?? '') === $searchId)) {
+                $foundAdm = $s;
+                break;
+            }
+            if ($phone && clean_phone($s['phone'] ?? '') === $phone) {
+                $foundAdm = $s;
+                break;
+            }
+        }
+    }
+
+    if (!$foundAdm) {
+        json_err('Admission credential record not found', 404);
+    }
+
+    $photo = $foundAdm['photoUrl'] ?? ($foundAdm['avatar'] ?? ($foundAdm['avatarUrl'] ?? ''));
+    $name = $foundAdm['fullName'] ?? ($foundAdm['name'] ?? 'Student');
+    $course = $foundAdm['courseTitle'] ?? ($foundAdm['courseName'] ?? ($foundAdm['appliedCourse'] ?? 'Professional Photography Course'));
+    $id = $foundAdm['id'] ?? ($foundAdm['offlineAdmissionId'] ?? ($foundAdm['enrollmentNo'] ?? 'QAA-2026'));
+    $studio = $foundAdm['studioName'] ?? 'Independent';
+    $city = $foundAdm['city'] ?? ($foundAdm['workCity'] ?? 'Bihar');
+    $blood = $foundAdm['bloodGroup'] ?? 'B+';
+
+    json_ok([
+        'id'            => $id,
+        'name'          => $name,
+        'course'        => $course,
+        'studio'        => $studio,
+        'city'          => $city,
+        'blood'         => $blood,
+        'photoUrl'      => $photo,
+        'status'        => $foundAdm['status'] ?? 'active',
+        'isOnlineBatch' => !empty($foundAdm['isOnlineBatch']) || strpos($id, '-ON-') !== false
+    ]);
+}
+
 // 11. Certificate Verification (Public)
 if ($action === 'verify-certificate' && $method === 'GET') {
     $certId = trim($_GET['id'] ?? '');
@@ -2225,22 +2355,33 @@ if ($action === 'get-live-classes' && $method === 'GET') {
             } elseif ($cType === 'course') {
                 // Course Specific Batch:
                 // Strictly restricted to students enrolled in this course batch or all-access.
-                // Workshop students ('masterclass-live', 'live_demo_01') ARE NEVER AUTHORIZED!
+                // Workshop students (₹21 tickets) ARE NEVER AUTHORIZED!
+                $isBatchClass = (bool)preg_match('/batch\s*[-_]?\s*\d+/i', ($c['title'] ?? '') . ' ' . ($c['id'] ?? ''));
+                $hasRealCourse = false;
+                foreach ($enrolledList as $eid) {
+                    if (str_starts_with($eid, 'course-')) {
+                        $hasRealCourse = true;
+                        break;
+                    }
+                }
+
+                $effCourseRef = $courseRef;
+                if ($isBatchClass && (empty($effCourseRef) || $effCourseRef === 'all')) {
+                    $effCourseRef = map_offline_course_id($c['title'] ?? '');
+                }
+
                 if (in_array('all-access', $enrolledList)) {
-                    $isAuth = true;
-                } elseif (!empty($courseRef) && ($courseRef === 'all' || in_array($courseRef, $enrolledList))) {
                     $isAuth = true;
                 } elseif (in_array($c['id'], $enrolledList)) {
                     $isAuth = true;
+                } elseif (!empty($effCourseRef) && $effCourseRef !== 'all' && in_array($effCourseRef, $enrolledList)) {
+                    $isAuth = true;
+                } elseif ($effCourseRef === 'all' && !$isBatchClass && $hasRealCourse) {
+                    $isAuth = true;
                 }
             } else {
-                // Workshop (e.g. ₹21 masterclass)
-                if (in_array($c['id'], $enrolledList)
-                    || in_array('all-access', $enrolledList)
-                    || in_array('masterclass-live', $enrolledList)
-                    || in_array('live_demo_01', $enrolledList)) {
-                    $isAuth = true;
-                } elseif (!empty($courseRef) && ($courseRef === 'all' || in_array($courseRef, $enrolledList))) {
+                // Workshop (e.g. ₹21 masterclass) - strictly for this workshop or all-access
+                if (in_array($c['id'], $enrolledList) || in_array('all-access', $enrolledList)) {
                     $isAuth = true;
                 }
             }
@@ -2344,22 +2485,33 @@ if ($action === 'get-live-session' && ($method === 'GET' || $method === 'POST'))
     } elseif ($targetType === 'course') {
         // STRICT COURSE BATCH AUTHORIZATION:
         // Must be enrolled in this course batch or have all-access.
-        // 'masterclass-live' or 'live_demo_01' CANNOT access!
+        // Workshop students (₹21 tickets) CANNOT access!
+        $isBatchClass = (bool)preg_match('/batch\s*[-_]?\s*\d+/i', ($target['title'] ?? '') . ' ' . ($target['id'] ?? ''));
+        $hasRealCourse = false;
+        foreach ($enrolledList as $eid) {
+            if (str_starts_with($eid, 'course-')) {
+                $hasRealCourse = true;
+                break;
+            }
+        }
+
+        $effTargetCourseId = $targetCourseId;
+        if ($isBatchClass && (empty($effTargetCourseId) || $effTargetCourseId === 'all')) {
+            $effTargetCourseId = map_offline_course_id($target['title'] ?? '');
+        }
+
         if (in_array('all-access', $enrolledList)) {
             $isAuth = true;
-        } elseif (!empty($targetCourseId) && ($targetCourseId === 'all' || in_array($targetCourseId, $enrolledList))) {
-            $isAuth = true;
         } elseif (in_array($target['id'], $enrolledList)) {
+            $isAuth = true;
+        } elseif (!empty($effTargetCourseId) && $effTargetCourseId !== 'all' && in_array($effTargetCourseId, $enrolledList)) {
+            $isAuth = true;
+        } elseif ($effTargetCourseId === 'all' && !$isBatchClass && $hasRealCourse) {
             $isAuth = true;
         }
     } else {
         // Workshop (e.g. ₹21 masterclass)
-        if (in_array($target['id'], $enrolledList)
-            || in_array('all-access', $enrolledList)
-            || in_array('masterclass-live', $enrolledList)
-            || in_array('live_demo_01', $enrolledList)) {
-            $isAuth = true;
-        } elseif (!empty($targetCourseId) && ($targetCourseId === 'all' || in_array($targetCourseId, $enrolledList))) {
+        if (in_array($target['id'], $enrolledList) || in_array('all-access', $enrolledList)) {
             $isAuth = true;
         }
     }
@@ -2516,7 +2668,7 @@ if ($action === 'create-workshop-order' && $method === 'POST') {
             }
         }
     }
-    // Fallback: pick first workshop or first class if id mismatch
+    // Fallback: pick first workshop (never fall back to a batch/course class)
     if (!$target && !empty($allClasses)) {
         foreach ($allClasses as $c) {
             if (($c['type'] ?? '') === 'workshop') {
@@ -2524,10 +2676,6 @@ if ($action === 'create-workshop-order' && $method === 'POST') {
                 $liveId = $c['id'];
                 break;
             }
-        }
-        if (!$target) {
-            $target = $allClasses[0];
-            $liveId = $target['id'];
         }
     }
     if (!$target) json_err('Workshop session not found', 404);
@@ -2646,13 +2794,10 @@ if ($action === 'verify-workshop-payment' && $method === 'POST') {
                 break;
             }
         }
-        if (!$target) {
-            $target = $allClasses[0];
-            $liveId = $target['id'];
-        }
     }
+    if (!$target) json_err('Workshop session not found', 404);
 
-    $ticketPrice = (int)($target['ticketPrice'] ?? 299);
+    $ticketPrice = (int)($target['ticketPrice'] ?? 21);
     $students = load_students();
     $student = null;
     $isNew = false;
@@ -2675,16 +2820,14 @@ if ($action === 'verify-workshop-payment' && $method === 'POST') {
             'email'            => $email ?: '',
             'city'             => '',
             'enrolledAt'       => date('c'),
-            'enrolledCourses'  => array_values(array_unique([$liveId, 'masterclass-live', 'live_demo_01'])),
+            'enrolledCourses'  => [$liveId],
             'completedLessons' => []
         ];
         $students[] = $student;
     } else {
         if (!is_array($student['enrolledCourses'])) $student['enrolledCourses'] = [];
-        foreach ([$liveId, 'masterclass-live', 'live_demo_01'] as $cIdToEnroll) {
-            if (!in_array($cIdToEnroll, $student['enrolledCourses'])) {
-                $student['enrolledCourses'][] = $cIdToEnroll;
-            }
+        if (!in_array($liveId, $student['enrolledCourses'])) {
+            $student['enrolledCourses'][] = $liveId;
         }
         if ($name && empty($student['name'])) $student['name'] = $name;
         if ($email && empty($student['email'])) $student['email'] = $email;
@@ -2731,7 +2874,7 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
     }
 
     $fullName     = trim($_POST['fullName'] ?? '');
-    $phone        = preg_replace('/\D/', '', $_POST['phone'] ?? '');
+    $phone        = clean_phone($_POST['phone'] ?? '');
     $email        = trim($_POST['email'] ?? '');
     $dob          = trim($_POST['dob'] ?? '');
     $gender       = trim($_POST['gender'] ?? 'Male');
@@ -2748,7 +2891,14 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
     $workCity     = trim($_POST['workCity'] ?? $city);
     $instagram    = trim($_POST['instagram'] ?? '');
     $careerGoal   = trim($_POST['careerGoal'] ?? '');
-    $paymentMode  = trim($_POST['paymentMode'] ?? 'online'); // 'online' (Razorpay/UPI) or 'cash' (Pay at Campus)
+    $paymentMode  = trim($_POST['paymentMode'] ?? 'online'); // 'online', 'online_batch_direct', 'already_paid', or 'cash'
+
+    // Detect if this is an Online Batch registration (?batch=114, ?b=115, etc.)
+    $isOnlineBatch = !empty($_POST['isOnlineBatch']) ||
+                     preg_match('/batch\s*[-_]?\s*(\d+)/i', $courseTitle) ||
+                     in_array($paymentMode, ['online_batch_direct', 'already_paid']) ||
+                     stripos($courseTitle, 'online') !== false;
+    $batchCourseId = $isOnlineBatch ? map_offline_course_id($courseTitle) : null;
 
     if (!$fullName || strlen($phone) < 10) {
         json_err('Full Name aur valid 10-digit mobile number mandatory hai.', 400);
@@ -2778,7 +2928,7 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
     $phoneVerified = (bool)$isPhoneVerified;
     $emailVerified = (bool)$isEmailVerified;
 
-    // Helper to upload files safely with size validation (up to 10 MB)
+    // Helper to upload files safely with size validation (up to 25 MB)
     $saveUploadedDoc = function($fieldKey, $prefix, $maxBytes = 0) use ($uploadDir) {
         if (empty($_FILES[$fieldKey]) || $_FILES[$fieldKey]['error'] !== UPLOAD_ERR_OK) {
             return '';
@@ -2802,16 +2952,17 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         return '';
     };
 
-    $photoUrl = $saveUploadedDoc('photo_file', 'photo', 2 * 1024 * 1024); // 2 MB max limit
-    $aadhaarUrl = $saveUploadedDoc('aadhaar_file', 'aadhaar', 2 * 1024 * 1024); // 2 MB max limit
-    $certUrl = $saveUploadedDoc('cert_file', 'cert', 2 * 1024 * 1024); // 2 MB max limit
+    $photoUrl = $saveUploadedDoc('photo_file', 'photo', 25 * 1024 * 1024); // 25 MB max limit
+    $aadhaarUrl = $saveUploadedDoc('aadhaar_file', 'aadhaar', 25 * 1024 * 1024); // 25 MB max limit
+    $certUrl = $saveUploadedDoc('cert_file', 'cert', 25 * 1024 * 1024); // 25 MB max limit
 
     $admissionsFile = DATA_DIR . '/offline-admissions.json';
     $admissions = file_exists($admissionsFile) ? json_decode(file_get_contents($admissionsFile), true) : [];
     if (!is_array($admissions)) $admissions = [];
 
-    $admissionId = 'QAA-OFF-' . date('Y') . '-' . strtoupper(substr(uniqid(), -5));
-    $admissionFee = 500; // Fixed registration fee
+    $idPrefix = $isOnlineBatch ? 'QAA-ON-' : 'QAA-OFF-';
+    $admissionId = $idPrefix . date('Y') . '-' . strtoupper(substr(uniqid(), -5));
+    $admissionFee = $isOnlineBatch ? 0 : 500; // Online batches enrolled directly
 
     $newAdmission = [
         'id'            => $admissionId,
@@ -2827,6 +2978,8 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         'state'         => $state,
         'pincode'       => $pincode,
         'courseTitle'   => $courseTitle,
+        'isOnlineBatch' => $isOnlineBatch,
+        'batchCourseId' => $batchCourseId,
         'hostelNeeded'  => $hostelNeeded,
         'studioName'    => $studioName,
         'currentRole'   => $currentRole,
@@ -2838,22 +2991,22 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         'certUrl'       => $certUrl,
         'paymentMode'   => $paymentMode,
         'feeAmount'     => $admissionFee,
-        'paymentStatus' => ($paymentMode === 'cash') ? 'pending_campus' : 'awaiting_online_payment',
-        'status'        => ($paymentMode === 'cash') ? 'pending_approval' : 'submitted',
+        'paymentStatus' => $isOnlineBatch ? 'paid' : (($paymentMode === 'cash') ? 'pending_campus' : 'awaiting_online_payment'),
+        'status'        => $isOnlineBatch ? 'active' : (($paymentMode === 'cash') ? 'pending_approval' : 'submitted'),
         'phoneVerified' => $phoneVerified,
         'emailVerified' => $emailVerified,
-        'verificationNote' => $phoneVerified ? 'Verified via WhatsApp OTP' : 'Pending mentor call confirmation',
+        'verificationNote' => $phoneVerified ? 'Verified via WhatsApp OTP' : 'Direct Batch Registration',
         'createdAt'     => date('c')
     ];
 
-    // If online payment chosen, initialize Razorpay order
+    // If online payment chosen (and not already confirmed online batch), initialize Razorpay order
     $razorpayData = null;
     $settings = load_settings();
     $keyId = trim($settings['razorpayKeyId'] ?? '');
     $keySecret = trim($settings['razorpayKeySecret'] ?? '');
     $razorpayEnabled = !empty($settings['razorpayEnabled']) && !empty($keyId) && !empty($keySecret);
 
-    if ($paymentMode === 'online' && $razorpayEnabled) {
+    if ($paymentMode === 'online' && !$isOnlineBatch && $razorpayEnabled) {
         $ch = curl_init('https://api.razorpay.com/v1/orders');
         $orderPayload = [
             'amount'          => $admissionFee * 100, // 50000 paise
@@ -2900,18 +3053,37 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         }
     }
 
-    // Save admission record
-    $admissions[] = $newAdmission;
+    // Save admission record (or update existing submission by phone)
+    $existingAdmIdx = -1;
+    foreach ($admissions as $idx => $ea) {
+        if (clean_phone($ea['phone'] ?? '') === $phone) {
+            $existingAdmIdx = $idx;
+            break;
+        }
+    }
+    if ($existingAdmIdx >= 0) {
+        // Keep existing documents if new upload was empty
+        if (empty($photoUrl) && !empty($admissions[$existingAdmIdx]['photoUrl'])) {
+            $newAdmission['photoUrl'] = $admissions[$existingAdmIdx]['photoUrl'];
+            $photoUrl = $newAdmission['photoUrl'];
+        }
+        if (empty($aadhaarUrl) && !empty($admissions[$existingAdmIdx]['aadhaarUrl'])) {
+            $newAdmission['aadhaarUrl'] = $admissions[$existingAdmIdx]['aadhaarUrl'];
+        }
+        $admissions[$existingAdmIdx] = array_merge($admissions[$existingAdmIdx], $newAdmission);
+    } else {
+        $admissions[] = $newAdmission;
+    }
     file_put_contents($admissionsFile, json_encode($admissions, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
 
     // Auto-sync submitted admission to alumni showcase immediately
     sync_offline_admissions_to_alumni();
 
-    // Auto-create or update student in students.json for portal access
+    // Auto-create or update student in students.json for portal & app access
     $students = get_all_students();
     $existingStudent = null;
     foreach ($students as &$s) {
-        if (($s['phone'] ?? '') === $phone) {
+        if (clean_phone($s['phone'] ?? '') === $phone) {
             $existingStudent = &$s;
             break;
         }
@@ -2928,17 +3100,38 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         }
         $existingStudent['isOfflineStudent'] = true;
         $existingStudent['offlineAdmissionId'] = $admissionId;
+        $existingStudent['enrollmentNo'] = $admissionId;
         $existingStudent['appliedCourse'] = $courseTitle;
         $existingStudent['studioName'] = $studioName;
         $existingStudent['currentRole'] = $currentRole;
         $existingStudent['workCity'] = $workCity;
-        if (empty($existingStudent['isPaid500'])) {
+        $existingStudent['fatherName'] = $fatherName;
+        $existingStudent['bloodGroup'] = $bloodGroup;
+        $existingStudent['address'] = $address;
+        $existingStudent['city'] = $city;
+        $existingStudent['state'] = $state;
+        $existingStudent['pincode'] = $pincode;
+
+        if ($isOnlineBatch) {
+            $existingStudent['isOnlineBatch'] = true;
+            if (!isset($existingStudent['enrolledCourses']) || !is_array($existingStudent['enrolledCourses'])) {
+                $existingStudent['enrolledCourses'] = [];
+            }
+            if ($batchCourseId && !in_array($batchCourseId, $existingStudent['enrolledCourses'])) {
+                $existingStudent['enrolledCourses'][] = $batchCourseId;
+            }
+            $existingStudent['paymentStatus'] = 'paid';
+            $existingStudent['isPaid500'] = true;
+            $existingStudent['isApproved'] = true;
+            $existingStudent['status'] = 'active';
+        } else if (empty($existingStudent['isPaid500'])) {
             $existingStudent['paymentStatus'] = ($paymentMode === 'cash') ? 'pay_at_campus' : 'unpaid';
             $existingStudent['isPaid500'] = false;
             $existingStudent['isApproved'] = false;
             $existingStudent['status'] = ($paymentMode === 'cash') ? 'pending_approval' : 'pending_payment';
         }
     } else {
+        $enrolledList = ($isOnlineBatch && $batchCourseId) ? [$batchCourseId] : [];
         $students[] = [
             'id'                 => 'stu_' . time() . '_' . substr(md5($phone), 0, 4),
             'name'               => $fullName,
@@ -2947,34 +3140,48 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
             'avatar'             => $photoUrl,
             'avatarUrl'          => $photoUrl,
             'photoUrl'           => $photoUrl,
-            'enrolledCourses'    => [], // Clean! Strictly empty until Admin approves
+            'enrolledCourses'    => $enrolledList,
             'isOfflineStudent'   => true,
+            'isOnlineBatch'      => $isOnlineBatch,
             'offlineAdmissionId' => $admissionId,
+            'enrollmentNo'       => $admissionId,
             'appliedCourse'      => $courseTitle,
-            'paymentStatus'      => ($paymentMode === 'cash') ? 'pay_at_campus' : 'unpaid',
-            'isPaid500'          => false,
-            'isApproved'         => false,
-            'status'             => ($paymentMode === 'cash') ? 'pending_approval' : 'pending_payment',
+            'paymentStatus'      => $isOnlineBatch ? 'paid' : (($paymentMode === 'cash') ? 'pay_at_campus' : 'unpaid'),
+            'isPaid500'          => $isOnlineBatch ? true : false,
+            'isApproved'         => $isOnlineBatch ? true : false,
+            'status'             => $isOnlineBatch ? 'active' : (($paymentMode === 'cash') ? 'pending_approval' : 'pending_payment'),
             'studioName'         => $studioName,
             'currentRole'        => $currentRole,
             'workCity'           => $workCity,
+            'fatherName'         => $fatherName,
+            'bloodGroup'         => $bloodGroup,
+            'address'            => $address,
+            'city'               => $city,
+            'state'              => $state,
+            'pincode'            => $pincode,
             'registeredAt'       => date('c')
         ];
     }
     save_all_students($students);
 
+    $sessionToken = create_student_session($phone);
+
     json_ok([
-        'admissionId'  => $admissionId,
-        'fullName'     => $fullName,
-        'phone'        => $phone,
-        'photoUrl'     => $photoUrl,
-        'bloodGroup'   => $bloodGroup,
-        'feeAmount'    => $admissionFee,
-        'paymentMode'  => $paymentMode,
-        'razorpay'     => $razorpayData,
-        'message'      => ($paymentMode === 'cash')
-            ? 'Admission form successfully submit ho gaya hai! ₹500 registration fee aap On-Campus Siwan aakar pay kar sakte hain.'
-            : 'Admission form successfully submit ho gaya hai! Kripya ₹500 registration fee pay karein.'
+        'admissionId'   => $admissionId,
+        'fullName'      => $fullName,
+        'phone'         => $phone,
+        'photoUrl'      => $photoUrl,
+        'bloodGroup'    => $bloodGroup,
+        'feeAmount'     => $admissionFee,
+        'paymentMode'   => $paymentMode,
+        'isOnlineBatch' => $isOnlineBatch,
+        'token'         => $sessionToken,
+        'razorpay'      => $razorpayData,
+        'message'       => $isOnlineBatch
+            ? 'Online Batch Admission form successfully submit ho gaya hai! Aapka Official PVC Identity Card generate ho gaya hai.'
+            : (($paymentMode === 'cash')
+                ? 'Admission form successfully submit ho gaya hai! ₹500 registration fee aap On-Campus Siwan aakar pay kar sakte hain.'
+                : 'Admission form successfully submit ho gaya hai! Kripya ₹500 registration fee pay karein.')
     ]);
 }
 
@@ -3049,11 +3256,11 @@ if ($action === 'verify-offline-admission-payment' && $method === 'POST') {
         $students = get_all_students();
         $foundStu = false;
         foreach ($students as &$stu) {
-            if (($stu['phone'] ?? '') === $studentPhone) {
+            if (clean_phone($stu['phone'] ?? '') === clean_phone($studentPhone)) {
                 if (!isset($stu['enrolledCourses']) || !is_array($stu['enrolledCourses'])) {
                     $stu['enrolledCourses'] = [];
                 }
-                if (!in_array($courseId, $stu['enrolledCourses'])) {
+                if ($courseId && !in_array($courseId, $stu['enrolledCourses'])) {
                     $stu['enrolledCourses'][] = $courseId;
                 }
                 $stu['isPaid500'] = true;
@@ -3061,6 +3268,19 @@ if ($action === 'verify-offline-admission-payment' && $method === 'POST') {
                 $stu['appliedCourse'] = $admCourseTitle;
                 $stu['isApproved'] = true;
                 $stu['status'] = 'active';
+                if (!empty($admRecord['photoUrl'])) {
+                    $stu['avatar'] = $admRecord['photoUrl'];
+                    $stu['avatarUrl'] = $admRecord['photoUrl'];
+                    $stu['photoUrl'] = $admRecord['photoUrl'];
+                }
+                $stu['isOfflineStudent'] = true;
+                $stu['offlineAdmissionId'] = $admissionId;
+                $stu['enrollmentNo'] = $admissionId;
+                if (!empty($admRecord['fatherName'])) $stu['fatherName'] = $admRecord['fatherName'];
+                if (!empty($admRecord['bloodGroup'])) $stu['bloodGroup'] = $admRecord['bloodGroup'];
+                if (!empty($admRecord['studioName'])) $stu['studioName'] = $admRecord['studioName'];
+                if (!empty($admRecord['city'])) $stu['city'] = $admRecord['city'];
+                if (!empty($admRecord['address'])) $stu['address'] = $admRecord['address'];
                 $foundStu = true;
                 break;
             }
@@ -3071,12 +3291,15 @@ if ($action === 'verify-offline-admission-payment' && $method === 'POST') {
             $students[] = [
                 'id'                 => 'stu_' . time() . '_' . substr(md5($studentPhone), 0, 4),
                 'name'               => $studentName,
-                'phone'              => $studentPhone,
+                'phone'              => clean_phone($studentPhone),
                 'email'              => $admRecord['email'] ?? '',
                 'avatar'             => $admRecord['photoUrl'] ?? '',
-                'enrolledCourses'    => [$courseId],
+                'avatarUrl'          => $admRecord['photoUrl'] ?? '',
+                'photoUrl'           => $admRecord['photoUrl'] ?? '',
+                'enrolledCourses'    => $courseId ? [$courseId] : [],
                 'isOfflineStudent'   => true,
                 'offlineAdmissionId' => $admissionId,
+                'enrollmentNo'       => $admissionId,
                 'appliedCourse'      => $admCourseTitle,
                 'paymentStatus'      => 'paid',
                 'isPaid500'          => true,
@@ -3085,6 +3308,9 @@ if ($action === 'verify-offline-admission-payment' && $method === 'POST') {
                 'studioName'         => $admRecord['studioName'] ?? '',
                 'currentRole'        => $admRecord['currentRole'] ?? '',
                 'workCity'           => $admRecord['city'] ?? '',
+                'fatherName'         => $admRecord['fatherName'] ?? '',
+                'bloodGroup'         => $admRecord['bloodGroup'] ?? '',
+                'address'            => $admRecord['address'] ?? '',
                 'registeredAt'       => date('c')
             ];
         }

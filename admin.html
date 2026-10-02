@@ -4740,15 +4740,21 @@ function renderLmsStudents() {
   }
 
   tbody.innerHTML = filtered.map(s => {
-    const isOffline = !!s.isOfflineStudent || !!s.offlineAdmissionId;
-    const isPaid = !!s.isPaid500 || s.paymentStatus === 'paid';
-    const isApproved = !!s.isApproved || s.status === 'active' || s.status === 'approved';
-    const photoUrl = resolveMediaUrl(s.photoUrl || (s.offlineData && s.offlineData.photoUrl) || '');
-    const certCode = `QAA-PR-${s.phone.slice(-4)}`;
+    const isOnlineBatch = !!s.isOnlineBatch || (s.offlineAdmissionId && String(s.offlineAdmissionId).includes('-ON-')) || /batch\s*[-_]?\s*\d+/i.test(s.appliedCourse || '') || (s.enrolledCourseNames || []).some(cn => /batch\s*[-_]?\s*\d+/i.test(cn));
+    const isOffline = (!!s.isOfflineStudent || !!s.offlineAdmissionId) && !isOnlineBatch;
+    const isPaid = !!s.isPaid500 || s.paymentStatus === 'paid' || isOnlineBatch;
+    const isApproved = !!s.isApproved || s.status === 'active' || s.status === 'approved' || isOnlineBatch;
+    const photoUrl = resolveMediaUrl(s.photoUrl || s.avatar || s.avatarUrl || (s.offlineData && (s.offlineData.photoUrl || s.offlineData.avatar || s.offlineData.avatarUrl)) || '');
+    const certCode = `QAA-PR-${(s.phone || '0000').slice(-4)}`;
+    const hasAdmission = isOffline || isOnlineBatch || !!s.offlineAdmissionId || !!s.offlineData || !!s.photoUrl || (typeof allOfflineAdmissions !== 'undefined' && allOfflineAdmissions.some(a => String(a.phone || '').replace(/[^0-9]/g, '') === String(s.phone || '').replace(/[^0-9]/g, '')));
 
     // Type Badge
     let typeBadge = '';
-    if (isOffline) {
+    if (isOnlineBatch) {
+      const bMatch = (s.appliedCourse || '').match(/batch\s*[-_]?\s*(\d+)/i) || (s.enrolledCourseNames || []).join(' ').match(/batch\s*[-_]?\s*(\d+)/i);
+      const bNum = s.batchNumber || (bMatch ? bMatch[1] : 'ONLINE');
+      typeBadge = `<span class="badge" style="background:rgba(14,165,233,0.18);color:#38bdf8;border:1px solid rgba(56,189,248,0.4);font-weight:700;font-size:10.5px">🌐 BATCH #${escapeHtml(String(bNum))}</span>`;
+    } else if (isOffline) {
       if (isPaid) {
         typeBadge = `<span class="badge" style="background:rgba(16,185,129,0.18);color:#34d399;border:1px solid rgba(16,185,129,0.4);font-weight:700;font-size:10.5px">🏛️ OFFLINE (₹500 PAID)</span>`;
       } else {
@@ -4760,7 +4766,26 @@ function renderLmsStudents() {
 
     // Courses Info Markup
     let courseInfo = '';
-    if (isOffline) {
+    if (isOnlineBatch) {
+      const courseTitle = s.appliedCourse || (s.enrolledCourseNames && s.enrolledCourseNames[0]) || 'Online Live Batch';
+      courseInfo = `
+        <div style="font-weight:700;color:#38bdf8;font-size:13px;display:flex;align-items:center;gap:6px">
+          <span>🎬</span><span>${escapeHtml(courseTitle)}</span>
+        </div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:3px;display:flex;gap:8px;flex-wrap:wrap">
+          ${s.offlineAdmissionId ? `<span>App ID: <code style="color:#38bdf8">${escapeHtml(s.offlineAdmissionId)}</code></span>` : ''}
+          <span style="color:#34d399;font-weight:600">💻 Online Live Interactive Batch</span>
+        </div>
+      `;
+      if (s.enrolledCourseNames && s.enrolledCourseNames.length) {
+        courseInfo += `
+          <div style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap">
+            <span style="font-size:10.5px;color:#cbd5e1">LMS Access:</span>
+            ${s.enrolledCourseNames.map(cn => `<span class="badge" style="background:rgba(14,165,233,0.12);color:#93c5fd;border:1px solid rgba(56,189,248,0.28);font-size:10px">${escapeHtml(cn)}</span>`).join('')}
+          </div>
+        `;
+      }
+    } else if (isOffline) {
       courseInfo = `
         <div style="font-weight:700;color:#fde68a;font-size:13px;display:flex;align-items:center;gap:6px">
           <span>🎬</span><span>${escapeHtml(s.appliedCourse || '14-Week Offline Master Class')}</span>
@@ -4792,7 +4817,17 @@ function renderLmsStudents() {
 
     // Status & Payment Markup
     let statusMarkup = '';
-    if (isOffline) {
+    if (isOnlineBatch) {
+      statusMarkup = `
+        <div style="color:#34d399;font-weight:700;font-size:12px;display:flex;align-items:center;gap:4px">
+          <span>✓</span><span>Batch Active &amp; Enrolled</span>
+        </div>
+        <div style="font-size:10.5px;color:#38bdf8">Online Verified</div>
+      `;
+      if (s.totalCompletedLessons > 0) {
+        statusMarkup += `<div style="font-size:10.5px;color:#94a3b8;margin-top:3px"><b>${s.totalCompletedLessons}</b> lessons done</div>`;
+      }
+    } else if (isOffline) {
       if (isApproved && isPaid) {
         statusMarkup = `
           <div style="color:#34d399;font-weight:700;font-size:12px;display:flex;align-items:center;gap:4px">
@@ -4829,13 +4864,13 @@ function renderLmsStudents() {
 
     // Action Buttons
     let actionsHtml = `<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end">`;
-    if (isOffline) {
+    if (hasAdmission || isOffline || isOnlineBatch) {
       actionsHtml += `
         <button onclick="viewOfflineStudentModal('${s.phone}')" class="btn btn-outline" style="padding:5px 9px;font-size:11px;color:#38bdf8;border-color:rgba(56,189,248,0.4);background:rgba(56,189,248,0.12)" title="View Full Application & Uploaded Documents">
           📋 Details
         </button>
       `;
-      if (!isPaid || !isApproved) {
+      if (isOffline && (!isPaid || !isApproved)) {
         actionsHtml += `
           <button onclick="quickApproveOfflineStudent('${s.offlineAdmissionId || ''}', '${s.phone}')" class="btn btn-gold" style="padding:5px 9px;font-size:11px" title="Mark ₹500 Paid &amp; Approve">
             💰 Mark Paid
@@ -4944,19 +4979,20 @@ function viewOfflineStudentModal(phoneOrId) {
     return;
   }
 
-  const isPaid = (adm.paymentStatus === 'paid') || (adm.isPaid500 === true);
-  const isApproved = (adm.status === 'approved') || (adm.isApproved === true);
-  const photoSrc = resolveMediaUrl(adm.photoUrl || '');
+  const isOnlineBatch = !!adm.isOnlineBatch || String(adm.id || adm.offlineAdmissionId || '').includes('-ON-') || /batch\s*[-_]?\s*\d+/i.test(adm.courseTitle || adm.appliedCourse || '');
+  const isPaid = (adm.paymentStatus === 'paid') || (adm.isPaid500 === true) || isOnlineBatch;
+  const isApproved = (adm.status === 'approved') || (adm.isApproved === true) || (adm.status === 'active') || isOnlineBatch;
+  const photoSrc = resolveMediaUrl(adm.photoUrl || adm.avatar || adm.avatarUrl || '');
   const aadhaarSrc = resolveMediaUrl(adm.aadhaarUrl || adm.aadhaarDocUrl || '');
   const certSrc = resolveMediaUrl(adm.certUrl || adm.prevCertUrl || '');
-  const courseTitle = adm.courseTitle || adm.courseName || adm.appliedCourse || 'Offline 14-Week Master Class';
+  const courseTitle = adm.courseTitle || adm.courseName || adm.appliedCourse || (isOnlineBatch ? 'Online Live Batch Masterclass' : 'Offline 14-Week Master Class');
   const phone = adm.phone || '';
   const fullName = adm.fullName || adm.name || 'Student';
-  const admId = adm.id || adm.offlineAdmissionId || 'QAA-OFF-2026-LIVE';
+  const admId = adm.id || adm.offlineAdmissionId || (isOnlineBatch ? 'QAA-ON-2026-LIVE' : 'QAA-OFF-2026-LIVE');
 
   const modalTitle = document.getElementById('admDetailModalTitle');
   const modalSub = document.getElementById('admDetailModalSub');
-  if (modalTitle) modalTitle.textContent = fullName + ' – Admission Dossier';
+  if (modalTitle) modalTitle.textContent = fullName + (isOnlineBatch ? ' – Batch Admission Dossier' : ' – Admission Dossier');
   if (modalSub) modalSub.textContent = `Application ID: ${admId} • Registered: ${adm.createdAt ? new Date(adm.createdAt).toLocaleString() : 'Recent'}`;
 
   const bodyEl = document.getElementById('offlineDetailModalBody');
@@ -4970,7 +5006,14 @@ function viewOfflineStudentModal(phoneOrId) {
         <div style="flex:1">
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
             <h3 style="margin:0;font-size:18px;color:#fff;font-weight:700">${escapeHtml(fullName)}</h3>
-            ${isPaid ? `
+            ${isOnlineBatch ? `
+              <span class="badge" style="background:rgba(14,165,233,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.4);font-weight:700;font-size:11px">
+                🌐 ONLINE LIVE BATCH
+              </span>
+              <span class="badge" style="background:rgba(16,185,129,0.2);color:#34d399;border:1px solid rgba(16,185,129,0.4);font-weight:700;font-size:11px">
+                ✓ ADMISSION ACTIVE
+              </span>
+            ` : (isPaid ? `
               <span class="badge" style="background:rgba(16,185,129,0.2);color:#34d399;border:1px solid rgba(16,185,129,0.4);font-weight:700;font-size:11px">
                 ✓ ₹500 SEAT FEE PAID
               </span>
@@ -4978,8 +5021,8 @@ function viewOfflineStudentModal(phoneOrId) {
               <span class="badge" style="background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.4);font-weight:700;font-size:11px">
                 🏛️ PAY AT CAMPUS (₹500 DUE)
               </span>
-            `}
-            ${isApproved ? `
+            `)}
+            ${!isOnlineBatch && (isApproved ? `
               <span class="badge" style="background:rgba(59,130,246,0.2);color:#60a5fa;border:1px solid rgba(59,130,246,0.4);font-weight:700;font-size:11px">
                 ✓ APPROVED &amp; ACTIVE
               </span>
@@ -4987,7 +5030,7 @@ function viewOfflineStudentModal(phoneOrId) {
               <span class="badge" style="background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.4);font-weight:700;font-size:11px">
                 ⏳ PENDING ADMIN APPROVAL
               </span>
-            `}
+            `)}
           </div>
           <div style="font-size:12.5px;color:#cbd5e1;margin-top:6px;display:flex;gap:14px;flex-wrap:wrap">
             <span>📱 <strong style="color:var(--gold)">+91 ${escapeHtml(phone)}</strong></span>
@@ -5015,9 +5058,9 @@ function viewOfflineStudentModal(phoneOrId) {
           <h4 style="margin:0 0 10px;font-size:12px;color:#fcd34d;text-transform:uppercase;letter-spacing:0.5px">🎬 Course &amp; Campus Stay</h4>
           <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;color:#cbd5e1">
             <div><span style="color:#94a3b8">Applied Course:</span> <strong style="color:#fde68a">${escapeHtml(courseTitle)}</strong></div>
-            <div><span style="color:#94a3b8">Hostel Facility:</span> ${adm.hostelNeeded ? '<strong style="color:#34d399">🏨 YES - Outstation Student (Needs Hostel in Siwan)</strong>' : '<strong style="color:#94a3b8">🏠 Day Scholar (Local)</strong>'}</div>
-            <div><span style="color:#94a3b8">Payment Mode:</span> <strong>${adm.paymentMode === 'online' ? 'Online Gateway (Razorpay/UPI)' : '🏛️ Pay at Siwan Campus (Cash on Arrival)'}</strong></div>
-            <div><span style="color:#94a3b8">Seat Fee Status:</span> ${isPaid ? '<strong style="color:#34d399">✓ ₹500 Confirmed</strong>' : '<strong style="color:#fbbf24">⏳ ₹500 Pending at Campus</strong>'}</div>
+            <div><span style="color:#94a3b8">Training Mode:</span> <strong>${isOnlineBatch ? '🌐 Online Live Interactive Batch (LMS Access)' : (adm.hostelNeeded ? '🏨 Offline Masterclass (Hostel in Siwan)' : '🏠 Offline Masterclass (Day Scholar)')}</strong></div>
+            <div><span style="color:#94a3b8">Payment Mode:</span> <strong>${isOnlineBatch ? 'Online Enrollment / Confirmed' : (adm.paymentMode === 'online' ? 'Online Gateway (Razorpay/UPI)' : '🏛️ Pay at Siwan Campus (Cash on Arrival)')}</strong></div>
+            <div><span style="color:#94a3b8">Seat Fee Status:</span> ${isPaid ? '<strong style="color:#34d399">✓ Confirmed &amp; Enrolled</strong>' : '<strong style="color:#fbbf24">⏳ ₹500 Pending at Campus</strong>'}</div>
           </div>
         </div>
 
@@ -5097,7 +5140,7 @@ function viewOfflineStudentModal(phoneOrId) {
   const btnsEl = document.getElementById('offlineDetailActionBtns');
   if (btnsEl) {
     btnsEl.innerHTML = `
-      <a href="admission/verify.html?id=${encodeURIComponent(admId)}&name=${encodeURIComponent(fullName)}&course=${encodeURIComponent(courseTitle)}&phone=${encodeURIComponent(phone)}" target="_blank" class="btn btn-outline" style="font-size:12px;padding:8px 14px;color:#fde68a;border-color:rgba(216,161,83,0.4);background:rgba(216,161,83,0.1);text-decoration:none">
+      <a href="admission/verify.html?id=${encodeURIComponent(admId)}&name=${encodeURIComponent(fullName)}&course=${encodeURIComponent(courseTitle)}&phone=${encodeURIComponent(phone)}&photo=${encodeURIComponent(photoSrc)}" target="_blank" class="btn btn-outline" style="font-size:12px;padding:8px 14px;color:#fde68a;border-color:rgba(216,161,83,0.4);background:rgba(216,161,83,0.1);text-decoration:none">
         🪪 View Official ID Card
       </a>
       ${!isPaid ? `

@@ -258,7 +258,7 @@ function enterAppView() {
 function updateHeaderUI() {
   if (!currentStudent) return;
   const name = currentStudent.name || 'Student';
-  const avatar = currentStudent.avatar || currentStudent.avatarUrl || '';
+  const avatar = currentStudent.photoUrl || currentStudent.avatar || currentStudent.avatarUrl || '';
   const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
 
   const imgEl = document.getElementById('header-avatar-img');
@@ -640,7 +640,7 @@ async function loadDashboardData() {
   document.getElementById('dash-student-name').textContent = `Namaste, ${currentStudent.name || 'Student'}!`;
   document.getElementById('dash-student-id').textContent = `ID: ${currentStudent.enrollmentNo || currentStudent.id || 'QAA-STUDENT'}`;
 
-  const avatar = currentStudent.avatar || currentStudent.avatarUrl || '';
+  const avatar = currentStudent.photoUrl || currentStudent.avatar || currentStudent.avatarUrl || '';
   const initials = (currentStudent.name || 'Student').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
   const avatarImg = document.getElementById('dash-avatar-img');
   const avatarFb = document.getElementById('dash-avatar-fallback');
@@ -1486,7 +1486,7 @@ function openAvatarQuickMenu() {
   const name = currentStudent.name || 'Student';
   const phone = currentStudent.phone ? `+91 ${currentStudent.phone}` : (currentStudent.email || '');
   const enrollNo = currentStudent.enrollmentNo || currentStudent.id || 'QAA-STUDENT';
-  const avatar = currentStudent.avatar || currentStudent.avatarUrl || '';
+  const avatar = currentStudent.photoUrl || currentStudent.avatar || currentStudent.avatarUrl || '';
   const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
 
   document.getElementById('quickmenu-name').textContent = name;
@@ -1495,9 +1495,13 @@ function openAvatarQuickMenu() {
 
   const roleBadge = document.getElementById('quickmenu-role-badge');
   if (roleBadge) {
-    if (currentStudent.isOfflineStudent || currentStudent.offlineAdmissionId) {
-      roleBadge.textContent = 'OFFLINE ADMISSION';
+    const isOnlineBatch = !!currentStudent.isOnlineBatch || (currentStudent.offlineAdmissionId && String(currentStudent.offlineAdmissionId).includes('-ON-')) || /batch\s*[-_]?\s*\d+/i.test(currentStudent.appliedCourse || '');
+    if (isOnlineBatch) {
+      roleBadge.textContent = 'ONLINE BATCH ADMISSION';
       roleBadge.style.color = '#38bdf8';
+    } else if (currentStudent.isOfflineStudent || currentStudent.offlineAdmissionId) {
+      roleBadge.textContent = 'OFFLINE ADMISSION';
+      roleBadge.style.color = '#fde68a';
     } else {
       roleBadge.textContent = 'VERIFIED STUDENT';
       roleBadge.style.color = '#34d399';
@@ -2673,7 +2677,7 @@ function loadProfileData() {
     certCountEl.textContent = certCount;
   }
 
-  const avatar = currentStudent.avatar || currentStudent.avatarUrl || '';
+  const avatar = currentStudent.photoUrl || currentStudent.avatar || currentStudent.avatarUrl || '';
   const initials = (currentStudent.name || 'Student')
     .split(' ')
     .filter(Boolean)
@@ -2733,7 +2737,7 @@ function openStudentIdCardModal() {
   document.getElementById('idcard-phone').textContent = `+91 ${currentStudent.phone || '••••••••••'}`;
   document.getElementById('idcard-program').textContent = currentStudent.appliedCourse || 'Master Media Arts LMS';
 
-  const photo = currentStudent.avatar || currentStudent.avatarUrl || '../home-assets/ec55a6be3747a9.webp';
+  const photo = currentStudent.photoUrl || currentStudent.avatar || currentStudent.avatarUrl || '../home-assets/ec55a6be3747a9.webp';
   document.getElementById('idcard-photo').src = photo;
 
   document.getElementById('modal-id-card').classList.add('active');

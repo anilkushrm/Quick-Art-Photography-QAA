@@ -258,12 +258,14 @@
   <script>
     (function () {
       var params = new URLSearchParams(window.location.search);
-      var id = params.get('id') || 'QAA-OFF-2026-LIVE';
+      var id = params.get('id') || 'QAA-2026-LIVE';
       var name = params.get('name') || 'Registered Student';
       var course = params.get('course') || 'Wedding Film-making Course';
       var studio = params.get('studio') || 'Digital Studio';
       var city = params.get('city') || 'Siwan, Bihar';
       var blood = params.get('blood') || 'B+';
+      var photo = params.get('photo') || '';
+      var phone = params.get('phone') || '';
 
       document.getElementById('v-id').textContent = id;
       document.getElementById('v-name').textContent = name;
@@ -273,6 +275,33 @@
       var vBlood = document.getElementById('v-blood');
       if (vBlood) vBlood.textContent = blood;
       document.getElementById('v-hash').textContent = 'QAA-AUTH-' + Math.abs(id.split('').reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0)).toString(16).toUpperCase();
+
+      var vPhoto = document.getElementById('v-photo');
+      if (photo && vPhoto) {
+        vPhoto.src = photo;
+      }
+
+      // Fetch authentic live admission record
+      if (id || phone) {
+        fetch('../api/lms.php?action=verify-student-admission&id=' + encodeURIComponent(id) + '&phone=' + encodeURIComponent(phone))
+          .then(function (res) { return res.json(); })
+          .then(function (data) {
+            if (data && data.ok) {
+              if (data.name) document.getElementById('v-name').textContent = data.name;
+              if (data.course) document.getElementById('v-course').textContent = data.course;
+              if (data.studio) document.getElementById('v-studio').textContent = data.studio;
+              if (data.city) document.getElementById('v-city').textContent = data.city;
+              if (data.blood && vBlood) vBlood.textContent = data.blood;
+              if (data.id) document.getElementById('v-id').textContent = data.id;
+              if (data.photoUrl && vPhoto) {
+                var p = data.photoUrl.trim();
+                if (!p.startsWith('http') && !p.startsWith('/') && !p.startsWith('data:')) p = '/' + p;
+                vPhoto.src = p;
+              }
+            }
+          })
+          .catch(function () {});
+      }
     })();
   </script>
 </body>

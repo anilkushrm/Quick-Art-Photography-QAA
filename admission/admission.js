@@ -17,9 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
   var inputCity = document.getElementById('adm-city');
   var inputBlood = document.getElementById('adm-bloodgroup');
 
-  // File size limits: Photo = 2 MB, Documents = 2 MB (Auto-compressed via canvas to under 150 KB)
-  var MAX_PHOTO_BYTES = 2 * 1024 * 1024; // 2 MB
-  var MAX_DOC_BYTES = 2 * 1024 * 1024;   // 2 MB
+  // File size limits: Allow smartphone camera photos up to 25 MB (Auto-compressed via canvas to under 150 KB)
+  var MAX_PHOTO_BYTES = 25 * 1024 * 1024; // 25 MB
+  var MAX_DOC_BYTES = 25 * 1024 * 1024;   // 25 MB
 
   // In-memory optimized Blobs for upload
   var processedPhotoFile = null;
@@ -128,6 +128,58 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
 
+      // Mark online batch mode for KYC & instant ID card issuance
+      window.isOnlineBatchMode = true;
+      window.dynamicBatchNum = batchNum || '';
+
+      // Update Section 5 payment / enrollment title & options for online batch context
+      var payBlock = document.querySelector('.adm-payment-block');
+      if (payBlock) {
+        var pTitle = payBlock.querySelector('h3');
+        if (pTitle) pTitle.textContent = 'Batch KYC Registration & PVC Identity Card';
+        var pSub = payBlock.querySelector('small');
+        if (pSub) pSub.textContent = 'Form submit hote hi aapka official PVC Student Identity Card generate ho jayega aur Classroom unlock hoga.';
+      }
+
+      var feeCard = document.querySelector('.adm-fee-summary-card');
+      if (feeCard) {
+        feeCard.innerHTML = `
+          <div class="adm-fee-row">
+            <span>Official Batch Enrollment Status:</span>
+            <strong style="color:#10b981;">CONFIRMED / VERIFIED BATCH</strong>
+          </div>
+          <div class="adm-fee-row adm-fee-muted">
+            <span>PVC Student ID Card & LMS Portal:</span>
+            <span style="color:#fbbf24;">Instant Access & Verification Issued</span>
+          </div>
+        `;
+      }
+
+      var payOptions = document.querySelector('.adm-pay-options');
+      if (payOptions) {
+        payOptions.innerHTML = `
+          <label class="adm-pay-choice">
+            <input type="radio" name="paymentMode" value="online_batch_direct" checked>
+            <div class="adm-choice-box">
+              <div class="adm-choice-header">
+                <strong>⚡ Direct Batch Enrollment & Instant PVC ID Card</strong>
+                <span class="adm-badge-instant">RECOMMENDED</span>
+              </div>
+              <p>Official registration confirm karte hi aapka verifiable PVC Student ID Card issue hoga aur Portal Classroom access active ho jayega.</p>
+            </div>
+          </label>
+          <label class="adm-pay-choice">
+            <input type="radio" name="paymentMode" value="already_paid">
+            <div class="adm-choice-box">
+              <div class="adm-choice-header">
+                <strong>💬 Fee Already Paid to Academy (UPI / QR / WhatsApp)</strong>
+              </div>
+              <p>Course fee WhatsApp / Bank transfer se pehle hi pay ho chuki hai. Details verify karke official Roll Number issue karein.</p>
+            </div>
+          </label>
+        `;
+      }
+
       // Optional URL parameter for custom registration fee e.g. ?fee=0 or ?fee=500
       var paramFee = params.get('fee');
       if (paramFee !== null) {
@@ -197,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (this.files && this.files[0]) {
         var file = this.files[0];
         if (file.size > MAX_PHOTO_BYTES) {
-          alert('Photo ka size 2 MB se adhik hai (' + Math.round(file.size / (1024 * 1024)) + ' MB)। Kripya 2 MB se chhota photo select karein.');
+          alert('Photo ka size 25 MB se adhik hai (' + Math.round(file.size / (1024 * 1024)) + ' MB)। Kripya 25 MB se chhota photo select karein.');
           this.value = '';
           return;
         }
@@ -238,10 +290,10 @@ document.addEventListener('DOMContentLoaded', function () {
       if (this.files && this.files[0]) {
         var file = this.files[0];
         if (file.size > MAX_DOC_BYTES) {
-          alert(docName + ' ka file size 2 MB se bada hai (' + (file.size / (1024 * 1024)).toFixed(1) + ' MB)। Kripya 2 MB se chhota photo ya PDF upload karein.');
+          alert(docName + ' ka file size 25 MB se bada hai (' + (file.size / (1024 * 1024)).toFixed(1) + ' MB)। Kripya 25 MB se chhota photo ya PDF upload karein.');
           this.value = '';
           var label = document.getElementById(labelId);
-          if (label) label.textContent = 'Click to upload ' + docName + ' (Max 2 MB)';
+          if (label) label.textContent = 'Click to upload ' + docName + ' (Max 25 MB)';
           return;
         }
         var label = document.getElementById(labelId);
@@ -577,42 +629,70 @@ document.addEventListener('DOMContentLoaded', function () {
         submitBtn.innerHTML = '⏳ Processing Application...';
       }
 
-      var formData = new FormData(form);
-      if (processedPhotoFile) {
-        formData.set('photo_file', processedPhotoFile, processedPhotoFile.name);
-      }
-      if (processedAadhaarFile) {
-        formData.set('aadhaar_file', processedAadhaarFile, processedAadhaarFile.name);
-      }
-      if (processedCertFile) {
-        formData.set('cert_file', processedCertFile, processedCertFile.name);
-      }
+      var filePhoto = inputPhoto && inputPhoto.files && inputPhoto.files[0];
+      var sendAdmission = function () {
+        var formData = new FormData(form);
+        if (processedPhotoFile) {
+          formData.set('photo_file', processedPhotoFile, processedPhotoFile.name);
+        }
+        if (processedAadhaarFile) {
+          formData.set('aadhaar_file', processedAadhaarFile, processedAadhaarFile.name);
+        }
+        if (processedCertFile) {
+          formData.set('cert_file', processedCertFile, processedCertFile.name);
+        }
+        if (window.isOnlineBatchMode) {
+          formData.set('isOnlineBatch', '1');
+          formData.set('batchNumber', window.dynamicBatchNum || '');
+        }
 
-      fetch('../api/lms.php?action=submit-offline-admission', {
-        method: 'POST',
-        body: formData
-      })
-        .then(function (res) { return res.json(); })
-        .then(function (data) {
-          if (!data.ok) {
-            throw new Error(data.error || 'Submission failed. Please check your data.');
-          }
-
-          // If Razorpay order returned for online payment
-          if (data.paymentMode === 'online' && data.razorpay && window.Razorpay) {
-            handleRazorpayPayment(data);
-          } else {
-            // Cash on arrival or direct confirmed
-            showSuccessModal(data);
-          }
+        fetch('../api/lms.php?action=submit-offline-admission', {
+          method: 'POST',
+          body: formData
         })
-        .catch(function (err) {
-          showStatus(err.message, 'error');
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = 'Submit Admission Form <span aria-hidden="true">→</span>';
-          }
+          .then(function (res) { return res.json(); })
+          .then(function (data) {
+            if (!data.ok) {
+              throw new Error(data.error || 'Submission failed. Please check your data.');
+            }
+
+            if (data.token) {
+              try {
+                localStorage.setItem('qaa_student_token', data.token);
+                localStorage.setItem('qa_student_token', data.token);
+              } catch (e) {}
+            }
+            if (data.photoUrl || studentUploadedPhotoDataUrl) {
+              try {
+                localStorage.setItem('qaa_student_avatar', data.photoUrl || studentUploadedPhotoDataUrl);
+              } catch (e) {}
+            }
+
+            // If Razorpay order returned for online payment (and not direct batch confirmation)
+            if (data.paymentMode === 'online' && data.razorpay && window.Razorpay && !data.isOnlineBatch) {
+              handleRazorpayPayment(data);
+            } else {
+              // Direct confirmed or online batch enrolled
+              showSuccessModal(data, true);
+            }
+          })
+          .catch(function (err) {
+            showStatus(err.message, 'error');
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = 'Submit Admission Form <span aria-hidden="true">→</span>';
+            }
+          });
+      };
+
+      if (filePhoto && !processedPhotoFile) {
+        compressImage(filePhoto, 640, 0.78, function (comp) {
+          processedPhotoFile = comp;
+          sendAdmission();
         });
+      } else {
+        sendAdmission();
+      }
     });
   }
 

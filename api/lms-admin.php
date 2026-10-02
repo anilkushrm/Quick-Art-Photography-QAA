@@ -209,7 +209,7 @@ if ($action === 'get-students' && $method === 'GET') {
     $admByPhone = [];
     $admById = [];
     foreach ($allAdms as $adm) {
-        $p = preg_replace('/[^0-9]/', '', (string)($adm['phone'] ?? ''));
+        $p = clean_phone($adm['phone'] ?? '');
         if ($p) $admByPhone[$p] = $adm;
         if (!empty($adm['id'])) $admById[$adm['id']] = $adm;
     }
@@ -218,7 +218,7 @@ if ($action === 'get-students' && $method === 'GET') {
 
     // Augment students with progress metrics & offline application data
     foreach ($students as &$stu) {
-        $pClean = preg_replace('/[^0-9]/', '', (string)($stu['phone'] ?? ''));
+        $pClean = clean_phone($stu['phone'] ?? '');
         if ($pClean) $existingPhones[$pClean] = true;
 
         $enrolledNames = [];
@@ -246,7 +246,11 @@ if ($action === 'get-students' && $method === 'GET') {
             if (empty($stu['fatherName'])) $stu['fatherName'] = $admRec['fatherName'] ?? '';
             if (empty($stu['address'])) $stu['address'] = $admRec['address'] ?? ($admRec['permanentAddress'] ?? '');
             if (isset($admRec['hostelNeeded'])) $stu['hostelNeeded'] = $admRec['hostelNeeded'];
-            if (!empty($admRec['photoUrl'])) $stu['photoUrl'] = $admRec['photoUrl'];
+            if (!empty($admRec['photoUrl'])) {
+                $stu['photoUrl'] = $admRec['photoUrl'];
+                $stu['avatar'] = $admRec['photoUrl'];
+                $stu['avatarUrl'] = $admRec['photoUrl'];
+            }
             if (!empty($admRec['aadhaarUrl'])) $stu['aadhaarUrl'] = $admRec['aadhaarUrl'];
             if (!empty($admRec['certUrl'])) $stu['certUrl'] = $admRec['certUrl'];
             if (!empty($admRec['paymentMode'])) $stu['paymentMode'] = $admRec['paymentMode'];
@@ -255,7 +259,7 @@ if ($action === 'get-students' && $method === 'GET') {
                 $stu['isPaid500'] = true;
                 $stu['paymentStatus'] = 'paid';
             }
-            if (($admRec['status'] ?? '') === 'approved') {
+            if (($admRec['status'] ?? '') === 'approved' || ($admRec['status'] ?? '') === 'active') {
                 $stu['isApproved'] = true;
             }
             if (!empty($admRec['alumniApproved']) || ($admRec['status'] ?? '') === 'approved_alumni') {
@@ -265,26 +269,36 @@ if ($action === 'get-students' && $method === 'GET') {
                 $stu['status'] = $admRec['status'] ?? ($stu['status'] ?? 'pending_approval');
             }
         }
+
+        // Online Batch Detection
+        $appliedCourse = $stu['appliedCourse'] ?? '';
+        $courseNamesStr = implode(' ', $stu['enrolledCourseNames'] ?? []);
+        if (!empty($stu['isOnlineBatch']) || (!empty($admRec) && !empty($admRec['isOnlineBatch'])) ||
+            preg_match('/batch\s*[-_]?\s*(\d+)/i', $appliedCourse . ' ' . $courseNamesStr, $bm)) {
+            $stu['isOnlineBatch'] = true;
+            if (!empty($bm[1])) $stu['batchNumber'] = $bm[1];
+        }
     }
     unset($stu);
 
     // If any offline applicant is not yet present in students array, synthesize them so admin sees every applicant
     foreach ($allAdms as $adm) {
-        $p = preg_replace('/[^0-9]/', '', (string)($adm['phone'] ?? ''));
+        $p = clean_phone($adm['phone'] ?? '');
         if ($p && empty($existingPhones[$p])) {
             $existingPhones[$p] = true;
             $isPaid = ($adm['paymentStatus'] ?? '') === 'paid';
-            $isAppr = ($adm['status'] ?? '') === 'approved';
+            $isAppr = ($adm['status'] ?? '') === 'approved' || ($adm['status'] ?? '') === 'active';
             $cId = map_offline_course_id($adm['courseTitle'] ?? '');
             $enrolledCourses = ($isPaid && $cId) ? [$cId] : [];
             $enrolledNames = [];
             foreach ($enrolledCourses as $cid) {
                 if (isset($courseMap[$cid])) $enrolledNames[] = $courseMap[$cid];
             }
+            $isBatch = !empty($adm['isOnlineBatch']) || (bool)preg_match('/batch\s*[-_]?\s*(\d+)/i', $adm['courseTitle'] ?? '');
             $students[] = [
                 'id' => 'stu_' . substr(md5(uniqid($p, true)), 0, 8),
                 'phone' => $p,
-                'name' => $adm['fullName'] ?? 'Offline Student',
+                'name' => $adm['fullName'] ?? 'Applicant',
                 'email' => $adm['email'] ?? '',
                 'city' => $adm['city'] ?? '',
                 'enrolledAt' => $adm['createdAt'] ?? date('c'),
@@ -294,6 +308,7 @@ if ($action === 'get-students' && $method === 'GET') {
                 'totalCompletedLessons' => 0,
                 'lastActive' => $adm['createdAt'] ?? date('c'),
                 'isOfflineStudent' => true,
+                'isOnlineBatch' => $isBatch,
                 'offlineAdmissionId' => $adm['id'] ?? '',
                 'appliedCourse' => $adm['courseTitle'] ?? '',
                 'studioName' => $adm['studioName'] ?? '',
@@ -302,6 +317,8 @@ if ($action === 'get-students' && $method === 'GET') {
                 'fatherName' => $adm['fatherName'] ?? '',
                 'address' => $adm['address'] ?? '',
                 'hostelNeeded' => $adm['hostelNeeded'] ?? false,
+                'avatar' => $adm['photoUrl'] ?? '',
+                'avatarUrl' => $adm['photoUrl'] ?? '',
                 'photoUrl' => $adm['photoUrl'] ?? '',
                 'aadhaarUrl' => $adm['aadhaarUrl'] ?? '',
                 'certUrl' => $adm['certUrl'] ?? '',
@@ -323,8 +340,7 @@ if ($action === 'get-students' && $method === 'GET') {
 // 5. Enroll / Create Student (Manual Enrollment from Admin)
 if ($action === 'enroll-student' && $method === 'POST') {
     $body = read_json_body();
-    $phone = preg_replace('/[^0-9]/', '', (string)($body['phone'] ?? ''));
-    if (strlen($phone) === 12 && substr($phone, 0, 2) === '91') $phone = substr($phone, 2);
+    $phone = clean_phone($body['phone'] ?? '');
 
     if (strlen($phone) < 10) {
         json_err('Valid 10-digit mobile number required', 400);
@@ -338,17 +354,52 @@ if ($action === 'enroll-student' && $method === 'POST') {
     $amountPaid = isset($body['amountPaid']) ? intval($body['amountPaid']) : 0;
     $notes = trim($body['notes'] ?? '');
 
+    // Cross-reference offline admissions data to link photo & admission dossier
+    $admFile = DATA_DIR . '/offline-admissions.json';
+    $admRec = null;
+    if (file_exists($admFile)) {
+        $allAdms = json_decode(file_get_contents($admFile), true) ?: [];
+        foreach ($allAdms as $a) {
+            if (clean_phone($a['phone'] ?? '') === $phone) {
+                $admRec = $a;
+                break;
+            }
+        }
+    }
+
     $students = get_all_students();
     $found = false;
     $targetStudent = null;
 
     foreach ($students as &$stu) {
-        if ($stu['phone'] === $phone) {
+        if (clean_phone($stu['phone'] ?? '') === $phone) {
             $stu['name'] = $name;
             if ($email) $stu['email'] = $email;
             if ($city) $stu['city'] = $city;
             $stu['enrolledCourses'] = array_values(array_unique(array_merge($stu['enrolledCourses'] ?? [], $coursesToEnroll)));
             $stu['lastActive'] = date('c');
+
+            // Preserve or link photo and admission dossier
+            if ($admRec) {
+                if (empty($stu['avatar']) && !empty($admRec['photoUrl'])) {
+                    $stu['avatar'] = $admRec['photoUrl'];
+                    $stu['avatarUrl'] = $admRec['photoUrl'];
+                    $stu['photoUrl'] = $admRec['photoUrl'];
+                }
+                if (empty($stu['offlineAdmissionId']) && !empty($admRec['id'])) {
+                    $stu['offlineAdmissionId'] = $admRec['id'];
+                    $stu['enrollmentNo'] = $admRec['id'];
+                }
+                if (empty($stu['appliedCourse']) && !empty($admRec['courseTitle'])) {
+                    $stu['appliedCourse'] = $admRec['courseTitle'];
+                }
+                if (empty($stu['fatherName']) && !empty($admRec['fatherName'])) $stu['fatherName'] = $admRec['fatherName'];
+                if (empty($stu['bloodGroup']) && !empty($admRec['bloodGroup'])) $stu['bloodGroup'] = $admRec['bloodGroup'];
+                if (empty($stu['studioName']) && !empty($admRec['studioName'])) $stu['studioName'] = $admRec['studioName'];
+                if (empty($stu['address']) && !empty($admRec['address'])) $stu['address'] = $admRec['address'];
+                $stu['isOfflineStudent'] = true;
+            }
+
             $targetStudent = $stu;
             $found = true;
             break;
@@ -368,6 +419,19 @@ if ($action === 'enroll-student' && $method === 'POST') {
             'completedLessons' => [],
             'lastActive' => date('c')
         ];
+        if ($admRec) {
+            $targetStudent['avatar'] = $admRec['photoUrl'] ?? '';
+            $targetStudent['avatarUrl'] = $admRec['photoUrl'] ?? '';
+            $targetStudent['photoUrl'] = $admRec['photoUrl'] ?? '';
+            $targetStudent['offlineAdmissionId'] = $admRec['id'] ?? '';
+            $targetStudent['enrollmentNo'] = $admRec['id'] ?? '';
+            $targetStudent['appliedCourse'] = $admRec['courseTitle'] ?? '';
+            $targetStudent['fatherName'] = $admRec['fatherName'] ?? '';
+            $targetStudent['bloodGroup'] = $admRec['bloodGroup'] ?? '';
+            $targetStudent['studioName'] = $admRec['studioName'] ?? '';
+            $targetStudent['address'] = $admRec['address'] ?? '';
+            $targetStudent['isOfflineStudent'] = true;
+        }
         $students[] = $targetStudent;
     }
 
@@ -1046,12 +1110,23 @@ if ($action === 'save-live-class' && $method === 'POST') {
         $rawStream = $matches[1];
     }
 
+    $cId = trim($item['courseId'] ?? '');
+    $liveType = in_array($item['type'] ?? '', ['course', 'workshop']) ? $item['type'] : 'workshop';
+    if ($liveType === 'course' && (empty($cId) || $cId === 'all')) {
+        if (preg_match('/batch\s*[-_]?\s*(\d+)/i', trim($item['title'] ?? ''), $bm)) {
+            $mappedCid = map_offline_course_id(trim($item['title']));
+            if ($mappedCid && $mappedCid !== 'course-offline-masterclass') {
+                $cId = $mappedCid;
+            }
+        }
+    }
+
     $record = [
         'id'            => $id,
         'title'         => trim($item['title']),
         'description'   => trim($item['description'] ?? ''),
-        'type'          => in_array($item['type'] ?? '', ['course', 'workshop']) ? $item['type'] : 'workshop',
-        'courseId'      => trim($item['courseId'] ?? ''),
+        'type'          => $liveType,
+        'courseId'      => $cId,
         'ticketPrice'   => (int)($item['ticketPrice'] ?? 0),
         'originalPrice' => (int)($item['originalPrice'] ?? 0),
         'scheduledAt'   => trim($item['scheduledAt'] ?? date('c')),

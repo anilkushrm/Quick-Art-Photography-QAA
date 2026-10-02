@@ -290,44 +290,62 @@ html, body {
   100% { transform: scale(0.95); opacity: 1; }
 }
 
-/* Header Notification Bell */
+/* Header Notification Bell (Clean & Minimalist - No Circle Background) */
 .header-icon-btn {
   position: relative;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-main);
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 17px;
+  padding: 0;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.15s ease, color 0.2s ease, opacity 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.header-icon-btn .bell-svg {
+  width: 22px;
+  height: 22px;
+  stroke: #cbd5e1;
+  stroke-width: 2;
+  transition: stroke 0.2s ease, transform 0.2s ease;
+}
+
+.header-icon-btn:hover .bell-svg,
+.header-icon-btn:focus-visible .bell-svg {
+  stroke: var(--gold);
 }
 
 .header-icon-btn:active {
-  transform: scale(0.92);
-  background: rgba(255, 255, 255, 0.12);
+  transform: scale(0.9);
+  opacity: 0.85;
+}
+
+.header-icon-btn:active .bell-svg {
+  stroke: var(--gold);
 }
 
 .header-notif-dot {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  min-width: 15px;
-  height: 15px;
+  top: 1px;
+  right: 1px;
+  min-width: 14px;
+  height: 14px;
   padding: 0 3px;
   background: var(--live-red);
-  color: #fff;
-  border-radius: 50%;
-  font-size: 9px;
+  color: #ffffff;
+  border-radius: 10px;
+  font-size: 8.5px;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid var(--bg-primary);
+  border: 1.5px solid #0d1322;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.45);
 }
 
 /* Header Avatar */

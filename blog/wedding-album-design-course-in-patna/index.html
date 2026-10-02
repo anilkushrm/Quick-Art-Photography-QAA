@@ -320,241 +320,154 @@
             color: #ffffff;
         }
 
-        /* ═══ LUXURY HEADER-MATCHED BOTTOM STICKY BAR ═══ */
+        /* ═══ MOBILE BOTTOM STICKY ENROLL & BATCH TIMER BAR (HIDDEN ON PC) ═══ */
         .qaa-sticky-bar {
-            position: fixed !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100% !important;
-            z-index: 99999 !important;
-            background: rgba(11, 17, 32, 0.95) !important;
-            backdrop-filter: blur(14px) !important;
-            -webkit-backdrop-filter: blur(14px) !important;
-            border-top: 1.5px solid rgba(216, 161, 83, 0.45) !important;
-            box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.45) !important;
-            padding: 8px 16px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
-            box-sizing: border-box !important;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+            display: none !important;
         }
-        .qaa-sticky-inner {
-            max-width: 1180px !important;
-            margin: 0 auto !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            gap: 12px !important;
-            width: 100% !important;
-        }
-        .qaa-sticky-left {
-            display: flex !important;
-            align-items: center !important;
-            gap: 10px !important;
-            min-width: 0 !important;
-            flex: 1 !important;
-        }
-        .qaa-sticky-brand {
-            display: flex !important;
-            align-items: center !important;
-            text-decoration: none !important;
-            flex-shrink: 0 !important;
-        }
-        .qaa-sticky-logo {
-            width: 36px !important;
-            height: 36px !important;
-            border-radius: 50% !important;
-            border: 1.5px solid #d8a153 !important;
-            object-fit: cover !important;
-            box-shadow: 0 0 10px rgba(216, 161, 83, 0.35) !important;
-        }
-        .qaa-sticky-info {
-            display: flex !important;
-            flex-direction: column !important;
-            min-width: 0 !important;
-            gap: 2px !important;
-        }
-        .qaa-sticky-batch-title {
-            display: flex !important;
-            align-items: center !important;
-            gap: 6px !important;
-            font-size: 0.84rem !important;
-            font-weight: 700 !important;
-            color: #ffffff !important;
-            line-height: 1.2 !important;
-            white-space: nowrap !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-        }
-        .qaa-live-pulse {
-            width: 7px !important;
-            height: 7px !important;
-            border-radius: 50% !important;
-            background: #22c55e !important;
-            box-shadow: 0 0 8px #22c55e !important;
-            animation: qaaPulse 1.8s infinite !important;
-            flex-shrink: 0 !important;
-        }
-        @keyframes qaaPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.35); opacity: 0.6; }
-        }
-        .qaa-gold-text {
-            color: #fce09b !important;
-            font-weight: 800 !important;
-        }
-        .qaa-sticky-timer-wrap {
-            display: flex !important;
-            align-items: center !important;
-            gap: 5px !important;
-            font-size: 0.76rem !important;
-            color: #cbd5e1 !important;
-            font-weight: 600 !important;
-            line-height: 1.2 !important;
-            white-space: nowrap !important;
-        }
-        .qaa-timer-icon {
-            font-size: 0.72rem !important;
-        }
-        .qaa-batch-countdown {
-            color: #93c5fd !important;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
-            font-weight: 700 !important;
-            letter-spacing: 0.03em !important;
-        }
-        .qaa-sticky-right {
-            display: flex !important;
-            align-items: center !important;
-            gap: 8px !important;
-            flex-shrink: 0 !important;
-        }
-        .qaa-sticky-btn-wa {
-            width: 36px !important;
-            height: 36px !important;
-            border-radius: 50% !important;
-            background: #25d366 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            color: #ffffff !important;
-            text-decoration: none !important;
-            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4) !important;
-            transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-            flex-shrink: 0 !important;
-        }
-        .qaa-sticky-btn-wa:hover {
-            transform: scale(1.08) !important;
-            box-shadow: 0 6px 16px rgba(37, 211, 102, 0.55) !important;
-        }
-        .qaa-sticky-btn-call {
-            width: 36px !important;
-            height: 36px !important;
-            border-radius: 50% !important;
-            background: #ffffff !important;
-            border: 1px solid rgba(255,255,255,0.2) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            color: #0f172a !important;
-            text-decoration: none !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
-            transition: transform 0.2s ease, background 0.2s ease !important;
-            flex-shrink: 0 !important;
-        }
-        .qaa-sticky-btn-call:hover {
-            transform: scale(1.08) !important;
-            background: #f8fafc !important;
-            color: #b47922 !important;
-        }
-        .qaa-sticky-btn-enroll {
-            background: linear-gradient(135deg, #d8a153 0%, #b8863b 100%) !important;
-            color: #090e1a !important;
-            font-weight: 800 !important;
-            font-size: 0.84rem !important;
-            padding: 8px 16px !important;
-            border-radius: 8px !important;
-            text-decoration: none !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            gap: 5px !important;
-            box-shadow: 0 4px 14px rgba(216, 161, 83, 0.38) !important;
-            white-space: nowrap !important;
-            transition: all 0.2s ease !important;
-            border: 1px solid rgba(255, 255, 255, 0.25) !important;
-            letter-spacing: 0.02em !important;
-        }
-        .qaa-sticky-btn-enroll:hover {
-            transform: translateY(-1.5px) !important;
-            box-shadow: 0 6px 18px rgba(216, 161, 83, 0.5) !important;
-            background: linear-gradient(135deg, #f59e0b 0%, #d8a153 100%) !important;
-        }
-        .qaa-sr-only {
-            position: absolute !important;
-            width: 1px !important;
-            height: 1px !important;
-            padding: 0 !important;
-            margin: -1px !important;
-            overflow: hidden !important;
-            clip: rect(0, 0, 0, 0) !important;
-            white-space: nowrap !important;
-            border: 0 !important;
-        }
-        body {
-            padding-bottom: 60px !important;
-        }
-        @media (max-width: 640px) {
-            .qaa-sticky-bar {
-                padding: 6px 10px calc(6px + env(safe-area-inset-bottom, 0px)) !important;
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 60px !important;
             }
-            .qaa-sticky-logo {
-                width: 32px !important;
-                height: 32px !important;
+            .qaa-sticky-bar {
+                display: block !important;
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                z-index: 99999 !important;
+                background: rgba(11, 17, 32, 0.96) !important;
+                backdrop-filter: blur(14px) !important;
+                -webkit-backdrop-filter: blur(14px) !important;
+                border-top: 1.5px solid rgba(216, 161, 83, 0.45) !important;
+                box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.5) !important;
+                padding: 8px 14px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+                box-sizing: border-box !important;
+                font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+            }
+            .qaa-sticky-inner {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 10px !important;
+                width: 100% !important;
+            }
+            .qaa-sticky-info {
+                display: flex !important;
+                flex-direction: column !important;
+                min-width: 0 !important;
+                gap: 2px !important;
             }
             .qaa-sticky-batch-title {
+                display: flex !important;
+                align-items: center !important;
+                gap: 6px !important;
                 font-size: 0.78rem !important;
+                font-weight: 700 !important;
+                color: #ffffff !important;
+                line-height: 1.2 !important;
+                white-space: nowrap !important;
+            }
+            .qaa-live-pulse {
+                width: 7px !important;
+                height: 7px !important;
+                border-radius: 50% !important;
+                background: #22c55e !important;
+                box-shadow: 0 0 8px #22c55e !important;
+                animation: qaaPulse 1.8s infinite !important;
+                flex-shrink: 0 !important;
+            }
+            @keyframes qaaPulse {
+                0%, 100% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.35); opacity: 0.6; }
+            }
+            .qaa-sticky-timer-wrap {
+                display: flex !important;
+                align-items: center !important;
+                gap: 4px !important;
+                font-size: 0.76rem !important;
+                color: #93c5fd !important;
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.02em !important;
+                line-height: 1.2 !important;
+                white-space: nowrap !important;
+            }
+            .qaa-timer-icon {
+                font-size: 0.72rem !important;
+            }
+            .qaa-sticky-right {
+                display: flex !important;
+                align-items: center !important;
+                flex-shrink: 0 !important;
+            }
+            .qaa-sticky-btn-enroll {
+                background: linear-gradient(135deg, #d8a153 0%, #b8863b 100%) !important;
+                color: #090e1a !important;
+                font-weight: 800 !important;
+                font-size: 0.84rem !important;
+                padding: 8px 18px !important;
+                border-radius: 8px !important;
+                text-decoration: none !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 5px !important;
+                box-shadow: 0 4px 14px rgba(216, 161, 83, 0.4) !important;
+                white-space: nowrap !important;
+                transition: all 0.2s ease !important;
+                border: 1px solid rgba(255, 255, 255, 0.25) !important;
+                letter-spacing: 0.02em !important;
+            }
+            .qaa-sticky-btn-enroll:hover {
+                transform: translateY(-1.5px) !important;
+                box-shadow: 0 6px 18px rgba(216, 161, 83, 0.5) !important;
+                background: linear-gradient(135deg, #f59e0b 0%, #d8a153 100%) !important;
+            }
+
+            /* Floating WhatsApp and Call buttons on Mobile: balanced right above the bottom bar */
+            .qa-float-stack {
+                display: flex !important;
+                position: fixed !important;
+                bottom: 66px !important;
+                right: 14px !important;
+                z-index: 99995 !important;
+                flex-direction: column !important;
+                gap: 8px !important;
+                align-items: flex-end !important;
+            }
+            .qa-float-stack a {
+                width: 44px !important;
+                height: 44px !important;
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+            }
+            .qa-float-stack svg {
+                width: 22px !important;
+                height: 22px !important;
+            }
+        }
+        @media (max-width: 380px) {
+            .qaa-sticky-batch-title {
+                font-size: 0.72rem !important;
             }
             .qaa-sticky-timer-wrap {
                 font-size: 0.70rem !important;
-            }
-            .qaa-sticky-btn-wa,
-            .qaa-sticky-btn-call {
-                width: 34px !important;
-                height: 34px !important;
             }
             .qaa-sticky-btn-enroll {
                 font-size: 0.78rem !important;
                 padding: 7px 12px !important;
             }
         }
-        @media (max-width: 420px) {
-            .qaa-sticky-btn-call {
-                display: none !important;
-            }
-            .qaa-sticky-logo {
-                width: 28px !important;
-                height: 28px !important;
-            }
-            .qaa-sticky-batch-title {
-                font-size: 0.74rem !important;
-            }
-            .qaa-sticky-timer-wrap {
-                font-size: 0.67rem !important;
-            }
-            .qaa-sticky-btn-enroll {
-                font-size: 0.75rem !important;
-                padding: 6px 10px !important;
-            }
-        }
-        /* Mobile adjustment for desktop floating buttons */
-        @media (max-width: 768px) {
-            .qa-float-stack {
-                display: none !important;
-            }
-        }
         @media (min-width: 769px) {
+            body {
+                padding-bottom: 0 !important;
+            }
+            .qaa-sticky-bar {
+                display: none !important;
+            }
             .qa-float-stack {
-                bottom: 76px !important;
-                right: 20px !important;
-                z-index: 90 !important;
+                bottom: 24px !important;
+                right: 24px !important;
+                z-index: 99990 !important;
             }
         }
     </style>
@@ -1662,46 +1575,23 @@
         </div>
     </footer>
 
-    <!-- ═══ LUXURY STICKY ENROLL & MONDAY BATCH BAR ═══ -->
+    <!-- ═══ MOBILE BOTTOM STICKY ENROLL & BATCH TIMER BAR ═══ -->
     <div class="qaa-sticky-bar" id="qaaStickyBar" aria-label="Course Enrollment and Live Batch Notification">
         <div class="qaa-sticky-inner">
-            <!-- Left Info & Brand -->
-            <div class="qaa-sticky-left">
-                <a href="../../about-us/" class="qaa-sticky-brand" aria-label="About Quick Art Academy">
-                    <img src="../../home-assets/ec55a6be3747a9.webp" width="36" height="36" alt="Quick Art Academy" class="qaa-sticky-logo" loading="lazy">
-                </a>
-                <div class="qaa-sticky-info">
-                    <div class="qaa-sticky-batch-title">
-                        <span class="qaa-live-pulse" aria-hidden="true"></span>
-                        <span class="qaa-batch-txt">New Batch: <strong class="qaa-gold-text">Monday</strong></span>
-                    </div>
-                    <div class="qaa-sticky-timer-wrap">
-                        <span class="qaa-timer-icon" aria-hidden="true">⏱️</span>
-                        <span class="qaa-batch-countdown">Starts in: 00d 00h 00m 00s</span>
-                    </div>
+            <!-- Left Info & Live Timer -->
+            <div class="qaa-sticky-info">
+                <div class="qaa-sticky-batch-title">
+                    <span class="qaa-live-pulse" aria-hidden="true"></span>
+                    <span>Next Batch Starts In:</span>
+                </div>
+                <div class="qaa-sticky-timer-wrap">
+                    <span class="qaa-timer-icon" aria-hidden="true">⏱️</span>
+                    <span class="qaa-batch-countdown">00d 00h 00m 00s</span>
                 </div>
             </div>
 
-            <!-- Right Actions -->
+            <!-- Right Action: Enroll Button -->
             <div class="qaa-sticky-right">
-                <a href="https://wa.me/919939800780?text=Hello%20Quick%20Art%20Academy%2C%20I%20am%20from%20Patna%20and%20want%20to%20enroll%20in%20the%20Upcoming%20Monday%20Wedding%20Album%20Design%20Batch." 
-                   class="qaa-sticky-btn-wa" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   aria-label="Chat on WhatsApp">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-                    </svg>
-                    <span class="qaa-sr-only">WhatsApp</span>
-                </a>
-                <a href="tel:+919939800780" 
-                   class="qaa-sticky-btn-call" 
-                   aria-label="Call Admission Desk">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                    </svg>
-                    <span class="qaa-sr-only">Call</span>
-                </a>
                 <a href="../../admission/" class="qaa-sticky-btn-enroll">
                     <span>⚡ Enroll Now</span>
                 </a>

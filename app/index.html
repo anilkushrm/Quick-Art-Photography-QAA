@@ -189,7 +189,7 @@
   <main id="app-viewport" class="app-viewport hidden">
 
     <!-- ──────────────── TAB 1: DASHBOARD ──────────────── -->
-    <section id="tab-dashboard" class="app-tab-panel active-tab">
+    <section id="tab-dashboard" class="app-tab-panel">
 
       <!-- Student Profile Card -->
       <div class="dash-profile-card">
@@ -322,7 +322,7 @@
     </section>
 
     <!-- ──────────────── TAB 2: MY COURSES ──────────────── -->
-    <section id="tab-mycourses" class="app-tab-panel">
+    <section id="tab-mycourses" class="app-tab-panel active-tab">
       <div class="section-hdr" style="margin-top: 0;">
         <h2 class="section-hdr-title">🎓 My Enrolled Courses</h2>
         <span id="courses-count-tag" style="font-size:11.5px; color:var(--text-muted);">Active Programs</span>
@@ -553,11 +553,11 @@
 
   <!-- ================= 5. PERMANENT BOTTOM NAVIGATION ================= -->
   <nav id="bottom-nav" class="bottom-nav hidden" aria-label="Bottom Navigation">
-    <button id="nav-btn-dashboard" class="nav-tab-item active" onclick="switchTab('dashboard')" type="button">
+    <button id="nav-btn-dashboard" class="nav-tab-item" onclick="switchTab('dashboard')" type="button">
       <span class="nav-tab-icon">🏠</span>
       <span class="nav-tab-label">Dashboard</span>
     </button>
-    <button id="nav-btn-mycourses" class="nav-tab-item" onclick="switchTab('mycourses')" type="button">
+    <button id="nav-btn-mycourses" class="nav-tab-item active" onclick="switchTab('mycourses')" type="button">
       <span class="nav-tab-icon">🎓</span>
       <span class="nav-tab-label">My Courses</span>
     </button>

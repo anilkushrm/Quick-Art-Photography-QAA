@@ -244,7 +244,12 @@ function enterAppView() {
   document.getElementById('bottom-nav').classList.remove('hidden');
 
   updateHeaderUI();
-  loadDashboardData();
+
+  // Default to 'mycourses' tab on open as requested
+  const params = new URLSearchParams(window.location.search);
+  const targetTab = params.get('tab') || 'mycourses';
+  switchTab(targetTab);
+
   startLiveWatcher();
   loadNotifications();
 }

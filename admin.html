@@ -2289,6 +2289,24 @@ fbq('track', 'PageView');
         </div>
       </div>
 
+      <!-- Student ID Photo Row -->
+      <div style="margin-top:12px;background:#0d1527;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <img id="enrollStudentPhotoPreview" src="../assets/anil-sharma.webp" alt="Student Preview" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #f59e0b" onerror="this.src='../assets/anil-sharma.webp'" />
+          <div>
+            <div style="font-size:12.5px;font-weight:700;color:#fff">Student ID Photo / Picture</div>
+            <div style="font-size:11px;color:#94a3b8" id="enrollStudentPhotoStatus">Default avatar</div>
+          </div>
+        </div>
+        <div>
+          <button type="button" onclick="document.getElementById('enrollStudentPhotoInput').click()" class="btn btn-outline" style="font-size:11px;padding:5px 12px;color:#fde68a;border-color:rgba(245,158,11,0.5);background:rgba(245,158,11,0.12);cursor:pointer">
+            📷 Choose Photo
+          </button>
+          <input type="file" id="enrollStudentPhotoInput" accept="image/*" style="display:none" onchange="handleEnrollStudentPhotoSelected(event)" />
+        </div>
+      </div>
+
+
       <div style="margin-top:14px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
           <label style="margin:0">Select Courses to Grant Access *</label>
@@ -5000,8 +5018,12 @@ function viewOfflineStudentModal(phoneOrId) {
     bodyEl.innerHTML = `
       <!-- Top Hero Strip -->
       <div style="display:flex;align-items:center;gap:16px;background:#131d33;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:18px">
-        <div style="position:relative">
-          <img src="${photoSrc || '../assets/anil-sharma.webp'}" alt="${escapeHtml(fullName)}" style="width:68px;height:68px;border-radius:50%;object-fit:cover;border:3px solid #f59e0b;box-shadow:0 6px 16px rgba(0,0,0,0.4)" onerror="this.src='../assets/anil-sharma.webp'" />
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <img id="dossierStudentPhoto_${escapeHtml(phone)}" src="${photoSrc || '../assets/anil-sharma.webp'}" alt="${escapeHtml(fullName)}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #f59e0b;box-shadow:0 6px 16px rgba(0,0,0,0.4)" onerror="this.src='../assets/anil-sharma.webp'" />
+          <button type="button" onclick="triggerAdminPhotoUpload('${escapeHtml(phone)}')" class="btn btn-outline" style="font-size:10.5px;padding:3px 8px;border-radius:6px;color:#fde68a;border-color:rgba(245,158,11,0.5);background:rgba(245,158,11,0.15);white-space:nowrap;cursor:pointer" title="Upload or Change Student ID Card Photo">
+            📷 Change Photo
+          </button>
+          <input type="file" id="adminStudentPhotoInput_${escapeHtml(phone)}" accept="image/*" style="display:none" onchange="handleAdminStudentPhotoSelected(event, '${escapeHtml(phone)}')" />
         </div>
         <div style="flex:1">
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -5022,6 +5044,7 @@ function viewOfflineStudentModal(phoneOrId) {
                 🏛️ PAY AT CAMPUS (₹500 DUE)
               </span>
             `)}
+
             ${!isOnlineBatch && (isApproved ? `
               <span class="badge" style="background:rgba(59,130,246,0.2);color:#60a5fa;border:1px solid rgba(59,130,246,0.4);font-weight:700;font-size:11px">
                 ✓ APPROVED &amp; ACTIVE
@@ -5120,16 +5143,25 @@ function viewOfflineStudentModal(phoneOrId) {
 
           <!-- Student Formal Photo -->
           <div style="background:#131d33;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;align-items:center;gap:8px">
-              <span style="font-size:18px">📸</span>
-              <strong style="font-size:12px;color:#fff">Formal Passport Photo</strong>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:18px">📸</span>
+                <strong style="font-size:12px;color:#fff">Formal Passport Photo</strong>
+              </div>
+              <button type="button" onclick="triggerAdminPhotoUpload('${escapeHtml(phone)}')" class="btn btn-outline" style="font-size:10.5px;padding:3px 8px;color:#fde68a;border-color:rgba(245,158,11,0.5);background:rgba(245,158,11,0.12);cursor:pointer">
+                📷 Upload / Change
+              </button>
             </div>
             ${photoSrc ? `
-              <a href="${photoSrc}" target="_blank" class="btn btn-outline" style="font-size:11.5px;padding:6px 12px;display:flex;align-items:center;justify-content:center;gap:6px;color:#34d399;border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.1);text-decoration:none">
-                👁️ View Full Photo
-              </a>
-            ` : `<span style="font-size:11px;color:#94a3b8">No photo uploaded</span>`}
+              <div style="display:flex;align-items:center;gap:10px">
+                <img src="${photoSrc}" style="width:48px;height:48px;border-radius:6px;object-fit:cover;border:1px solid #f59e0b" />
+                <a href="${photoSrc}" target="_blank" class="btn btn-outline" style="font-size:11.5px;padding:6px 12px;display:flex;align-items:center;justify-content:center;gap:6px;color:#34d399;border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.1);text-decoration:none">
+                  👁️ View Full Photo
+                </a>
+              </div>
+            ` : `<span style="font-size:11px;color:#94a3b8">No photo uploaded yet</span>`}
           </div>
+
 
         </div>
       </div>
@@ -5234,6 +5266,14 @@ function openEnrollStudentModal() {
   document.getElementById('enrollStudentPaymentMode').value = 'UPI / QR Code';
   document.getElementById('enrollStudentAmount').value = '4999';
   document.getElementById('enrollStudentSendWA').checked = true;
+
+  // Reset photo preview in modal
+  window.tempEnrollStudentPhotoDataUrl = null;
+  const photoPrev = document.getElementById('enrollStudentPhotoPreview');
+  const photoStat = document.getElementById('enrollStudentPhotoStatus');
+  if (photoPrev) photoPrev.src = '../assets/anil-sharma.webp';
+  if (photoStat) photoStat.textContent = 'Default avatar';
+
   populateCourseCheckboxes([]);
   document.getElementById('lmsStudentModal').classList.add('show');
 }
@@ -5251,8 +5291,136 @@ function openEditStudentModal(phone) {
   document.getElementById('enrollStudentPaymentMode').value = 'UPI / QR Code';
   document.getElementById('enrollStudentAmount').value = '0';
   document.getElementById('enrollStudentSendWA').checked = false;
+
+  // Set student photo preview in modal
+  window.tempEnrollStudentPhotoDataUrl = null;
+  const currentPhoto = stu.photoUrl || stu.avatar || stu.avatarUrl || (stu.offlineData && stu.offlineData.photoUrl) || '';
+  const photoPrev = document.getElementById('enrollStudentPhotoPreview');
+  const photoStat = document.getElementById('enrollStudentPhotoStatus');
+  if (photoPrev) photoPrev.src = currentPhoto || '../assets/anil-sharma.webp';
+  if (photoStat) photoStat.textContent = currentPhoto ? 'Custom ID photo attached' : 'No photo uploaded (Default avatar)';
+
   populateCourseCheckboxes(stu.enrolledCourses || []);
   document.getElementById('lmsStudentModal').classList.add('show');
+}
+
+function handleEnrollStudentPhotoSelected(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const img = new Image();
+    img.onload = function() {
+      const maxDim = 1200;
+      let w = img.width, h = img.height;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+        else { w = Math.round((w * maxDim) / h); h = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.86);
+
+      window.tempEnrollStudentPhotoDataUrl = dataUrl;
+      const prev = document.getElementById('enrollStudentPhotoPreview');
+      const stat = document.getElementById('enrollStudentPhotoStatus');
+      if (prev) prev.src = dataUrl;
+      if (stat) stat.textContent = '✓ New photo selected (Will save on submit)';
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function triggerAdminPhotoUpload(phone) {
+  const pClean = String(phone || '').replace(/\D/g, '');
+  const input = document.getElementById(`adminStudentPhotoInput_${pClean}`) || document.getElementById(`adminStudentPhotoInput_${phone}`);
+  if (input) {
+    input.click();
+  } else {
+    let fallback = document.getElementById('adminStudentPhotoInputFallback');
+    if (!fallback) {
+      fallback = document.createElement('input');
+      fallback.id = 'adminStudentPhotoInputFallback';
+      fallback.type = 'file';
+      fallback.accept = 'image/*';
+      fallback.style.display = 'none';
+      document.body.appendChild(fallback);
+    }
+    fallback.onchange = (e) => handleAdminStudentPhotoSelected(e, phone);
+    fallback.click();
+  }
+}
+
+function handleAdminStudentPhotoSelected(e, phone) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+
+  toast('Processing & compressing photo…');
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const img = new Image();
+    img.onload = function() {
+      const maxDim = 1200;
+      let w = img.width, h = img.height;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+        else { w = Math.round((w * maxDim) / h); h = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.86);
+
+      uploadStudentPhotoAdmin(phone, dataUrl);
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function uploadStudentPhotoAdmin(phone, dataUrl) {
+  toast('Uploading photo & synchronizing ID card…');
+  try {
+    const res = await lmsAdmin('update-student-photo', {
+      method: 'POST',
+      body: { phone: String(phone).replace(/\D/g, ''), photo: dataUrl }
+    });
+    if (!res || !res.ok) throw new Error(res?.error || 'Photo upload failed');
+
+    const newPhotoUrl = res.photoUrl;
+    toast('✅ Student photo updated & ID card synchronized!');
+
+    // Update in-memory collections
+    const pClean = String(phone).replace(/\D/g, '');
+    if (typeof allLmsStudents !== 'undefined' && Array.isArray(allLmsStudents)) {
+      const stu = allLmsStudents.find(s => String(s.phone).replace(/\D/g, '') === pClean);
+      if (stu) {
+        stu.photoUrl = newPhotoUrl;
+        stu.avatar = newPhotoUrl;
+        stu.avatarUrl = newPhotoUrl;
+      }
+    }
+    if (typeof allOfflineAdmissions !== 'undefined' && Array.isArray(allOfflineAdmissions)) {
+      const adm = allOfflineAdmissions.find(a => String(a.phone).replace(/\D/g, '') === pClean);
+      if (adm) {
+        adm.photoUrl = newPhotoUrl;
+      }
+    }
+
+    // Update modal DOM images directly
+    const heroImg = document.getElementById(`dossierStudentPhoto_${phone}`) || document.getElementById(`dossierStudentPhoto_${pClean}`);
+    if (heroImg) heroImg.src = newPhotoUrl;
+
+    renderLmsStudents();
+    viewOfflineStudentModal(phone);
+  } catch (err) {
+    toast(`Failed to update photo: ${err.message}`, false);
+  }
 }
 
 function populateCourseCheckboxes(selectedIds) {
@@ -5295,10 +5463,15 @@ async function saveStudentModal() {
   const btn = document.getElementById('btnSaveStudent');
   if (btn) { btn.disabled = true; btn.textContent = 'Enrolling Student…'; }
 
+  const payload = { name, phone, email, city, enrolledCourses, paymentMethod, amountPaid, notes };
+  if (window.tempEnrollStudentPhotoDataUrl) {
+    payload.photo = window.tempEnrollStudentPhotoDataUrl;
+  }
+
   try {
     const res = await lmsAdmin('enroll-student', {
       method: 'POST',
-      body: { name, phone, email, city, enrolledCourses, paymentMethod, amountPaid, notes }
+      body: payload
     });
     toast('✅ Student enrolled successfully & course unlocked!');
     closeStudentModal();
@@ -5314,6 +5487,7 @@ async function saveStudentModal() {
     if (btn) { btn.disabled = false; btn.textContent = 'Enroll Student & Grant Access ✓'; }
   }
 }
+
 
 async function deleteStudent(phone) {
   const pClean = String(phone || '').replace(/[^0-9]/g, '');

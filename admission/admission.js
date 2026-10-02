@@ -899,6 +899,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     '&studio=' + encodeURIComponent(sStudio) +
                     '&city=' + encodeURIComponent(sCity) +
                     '&blood=' + encodeURIComponent(sBlood);
+    if (sPhone) {
+      verifyUrl += '&phone=' + encodeURIComponent(sPhone);
+    }
+    if (photoSource && photoSource.indexOf('data:') === -1 && photoSource.indexOf('default-student-avatar') === -1) {
+      verifyUrl += '&photo=' + encodeURIComponent(photoSource);
+    }
+
 
     if (qrImg) {
       var qrApi = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=1&data=' + encodeURIComponent(verifyUrl);

@@ -278,8 +278,11 @@
 
       var vPhoto = document.getElementById('v-photo');
       if (photo && vPhoto) {
-        vPhoto.src = photo;
+        var p0 = photo.trim();
+        if (!p0.startsWith('http') && !p0.startsWith('/') && !p0.startsWith('data:')) p0 = '/' + p0;
+        vPhoto.src = p0;
       }
+
 
       // Fetch authentic live admission record
       if (id || phone) {

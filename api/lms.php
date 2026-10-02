@@ -2099,8 +2099,49 @@ if ($action === 'verify-student-admission' && ($method === 'GET' || $method === 
     }
 
     $photo = $foundAdm['photoUrl'] ?? ($foundAdm['avatar'] ?? ($foundAdm['avatarUrl'] ?? ''));
+    if ($photo && !preg_match('#^(https?://|data:|/)#', $photo)) {
+        $photo = '/' . $photo;
+    }
     $name = $foundAdm['fullName'] ?? ($foundAdm['name'] ?? 'Student');
-    $course = $foundAdm['courseTitle'] ?? ($foundAdm['courseName'] ?? ($foundAdm['appliedCourse'] ?? 'Professional Photography Course'));
+    $course = $foundAdm['courseTitle'] ?? ($foundAdm['courseName'] ?? ($foundAdm['appliedCourse'] ?? ''));
+
+    // If course title is empty or generic, resolve from enrolledCourses
+    if (empty($course) || $course === 'Professional Photography Course') {
+        if (!empty($foundAdm['enrolledCourses']) && is_array($foundAdm['enrolledCourses'])) {
+            $cId = $foundAdm['enrolledCourses'][0] ?? '';
+            $courseMap = [
+                'course-8497f1e9'          => 'Advanced Wedding Filmmaking – Batch 114',
+                'course-cinematic-wedding'  => 'Wedding Film-making Course',
+                'course-premiere-pro'      => 'Advance Video Editing Course',
+                'course-edius-pro'         => 'EDIUS Pro Fast Wedding Editing',
+                'course-davinci-resolve'   => 'DaVinci Resolve Color Grading & Studio Finishing',
+                'course-album-design'      => 'Album Design Course',
+                'course-pre-wedding'       => 'Pre-Wedding Shoot & Filmmaking Masterclass',
+                'course-digital-marketing' => 'Complete Studio Filmmaking & Marketing Course',
+                'course-automation'        => 'Studio Automation & AI CRM Masterclass',
+                'course-website-design'    => 'Website Design Course',
+                'course-offline-masterclass' => 'Offline 14-Week Master Class'
+            ];
+            if (!empty($courseMap[$cId])) {
+                $course = $courseMap[$cId];
+            } else {
+                $cFile = DATA_DIR . '/courses.json';
+                if (file_exists($cFile)) {
+                    $allCourses = json_decode(file_get_contents($cFile), true) ?: [];
+                    foreach ($allCourses as $c) {
+                        if (($c['id'] ?? '') === $cId) {
+                            $course = $c['title'] ?? $course;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (empty($course)) {
+        $course = 'Professional Photography Course';
+    }
+
     $id = $foundAdm['id'] ?? ($foundAdm['offlineAdmissionId'] ?? ($foundAdm['enrollmentNo'] ?? 'QAA-2026'));
     $studio = $foundAdm['studioName'] ?? 'Independent';
     $city = $foundAdm['city'] ?? ($foundAdm['workCity'] ?? 'Bihar');
@@ -2118,6 +2159,7 @@ if ($action === 'verify-student-admission' && ($method === 'GET' || $method === 
         'isOnlineBatch' => !empty($foundAdm['isOnlineBatch']) || strpos($id, '-ON-') !== false
     ]);
 }
+
 
 // 11. Certificate Verification (Public)
 if ($action === 'verify-certificate' && $method === 'GET') {
@@ -2257,27 +2299,37 @@ if ($action === 'verify-certificate' && $method === 'GET') {
     }
 }
 
-// Update student profile (name, email, city)
+// Update student profile (name, email, city, avatar/photo)
 if ($action === 'update-profile' && $method === 'POST') {
     $stu  = require_student();
-    $body = read_json_body();
+    $body = read_json_body() ?: $_POST;
 
-    $name  = trim($body['name']  ?? '');
-    $email = strtolower(trim($body['email'] ?? ''));
-    $city  = trim($body['city']  ?? '');
+    $name  = trim($body['name']  ?? ($stu['name'] ?? ''));
+    $email = strtolower(trim($body['email'] ?? ($stu['email'] ?? '')));
+    $city  = trim($body['city']  ?? ($stu['city'] ?? ''));
+    $rawPhoto = $body['avatar'] ?? ($body['photo'] ?? ($_FILES['avatar'] ?? ($_FILES['photo'] ?? null)));
 
-    if (!$name) json_err('Naam required hai', 400);
     if ($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         json_err('Valid email address darj karein', 400);
+    }
+
+    $photoUrl = '';
+    if ($rawPhoto) {
+        $photoUrl = save_student_avatar_image($rawPhoto, $stu['phone']);
     }
 
     $students = load_students();
     $updated  = false;
     foreach ($students as &$s) {
-        if ($s['phone'] === $stu['phone']) {
-            $s['name']  = $name;
+        if (clean_phone($s['phone'] ?? '') === clean_phone($stu['phone'])) {
+            if ($name)  $s['name']  = $name;
             if ($email) $s['email'] = $email;
             if ($city)  $s['city']  = $city;
+            if ($photoUrl) {
+                $s['avatar']    = $photoUrl;
+                $s['avatarUrl'] = $photoUrl;
+                $s['photoUrl']  = $photoUrl;
+            }
             $updated = true;
             break;
         }
@@ -2285,8 +2337,35 @@ if ($action === 'update-profile' && $method === 'POST') {
     unset($s);
 
     if ($updated) save_students($students);
-    json_ok(['updated' => $updated]);
+
+    // Also update offline-admissions.json if an admission record exists for this phone
+    if ($photoUrl) {
+        $admFile = DATA_DIR . '/offline-admissions.json';
+        if (file_exists($admFile)) {
+            $adms = json_decode(file_get_contents($admFile), true) ?: [];
+            $admUpdated = false;
+            foreach ($adms as &$a) {
+                if (clean_phone($a['phone'] ?? '') === clean_phone($stu['phone'])) {
+                    $a['photoUrl'] = $photoUrl;
+                    if ($name) $a['fullName'] = $name;
+                    $admUpdated = true;
+                    break;
+                }
+            }
+            unset($a);
+            if ($admUpdated) {
+                file_put_contents($admFile, json_encode($adms, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+            }
+        }
+    }
+
+    json_ok([
+        'updated'  => $updated,
+        'photoUrl' => $photoUrl ?: ($stu['photoUrl'] ?? ($stu['avatar'] ?? '')),
+        'avatar'   => $photoUrl ?: ($stu['avatar'] ?? '')
+    ]);
 }
+
 
 // Change password
 if ($action === 'change-password' && $method === 'POST') {

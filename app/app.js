@@ -2710,24 +2710,55 @@ function handleProfilePhotoUpload(e) {
 
   const reader = new FileReader();
   reader.onload = async (evt) => {
-    const dataUrl = evt.target.result;
-    if (currentStudent) {
-      currentStudent.avatar = dataUrl;
-      localStorage.setItem('qaa_student_info', JSON.stringify(currentStudent));
-      loadProfileData();
-      updateHeaderUI();
-      toast('Photo updated successfully!');
+    const img = new Image();
+    img.onload = async () => {
+      const maxDim = 1200;
+      let w = img.width, h = img.height;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+        else { w = Math.round((w * maxDim) / h); h = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.86);
 
-      try {
-        await apiFetch('update-profile', {
-          method: 'POST',
-          body: { avatar: dataUrl }
-        });
-      } catch (_) {}
-    }
+      if (currentStudent) {
+        currentStudent.avatar = dataUrl;
+        currentStudent.avatarUrl = dataUrl;
+        currentStudent.photoUrl = dataUrl;
+        localStorage.setItem('qaa_student_info', JSON.stringify(currentStudent));
+        loadProfileData();
+        updateHeaderUI();
+
+        // Update ID card photo preview if element exists
+        const idCardPhoto = document.getElementById('idcard-photo');
+        if (idCardPhoto) idCardPhoto.src = dataUrl;
+
+        toast('Photo updated successfully! Syncing…');
+
+        try {
+          const res = await apiFetch('update-profile', {
+            method: 'POST',
+            body: { avatar: dataUrl, name: currentStudent.name || '' }
+          });
+          if (res && res.photoUrl) {
+            currentStudent.photoUrl = res.photoUrl;
+            currentStudent.avatar = res.photoUrl;
+            currentStudent.avatarUrl = res.photoUrl;
+            localStorage.setItem('qaa_student_info', JSON.stringify(currentStudent));
+            if (idCardPhoto) idCardPhoto.src = res.photoUrl;
+          }
+          toast('Photo & ID Card updated on server! 🎉');
+        } catch (_) {}
+      }
+    };
+    img.src = evt.target.result;
   };
   reader.readAsDataURL(file);
 }
+
 
 // Student ID Card Modal
 function openStudentIdCardModal() {

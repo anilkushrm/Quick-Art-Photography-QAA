@@ -4488,40 +4488,81 @@ if (typeof window.showToast === 'undefined') {
   window.showToast = toast;
 }
 
-/** Handle profile picture selection — store as base64 in localStorage */
+/** Handle profile picture selection — compress and sync to backend + ID card */
 function handleAvatarUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
-  if (file.size > 2 * 1024 * 1024) { showToast('Photo 2MB se choti honi chahiye', false); return; }
+
+  showToast('Photo process ho rahi hai…');
 
   const reader = new FileReader();
   reader.onload = (ev) => {
-    const dataUrl = ev.target.result;
-    const stu = window._currentStudent || {};
+    const img = new Image();
+    img.onload = async () => {
+      // Compress to max 1200px to handle large phone photos effortlessly
+      const maxDim = 1200;
+      let w = img.width, h = img.height;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+        else { w = Math.round((w * maxDim) / h); h = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.86);
 
-    // Save to localStorage
-    localStorage.setItem('qaa_avatar_' + stu.id, dataUrl);
+      const stu = window._currentStudent || {};
 
-    // Update preview in modal
-    const preview = document.getElementById('profile-avatar-preview');
-    if (preview) {
-      preview.innerHTML = `<img src="${dataUrl}" alt="Profile" /><div class="profile-avatar-edit-badge">✏️</div>`;
-    }
+      // Save to localStorage immediately
+      localStorage.setItem('qaa_avatar_' + (stu.id || stu.phone), dataUrl);
+      localStorage.setItem('qaa_student_avatar', dataUrl);
 
-    // Update nav avatars immediately
-    ['nav-avatar-img', 'dropdown-avatar-img'].forEach(id => {
-      const img = document.getElementById(id);
-      if (img) { img.src = dataUrl; img.classList.remove('hidden'); }
-    });
-    ['nav-avatar-initials', 'dropdown-avatar-initials'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.classList.add('hidden');
-    });
+      // Update preview in modal
+      const preview = document.getElementById('profile-avatar-preview');
+      if (preview) {
+        preview.innerHTML = `<img src="${dataUrl}" alt="Profile" /><div class="profile-avatar-edit-badge">✏️</div>`;
+      }
 
-    showToast('Profile photo update ho gaya! 🎉');
+      // Update nav avatars immediately
+      ['nav-avatar-img', 'dropdown-avatar-img', 'dash-avatar-img'].forEach(id => {
+        const im = document.getElementById(id);
+        if (im) { im.src = dataUrl; im.classList.remove('hidden'); }
+      });
+      ['nav-avatar-initials', 'dropdown-avatar-initials', 'dash-avatar-initials'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+
+      // Sync to academy server & ID Card database
+      try {
+        const tok = localStorage.getItem('qaa_student_token') || '';
+        const res = await fetch(`${getLmsApiBase()}?action=update-profile`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Student-Token': tok
+          },
+          body: JSON.stringify({ avatar: dataUrl, name: stu.name || '' })
+        });
+        const data = await res.json();
+        if (data && data.ok && data.photoUrl) {
+          stu.avatar = data.photoUrl;
+          stu.photoUrl = data.photoUrl;
+          stu.avatarUrl = data.photoUrl;
+          localStorage.setItem('qaa_student_avatar', data.photoUrl);
+          localStorage.setItem('qaa_avatar_' + (stu.id || stu.phone), data.photoUrl);
+        }
+        showToast('Profile photo & ID Card update ho gaya! 🎉');
+      } catch (err) {
+        showToast('Photo locally update ho gaya (server sync pending)');
+      }
+    };
+    img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 }
+
 
 /** Save profile name/email/city changes */
 async function saveProfileChanges() {

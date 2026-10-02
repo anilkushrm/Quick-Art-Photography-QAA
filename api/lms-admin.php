@@ -367,6 +367,12 @@ if ($action === 'enroll-student' && $method === 'POST') {
         }
     }
 
+    $rawPhoto = $body['photo'] ?? ($body['avatar'] ?? ($_FILES['photo'] ?? ($_FILES['avatar'] ?? null)));
+    $photoUrl = '';
+    if ($rawPhoto) {
+        $photoUrl = save_student_avatar_image($rawPhoto, $phone);
+    }
+
     $students = get_all_students();
     $found = false;
     $targetStudent = null;
@@ -378,6 +384,12 @@ if ($action === 'enroll-student' && $method === 'POST') {
             if ($city) $stu['city'] = $city;
             $stu['enrolledCourses'] = array_values(array_unique(array_merge($stu['enrolledCourses'] ?? [], $coursesToEnroll)));
             $stu['lastActive'] = date('c');
+
+            if ($photoUrl) {
+                $stu['avatar'] = $photoUrl;
+                $stu['avatarUrl'] = $photoUrl;
+                $stu['photoUrl'] = $photoUrl;
+            }
 
             // Preserve or link photo and admission dossier
             if ($admRec) {
@@ -419,10 +431,17 @@ if ($action === 'enroll-student' && $method === 'POST') {
             'completedLessons' => [],
             'lastActive' => date('c')
         ];
+        if ($photoUrl) {
+            $targetStudent['avatar'] = $photoUrl;
+            $targetStudent['avatarUrl'] = $photoUrl;
+            $targetStudent['photoUrl'] = $photoUrl;
+        }
         if ($admRec) {
-            $targetStudent['avatar'] = $admRec['photoUrl'] ?? '';
-            $targetStudent['avatarUrl'] = $admRec['photoUrl'] ?? '';
-            $targetStudent['photoUrl'] = $admRec['photoUrl'] ?? '';
+            if (empty($targetStudent['avatar'])) {
+                $targetStudent['avatar'] = $admRec['photoUrl'] ?? '';
+                $targetStudent['avatarUrl'] = $admRec['photoUrl'] ?? '';
+                $targetStudent['photoUrl'] = $admRec['photoUrl'] ?? '';
+            }
             $targetStudent['offlineAdmissionId'] = $admRec['id'] ?? '';
             $targetStudent['enrollmentNo'] = $admRec['id'] ?? '';
             $targetStudent['appliedCourse'] = $admRec['courseTitle'] ?? '';
@@ -476,7 +495,72 @@ if ($action === 'enroll-student' && $method === 'POST') {
     ]);
 }
 
+// 5.1 Update Student Photo / ID Card Picture (Admin Direct Upload)
+if ($action === 'update-student-photo' && $method === 'POST') {
+    $body = read_json_body() ?: $_POST;
+    $phone = clean_phone($body['phone'] ?? ($_POST['phone'] ?? ''));
+    if (strlen($phone) < 10) {
+        json_err('Valid 10-digit mobile number required', 400);
+    }
+
+    $rawPhoto = $body['photo'] ?? ($body['avatar'] ?? ($_FILES['photo'] ?? ($_FILES['avatar'] ?? null)));
+    if (!$rawPhoto) {
+        json_err('Photo data or file required', 400);
+    }
+
+    $photoUrl = save_student_avatar_image($rawPhoto, $phone);
+    if (!$photoUrl) {
+        json_err('Photo save nahi ho saki. Valid image file (JPG, PNG, WebP) select karein.', 400);
+    }
+
+    // 1. Update in students.json
+    $students = get_all_students();
+    $foundStudent = false;
+    foreach ($students as &$s) {
+        if (clean_phone($s['phone'] ?? '') === $phone) {
+            $s['photoUrl']  = $photoUrl;
+            $s['avatar']    = $photoUrl;
+            $s['avatarUrl'] = $photoUrl;
+            $foundStudent = true;
+            break;
+        }
+    }
+    unset($s);
+    if ($foundStudent) {
+        save_all_students($students);
+    }
+
+    // 2. Update in offline-admissions.json
+    $admFile = DATA_DIR . '/offline-admissions.json';
+    $adms = file_exists($admFile) ? json_decode(file_get_contents($admFile), true) ?: [] : [];
+    $foundAdm = false;
+    foreach ($adms as &$a) {
+        if (clean_phone($a['phone'] ?? '') === $phone) {
+            $a['photoUrl'] = $photoUrl;
+            $foundAdm = true;
+            break;
+        }
+    }
+    unset($a);
+    if ($foundAdm) {
+        file_put_contents($admFile, json_encode($adms, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    }
+
+    // Auto sync to alumni directory
+    if (function_exists('sync_offline_admissions_to_alumni')) {
+        sync_offline_admissions_to_alumni();
+    }
+
+    json_ok([
+        'ok'       => true,
+        'phone'    => $phone,
+        'photoUrl' => $photoUrl,
+        'message'  => 'Photo successfully updated and linked to Student ID Card!'
+    ]);
+}
+
 // 6. Delete Student (From Both LMS Students and Offline Admissions Registry)
+
 if ($action === 'delete-student' && $method === 'POST') {
     $body = read_json_body();
     $rawPhone = $body['phone'] ?? ($body['id'] ?? '');

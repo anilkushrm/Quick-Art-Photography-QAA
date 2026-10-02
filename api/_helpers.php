@@ -801,7 +801,61 @@ function consume_email_otp($email) {
     }
 }
 
+/**
+ * Universal helper to save student profile/ID card photo from base64 data URL or $_FILES
+ * Supports JPG, PNG, WebP up to 25MB, saves to /uploads/admissions/
+ */
+function save_student_avatar_image($rawInput, $phone = 'student') {
+    if (empty($rawInput)) return '';
+    $uploadDir = __DIR__ . '/../uploads/admissions';
+    if (!is_dir($uploadDir)) {
+        @mkdir($uploadDir, 0755, true);
+    }
+
+    $cleanPhone = preg_replace('/[^0-9]/', '', (string)$phone);
+    if (!$cleanPhone) $cleanPhone = 'student';
+
+    // 1. If it's already an existing /uploads/ path, keep it
+    if (is_string($rawInput) && (strpos($rawInput, '/uploads/') === 0 || strpos($rawInput, 'uploads/') === 0)) {
+        return '/' . ltrim($rawInput, '/');
+    }
+
+    // 2. Base64 Data URL (e.g. data:image/jpeg;base64,... or data:image/png;base64,...)
+    if (is_string($rawInput) && preg_match('#^data:image/(\w+);base64,(.+)$#si', $rawInput, $m)) {
+        $ext = strtolower($m[1]);
+        if ($ext === 'jpeg') $ext = 'jpg';
+        if (!in_array($ext, ['jpg', 'png', 'webp'])) $ext = 'jpg';
+
+        $data = base64_decode($m[2]);
+        if (!$data || strlen($data) < 50) return '';
+        if (strlen($data) > 25 * 1024 * 1024) return ''; // 25 MB max
+
+        $fileName = 'photo_' . $cleanPhone . '_' . substr(md5(uniqid(mt_rand(), true)), 0, 8) . '.' . $ext;
+        $dest = $uploadDir . '/' . $fileName;
+        if (file_put_contents($dest, $data)) {
+            @chmod($dest, 0644);
+            return '/uploads/admissions/' . $fileName;
+        }
+    }
+
+    // 3. File upload ($_FILES array structure)
+    if (is_array($rawInput) && !empty($rawInput['tmp_name']) && $rawInput['error'] === UPLOAD_ERR_OK) {
+        $ext = strtolower(pathinfo($rawInput['name'], PATHINFO_EXTENSION));
+        if ($ext === 'jpeg') $ext = 'jpg';
+        if (!in_array($ext, ['jpg', 'png', 'webp'])) $ext = 'jpg';
+        $fileName = 'photo_' . $cleanPhone . '_' . substr(md5(uniqid(mt_rand(), true)), 0, 8) . '.' . $ext;
+        $dest = $uploadDir . '/' . $fileName;
+        if (move_uploaded_file($rawInput['tmp_name'], $dest)) {
+            @chmod($dest, 0644);
+            return '/uploads/admissions/' . $fileName;
+        }
+    }
+
+    return '';
+}
+
 require_once __DIR__ . '/_notifications.php';
+
 
 
 

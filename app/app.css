@@ -2366,8 +2366,185 @@ button.profile-menu-danger:active {
 }
 
 /* ==========================================================================
-   9. TAB 3: LIVE & WEBINARS STUDIO
+   9. TAB 3: PAID LIVE CLASSES & SESSIONS
    ========================================================================== */
+.paid-live-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 14px;
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+
+.paid-live-card:hover {
+  border-color: rgba(234, 179, 8, 0.35);
+}
+
+.paid-live-card.active-live-border {
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 0 0 20px -4px rgba(239, 68, 68, 0.3);
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.08) 0%, var(--bg-card) 100%);
+}
+
+.paid-live-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.paid-live-course-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(234, 179, 8, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(234, 179, 8, 0.25);
+}
+
+.paid-live-status-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.paid-live-status-tag.live {
+  background: rgba(239, 68, 68, 0.18);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  animation: liveBadgePulse 1.8s infinite;
+}
+
+.paid-live-status-tag.scheduled {
+  background: rgba(59, 130, 246, 0.14);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.paid-live-status-tag.completed {
+  background: rgba(16, 185, 129, 0.14);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.paid-live-title {
+  font-family: var(--font-heading);
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.35;
+  margin-bottom: 6px;
+}
+
+.paid-live-desc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+
+.paid-live-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.paid-live-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.paid-live-meta-lbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.paid-live-meta-val {
+  font-size: 12px;
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+.empty-paid-live-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px 18px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.empty-paid-live-icon {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.empty-paid-live-title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.empty-paid-live-sub {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  max-width: 380px;
+  margin: 0 auto 14px;
+  line-height: 1.5;
+}
+
+.enrolled-courses-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.enrolled-course-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+}
+
+.empty-paid-live-tip {
+  font-size: 11.5px;
+  color: #fbbf24;
+  background: rgba(234, 179, 8, 0.08);
+  border: 1px solid rgba(234, 179, 8, 0.15);
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: inline-block;
+  line-height: 1.4;
+}
+
 .live-stream-box {
   width: 100%;
   aspect-ratio: 16 / 9;

@@ -1674,91 +1674,97 @@ function shareCurrentLesson() {
 }
 
 // ==========================================================================
-// 8. TAB 3: LIVE & WEBINARS ENGINE
+// 8. TAB 3: LIVE SESSIONS (PAID ENROLLED ONLY)
 // ==========================================================================
 async function loadLiveClassesTab() {
-  const mount = document.getElementById('live-stream-mount');
   const pill = document.getElementById('live-tab-status-pill');
-  const interactiveSection = document.getElementById('live-interactive-section');
-  const upcomingListEl = document.getElementById('upcoming-live-list');
+  const activeMount = document.getElementById('live-active-mount');
+  const paidListEl = document.getElementById('paid-live-classes-list');
   const pastListEl = document.getElementById('past-recordings-list');
 
   try {
     const res = await apiFetch('get-live-classes');
     allLiveClasses = res.liveClasses || [];
 
-    // STRICT: Only live classes that the current student is actually enrolled in
-    const enrolledLiveClasses = allLiveClasses.filter(c => isStudentEnrolledInLive(c));
-    const activeLive = enrolledLiveClasses.find(c => c.status === 'live');
+    // STRICT: Filter to only live classes for the current student's PAID enrolled courses
+    const paidEnrolledClasses = allLiveClasses.filter(c => isStudentEnrolledInLive(c));
+    const activeLive = paidEnrolledClasses.find(c => c.status === 'live');
 
-    if (activeLive) {
-      let streamId = activeLive.streamId;
-      if (!streamId) {
-        try {
-          const sessRes = await apiFetch(`get-live-session&liveId=${encodeURIComponent(activeLive.id)}`);
-          if (sessRes && sessRes.streamId) {
-            streamId = sessRes.streamId;
-            activeLive.streamId = streamId;
-          }
-        } catch (e) {
-          console.warn('Failed to fetch streamId:', e);
-        }
+    // 1. ACTIVE LIVE CLASS MOUNT (Only shown if student has a paid class live RIGHT NOW)
+    if (activeLive && activeMount) {
+      if (pill) {
+        pill.textContent = '🔴 1 Class Live Now';
+        pill.style.color = '#ef4444';
       }
-
-      if (streamId) {
-        if (pill) {
-          pill.textContent = '🔴 LIVE BROADCASTING';
-          pill.style.color = '#ef4444';
-        }
-        if (mount) {
-          mount.innerHTML = `
-            <div style="position:relative; width:100%; height:100%;">
-              <iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(streamId)}?autoplay=1&modestbranding=1" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>
+      activeMount.classList.remove('hidden');
+      activeMount.innerHTML = `
+        <div class="paid-live-card active-live-border">
+          <div class="paid-live-header">
+            <span class="paid-live-course-tag">🎓 ${escHtml(getCourseTitleById(activeLive.courseId))}</span>
+            <span class="paid-live-status-tag live">🔴 LIVE BROADCASTING NOW</span>
+          </div>
+          <div class="paid-live-title" style="font-size:17px;">${escHtml(activeLive.title)}</div>
+          ${activeLive.description ? `<div class="paid-live-desc">${escHtml(activeLive.description)}</div>` : ''}
+          <div class="paid-live-meta-grid">
+            <div class="paid-live-meta-item">
+              <span class="paid-live-meta-lbl">Session Status</span>
+              <span class="paid-live-meta-val" style="color:#ef4444;font-weight:700;">● Active Streaming</span>
             </div>
-          `;
-        }
-        if (interactiveSection) interactiveSection.style.display = 'block';
-      } else {
-        renderLiveStandby(mount, pill, interactiveSection);
+            <div class="paid-live-meta-item">
+              <span class="paid-live-meta-lbl">Mentor</span>
+              <span class="paid-live-meta-val">👨‍🏫 Anil Sharma</span>
+            </div>
+          </div>
+          <div id="active-live-player-box" style="margin-top:12px;">
+            <button type="button" class="btn-primary" onclick="launchLiveSession('${activeLive.id}')" style="width:100%; padding:12px; font-size:14px; font-weight:700;">
+              🔴 Enter Live Classroom Now
+            </button>
+          </div>
+        </div>
+      `;
+    } else if (activeMount) {
+      activeMount.classList.add('hidden');
+      activeMount.innerHTML = '';
+      if (pill) {
+        pill.textContent = '🎓 Paid Enrolled Access';
+        pill.style.color = '#94a3b8';
       }
-    } else {
-      renderLiveStandby(mount, pill, interactiveSection);
     }
 
-    // Upcoming Live Classes: ONLY for enrolled courses
-    const upcoming = allLiveClasses.filter(c => c.status === 'scheduled' && isStudentEnrolledInLive(c));
-    if (upcomingListEl) {
-      if (!upcoming.length) {
-        upcomingListEl.innerHTML = `
-          <div style="font-size:12.5px; color:var(--text-muted); padding:18px; background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); text-align:center;">
-            <div style="font-size:24px; margin-bottom:6px;">📡</div>
-            <div style="font-weight:600; color:#fff; margin-bottom:4px;">Koi Live Class Scheduled Nahi Hai</div>
-            <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">Aapke enrolled courses ke liye agli live masterclass jald hi schedule hogi. Notifications on rakhein.</div>
+    // 2. PAID ENROLLED SCHEDULED SESSIONS
+    const scheduled = paidEnrolledClasses.filter(c => c.status === 'scheduled');
+    if (paidListEl) {
+      if (!scheduled.length) {
+        const enrolledNames = (enrolledCourses || []).map(c => c.title || c.name || c.id);
+        paidListEl.innerHTML = `
+          <div class="empty-paid-live-card">
+            <div class="empty-paid-live-icon">🎓</div>
+            <div class="empty-paid-live-title">Paid Mentorship &amp; Live Doubt Sessions</div>
+            <p class="empty-paid-live-sub">
+              Mentor Anil Sharma dwara aapke enrolled courses ke liye advanced video editing, album design aur doubt clearing live classes schedule kiye jate hain.
+            </p>
+            ${enrolledNames.length ? `
+              <div style="font-size:11px; text-transform:uppercase; color:var(--text-muted); font-weight:700; margin-bottom:6px; letter-spacing:0.04em;">Aapke Active Courses (Live Access Granted):</div>
+              <div class="enrolled-courses-pills">
+                ${enrolledNames.map(name => `<span class="enrolled-course-pill">✓ ${escHtml(name)}</span>`).join('')}
+              </div>
+            ` : `
+              <div class="empty-paid-live-tip" style="color:#fca5a5; background:rgba(239,68,68,0.08); border-color:rgba(239,68,68,0.2);">
+                ⚠️ Aapka koi paid course active nahi mila. Courses tab me jakar enroll karein.
+              </div>
+            `}
+            <div class="empty-paid-live-tip">
+              📌 Agli live class schedule hote hi uski date, time aur join button yahin update ho jayegi.
+            </div>
           </div>
         `;
       } else {
-        upcomingListEl.innerHTML = upcoming.map(c => `
-          <div class="scheduled-class-card" style="margin-bottom:10px;">
-            <div class="scheduled-left">
-              <div class="cal-box">
-                <span class="cal-month">LIVE</span>
-                <span class="cal-day">🔴</span>
-              </div>
-              <div>
-                <div class="scheduled-title">${escHtml(c.title)}</div>
-                <div class="scheduled-time">${c.scheduledAt ? new Date(c.scheduledAt).toLocaleString('en-IN') : 'Scheduled soon'}</div>
-              </div>
-            </div>
-            <button type="button" class="btn-primary" onclick="requestPushNotificationPermission()" style="width:auto;padding:6px 12px;font-size:11px;">
-              🔔 Remind Me
-            </button>
-          </div>
-        `).join('');
+        paidListEl.innerHTML = scheduled.map(c => renderPaidLiveCard(c)).join('');
       }
     }
 
-    // Past Recordings: ONLY for enrolled courses
-    const past = allLiveClasses.filter(c => (c.status === 'completed' || c.replayUrl) && isStudentEnrolledInLive(c));
+    // 3. PAST CLASS RECORDINGS (ONLY FOR ENROLLED PAID COURSES)
+    const past = paidEnrolledClasses.filter(c => (c.status === 'completed' || c.replayUrl));
     if (pastListEl) {
       if (!past.length) {
         pastListEl.innerHTML = `
@@ -1774,7 +1780,7 @@ async function loadLiveClassesTab() {
               <span class="announcement-date">Available</span>
             </div>
             <div class="announcement-title">${escHtml(c.title)}</div>
-            <div class="announcement-body">${escHtml(c.description || 'Full class recording')}</div>
+            <div class="announcement-body">${escHtml(c.description || 'Full class recording for enrolled students')}</div>
           </div>
         `).join('');
       }
@@ -1784,34 +1790,62 @@ async function loadLiveClassesTab() {
   }
 }
 
-function renderLiveStandby(mount, pill, interactiveSection) {
-  if (pill) {
-    pill.textContent = '📡 Studio Standby';
-    pill.style.color = '#94a3b8';
-  }
-  if (mount) {
-    mount.innerHTML = `
-      <div class="live-standby-placeholder">
-        <div style="font-size: 38px; margin-bottom: 8px;">📡</div>
-        <h3 id="live-standby-title" style="font-family:var(--font-heading); color:#fff; font-size:17px; margin-bottom:6px;">Live Studio Standby</h3>
-        <p id="live-standby-sub" style="font-size:12px; color:var(--text-muted); max-width: 340px; margin-bottom: 16px; line-height: 1.5;">
-          Abhi aapke enrolled courses ke liye koi live class broadcast nahi ho rahi hai. Mentor Anil Sharma jab class live karenge, stream automatically yahin play hogi.
-        </p>
-        <button type="button" class="btn-primary" onclick="requestPushNotificationPermission()" style="width:auto; padding:10px 18px; font-size:12.5px;">
-          🔔 Enable Live Class Alerts
-        </button>
-      </div>
-    `;
-  }
-  if (interactiveSection) interactiveSection.style.display = 'none';
+function getCourseTitleById(courseId) {
+  if (!courseId) return 'All-Access Mentorship';
+  const c = (enrolledCourses || []).find(x => x.id === courseId);
+  return c?.title || c?.name || courseId.replace('course-', '').replace(/-/g, ' ').toUpperCase();
 }
 
-async function openLiveClassPlayerById(classId) {
-  switchTab('live');
+function renderPaidLiveCard(c) {
+  const courseLabel = getCourseTitleById(c.courseId);
+  const dt = c.scheduledAt ? new Date(c.scheduledAt) : null;
+  const timeStr = dt ? dt.toLocaleString('en-IN', {
+    weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+  }) + ' IST' : 'Scheduled Soon';
+
+  return `
+    <div class="paid-live-card">
+      <div class="paid-live-header">
+        <span class="paid-live-course-tag">🎓 ${escHtml(courseLabel)}</span>
+        <span class="paid-live-status-tag scheduled">⏳ Scheduled</span>
+      </div>
+      <div class="paid-live-title">${escHtml(c.title)}</div>
+      ${c.description ? `<div class="paid-live-desc">${escHtml(c.description)}</div>` : ''}
+      <div class="paid-live-meta-grid">
+        <div class="paid-live-meta-item">
+          <span class="paid-live-meta-lbl">Session Timing</span>
+          <span class="paid-live-meta-val">📅 ${escHtml(timeStr)}</span>
+        </div>
+        <div class="paid-live-meta-item">
+          <span class="paid-live-meta-lbl">Mentor</span>
+          <span class="paid-live-meta-val">👨‍🏫 Anil Sharma</span>
+        </div>
+        <div class="paid-live-meta-item">
+          <span class="paid-live-meta-lbl">Duration</span>
+          <span class="paid-live-meta-val">⏱️ ${escHtml(c.duration || '90 Mins')}</span>
+        </div>
+        <div class="paid-live-meta-item">
+          <span class="paid-live-meta-lbl">Access Status</span>
+          <span class="paid-live-meta-val" style="color:#34d399;">✓ Verified Paid Access</span>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <button type="button" class="btn-primary" onclick="requestPushNotificationPermission()" style="width:auto; padding:8px 14px; font-size:12px;">
+          🔔 Set Class Reminder
+        </button>
+        <a href="https://wa.me/919939800780?text=${encodeURIComponent('Namaste Sir, I have a doubt regarding live class: ' + c.title)}" target="_blank" rel="noopener" class="btn-secondary" style="width:auto; padding:8px 14px; font-size:12px; text-decoration:none;">
+          💬 Ask Doubt on WhatsApp
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+async function launchLiveSession(classId) {
   const session = allLiveClasses.find(c => c.id === classId);
   if (!session) return;
   if (!isStudentEnrolledInLive(session)) {
-    toast('Aap is live session ke liye enrolled nahi hain.');
+    toast('Aap is session ke liye enrolled nahi hain.');
     return;
   }
   let streamId = session.streamId;
@@ -1820,28 +1854,24 @@ async function openLiveClassPlayerById(classId) {
       const sessRes = await apiFetch(`get-live-session&liveId=${encodeURIComponent(session.id)}`);
       if (sessRes && sessRes.streamId) streamId = sessRes.streamId;
     } catch (e) {
-      toast(e.message || 'Stream access restricted.');
+      toast(e.message || 'Live session stream access restricted.');
       return;
     }
   }
-  if (streamId) {
-    const mount = document.getElementById('live-stream-mount');
-    const pill = document.getElementById('live-tab-status-pill');
-    const interactive = document.getElementById('live-interactive-section');
-    if (pill) {
-      pill.textContent = '🔴 LIVE BROADCASTING';
-      pill.style.color = '#ef4444';
-    }
-    if (mount) {
-      mount.innerHTML = `
-        <div style="position:relative; width:100%; height:100%;">
-          <iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(streamId)}?autoplay=1&modestbranding=1" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>
-        </div>
-      `;
-    }
-    if (interactive) interactive.style.display = 'block';
+  const box = document.getElementById('active-live-player-box');
+  if (box && streamId) {
+    box.innerHTML = `
+      <div class="live-stream-box" style="margin-top:10px;">
+        <iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(streamId)}?autoplay=1&modestbranding=1" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>
+      </div>
+    `;
     toast(`🔴 Joined Live: ${session.title}`);
   }
+}
+
+function openLiveClassPlayerById(classId) {
+  switchTab('live');
+  launchLiveSession(classId);
 }
 
 async function openLiveRecording(classId) {

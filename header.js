@@ -210,98 +210,74 @@
      });
    }
 
-   // 3. Build professional, luxury Free Resources dropdown with icons, badges & descriptions
-   if (freeResPanel) {
-     const resItems = [
-       {
-         href: `${navPrefix}about-us/`,
-         icon: 'Ab',
-         iconBg: 'linear-gradient(135deg, #d8a153 0%, #b88636 100%)',
-         title: 'About Us & Mentors',
-         desc: 'Meet founder Anil Sharma & academy journey',
-         badge: ''
-       },
-       {
-         href: `${navPrefix}blog/`,
-         icon: 'Bg',
-         iconBg: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
-         title: 'Editing Blogs & Tutorials',
-         desc: 'Industry guides, editing tips & workflows',
-         badge: '20+ Guides'
-       },
-       {
-         href: `${navPrefix}curriculum/`,
-         icon: 'Cu',
-         iconBg: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
-         title: 'Course Curriculum (14-Weeks)',
-         desc: 'Full module breakdown & weekly roadmap',
-         badge: '14-Wk'
-       },
-       {
-         href: `${navPrefix}downloads/course-details.pdf`,
-         icon: 'Pd',
-         iconBg: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-         title: 'Download Course Details PDF',
-         desc: 'Official brochure with complete fee structure',
-         badge: 'PDF',
-         target: '_blank'
-       },
-       {
-         href: 'https://www.youtube.com/@QuickartPhotographyAcademy/videos',
-         icon: 'Yt',
-         iconBg: 'linear-gradient(135deg, #e11d48 0%, #be123c 100%)',
-         title: 'YouTube · Free Video Courses',
-         desc: 'Watch full video lessons & editing demos',
-         badge: 'Free',
-         target: '_blank'
-       },
-       {
-         href: `${navPrefix}alumni/`,
-         icon: 'Al',
-         iconBg: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
-         title: 'Alumni Directory & Hall of Fame',
-         desc: 'Explore 1,800+ working editors & studios',
-         badge: '1,800+'
-       },
-       {
-         href: 'https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes&hl=en',
-         icon: 'Ap',
-         iconBg: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-         title: 'Download Student Mobile App',
-         desc: 'Learn on Android/iOS with offline access',
-         badge: 'App',
-         target: '_blank'
-       }
-     ];
+    // 3. Build sleek Free Resources dropdown matching the icon-box + label row layout and website color theme
+    if (freeResPanel) {
+      const currentPath = (window.location.pathname || '').toLowerCase();
+      const resItems = [
+        {
+          href: `${navPrefix}about-us/`,
+          title: 'About Us',
+          iconColor: '#f3d695',
+          isActive: currentPath.includes('/about-us'),
+          svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path><path d="M19 21V11l-6-3"></path><path d="M9 9h1"></path><path d="M9 13h1"></path><path d="M9 17h1"></path></svg>'
+        },
+        {
+          href: `${navPrefix}blog/`,
+          title: 'Blog',
+          iconColor: '#38bdf8',
+          isActive: currentPath.includes('/blog'),
+          svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8V6Z"></path></svg>'
+        },
+        {
+          href: `${navPrefix}curriculum/`,
+          title: 'Course Curriculum (14-Weeks)',
+          iconColor: '#a78bfa',
+          isActive: currentPath.includes('/curriculum'),
+          svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>'
+        },
+        {
+          href: `${navPrefix}downloads/course-details.pdf`,
+          title: 'Download Course Details PDF',
+          iconColor: '#f87171',
+          target: '_blank',
+          svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>'
+        },
+        {
+          href: 'https://www.youtube.com/@QuickartPhotographyAcademy/videos',
+          title: 'YouTube · Free Courses',
+          iconColor: '#fb7185',
+          target: '_blank',
+          svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon></svg>'
+        },
+        {
+          href: `${navPrefix}alumni/`,
+          title: 'Alumni Directory & Hall of Fame',
+          iconColor: '#fbbf24',
+          isActive: currentPath.includes('/alumni'),
+          svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>'
+        },
+        {
+          href: 'https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes&hl=en',
+          title: 'Download Our App',
+          iconColor: '#34d399',
+          target: '_blank',
+          svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>'
+        }
+      ];
 
-     freeResPanel.innerHTML = `
-       <div class="ref-res-header">
-         <span class="ref-res-kicker">STUDENT RESOURCES</span>
-         <span class="ref-res-badge">100% Free</span>
-       </div>
-       <div class="ref-res-list">
-         ${resItems.map(item => `
-           <a href="${item.href}" class="ref-res-card"${item.target ? ` target="${item.target}" rel="noopener noreferrer"` : ''}>
-             <span class="ref-res-icon" style="background:${item.iconBg};color:#ffffff;">${item.icon}</span>
-             <div class="ref-res-info">
-               <div class="ref-res-title-row">
-                 <span class="ref-res-title">${item.title}</span>
-                 ${item.badge ? `<span class="ref-res-pill">${item.badge}</span>` : ''}
-               </div>
-               <div class="ref-res-desc">${item.desc}</div>
-             </div>
-             <span class="ref-res-chevron" aria-hidden="true">&rsaquo;</span>
-           </a>
-         `).join('')}
-       </div>
-       <div class="ref-res-footer">
-         <a href="https://wa.me/919939800780?text=Hi%2C%20I%20have%20questions%20about%20academy%20courses" target="_blank" rel="noopener noreferrer" class="ref-res-footer-link">
-           <span>💬 Need guidance? Chat on WhatsApp <strong>+91 99398 00780</strong></span>
-           <span aria-hidden="true">&rarr;</span>
-         </a>
-       </div>
-     `;
-   }
+      freeResPanel.innerHTML = `
+        <div class="ref-res-list">
+          ${resItems.map(item => `
+            <a href="${item.href}" class="ref-res-item${item.isActive ? ' ref-res-active' : ''}"${item.target ? ` target="${item.target}" rel="noopener noreferrer"` : ''}>
+              <span class="ref-res-icon-box" style="color:${item.iconColor};">
+                ${item.svg}
+              </span>
+              <span class="ref-res-label">${item.title}</span>
+            </a>
+          `).join('')}
+        </div>
+      `;
+    }
  }
 
  // 3. Mobile Navigation: Move About Us into Free Resources accordion, ensure Alumni in main list

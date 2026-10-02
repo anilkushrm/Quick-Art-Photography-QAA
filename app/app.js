@@ -1715,9 +1715,9 @@ async function loadLiveClassesTab() {
               <span class="paid-live-meta-val">👨‍🏫 Anil Sharma</span>
             </div>
           </div>
-          <div id="active-live-player-box" style="margin-top:12px;">
-            <button type="button" class="btn-primary" onclick="launchLiveSession('${activeLive.id}')" style="width:100%; padding:12px; font-size:14px; font-weight:700;">
-              🔴 Enter Live Classroom Now
+          <div style="margin-top:14px;">
+            <button type="button" class="btn-primary" onclick="openLiveClassroom('${activeLive.id}')" style="width:100%; padding:14px; font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px;">
+              🔴 Enter Live Classroom (Full Screen &amp; Live Chat) →
             </button>
           </div>
         </div>
@@ -1846,6 +1846,13 @@ function renderPaidLiveCard(c) {
           <span class="paid-live-meta-val" style="color:#34d399;">✓ Verified Paid Access</span>
         </div>
       </div>
+      ${c.status === 'live' ? `
+        <div style="margin-top:12px; margin-bottom:12px;">
+          <button type="button" class="btn-primary" onclick="openLiveClassroom('${c.id}')" style="width:100%; padding:12px; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:6px;">
+            🔴 Join Live Classroom Now →
+          </button>
+        </div>
+      ` : ''}
       <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
         <button type="button" class="btn-primary" onclick="requestPushNotificationPermission()" style="width:auto; padding:8px 14px; font-size:12px;">
           🔔 Set Class Reminder
@@ -1907,37 +1914,427 @@ function startLiveCountdowns() {
   liveCountdownInterval = setInterval(updateAll, 1000);
 }
 
-async function launchLiveSession(classId) {
-  const session = allLiveClasses.find(c => c.id === classId);
-  if (!session) return;
-  if (!isStudentEnrolledInLive(session)) {
-    toast('Aap is session ke liye enrolled nahi hain.');
+// ==========================================================================
+// 8.5 DEDICATED LIVE CLASSROOM ENGINE (FULL SCREEN, CHAT & ANTI-PIRACY DRM)
+// ==========================================================================
+let currentAppLiveSession = null;
+let appLiveDoubtsPollTimer = null;
+let appLiveWatermarkInterval = null;
+let appLiveAttendeesTimer = null;
+let appLiveAttendeesCount = 428;
+let appLiveControlsTimeout = null;
+
+function cleanYouTubeVideoId(input) {
+  if (!input) return '';
+  input = String(input).trim();
+  if (input.startsWith('rtmp://') || input.startsWith('rtmps://')) return '';
+  if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+  const mLive = input.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/i);
+  if (mLive) return mLive[1];
+  const mShort = input.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/i);
+  if (mShort) return mShort[1];
+  const mV = input.match(/[?&]v=([a-zA-Z0-9_-]{11})/i);
+  if (mV) return mV[1];
+  const mEmbed = input.match(/embed\/([a-zA-Z0-9_-]{11})/i);
+  if (mEmbed) return mEmbed[1];
+  return input;
+}
+
+async function openLiveClassroom(classId) {
+  const classroom = document.getElementById('view-live-classroom');
+  const viewport = document.getElementById('app-viewport');
+  const bottomNav = document.getElementById('bottom-nav');
+
+  if (!classroom) return;
+
+  const session = (allLiveClasses || []).find(c => c.id === classId);
+  if (session && !isStudentEnrolledInLive(session)) {
+    toast('Aap is session ke liye enrolled nahi hain. Yeh class paid batch ke liye reserved hai.');
     return;
   }
-  let streamId = session.streamId;
-  if (!streamId) {
-    try {
-      const sessRes = await apiFetch(`get-live-session&liveId=${encodeURIComponent(session.id)}`);
-      if (sessRes && sessRes.streamId) streamId = sessRes.streamId;
-    } catch (e) {
-      toast(e.message || 'Live session stream access restricted.');
-      return;
-    }
-  }
-  const box = document.getElementById('active-live-player-box');
-  if (box && streamId) {
-    box.innerHTML = `
-      <div class="live-stream-box" style="margin-top:10px;">
-        <iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(streamId)}?autoplay=1&modestbranding=1" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>
+
+  // Switch view immediately
+  classroom.classList.remove('hidden');
+  if (viewport) viewport.classList.add('hidden');
+  if (bottomNav) bottomNav.classList.add('hidden');
+  classroom.scrollTop = 0;
+
+  // Placeholder while loading stream
+  const mount = document.getElementById('live-cr-video-mount');
+  if (mount) {
+    mount.innerHTML = `
+      <div class="live-cr-placeholder">
+        <div class="live-pulse-ring"></div>
+        <div style="font-weight:700;font-size:15px;margin-top:14px;color:#fff;">Connecting to Live Studio…</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Mentor Anil Sharma Live Stream</div>
       </div>
     `;
-    toast(`🔴 Joined Live: ${session.title}`);
+  }
+
+  if (session && session.title) {
+    const titleEl = document.getElementById('live-cr-title');
+    if (titleEl) titleEl.textContent = session.title;
+    const dTitle = document.getElementById('live-details-title');
+    if (dTitle) dTitle.textContent = session.title;
+  }
+
+  try {
+    const res = await apiFetch(`get-live-session&liveId=${encodeURIComponent(classId)}`);
+    currentAppLiveSession = res;
+
+    // Update Titles & Meta
+    const titleEl = document.getElementById('live-cr-title');
+    if (titleEl) titleEl.textContent = res.title || 'Live Mentorship';
+
+    const dTitle = document.getElementById('live-details-title');
+    if (dTitle) dTitle.textContent = res.title || 'Live Mentorship';
+
+    const dMeta = document.getElementById('live-details-meta');
+    if (dMeta && res.scheduledAt) {
+      const dt = new Date(res.scheduledAt).toLocaleString('en-IN', {
+        weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+      });
+      dMeta.textContent = `Schedule: ${dt} • Duration: ${res.duration || '90 Mins'}`;
+    }
+
+    const dDesc = document.getElementById('live-details-desc');
+    if (dDesc) {
+      dDesc.textContent = res.description || 'Hands-on live editing & color grading masterclass with Mentor Anil Sharma.';
+    }
+
+    // Attached Practice Assets
+    const resWrap = document.getElementById('live-resources-wrap');
+    const resItems = document.getElementById('live-resources-items');
+    if (resWrap && resItems) {
+      if (Array.isArray(res.resources) && res.resources.length) {
+        resWrap.classList.remove('hidden');
+        resItems.innerHTML = res.resources.map(r => `
+          <a href="${escHtml(r.url)}" target="_blank" rel="noopener" class="resource-item" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;text-decoration:none;color:#fff;margin-bottom:6px;">
+            <span>📦 ${escHtml(r.title)}</span>
+            <span style="font-weight:700;color:#34d399;">Download ⬇</span>
+          </a>
+        `).join('');
+      } else {
+        resWrap.classList.add('hidden');
+        resItems.innerHTML = '';
+      }
+    }
+
+    // 1. Mount Video Player with Anti-Leak
+    embedAppLiveStream(res.streamId, res.replayUrl, res.status);
+
+    // 2. Initialize Dynamic Anti-Piracy Watermark Protection
+    initLiveWatermark(res.watermark);
+
+    // 3. Start Live Doubts Polling
+    pollLiveDoubtsApp();
+    if (appLiveDoubtsPollTimer) clearInterval(appLiveDoubtsPollTimer);
+    appLiveDoubtsPollTimer = setInterval(pollLiveDoubtsApp, 3500);
+
+    // 4. Start Live Attendees Simulation (380 - 520)
+    startAppLiveAttendees();
+
+    // 5. Briefly show controls
+    handleLiveShieldClick();
+
+    toast(`🔴 Joined Live: ${res.title}`);
+  } catch (err) {
+    toast('Live access failed: ' + (err.message || 'Restricted'), false);
+    closeLiveClassroom();
   }
 }
 
+function embedAppLiveStream(streamId, replayUrl, status) {
+  const mount = document.getElementById('live-cr-video-mount');
+  if (!mount) return;
+
+  let rawId = streamId;
+  if (status === 'completed' && replayUrl) rawId = replayUrl;
+  const videoId = cleanYouTubeVideoId(rawId);
+
+  if (!videoId) {
+    mount.innerHTML = `
+      <div class="live-cr-placeholder">
+        <div style="font-size:32px;margin-bottom:8px;">⏳</div>
+        <div style="font-weight:700;font-size:15px;color:#fff;">Stream Starting Soon</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;max-width:320px;line-height:1.4;">
+          Mentor Anil Sharma will start broadcasting shortly. Please stay on this screen.
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const originStr = encodeURIComponent(window.location.origin);
+  const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&enablejsapi=1&origin=${originStr}`;
+
+  mount.innerHTML = `
+    <iframe 
+      id="live-cr-stream-iframe"
+      src="${embedUrl}" 
+      title="Quick Art Photography Academy Live Stream" 
+      frameborder="0" 
+      sandbox="allow-scripts allow-same-origin allow-presentation"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowfullscreen
+      style="width:100%;height:100%;border:none;">
+    </iframe>
+  `;
+}
+
+function initLiveWatermark(watermarkText) {
+  if (appLiveWatermarkInterval) {
+    clearInterval(appLiveWatermarkInterval);
+    appLiveWatermarkInterval = null;
+  }
+
+  const chip = document.getElementById('live-watermark-text');
+  if (!chip) return;
+
+  if (!watermarkText) {
+    const stu = currentStudent || JSON.parse(localStorage.getItem('qaa_student_info') || '{}');
+    const cleanName = stu.name || 'Verified Student';
+    const cleanPhone = stu.phone ? `+91-${stu.phone}` : '+91-••••••••••';
+    const cleanId = stu.id || 'QA-STU';
+    watermarkText = `${cleanName} | ${cleanPhone} | ${cleanId}`;
+  }
+
+  chip.textContent = watermarkText;
+
+  const moveWatermark = () => {
+    const top = Math.floor(Math.random() * 62) + 16;  // 16% to 78%
+    const left = Math.floor(Math.random() * 58) + 10; // 10% to 68%
+    chip.style.top = `${top}%`;
+    chip.style.left = `${left}%`;
+  };
+
+  moveWatermark();
+  appLiveWatermarkInterval = setInterval(moveWatermark, 7500);
+}
+
+function startAppLiveAttendees() {
+  if (appLiveAttendeesTimer) clearInterval(appLiveAttendeesTimer);
+  appLiveAttendeesCount = Math.floor(Math.random() * 120) + 390;
+  const countEl = document.getElementById('live-cr-watchers-count');
+  if (countEl) countEl.textContent = appLiveAttendeesCount;
+
+  appLiveAttendeesTimer = setInterval(() => {
+    const delta = Math.floor(Math.random() * 7) - 3;
+    appLiveAttendeesCount = Math.max(340, Math.min(680, appLiveAttendeesCount + delta));
+    const el = document.getElementById('live-cr-watchers-count');
+    if (el) el.textContent = appLiveAttendeesCount;
+  }, 4000);
+}
+
+function closeLiveClassroom() {
+  const classroom = document.getElementById('view-live-classroom');
+  const viewport = document.getElementById('app-viewport');
+  const bottomNav = document.getElementById('bottom-nav');
+
+  if (classroom) classroom.classList.add('hidden');
+  if (viewport) viewport.classList.remove('hidden');
+  if (bottomNav) bottomNav.classList.remove('hidden');
+
+  // Stop Video
+  const mount = document.getElementById('live-cr-video-mount');
+  if (mount) mount.innerHTML = '';
+
+  // Stop Timers
+  if (appLiveDoubtsPollTimer) {
+    clearInterval(appLiveDoubtsPollTimer);
+    appLiveDoubtsPollTimer = null;
+  }
+  if (appLiveWatermarkInterval) {
+    clearInterval(appLiveWatermarkInterval);
+    appLiveWatermarkInterval = null;
+  }
+  if (appLiveAttendeesTimer) {
+    clearInterval(appLiveAttendeesTimer);
+    appLiveAttendeesTimer = null;
+  }
+
+  // Exit Fullscreen if active
+  exitLiveCinemaFullscreen();
+
+  currentAppLiveSession = null;
+}
+
+async function pollLiveDoubtsApp() {
+  if (!currentAppLiveSession || !currentAppLiveSession.id) return;
+  const container = document.getElementById('live-cr-chat-messages');
+  const fsContainer = document.getElementById('live-fs-chat-messages');
+  if (!container && !fsContainer) return;
+
+  try {
+    const res = await apiFetch(`fetch-live-doubts&liveId=${encodeURIComponent(currentAppLiveSession.id)}`);
+    const messages = res.messages || [];
+
+    if (!messages.length) {
+      const emptyHtml = `
+        <div class="chat-empty-state">
+          <span>💬</span>
+          <p>Live classroom chat is open. Ask your editing doubts or color grading questions below.</p>
+        </div>
+      `;
+      if (container) container.innerHTML = emptyHtml;
+      if (fsContainer) fsContainer.innerHTML = emptyHtml;
+      return;
+    }
+
+    const messagesHtml = messages.map(m => {
+      const timeStr = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+      if (m.isMentor) {
+        return `
+          <div class="chat-msg-bubble mentor">
+            <div class="chat-msg-hdr">
+              <span>⭐ ${escHtml(m.studentName || 'Mentor Anil Sharma')}</span>
+              <span class="chat-msg-time">${timeStr}</span>
+            </div>
+            <div class="chat-msg-text">${escHtml(m.message)}</div>
+          </div>
+        `;
+      }
+      return `
+        <div class="chat-msg-bubble student">
+          <div class="chat-msg-hdr">
+            <span>🎓 ${escHtml(m.studentName || 'Student')}</span>
+            <span class="chat-msg-time">${timeStr}</span>
+          </div>
+          <div class="chat-msg-text">${escHtml(m.message)}</div>
+        </div>
+      `;
+    }).join('');
+
+    if (container) {
+      const shouldScroll = container.scrollHeight - container.scrollTop <= container.clientHeight + 100;
+      container.innerHTML = messagesHtml;
+      if (shouldScroll) container.scrollTop = container.scrollHeight;
+    }
+
+    if (fsContainer) {
+      const shouldScroll = fsContainer.scrollHeight - fsContainer.scrollTop <= fsContainer.clientHeight + 100;
+      fsContainer.innerHTML = messagesHtml;
+      if (shouldScroll) fsContainer.scrollTop = fsContainer.scrollHeight;
+    }
+  } catch (e) {}
+}
+
+async function sendLiveDoubtApp(isFs = false) {
+  if (!currentAppLiveSession || !currentAppLiveSession.id) return;
+  const inp = document.getElementById(isFs ? 'live-fs-doubt-input' : 'live-cr-doubt-input');
+  const sendBtn = document.getElementById(isFs ? '' : 'btn-live-cr-send');
+  const msg = inp ? inp.value.trim() : '';
+
+  if (!msg) return;
+
+  inp.value = '';
+  if (sendBtn) sendBtn.disabled = true;
+
+  try {
+    await apiFetch('send-live-doubt', {
+      method: 'POST',
+      body: {
+        liveId: currentAppLiveSession.id,
+        message: msg
+      }
+    });
+    pollLiveDoubtsApp();
+    toast('✓ Doubt sent to Mentor Anil Sharma');
+  } catch (err) {
+    toast(err.message || 'Failed to send doubt', false);
+  } finally {
+    if (sendBtn) sendBtn.disabled = false;
+  }
+}
+
+function sendQuickReaction(reactionText) {
+  const inp = document.getElementById('live-cr-doubt-input');
+  if (inp) {
+    inp.value = reactionText;
+    sendLiveDoubtApp(false);
+  }
+}
+
+function handleLiveShieldClick() {
+  const container = document.getElementById('live-cr-player-container');
+  if (!container) return;
+  container.classList.add('show-controls');
+  if (appLiveControlsTimeout) clearTimeout(appLiveControlsTimeout);
+  appLiveControlsTimeout = setTimeout(() => {
+    container.classList.remove('show-controls');
+  }, 4500);
+}
+
+function toggleFullscreenChatDrawer() {
+  const drawer = document.getElementById('live-fs-chat-drawer');
+  if (!drawer) return;
+  drawer.classList.toggle('hidden');
+  if (!drawer.classList.contains('hidden')) {
+    pollLiveDoubtsApp();
+    const inp = document.getElementById('live-fs-doubt-input');
+    if (inp) inp.focus();
+  }
+}
+
+function toggleLiveCinemaFullscreen() {
+  const container = document.getElementById('live-cr-player-container');
+  if (!container) return;
+
+  const isFs = container.classList.contains('is-fullscreen') || !!(document.fullscreenElement || document.webkitFullscreenElement);
+
+  if (!isFs) {
+    container.classList.add('is-fullscreen');
+    document.body.classList.add('live-fs-open');
+
+    try {
+      if (container.requestFullscreen) {
+        container.requestFullscreen().catch(() => {});
+      } else if (container.webkitRequestFullscreen) {
+        container.webkitRequestFullscreen();
+      }
+    } catch (_) {}
+
+    try {
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {});
+      }
+    } catch (_) {}
+
+    handleLiveShieldClick();
+  } else {
+    exitLiveCinemaFullscreen();
+  }
+}
+
+function exitLiveCinemaFullscreen() {
+  const container = document.getElementById('live-cr-player-container');
+  if (container) container.classList.remove('is-fullscreen');
+  document.body.classList.remove('live-fs-open');
+
+  try {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }
+  } catch (_) {}
+
+  try {
+    if (screen.orientation && screen.orientation.unlock) {
+      screen.orientation.unlock();
+    }
+  } catch (_) {}
+
+  const drawer = document.getElementById('live-fs-chat-drawer');
+  if (drawer) drawer.classList.add('hidden');
+}
+
+// Backward compatibility alias
+function launchLiveSession(classId) {
+  openLiveClassroom(classId);
+}
+
 function openLiveClassPlayerById(classId) {
-  switchTab('live');
-  launchLiveSession(classId);
+  openLiveClassroom(classId);
 }
 
 async function openLiveRecording(classId) {
@@ -1959,24 +2356,8 @@ function sendLiveReaction(emoji) {
 }
 
 async function handleSendLiveDoubt(e) {
-  e.preventDefault();
-  const input = document.getElementById('input-live-doubt');
-  const text = input.value.trim();
-  if (!text) return;
-
-  const chatContainer = document.getElementById('live-chat-messages');
-  const studentName = (currentStudent && currentStudent.name) || 'You';
-
-  const bubble = document.createElement('div');
-  bubble.className = 'chat-bubble';
-  bubble.innerHTML = `
-    <div class="chat-author" style="color:#60a5fa;">${escHtml(studentName)}</div>
-    <div>${escHtml(text)}</div>
-  `;
-  chatContainer.appendChild(bubble);
-  chatContainer.scrollTop = chatContainer.scrollHeight;
-  input.value = '';
-  toast('Doubt sent to Mentor Anil Sharma! ✓');
+  if (e) e.preventDefault();
+  sendLiveDoubtApp(false);
 }
 
 // ==========================================================================

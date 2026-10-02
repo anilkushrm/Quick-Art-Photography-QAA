@@ -577,6 +577,147 @@
     </button>
   </nav>
 
+  <!-- ================= 6. DEDICATED LIVE CLASSROOM VIEW (FULL SCREEN, CHAT & ANTI-PIRACY WATERMARK) ================= -->
+  <div id="view-live-classroom" class="live-classroom-viewport hidden">
+    <!-- Top Header Bar -->
+    <div class="classroom-top-bar live-cr-bar">
+      <button type="button" class="classroom-back-btn" onclick="closeLiveClassroom()">
+        ← Exit Live
+      </button>
+      <div class="live-cr-title-box">
+        <div class="live-cr-badge"><span class="live-pulse-dot"></span> LIVE NOW</div>
+        <h3 id="live-cr-title" class="live-cr-title">Live Masterclass</h3>
+      </div>
+      <button type="button" class="live-cr-fs-btn" onclick="toggleLiveCinemaFullscreen()" title="Fullscreen Mode">
+        ⛶ Fullscreen
+      </button>
+    </div>
+
+    <!-- Live Stream Video Player Stage -->
+    <div id="live-cr-player-container" class="live-cr-player-container" oncontextmenu="return false;">
+      <div id="live-cr-video-mount" class="live-cr-video-mount">
+        <div class="live-cr-placeholder">
+          <div class="live-pulse-ring"></div>
+          <div style="font-weight:700;font-size:15px;margin-top:14px;color:#fff;">Connecting to Live Studio…</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Lead Mentor Anil Sharma Live Stream</div>
+        </div>
+      </div>
+
+      <!-- Invisible Anti-Leak / Anti-Redirect Shield -->
+      <div id="live-cr-shield" class="live-cr-shield" onclick="handleLiveShieldClick()" ondblclick="toggleLiveCinemaFullscreen()" title="Quick Art Live Cinema"></div>
+
+      <!-- Anti-Piracy DRM Floating Student Watermark -->
+      <div id="live-watermark-overlay" class="live-watermark-layer" aria-hidden="true">
+        <span id="live-watermark-text" class="live-watermark-chip"></span>
+      </div>
+
+      <!-- Floating Controls on Video (Comments & Fullscreen) -->
+      <div class="live-cr-floating-controls" id="live-cr-floating-controls">
+        <button type="button" class="live-cr-float-btn" onclick="toggleFullscreenChatDrawer()" title="Live Comments">
+          💬 Comments
+        </button>
+        <button type="button" class="live-cr-float-btn" onclick="toggleLiveCinemaFullscreen()" title="Toggle Fullscreen">
+          ⛶
+        </button>
+      </div>
+
+      <!-- Fullscreen Live Doubts & Comments Sliding Drawer -->
+      <div id="live-fs-chat-drawer" class="live-fs-chat-drawer hidden">
+        <div class="live-fs-chat-header">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span class="chat-icon-dot"></span>
+            <span style="font-weight:700;font-size:13px;color:#fff;">Live Doubts &amp; Comments</span>
+          </div>
+          <button type="button" class="live-fs-chat-close" onclick="toggleFullscreenChatDrawer()" title="Close Comments">✕</button>
+        </div>
+        <div id="live-fs-chat-messages" class="live-cr-messages-list">
+          <div class="chat-empty-state">
+            <span>💬</span>
+            <p>Live doubts chat is open. Ask your editing doubts below.</p>
+          </div>
+        </div>
+        <div class="live-cr-input-bar">
+          <input type="text" id="live-fs-doubt-input" placeholder="Ask doubt to Mentor Anil Sharma..." maxlength="300" onkeydown="if(event.key==='Enter')sendLiveDoubtApp(true)" />
+          <button type="button" class="btn-live-send" onclick="sendLiveDoubtApp(true)" title="Send Doubt">➔</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Broadcast Status Ribbon -->
+    <div class="live-stream-bar">
+      <div class="live-stream-status">
+        <span class="live-broadcast-badge">
+          <span class="live-blink-circle"></span>
+          <span>LIVE</span>
+        </span>
+        <span class="live-attendees-pill-badge" id="live-cr-watchers-pill">
+          👁 <span id="live-cr-watchers-count">428</span> Watching
+        </span>
+        <span class="stream-quality-badge">1080p HD</span>
+      </div>
+      <div class="live-stream-actions">
+        <button type="button" class="live-action-icon-btn" onclick="pollLiveDoubtsApp()" title="Refresh Chat">🔄</button>
+        <button type="button" class="live-action-icon-btn live-fs-btn" onclick="toggleLiveCinemaFullscreen()" title="Fullscreen">⛶</button>
+      </div>
+    </div>
+
+    <!-- Live Interaction & Doubts Deck (Student Comments Section) -->
+    <div class="live-cr-content-deck">
+      <div class="live-chat-card-app">
+        <div class="live-chat-header-app">
+          <div class="live-chat-title-row">
+            <span class="chat-icon-dot"></span>
+            <h4>Live Doubts &amp; Q&amp;A</h4>
+          </div>
+          <span class="live-chat-mentor-tag">👨‍🏫 Mentor Anil Sharma Active</span>
+        </div>
+
+        <!-- Quick Reaction Emoji Chips -->
+        <div class="live-quick-chips">
+          <button type="button" class="live-chip-btn" onclick="sendQuickReaction('👏 Brilliant Explanation!')">👏 Brilliant!</button>
+          <button type="button" class="live-chip-btn" onclick="sendQuickReaction('🔥 Super Editing!')">🔥 Super Editing</button>
+          <button type="button" class="live-chip-btn" onclick="sendQuickReaction('❓ Sir, please repeat once')">❓ Repeat once</button>
+          <button type="button" class="live-chip-btn" onclick="sendQuickReaction('💡 Mindblowing concept')">💡 Mindblowing</button>
+          <button type="button" class="live-chip-btn" onclick="sendQuickReaction('❤️ Thank you sir')">❤️ Thank you</button>
+        </div>
+
+        <!-- Messages Stream -->
+        <div id="live-cr-chat-messages" class="live-cr-messages-list">
+          <div class="chat-empty-state">
+            <span>💬</span>
+            <p>Live classroom chat is open. Ask your editing doubts or color grading questions below.</p>
+          </div>
+        </div>
+
+        <!-- Doubt Input Bar -->
+        <div class="live-cr-input-bar">
+          <input type="text" id="live-cr-doubt-input" placeholder="Ask doubt to Mentor Anil Sharma..." maxlength="300" onkeydown="if(event.key==='Enter')sendLiveDoubtApp(false)" />
+          <button type="button" class="btn-live-send" id="btn-live-cr-send" onclick="sendLiveDoubtApp(false)" title="Send Question">➔</button>
+        </div>
+
+        <div class="live-chat-footer-note">
+          🔒 Quick Art Academy Protected • Student Anti-Piracy Watermark Active
+        </div>
+      </div>
+
+      <!-- Live Session Details & Attached Practice Downloads -->
+      <div class="live-details-card-app" style="margin-top: 14px; margin-bottom: 24px;">
+        <div class="live-details-header">
+          <div>
+            <h4 id="live-details-title" style="font-size:15px; font-weight:700; color:#fff; margin:0 0 4px;">Session Title</h4>
+            <div id="live-details-meta" style="font-size:12px; color:var(--text-muted);">Scheduled Live Stream</div>
+          </div>
+          <span class="live-access-badge">✓ Verified Access Pass</span>
+        </div>
+        <div id="live-details-desc" style="font-size:13px; color:#cbd5e1; line-height:1.5;">Hands-on editing session with Mentor Anil Sharma.</div>
+        <div id="live-resources-wrap" style="margin-top:14px;" class="hidden">
+          <h5 style="font-size:13px; font-weight:700; color:var(--gold); margin:0 0 8px;">📁 Practice Project Assets</h5>
+          <div id="live-resources-items"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= 6. CLASSROOM PLAYER VIEW ================= -->
   <div id="view-classroom-player" class="hidden">
     <div class="classroom-top-bar">

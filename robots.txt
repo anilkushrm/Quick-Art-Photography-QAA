@@ -45,8 +45,9 @@ Allow: /
 User-agent: cohere-ai
 Allow: /
 
-# Sitemaps and AI Knowledge Files
+# Sitemaps, RSS Feeds and AI Knowledge Files
 Sitemap: https://quickartphotography.in/sitemap.xml
+# RSS Feed: https://quickartphotography.in/feed.xml
 
 # LLM Information Files (https://llmstxt.org)
 # Allows AI models to read structured context about Quick Art Photography Academy

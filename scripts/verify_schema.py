@@ -45,6 +45,7 @@ def check_file(rel_path):
         "join-video-editing-album-design-course/index.html",
         "portal/email-template-preview.html",
         "portal/index.html",
+        "portal/obs-doubts.html",
         "portal/signup.html",
         "scratch/card_only.html",
         "scratch/pvc_vertical_card.html",

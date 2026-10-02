@@ -580,7 +580,6 @@
       <button type="button" class="classroom-back-btn" onclick="closeClassroomPlayer()">
         ← Back
       </button>
-      <div id="cr-course-title" class="classroom-top-title">Course Title</div>
       <button type="button" class="classroom-lessons-toggle-btn" onclick="openAllLessonsDrawer()">
         📚 All Lessons ▾
       </button>
@@ -591,7 +590,7 @@
       <!-- Injected dynamically -->
     </div>
 
-    <!-- Lesson Action Strip (3 Action Buttons from Website LMS) -->
+    <!-- Lesson Action Strip (Clean & Minimalist Controls) -->
     <div class="classroom-action-strip">
       <div class="lesson-meta-bar">
         <span class="lesson-badge-dur" id="cr-lesson-dur-badge">⏱ 40:00</span>
@@ -602,10 +601,10 @@
           ↺ Replay
         </button>
         <button type="button" id="btn-toggle-complete" class="btn-player-action btn-complete" onclick="toggleCurrentLessonComplete()">
-          <span id="complete-icon">○</span> <span id="complete-text">Mark Complete</span>
+          <span id="complete-icon">✓</span> <span id="complete-text">Complete</span>
         </button>
         <button type="button" id="btn-next-lesson" class="btn-player-action btn-next" onclick="goToNextLesson()">
-          Next Lesson →
+          Next →
         </button>
       </div>
     </div>

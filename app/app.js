@@ -893,7 +893,8 @@ async function openClassroomPlayer(courseId, initialLessonId = null) {
     const res = await apiFetch(`course-details&courseId=${encodeURIComponent(courseId)}`);
     activeCourse = res.course;
 
-    document.getElementById('cr-course-title').textContent = activeCourse.title;
+    const titleEl = document.getElementById('cr-course-title');
+    if (titleEl) titleEl.textContent = activeCourse.title;
 
     renderDrawerLessons(activeCourse);
 
@@ -977,9 +978,13 @@ async function loadLessonToPlayer(courseId, lessonId) {
     updatePlayerCompleteButton(isDone);
 
     const mount = document.getElementById('cr-video-mount');
-    const streamUrl = activeLesson.streamUrl || '';
+    const streamUrl = activeLesson.streamUrl || activeLesson.videoUrl || activeLesson.bunnyIframeUrl || activeLesson.embedUrl || activeLesson.url || '';
     const videoType = activeLesson.videoType || '';
-    const ytId = activeLesson.youtubeId || '';
+    let ytId = activeLesson.youtubeId || '';
+    if (!ytId && streamUrl) {
+      const match = streamUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+      if (match) ytId = match[1];
+    }
 
     if (videoType === 'bunny_stream' || streamUrl.includes('iframe.mediadelivery.net')) {
       const sep = streamUrl.includes('?') ? '&' : '?';
@@ -1035,8 +1040,8 @@ function updatePlayerCompleteButton(isDone) {
   completeBtn.classList.toggle('done', isDone);
   const icon = document.getElementById('complete-icon');
   const text = document.getElementById('complete-text');
-  if (icon) icon.textContent = isDone ? '✓' : '○';
-  if (text) text.textContent = isDone ? 'Completed' : 'Mark Complete';
+  if (icon) icon.textContent = '✓';
+  if (text) text.textContent = isDone ? 'Completed' : 'Complete';
 }
 
 function handleLessonVideoEnded() {

@@ -180,17 +180,6 @@
    });
    topAboutLinks.forEach(a => a.remove());
 
-   if (freeResPanel && !freeResPanel.querySelector('a[href*="about-us"]')) {
-     const aboutDropA = document.createElement('a');
-     aboutDropA.href = `${navPrefix}about-us/`;
-     aboutDropA.textContent = 'About Us';
-     if (freeResPanel.firstChild) {
-       freeResPanel.insertBefore(aboutDropA, freeResPanel.firstChild);
-     } else {
-       freeResPanel.append(aboutDropA);
-     }
-   }
-
    // 2. Ensure "Alumni" is present on the main top-level navbar
    const topLevelAlumni = Array.from(desktopNav.children).filter(el => {
      if (el.tagName !== 'A') return false;
@@ -221,39 +210,97 @@
      });
    }
 
-   // Ensure Course Curriculum (14-Weeks) and Download Course Details PDF in Free Resources dropdown
-   if (freeResPanel && !freeResPanel.querySelector('a[href*="curriculum"]')) {
-     const currDropA = document.createElement('a');
-     currDropA.href = `${navPrefix}curriculum/`;
-     currDropA.textContent = 'Course Curriculum (14-Weeks)';
-     const brochureA = freeResPanel.querySelector('a[href*="course-details.pdf"]');
-     if (brochureA) {
-       freeResPanel.insertBefore(currDropA, brochureA);
-     } else {
-       freeResPanel.prepend(currDropA);
-     }
-   }
-   const brochureA = freeResPanel.querySelector('a[href*="course-details.pdf"]');
-   if (brochureA) {
-     brochureA.textContent = 'Download Course Details PDF';
-     brochureA.href = `${navPrefix}downloads/course-details.pdf`;
-     brochureA.setAttribute('target', '_blank');
-     brochureA.setAttribute('rel', 'noopener noreferrer');
-   } else {
-     const pdfA = document.createElement('a');
-     pdfA.href = `${navPrefix}downloads/course-details.pdf`;
-     pdfA.textContent = 'Download Course Details PDF';
-     pdfA.setAttribute('target', '_blank');
-     pdfA.setAttribute('rel', 'noopener noreferrer');
-     freeResPanel.append(pdfA);
-   }
+   // 3. Build professional, luxury Free Resources dropdown with icons, badges & descriptions
+   if (freeResPanel) {
+     const resItems = [
+       {
+         href: `${navPrefix}about-us/`,
+         icon: 'Ab',
+         iconBg: 'linear-gradient(135deg, #d8a153 0%, #b88636 100%)',
+         title: 'About Us & Mentors',
+         desc: 'Meet founder Anil Sharma & academy journey',
+         badge: ''
+       },
+       {
+         href: `${navPrefix}blog/`,
+         icon: 'Bg',
+         iconBg: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+         title: 'Editing Blogs & Tutorials',
+         desc: 'Industry guides, editing tips & workflows',
+         badge: '20+ Guides'
+       },
+       {
+         href: `${navPrefix}curriculum/`,
+         icon: 'Cu',
+         iconBg: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
+         title: 'Course Curriculum (14-Weeks)',
+         desc: 'Full module breakdown & weekly roadmap',
+         badge: '14-Wk'
+       },
+       {
+         href: `${navPrefix}downloads/course-details.pdf`,
+         icon: 'Pd',
+         iconBg: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+         title: 'Download Course Details PDF',
+         desc: 'Official brochure with complete fee structure',
+         badge: 'PDF',
+         target: '_blank'
+       },
+       {
+         href: 'https://www.youtube.com/@QuickartPhotographyAcademy/videos',
+         icon: 'Yt',
+         iconBg: 'linear-gradient(135deg, #e11d48 0%, #be123c 100%)',
+         title: 'YouTube · Free Video Courses',
+         desc: 'Watch full video lessons & editing demos',
+         badge: 'Free',
+         target: '_blank'
+       },
+       {
+         href: `${navPrefix}alumni/`,
+         icon: 'Al',
+         iconBg: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+         title: 'Alumni Directory & Hall of Fame',
+         desc: 'Explore 1,800+ working editors & studios',
+         badge: '1,800+'
+       },
+       {
+         href: 'https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes&hl=en',
+         icon: 'Ap',
+         iconBg: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+         title: 'Download Student Mobile App',
+         desc: 'Learn on Android/iOS with offline access',
+         badge: 'App',
+         target: '_blank'
+       }
+     ];
 
-   // Ensure Free Resources dropdown also has Alumni Directory
-   if (freeResPanel && !freeResPanel.querySelector('a[href*="alumni"]')) {
-     const alumniDropA = document.createElement('a');
-     alumniDropA.href = `${navPrefix}alumni/`;
-     alumniDropA.textContent = 'Alumni Directory & Hall of Fame';
-     freeResPanel.append(alumniDropA);
+     freeResPanel.innerHTML = `
+       <div class="ref-res-header">
+         <span class="ref-res-kicker">STUDENT RESOURCES</span>
+         <span class="ref-res-badge">100% Free</span>
+       </div>
+       <div class="ref-res-list">
+         ${resItems.map(item => `
+           <a href="${item.href}" class="ref-res-card"${item.target ? ` target="${item.target}" rel="noopener noreferrer"` : ''}>
+             <span class="ref-res-icon" style="background:${item.iconBg};color:#ffffff;">${item.icon}</span>
+             <div class="ref-res-info">
+               <div class="ref-res-title-row">
+                 <span class="ref-res-title">${item.title}</span>
+                 ${item.badge ? `<span class="ref-res-pill">${item.badge}</span>` : ''}
+               </div>
+               <div class="ref-res-desc">${item.desc}</div>
+             </div>
+             <span class="ref-res-chevron" aria-hidden="true">&rsaquo;</span>
+           </a>
+         `).join('')}
+       </div>
+       <div class="ref-res-footer">
+         <a href="https://wa.me/919939800780?text=Hi%2C%20I%20have%20questions%20about%20academy%20courses" target="_blank" rel="noopener noreferrer" class="ref-res-footer-link">
+           <span>💬 Need guidance? Chat on WhatsApp <strong>+91 99398 00780</strong></span>
+           <span aria-hidden="true">&rarr;</span>
+         </a>
+       </div>
+     `;
    }
  }
 

@@ -87,6 +87,310 @@
     <noscript><img height="1" width="1" style="display:none" alt="" aria-hidden="true" src="https://www.facebook.com/tr?id=28399880462937454&ev=PageView&noscript=1" /></noscript>
     <!-- End Meta Pixel Code -->
 
+    <!-- Custom Responsive Blog Styling -->
+    <style>
+        :root {
+            --brand-gold: #d8a153;
+            --brand-gold-dark: #b88636;
+            --brand-gold-light: #fef3c7;
+            --brand-navy: #0f172a;
+            --brand-dark-surface: #131b2e;
+            --text-heading: #0f172a;
+            --text-body: #334155;
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;
+            --border-gold: rgba(216, 161, 83, 0.35);
+        }
+
+        /* Prevent Horizontal Overflow Globally */
+        html, body {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+            margin: 0;
+            padding: 0;
+        }
+
+        .blog-wrapper {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+        }
+
+        .blog-container {
+            width: 100% !important;
+            max-width: 1240px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            padding-left: 24px !important;
+            padding-right: 24px !important;
+            box-sizing: border-box !important;
+        }
+
+        .blog-layout-grid {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) 340px !important;
+            gap: 36px !important;
+            min-width: 0 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .blog-article-card {
+            min-width: 0 !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            background: #ffffff !important;
+            border: 1px solid var(--border-light) !important;
+            border-radius: 18px !important;
+            padding: 36px !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04) !important;
+            overflow-wrap: break-word !important;
+            word-break: break-word !important;
+        }
+
+        .blog-article-body {
+            min-width: 0 !important;
+            max-width: 100% !important;
+            overflow-wrap: break-word !important;
+            word-break: break-word !important;
+        }
+
+        /* Responsive Table Container & Scrolling */
+        .blog-table-container {
+            margin: 22px 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .blog-table-hint {
+            display: none;
+            font-size: 12.5px;
+            color: #92400e;
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            padding: 7px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .blog-table-scroll {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 12px !important;
+            background: #ffffff !important;
+            box-sizing: border-box !important;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04) !important;
+        }
+
+        .blog-table-scroll table {
+            width: 100% !important;
+            min-width: 500px !important;
+            border-collapse: collapse !important;
+            text-align: left !important;
+            margin: 0 !important;
+        }
+
+        /* Grid Containers */
+        .blog-grid-auto {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+            gap: 14px !important;
+            margin: 20px 0 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .blog-grid-cards {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+            gap: 16px !important;
+            margin: 24px 0 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .blog-grid-software {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+            gap: 14px !important;
+            margin: 20px 0 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .blog-grid-process {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+            gap: 14px !important;
+            margin: 22px 0 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Flex wrap containers */
+        .blog-flex-wrap {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 14px !important;
+            margin-top: 16px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .blog-flex-item {
+            flex: 1 1 240px !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        /* CTA Banners */
+        .patna-cta-banner {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%) !important;
+            border: 1px solid rgba(216,161,83,0.45) !important;
+            border-radius: 16px !important;
+            padding: 24px 26px !important;
+            margin: 32px 0 !important;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25) !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 16px !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+        }
+
+        .patna-contact-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+            border: 1px solid rgba(216,161,83,0.45) !important;
+            border-radius: 16px !important;
+            padding: 30px 24px !important;
+            text-align: center !important;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3) !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+        }
+
+        /* Mobile Viewport Overrides (<= 768px) */
+        @media (max-width: 768px) {
+            .blog-container {
+                padding-left: 14px !important;
+                padding-right: 14px !important;
+                max-width: 100% !important;
+            }
+
+            .blog-article-page-wrap {
+                padding-top: 14px !important;
+                padding-bottom: 36px !important;
+            }
+
+            .blog-layout-grid {
+                grid-template-columns: 100% !important;
+                gap: 20px !important;
+                margin-top: 12px !important;
+            }
+
+            .blog-article-card {
+                padding: 20px 14px !important;
+                border-radius: 14px !important;
+                width: 100% !important;
+            }
+
+            .blog-table-hint {
+                display: block !important;
+            }
+
+            .blog-grid-auto,
+            .blog-grid-cards {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+
+            .blog-grid-software {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+
+            .blog-grid-process {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+
+            .patna-cta-banner {
+                padding: 20px 16px !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                text-align: center !important;
+            }
+
+            .patna-cta-banner .cta-btn-group {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 10px !important;
+                width: 100% !important;
+            }
+
+            .patna-cta-banner .cta-btn-group a {
+                width: 100% !important;
+                justify-content: center !important;
+                box-sizing: border-box !important;
+            }
+
+            .patna-contact-card {
+                padding: 24px 16px !important;
+            }
+
+            .patna-contact-card .contact-btn-group {
+                flex-direction: column !important;
+                width: 100% !important;
+            }
+
+            .patna-contact-card .contact-btn-group a {
+                width: 100% !important;
+                justify-content: center !important;
+                box-sizing: border-box !important;
+            }
+
+            .blog-article-header .blog-article-title {
+                font-size: clamp(20px, 5.5vw, 26px) !important;
+                line-height: 1.3 !important;
+            }
+
+            .blog-article-header .blog-article-lead {
+                font-size: 14px !important;
+                line-height: 1.65 !important;
+            }
+
+            .blog-rating-banner {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                text-align: center !important;
+                padding: 14px !important;
+            }
+
+            .blog-rating-banner a {
+                width: 100% !important;
+                justify-content: center !important;
+                box-sizing: border-box !important;
+            }
+        }
+
+        @media (max-width: 440px) {
+            .blog-grid-software,
+            .blog-grid-process {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+
+
     <!-- ═══ ADVANCE RICH SNIPPET STRUCTURED DATA (JSON-LD) ═══ -->
     <script type="application/ld+json">
 {
@@ -603,7 +907,7 @@
                     </header>
 
                     <!-- Google Star Rating Banner for Search Credibility -->
-                    <div style="background:linear-gradient(135deg, #fffcf6 0%, #fef8ec 100%);border:1.5px solid #e2c28e;border-radius:12px;padding:14px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;box-shadow:0 3px 12px rgba(216,161,83,0.1);">
+                    <div class="blog-rating-banner" style="background:linear-gradient(135deg, #fffcf6 0%, #fef8ec 100%);border:1.5px solid #e2c28e;border-radius:12px;padding:14px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;box-shadow:0 3px 12px rgba(216,161,83,0.1);">
                         <div style="display:flex;align-items:center;gap:12px;">
                             <span style="font-size:24px;line-height:1;flex-shrink:0;">⭐</span>
                             <div>
@@ -662,7 +966,7 @@
                             <p>Video Editing वह क्रिएटिव और टेक्निकल आर्ट है जिसमें रॉ वीडियो क्लिप्स को ट्रिम, कट, कलर ग्रेड और साउंड इफेक्ट्स के साथ सिंक्रनाइज़ करके एक इमोशनल और इंगेजिंग फाइनल वीडियो बनाया जाता है।</p>
                             <p>आज हर क्रिएटर, यूट्यूबर, फोटोग्राफर और बिजनेस को अपने ब्रांड को ग्रो करने के लिए हाई-क्वालिटी वीडियो चाहिए। इसलिए निम्नलिखित सेक्टर्स में वीडियो एडिटर्स की भारी डिमांड है:</p>
 
-                            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:14px;margin:20px 0;">
+                            <div class="blog-grid-auto">
                                 <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:12px;">
                                     <span style="font-size:22px;">🎬</span>
                                     <strong style="color:#0f172a;">YouTube Channels &amp; Podcasts</strong>
@@ -700,12 +1004,12 @@
                         </section>
 
                         <!-- Contact Quick CTA -->
-                        <div class="blog-cta-box" style="background:linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);border:1px solid rgba(216,161,83,0.45);border-radius:16px;padding:26px 30px;margin:32px 0;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;box-shadow:0 8px 24px rgba(0,0,0,0.25);">
+                        <div class="patna-cta-banner">
                             <div>
                                 <div style="color:#fce09b;font-weight:800;font-size:1.2rem;margin-bottom:6px;letter-spacing:0.02em;">🎓 Quick Art Photography Academy</div>
                                 <div style="color:#f1f5f9;font-size:0.96rem;font-weight:500;">Patna &amp; Bihar Students &mdash; 100% Practical Studio Lab Training with Free Hostel</div>
                             </div>
-                            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                            <div class="cta-btn-group" style="display:flex;gap:12px;flex-wrap:wrap;">
                                 <a href="https://wa.me/919939800780?text=Hi%2C%20I%20am%20from%20Patna%20and%20want%20to%20know%20about%20Video%20Editing%20Course" target="_blank" rel="noopener noreferrer"
                                    style="background:#25d366;color:#fff;font-weight:700;padding:11px 22px;border-radius:8px;text-decoration:none;font-size:0.95rem;display:inline-flex;align-items:center;gap:6px;">
                                     💬 WhatsApp: 9939800780
@@ -729,9 +1033,10 @@
                             <h2>🎯 3. Video Editing Classes in Patna for Beginners: कौन-कौन सीख सकता है?</h2>
                             <p>यदि आपके मन में यह सवाल है कि क्या आप बिना किसी पिछले बैकग्राउंड के वीडियो एडिटिंग सीख सकते हैं, तो जवाब है—<strong>100% हाँ!</strong> हमारी <strong>Video Editing Classes in Patna for Beginners</strong> को इस तरह डिज़ाइन किया गया है कि कक्षा 10वीं/12वीं पास छात्र भी इसे आसानी से समझ सकें:</p>
 
-                            <div style="overflow-x:auto;margin:22px 0;">
-                                <div class="blog-table-responsive" style="width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:22px 0;border-radius:12px;border:1px solid #e2e8f0;background:#ffffff;">
-<table style="width:100%;border-collapse:collapse;text-align:left;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.05);border:1px solid #e2e8f0;">
+                            <div class="blog-table-container">
+                                <div class="blog-table-hint">👉 Swipe horizontally to view full learner profile table 👈</div>
+                                <div class="blog-table-scroll">
+                                    <table>
                                     <thead>
                                         <tr style="background:#0f172a;color:#f8fafc;">
                                             <th style="padding:14px 20px;font-weight:700;font-size:15px;">Target Learner Profile</th>
@@ -748,15 +1053,15 @@
                                         <tr><td style="padding:12px 20px;font-weight:600;">Studio Photographers</td><td style="padding:12px 20px;text-align:center;font-weight:700;color:#16a34a;">✅ Yes</td><td style="padding:12px 20px;">Photo to video complete upgrade</td></tr>
                                     </tbody>
                                 </table>
-</div>
+                                </div>
                             </div>
 
-                            <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:16px;">
-                                <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px 18px;flex:1;min-width:240px;">
+                            <div class="blog-flex-wrap" style="margin-top:16px;">
+                                <div class="blog-flex-item" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px 18px;">
                                     <strong style="color:#1e40af;">🎓 शैक्षणिक योग्यता (Qualification):</strong>
                                     <div style="color:#1e293b;font-size:14px;margin-top:4px;">केवल बेसिक कंप्यूटर ऑपरेट करना आना चाहिए। किसी कोडिंग या डिग्री की जरूरत नहीं।</div>
                                 </div>
-                                <div style="background:#fefce8;border:1px solid #fef08a;border-radius:10px;padding:12px 18px;flex:1;min-width:240px;">
+                                <div class="blog-flex-item" style="background:#fefce8;border:1px solid #fef08a;border-radius:10px;padding:12px 18px;">
                                     <strong style="color:#854d0e;">🎂 उम्र सीमा (Age Limit):</strong>
                                     <div style="color:#1e293b;font-size:14px;margin-top:4px;">15 वर्ष से ऊपर कोई भी व्यक्ति आसानी से सीख सकता है। सीखने की कोई अंतिम उम्र नहीं होती।</div>
                                 </div>
@@ -775,7 +1080,7 @@
                             <h2>👑 5. Quick Art Photography Academy क्यों No.1 चॉइस है?</h2>
                             <p>हम केवल किताबी ज्ञान नहीं देते, बल्कि इंडस्ट्री के वास्तविक स्टैंडर्ड्स पर स्टूडेंट्स को तैयार करते हैं:</p>
 
-                            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px;margin:24px 0;">
+                            <div class="blog-grid-cards">
                                 <div style="background:#ffffff;border:1px solid #e2e8f0;border-left:4px solid #d8a153;border-radius:10px;padding:16px;">
                                     <strong style="color:#0f172a;display:block;margin-bottom:6px;">✅ 100% प्रैक्टिकल वर्कस्टेशन</strong>
                                     <p style="margin:0;font-size:14px;color:#64748b;">हर एक स्टूडेंट को अपनी खुद की पावरफुल एडिटिंग मशीन मिलती है।</p>
@@ -824,9 +1129,10 @@
                             <h2>💍 6. Wedding Video Editing Classes in Patna &amp; Complete Syllabus</h2>
                             <p>बिहार में सबसे ज्यादा कमाई वेडिंग वीडियो एडिटिंग से होती है। हमारी <strong>Wedding Video Editing Classes in Patna</strong> में स्टूडेंट्स को संपूर्ण 10-मॉड्यूल प्रैक्टिकल सिलेबस सिखाया जाता है:</p>
 
-                            <div style="overflow-x:auto;margin:22px 0;">
-                                <div class="blog-table-responsive" style="width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:22px 0;border-radius:12px;border:1px solid #e2e8f0;background:#ffffff;">
-<table style="width:100%;border-collapse:collapse;text-align:left;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.05);border:1px solid #e2e8f0;">
+                            <div class="blog-table-container">
+                                <div class="blog-table-hint">👉 Swipe horizontally to view full syllabus modules 👈</div>
+                                <div class="blog-table-scroll">
+                                    <table>
                                     <thead>
                                         <tr style="background:#1e293b;color:#f8fafc;">
                                             <th style="padding:14px 20px;font-weight:700;font-size:15px;width:35%;">Module Name</th>
@@ -846,7 +1152,7 @@
                                         <tr><td style="padding:12px 20px;font-weight:600;">10. Film LUTs &amp; Color Grading</td><td style="padding:12px 20px;">DaVinci Resolve Scopes, Color Wheels, Teal &amp; Orange cinematic look, LUTs &amp; Skin Tone Retouch</td></tr>
                                     </tbody>
                                 </table>
-</div>
+                                </div>
                             </div>
                         </section>
 
@@ -855,7 +1161,7 @@
                             <h2>💻 7. Tools &amp; Software Covered</h2>
                             <p>हम इंडस्ट्री-स्टैंडर्ड सॉफ्टवेयर्स पर ट्रेनिंग देते हैं ताकि आप देश-विदेश के किसी भी स्टूडियो में आसानी से काम कर सकें:</p>
 
-                            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:14px;margin:20px 0;">
+                            <div class="blog-grid-software">
                                 <div style="background:#f1f5f9;border:1px solid #cbd5e1;border-radius:10px;padding:16px;text-align:center;">
                                     <div style="font-size:28px;margin-bottom:6px;">🎞️</div>
                                     <strong style="color:#0f172a;display:block;">Adobe Premiere Pro</strong>
@@ -910,9 +1216,10 @@
                             <h2>⏳ 9. Course Duration, Fees &amp; Hostel Facility for Patna Students</h2>
                             <p>विद्यार्थी अपनी सुविधानुसार विभिन्न समय-सीमा वाले ट्रैक्स चुन सकते हैं:</p>
 
-                            <div style="overflow-x:auto;margin:20px 0;">
-                                <div class="blog-table-responsive" style="width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:22px 0;border-radius:12px;border:1px solid #e2e8f0;background:#ffffff;">
-<table style="width:100%;border-collapse:collapse;text-align:left;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.05);border:1px solid #e2e8f0;">
+                            <div class="blog-table-container">
+                                <div class="blog-table-hint">👉 Swipe horizontally to view course duration &amp; tracks 👈</div>
+                                <div class="blog-table-scroll">
+                                    <table>
                                     <thead>
                                         <tr style="background:#0f172a;color:#f8fafc;">
                                             <th style="padding:14px 20px;font-weight:700;">Course Track</th>
@@ -927,15 +1234,15 @@
                                         <tr><td style="padding:12px 20px;font-weight:600;">Master Video Editing + After Effects</td><td style="padding:12px 20px;text-align:center;font-weight:700;color:#0284c7;">14 Weeks</td><td style="padding:12px 20px;">Premiere Pro, After Effects VFX, DaVinci Resolve &amp; AI Workflows</td></tr>
                                     </tbody>
                                 </table>
-</div>
+                                </div>
                             </div>
 
-                            <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:16px;">
-                                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 18px;flex:1;min-width:240px;">
+                            <div class="blog-flex-wrap" style="margin-top:16px;">
+                                <div class="blog-flex-item" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 18px;">
                                     <strong style="color:#166534;font-size:15px;">💰 फीस स्ट्रक्चर (Affordable &amp; EMI):</strong>
                                     <div style="color:#1e293b;font-size:14px;margin-top:4px;">हमारा उद्देश्य बिहार के हर मेधावी युवा को हुनरमंद बनाना है। किफायती फीस के साथ बिना ब्याज की आसान किस्तों (No-Cost EMI) की सुविधा उपलब्ध है।</div>
                                 </div>
-                                <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px 18px;flex:1;min-width:240px;">
+                                <div class="blog-flex-item" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px 18px;">
                                     <strong style="color:#1e40af;font-size:15px;">🏠 हॉस्टल एवं रहने की व्यवस्था:</strong>
                                     <div style="color:#1e293b;font-size:14px;margin-top:4px;">पटना और राज्य के अन्य हिस्सों से आने वाले छात्रों के लिए सुरक्षित और स्वच्छ हॉस्टल की सुविधा उपलब्ध है ताकि वे बिना किसी चिंता के अभ्यास कर सकें।</div>
                                 </div>
@@ -947,7 +1254,7 @@
                             <h2>✅ 10. Admission Process (एडमिशन प्रक्रिया)</h2>
                             <p>Quick Art Photography Academy में अपनी सीट सुरक्षित करना बहुत आसान है:</p>
 
-                            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;margin:22px 0;">
+                            <div class="blog-grid-process">
                                 <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
                                     <div style="width:36px;height:36px;background:#d8a153;color:#111;font-weight:800;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">1</div>
                                     <strong style="color:#0f172a;display:block;margin-bottom:4px;">काउंसलिंग कॉल</strong>
@@ -1055,12 +1362,12 @@
                             <h2>📞 Contact Details – Quick Art Photography Academy</h2>
                             <p>अपनी सीट बुक करने या व्यक्तिगत काउंसलिंग के लिए आज ही संपर्क करें:</p>
 
-                            <div style="background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%);border:1px solid rgba(216,161,83,0.45);border-radius:16px;padding:32px;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,0.35);">
+                            <div class="patna-contact-card">
                                 <div style="color:#fce09b;font-size:1.6rem;font-weight:800;margin-bottom:8px;letter-spacing:0.02em;">Quick Art Photography Academy</div>
                                 <div style="color:#f8fafc;font-size:1.05rem;margin-bottom:8px;font-weight:500;">📍 <strong>Address:</strong> Ayodhya Puri, near Lalit Bus Stand, Siwan, Bihar 841226</div>
                                 <div style="color:#e2e8f0;font-size:0.96rem;margin-bottom:24px;font-weight:500;">(Direct connectivity from Patna Junction, Danapur, Hajipur &amp; Muzaffarpur)</div>
 
-                                <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+                                <div class="contact-btn-group" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
                                     <a href="https://wa.me/919939800780?text=Hi%2C%20I%20want%20to%20enroll%20in%20Video%20Editing%20Course%20from%20Patna"
                                        target="_blank" rel="noopener noreferrer"
                                        style="background:#25d366;color:#fff;font-weight:700;padding:14px 26px;border-radius:10px;text-decoration:none;font-size:1rem;display:inline-flex;align-items:center;gap:8px;">

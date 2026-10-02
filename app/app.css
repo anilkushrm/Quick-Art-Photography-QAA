@@ -70,13 +70,11 @@ html {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
-  touch-action: pan-y;
 }
 
 body {
   width: 100%;
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
+  min-height: 100%;
   background-color: var(--bg-primary);
   color: var(--text-main);
   font-family: var(--font-main);
@@ -86,7 +84,6 @@ body {
   overflow-y: visible;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
-  touch-action: pan-y;
   -webkit-font-smoothing: antialiased;
 }
 

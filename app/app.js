@@ -11,29 +11,6 @@ let activeLesson = null;
 let notificationsList = [];
 let liveCheckInterval = null;
 
-// ==========================================================================
-// 0. MOBILE SCROLL & REFRESH CONFLICT RESOLVER
-// ==========================================================================
-// Fixes: Scrolling freezing when lifting finger, and accidental page reloads
-let touchStartClientY = 0;
-window.addEventListener('touchstart', (e) => {
-  if (e.touches && e.touches.length === 1) {
-    touchStartClientY = e.touches[0].clientY;
-  }
-}, { passive: true });
-
-window.addEventListener('touchmove', (e) => {
-  if (e.touches && e.touches.length === 1) {
-    const currentY = e.touches[0].clientY;
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    // When already at the top of document, prevent accidental pull-to-refresh
-    if (scrollTop <= 0 && currentY > touchStartClientY) {
-      if (e.cancelable) {
-        e.preventDefault();
-      }
-    }
-  }
-}, { passive: false });
 
 // ==========================================================================
 // 1. SMART API CLIENT (ZERO JSON CRASHES, AUTO-FALLBACK & CORS COMPATIBLE)

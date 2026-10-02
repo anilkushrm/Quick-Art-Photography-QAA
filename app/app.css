@@ -228,8 +228,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(20px, calc(env(safe-area-inset-right) + 18px));
+  gap: 12px;
+  box-sizing: border-box;
 }
 
 .header-brand {
@@ -288,6 +290,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 /* Live Header Badge (Compact & Elegant - Single Line) */

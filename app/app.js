@@ -1276,7 +1276,11 @@ function closeAvatarQuickMenu() {
 
 function switchClassroomSubtab(tabKey) {
   document.querySelectorAll('.lesson-subtab').forEach(t => {
-    t.classList.toggle('active', t.getAttribute('data-sub') === tabKey);
+    const isActive = t.getAttribute('data-sub') === tabKey;
+    t.classList.toggle('active', isActive);
+    if (isActive) {
+      t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
   });
   ['curriculum', 'resources', 'notes', 'doubts', 'quiz', 'assignment', 'support'].forEach(k => {
     const el = document.getElementById(`cr-sub-${k}`);

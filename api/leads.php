@@ -10,6 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $body = read_json_body();
+if (!empty($body['website'])) {
+    http_response_code(200);
+    echo json_encode(['ok' => false]);
+    exit;
+}
 foreach (['name', 'phone', 'city', 'course', 'message', 'source'] as $field) {
     if (isset($body[$field]) && !is_string($body[$field])) json_err('Invalid form field', 400);
 }

@@ -240,6 +240,7 @@
         form.addEventListener('submit', async event => {
             event.preventDefault();
             if (!form.reportValidity()) return;
+            if (form.elements.website && form.elements.website.value) { return; } // bot
             const status = form.querySelector('.qa-form-status');
             const button = form.querySelector('button[type="submit"]');
             const rawPhone = form.elements.phone ? form.elements.phone.value.trim() : '';
@@ -266,6 +267,7 @@
                 if (!response.ok || !result.ok || !result.id) throw new Error('server');
                 try { 
                     sessionStorage.setItem('qa-enquiry-received', 'true'); 
+                    sessionStorage.setItem('qa_lead_pending', '1');
                     if (data.name) localStorage.setItem('qa_user_name', data.name.trim());
                     if (phone) localStorage.setItem('qa_user_phone', phone.replace(/\D/g, '').slice(-10));
                 } catch (_) { }
@@ -399,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.querySelector('.qa-popup-overlay')) return;
         markAutoPopupShown();
         const overlay = document.createElement('div'); overlay.className = 'qa-popup-overlay';
-        overlay.innerHTML = '<div class="qa-popup" role="dialog" aria-modal="true" aria-labelledby="qa-popup-title"><div class="qa-popup-top"><button class="qa-popup-close" type="button" aria-label="Close popup" title="Close">✕</button><span>♔ LIMITED SEATS LEFT</span><h2 id="qa-popup-title">Get a <em>FREE</em> Course Consultation</h2><p>Leave your details — our mentor will call within 60 minutes and guide you on the best course for your goals.</p></div><form class="qa-popup-form"><input name="name" required placeholder="Your Full Name *" autocomplete="name"><div class="qa-phone-group"><span class="qa-phone-prefix">🇮🇳 +91</span><input name="phone" required type="tel" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" placeholder="10-digit number *" autocomplete="tel"></div><input name="city" placeholder="Your City (optional)" autocomplete="address-level2"><input name="course" placeholder="Which course are you interested in? (optional)"><button type="submit">Request Free Callback <span>→</span></button>' + getProofHTML() + '<p class="qa-popup-status" role="status"></p></form></div>';
+        overlay.innerHTML = '<div class="qa-popup" role="dialog" aria-modal="true" aria-labelledby="qa-popup-title"><div class="qa-popup-top"><button class="qa-popup-close" type="button" aria-label="Close popup" title="Close">✕</button><span>♔ LIMITED SEATS LEFT</span><h2 id="qa-popup-title">Get a <em>FREE</em> Course Consultation</h2><p>Leave your details — our mentor will call within 60 minutes and guide you on the best course for your goals.</p></div><form class="qa-popup-form"><input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true"><input name="name" required placeholder="Your Full Name *" autocomplete="name"><div class="qa-phone-group"><span class="qa-phone-prefix">🇮🇳 +91</span><input name="phone" required type="tel" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" placeholder="10-digit number *" autocomplete="tel"></div><input name="city" placeholder="Your City (optional)" autocomplete="address-level2"><input name="course" placeholder="Which course are you interested in? (optional)"><button type="submit">Request Free Callback <span>→</span></button>' + getProofHTML() + '<p class="qa-popup-status" role="status"></p></form></div>';
         document.body.append(overlay);
         const close = () => overlay.remove();
         overlay.querySelector('.qa-popup-close').addEventListener('click', close);
@@ -443,6 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         overlay.querySelector('form').addEventListener('submit', async e => {
             e.preventDefault(); const form = e.currentTarget; if (!form.reportValidity()) return;
+            if (form.elements.website && form.elements.website.value) { return; } // bot
             const status = overlay.querySelector('.qa-popup-status'), button = form.querySelector('button');
             const data = Object.fromEntries(new FormData(form));
             const phoneDigits = (data.phone || '').replace(/\D/g, '').slice(0, 10);
@@ -456,6 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json(); if (!response.ok || !result.ok || !result.id) throw new Error('save');
                 try {
                     sessionStorage.setItem('qa-enquiry-received', 'true');
+                    sessionStorage.setItem('qa_lead_pending', '1');
                     localStorage.setItem(AUTO_POPUP_KEY, 'true');
                     if (data.name) localStorage.setItem('qa_user_name', data.name.trim());
                     if (data.phone) localStorage.setItem('qa_user_phone', data.phone.replace(/\D/g, '').slice(-10));

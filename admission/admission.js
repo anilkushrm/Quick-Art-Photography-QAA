@@ -17,9 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
   var inputCity = document.getElementById('adm-city');
   var inputBlood = document.getElementById('adm-bloodgroup');
 
-  // File size limits: Photo = 5 MB, Documents = 10 MB (Auto-compressed via canvas if larger)
-  var MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5 MB
-  var MAX_DOC_BYTES = 10 * 1024 * 1024;  // 10 MB
+  // File size limits: Photo = 2 MB, Documents = 2 MB (Auto-compressed via canvas to under 150 KB)
+  var MAX_PHOTO_BYTES = 2 * 1024 * 1024; // 2 MB
+  var MAX_DOC_BYTES = 2 * 1024 * 1024;   // 2 MB
 
   // In-memory optimized Blobs for upload
   var processedPhotoFile = null;
@@ -30,6 +30,121 @@ document.addEventListener('DOMContentLoaded', function () {
   // Verification state flags
   var isPhoneVerified = false;
   var isEmailVerified = false;
+
+  // 🚀 Dynamic Batch Enrollment Handler (?batch=114, ?b=115, ?course=...)
+  function initDynamicBatchMode() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var rawBatch = params.get('batch') || params.get('b') || params.get('course') || params.get('c');
+      if (!rawBatch) return;
+
+      rawBatch = rawBatch.trim();
+      var batchNum = '';
+      var numMatch = rawBatch.match(/\b(\d+)\b/);
+      if (numMatch) {
+        batchNum = numMatch[1];
+      }
+
+      var formattedTitle = rawBatch;
+      if (/^\d+$/.test(rawBatch)) {
+        formattedTitle = 'Advanced Wedding Filmmaking – Batch ' + rawBatch;
+      } else if (!rawBatch.match(/wedding|filmmaking|editing|photography|cinematography|masterclass/i) && batchNum) {
+        formattedTitle = 'Advanced Wedding Filmmaking – Batch ' + batchNum;
+      }
+
+      // Update Course Select element
+      var courseSelect = document.getElementById('adm-course');
+      if (courseSelect) {
+        // Check if option already exists
+        var exists = false;
+        for (var i = 0; i < courseSelect.options.length; i++) {
+          if (courseSelect.options[i].value.toLowerCase() === formattedTitle.toLowerCase()) {
+            courseSelect.selectedIndex = i;
+            exists = true;
+            break;
+          }
+        }
+        if (!exists) {
+          var opt = document.createElement('option');
+          opt.value = formattedTitle;
+          opt.textContent = '⭐ ' + formattedTitle + ' (Exclusive Enrolled Batch)';
+          opt.selected = true;
+          courseSelect.insertBefore(opt, courseSelect.firstChild);
+          courseSelect.selectedIndex = 0;
+        }
+        // Lock select visually but keep enabled for form submission
+        courseSelect.style.pointerEvents = 'none';
+        courseSelect.style.background = 'rgba(217, 119, 6, 0.12)';
+        courseSelect.style.borderColor = 'rgba(217, 119, 6, 0.55)';
+        courseSelect.style.color = '#fbbf24';
+        courseSelect.style.fontWeight = '700';
+      }
+
+      // Show and populate Batch Hero Banner
+      var batchHero = document.getElementById('adm-batch-hero');
+      var batchTitleEl = document.getElementById('adm-batch-hero-title');
+      var batchPillEl = document.getElementById('adm-batch-pill');
+      var batchSubEl = document.getElementById('adm-batch-hero-sub');
+
+      if (batchHero) {
+        batchHero.style.display = 'flex';
+      }
+      if (batchTitleEl) {
+        batchTitleEl.textContent = formattedTitle;
+      }
+      if (batchPillEl) {
+        batchPillEl.textContent = batchNum ? ('BATCH #' + batchNum) : 'ONLINE BATCH';
+      }
+      if (batchSubEl) {
+        batchSubEl.textContent = 'Official Direct Batch Admission. Form submit karte hi instant Official PVC Identity Card & Student LMS Portal Classroom unlock ho jayega.';
+      }
+
+      // Update Form Titles & Kicker for Online batch context
+      var kicker = document.getElementById('adm-kicker-label');
+      if (kicker) kicker.textContent = 'OFFICIAL ONLINE BATCH ENROLLMENT';
+
+      var mainTitle = document.getElementById('adm-main-title');
+      if (mainTitle) mainTitle.textContent = formattedTitle + ' — Registration';
+
+      var mainDesc = document.getElementById('adm-main-desc');
+      if (mainDesc) mainDesc.textContent = 'Please enter accurate student details for official Identity Card, Roll Number & Student Portal access.';
+
+      // Hide campus hostel question since this is an online batch
+      var hostelSelect = document.getElementById('adm-hostel');
+      if (hostelSelect) {
+        hostelSelect.value = 'no';
+        var hostelField = hostelSelect.closest('.adm-field');
+        if (hostelField) {
+          hostelField.style.display = 'none';
+        }
+      }
+
+      // Update trust badges strip for online live batches
+      var trustStrip = document.querySelector('.adm-trust-badges-bar');
+      if (trustStrip) {
+        var items = trustStrip.querySelectorAll('.adm-trust-badge-item');
+        if (items && items.length >= 3) {
+          items[2].innerHTML = '<span class="adm-trust-icon">📡</span><div><strong>100% Online Live Class</strong><span>Attend Live on Mobile / PC</span></div>';
+        }
+      }
+
+      // Optional URL parameter for custom registration fee e.g. ?fee=0 or ?fee=500
+      var paramFee = params.get('fee');
+      if (paramFee !== null) {
+        var feeVal = parseInt(paramFee, 10);
+        if (!isNaN(feeVal)) {
+          var feeBadgeVal = document.getElementById('adm-fee-badge-val');
+          if (feeBadgeVal) feeBadgeVal.textContent = feeVal > 0 ? ('₹' + feeVal) : 'FREE';
+        }
+      }
+
+    } catch (e) {
+      if (window.console) console.warn('Error in initDynamicBatchMode:', e);
+    }
+  }
+
+  // Execute dynamic batch setup on load
+  initDynamicBatchMode();
 
   // Helper: Auto-compress high-res mobile images to lightweight JPEG under 300 KB
   function compressImage(file, maxDimension, quality, callback) {
@@ -76,13 +191,13 @@ document.addEventListener('DOMContentLoaded', function () {
     reader.readAsDataURL(file);
   }
 
-  // 1. Photo file preview with instant base64 reader & auto-compression
+  // 1. Photo file preview with instant base64 reader & auto-compression (Under 120 KB)
   if (inputPhoto) {
     inputPhoto.addEventListener('change', function () {
       if (this.files && this.files[0]) {
         var file = this.files[0];
         if (file.size > MAX_PHOTO_BYTES) {
-          alert('Photo ka size 5 MB se adhik hai (' + Math.round(file.size / (1024 * 1024)) + ' MB)। Kripya 5 MB se chhota photo select karein.');
+          alert('Photo ka size 2 MB se adhik hai (' + Math.round(file.size / (1024 * 1024)) + ' MB)। Kripya 2 MB se chhota photo select karein.');
           this.value = '';
           return;
         }
@@ -108,31 +223,31 @@ document.addEventListener('DOMContentLoaded', function () {
         };
         instantReader.readAsDataURL(file);
 
-        // 2. Also compress in background for lightweight server upload
-        compressImage(file, 1200, 0.85, function (compressed) {
+        // 2. Also compress in background for ultra-lightweight server upload (~80-120 KB)
+        compressImage(file, 640, 0.78, function (compressed) {
           processedPhotoFile = compressed;
         });
       }
     });
   }
 
-  // 2. Document file size checks (Max 10 MB) with auto-compression for Aadhaar & Certificate
+  // 2. Document file size checks (Max 2 MB) with auto-compression for Aadhaar & Certificate (~150-200 KB)
   function attachFileSizeCheck(inputEl, labelId, docName, setProcessed) {
     if (!inputEl) return;
     inputEl.addEventListener('change', function () {
       if (this.files && this.files[0]) {
         var file = this.files[0];
         if (file.size > MAX_DOC_BYTES) {
-          alert(docName + ' ka file size 10 MB se bada hai (' + Math.round(file.size / (1024 * 1024)) + ' MB)। Kripya 10 MB se chhota photo ya PDF upload karein.');
+          alert(docName + ' ka file size 2 MB se bada hai (' + (file.size / (1024 * 1024)).toFixed(1) + ' MB)। Kripya 2 MB se chhota photo ya PDF upload karein.');
           this.value = '';
           var label = document.getElementById(labelId);
-          if (label) label.textContent = 'Click to upload ' + docName + ' (Max 10 MB)';
+          if (label) label.textContent = 'Click to upload ' + docName + ' (Max 2 MB)';
           return;
         }
         var label = document.getElementById(labelId);
         if (file.type && file.type.indexOf('image/') === 0) {
           if (label) label.textContent = '⏳ Optimizing ' + docName + '…';
-          compressImage(file, 1600, 0.85, function (compressed) {
+          compressImage(file, 1200, 0.75, function (compressed) {
             setProcessed(compressed);
             if (label) label.textContent = '✓ ' + file.name + ' (' + Math.round(compressed.size / 1024) + ' KB ready)';
           });

@@ -105,6 +105,18 @@ function map_offline_course_id($courseTitle) {
         }
     }
 
+    // 1.5 Match by batch number (e.g. "batch 114" or "batch-114" or "114")
+    if (preg_match('/batch\s*[-_]?\s*(\d+)/i', $t, $m)) {
+        $bNum = $m[1];
+        foreach ($courses as $c) {
+            if (stripos($c['title'] ?? '', "batch $bNum") !== false || 
+                stripos($c['id'] ?? '', "batch-$bNum") !== false || 
+                stripos($c['id'] ?? '', "batch$bNum") !== false) {
+                return $c['id'];
+            }
+        }
+    }
+
     // 2. Program keywords mapping
     if (strpos($t, 'advance video') !== false || strpos($t, 'video editing') !== false || strpos($t, 'premiere') !== false) {
         return 'course-premiere-pro';
@@ -305,7 +317,7 @@ if ($action === 'get-students' && $method === 'GET') {
         }
     }
 
-    json_ok(['students' => $students, 'courses' => $courses]);
+    json_ok(['students' => $students, 'courses' => $courses, 'offlineAdmissions' => array_values($allAdms)]);
 }
 
 // 5. Enroll / Create Student (Manual Enrollment from Admin)
@@ -400,19 +412,44 @@ if ($action === 'enroll-student' && $method === 'POST') {
     ]);
 }
 
-// 6. Delete Student
+// 6. Delete Student (From Both LMS Students and Offline Admissions Registry)
 if ($action === 'delete-student' && $method === 'POST') {
     $body = read_json_body();
-    $phone = $body['phone'] ?? '';
-    if (!$phone) json_err('Phone required', 400);
+    $rawPhone = $body['phone'] ?? ($body['id'] ?? '');
+    if (!$rawPhone) json_err('Phone or ID required', 400);
 
+    $cleanPhone = preg_replace('/[^0-9]/', '', (string)$rawPhone);
+    if (strlen($cleanPhone) === 12 && substr($cleanPhone, 0, 2) === '91') $cleanPhone = substr($cleanPhone, 2);
+
+    // 1. Remove from students.json
     $students = get_all_students();
-    $filtered = array_values(array_filter($students, function($s) use ($phone) {
-        return $s['phone'] !== $phone;
+    $filteredStudents = array_values(array_filter($students, function($s) use ($cleanPhone, $rawPhone) {
+        $p = preg_replace('/[^0-9]/', '', (string)($s['phone'] ?? ''));
+        if (strlen($p) === 12 && substr($p, 0, 2) === '91') $p = substr($p, 2);
+        if ($cleanPhone && $p === $cleanPhone) return false;
+        if (!empty($s['offlineAdmissionId']) && ($s['offlineAdmissionId'] === $rawPhone || $s['offlineAdmissionId'] === $cleanPhone)) return false;
+        if (!empty($s['id']) && ($s['id'] === $rawPhone || $s['id'] === $cleanPhone)) return false;
+        return true;
     }));
+    save_all_students($filteredStudents);
 
-    save_all_students($filtered);
-    json_ok(['deleted' => true, 'phone' => $phone]);
+    // 2. Remove from offline-admissions.json as well
+    $admFile = DATA_DIR . '/offline-admissions.json';
+    if (file_exists($admFile)) {
+        $allAdms = json_decode(file_get_contents($admFile), true) ?: [];
+        if (is_array($allAdms)) {
+            $filteredAdms = array_values(array_filter($allAdms, function($a) use ($cleanPhone, $rawPhone) {
+                $p = preg_replace('/[^0-9]/', '', (string)($a['phone'] ?? ''));
+                if (strlen($p) === 12 && substr($p, 0, 2) === '91') $p = substr($p, 2);
+                if ($cleanPhone && $p === $cleanPhone) return false;
+                if (!empty($a['id']) && ($a['id'] === $rawPhone || $a['id'] === $cleanPhone)) return false;
+                return true;
+            }));
+            file_put_contents($admFile, json_encode($filteredAdms, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        }
+    }
+
+    json_ok(['deleted' => true, 'phone' => $rawPhone]);
 }
 
 // 6.1 Set / Update Student Email & Password (Admin)

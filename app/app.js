@@ -1760,6 +1760,7 @@ async function loadLiveClassesTab() {
         `;
       } else {
         paidListEl.innerHTML = scheduled.map(c => renderPaidLiveCard(c)).join('');
+        startLiveCountdowns();
       }
     }
 
@@ -1811,6 +1812,22 @@ function renderPaidLiveCard(c) {
       </div>
       <div class="paid-live-title">${escHtml(c.title)}</div>
       ${c.description ? `<div class="paid-live-desc">${escHtml(c.description)}</div>` : ''}
+
+      ${c.scheduledAt ? `
+        <div class="live-countdown-container" data-countdown-target="${c.scheduledAt}">
+          <div class="live-countdown-badge">⏳ LIVE CLASS STARTS IN</div>
+          <div class="live-countdown-clock">
+            <div class="cd-box"><span class="cd-val cd-days">00</span><span class="cd-tag">DAYS</span></div>
+            <span class="cd-colon">:</span>
+            <div class="cd-box"><span class="cd-val cd-hours">00</span><span class="cd-tag">HRS</span></div>
+            <span class="cd-colon">:</span>
+            <div class="cd-box"><span class="cd-val cd-mins">00</span><span class="cd-tag">MINS</span></div>
+            <span class="cd-colon">:</span>
+            <div class="cd-box"><span class="cd-val cd-secs">00</span><span class="cd-tag">SECS</span></div>
+          </div>
+        </div>
+      ` : ''}
+
       <div class="paid-live-meta-grid">
         <div class="paid-live-meta-item">
           <span class="paid-live-meta-lbl">Session Timing</span>
@@ -1839,6 +1856,55 @@ function renderPaidLiveCard(c) {
       </div>
     </div>
   `;
+}
+
+let liveCountdownInterval = null;
+function startLiveCountdowns() {
+  if (liveCountdownInterval) clearInterval(liveCountdownInterval);
+
+  function updateAll() {
+    const nodes = document.querySelectorAll('[data-countdown-target]');
+    if (!nodes.length) return;
+
+    const now = Date.now();
+    nodes.forEach(el => {
+      const targetStr = el.getAttribute('data-countdown-target');
+      if (!targetStr) return;
+      const targetTime = new Date(targetStr).getTime();
+      const diff = targetTime - now;
+
+      const daysEl = el.querySelector('.cd-days');
+      const hoursEl = el.querySelector('.cd-hours');
+      const minsEl = el.querySelector('.cd-mins');
+      const secsEl = el.querySelector('.cd-secs');
+
+      if (diff <= 0) {
+        if (daysEl) daysEl.textContent = '00';
+        if (hoursEl) hoursEl.textContent = '00';
+        if (minsEl) minsEl.textContent = '00';
+        if (secsEl) secsEl.textContent = '00';
+        const badge = el.querySelector('.live-countdown-badge');
+        if (badge) {
+          badge.innerHTML = '🔴 STARTING NOW';
+          badge.style.color = '#ef4444';
+        }
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+      if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+      if (minsEl) minsEl.textContent = String(mins).padStart(2, '0');
+      if (secsEl) secsEl.textContent = String(secs).padStart(2, '0');
+    });
+  }
+
+  updateAll();
+  liveCountdownInterval = setInterval(updateAll, 1000);
 }
 
 async function launchLiveSession(classId) {

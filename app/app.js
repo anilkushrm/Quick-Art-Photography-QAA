@@ -895,7 +895,7 @@ async function openClassroomPlayer(courseId, initialLessonId = null) {
 
     document.getElementById('cr-course-title').textContent = activeCourse.title;
 
-    renderClassroomModules(activeCourse);
+    renderDrawerLessons(activeCourse);
 
     let targetLesson = null;
     if (initialLessonId) {
@@ -920,6 +920,7 @@ async function openClassroomPlayer(courseId, initialLessonId = null) {
 function closeClassroomPlayer() {
   document.getElementById('view-classroom-player').classList.add('hidden');
   document.getElementById('cr-video-mount').innerHTML = '';
+  closeAllLessonsDrawer();
 }
 
 function renderClassroomModules(course) {
@@ -957,27 +958,62 @@ async function loadLessonToPlayer(courseId, lessonId) {
     const res = await apiFetch(`get-lesson&courseId=${encodeURIComponent(courseId)}&lessonId=${encodeURIComponent(lessonId)}`);
     activeLesson = res.lesson;
 
-    document.querySelectorAll('.lesson-row-item').forEach(r => r.classList.remove('active'));
+    // Highlight row in active lists
+    document.querySelectorAll('.lesson-row-item, .drawer-lesson-item').forEach(r => r.classList.remove('active', 'playing'));
     document.getElementById(`cr-les-row-${lessonId}`)?.classList.add('active');
+    const drawerRow = document.getElementById(`drawer-les-row-${lessonId}`);
+    if (drawerRow) {
+      drawerRow.classList.add('playing');
+    }
 
-    document.getElementById('cr-lesson-title').textContent = activeLesson.title;
-    document.getElementById('cr-lesson-sub').textContent = `⏱ Duration: ${activeLesson.duration || 'Video'} • 4K HD`;
+    document.getElementById('cr-lesson-title').textContent = activeLesson.title || 'Lesson';
+    const durBadge = document.getElementById('cr-lesson-dur-badge');
+    if (durBadge) {
+      durBadge.textContent = `⏱ ${activeLesson.duration || 'Video'}`;
+    }
 
     const completedList = (currentStudent && currentStudent.completedLessons && currentStudent.completedLessons[courseId]) || [];
-    const isDone = completedList.includes(lessonId);
-    const completeBtn = document.getElementById('btn-toggle-complete');
-    completeBtn.classList.toggle('done', isDone);
-    completeBtn.textContent = isDone ? 'Completed ✓' : 'Mark Complete ✓';
+    const isDone = Boolean(activeLesson.isCompleted || completedList.includes(lessonId));
+    updatePlayerCompleteButton(isDone);
 
     const mount = document.getElementById('cr-video-mount');
-    if (activeLesson.bunnyIframeUrl) {
-      mount.innerHTML = `<iframe src="${activeLesson.bunnyIframeUrl}" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen></iframe>`;
-    } else if (activeLesson.videoUrl) {
-      mount.innerHTML = `<video src="${activeLesson.videoUrl}" controls playsinline style="width:100%;height:100%;background:#000;"></video>`;
-    } else if (activeLesson.youtubeId) {
-      mount.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${activeLesson.youtubeId}?autoplay=1&rel=0&modestbranding=1" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>`;
+    const streamUrl = activeLesson.streamUrl || '';
+    const videoType = activeLesson.videoType || '';
+    const ytId = activeLesson.youtubeId || '';
+
+    if (videoType === 'bunny_stream' || streamUrl.includes('iframe.mediadelivery.net')) {
+      const sep = streamUrl.includes('?') ? '&' : '?';
+      const cleanUrl = streamUrl.includes('_t=') ? streamUrl : (streamUrl + sep + '_t=' + Date.now() + '&autoplay=true');
+      mount.innerHTML = `<iframe id="cr-video-iframe" src="${cleanUrl}" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+      
+      // Listen for bunny end event
+      window._bunnyEndedListener && window.removeEventListener('message', window._bunnyEndedListener);
+      window._bunnyEndedListener = (e) => {
+        try {
+          const d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+          if (d?.event === 'ended' || d?.type === 'ended') {
+            handleLessonVideoEnded();
+          }
+        } catch (_) {}
+      };
+      window.addEventListener('message', window._bunnyEndedListener);
+
+    } else if (videoType === 'youtube' || ytId) {
+      const yUrl = streamUrl || `https://www.youtube-nocookie.com/embed/${ytId}?enablejsapi=1&autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+      mount.innerHTML = `<iframe id="cr-video-iframe" src="${yUrl}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+
+    } else if (streamUrl) {
+      mount.innerHTML = `<video id="main-video-el" src="${streamUrl}" controls playsinline style="width:100%;height:100%;object-fit:contain;background:#000;"></video>`;
+      const vidEl = document.getElementById('main-video-el');
+      if (vidEl) {
+        vidEl.addEventListener('ended', handleLessonVideoEnded);
+      }
     } else {
-      mount.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#fff;">Video lecture is being prepared</div>`;
+      mount.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#cbd5e1;padding:20px;text-align:center;">
+        <span style="font-size:32px;margin-bottom:8px;">🎬</span>
+        <div style="font-size:14px;font-weight:600;color:#fff;">Video lecture is being prepared</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Please check notes and practice files in the meantime.</div>
+      </div>`;
     }
 
     renderLessonResources(activeLesson);
@@ -986,9 +1022,47 @@ async function loadLessonToPlayer(courseId, lessonId) {
     renderLessonAssignment(activeLesson);
     loadLessonComments(courseId, lessonId);
 
-    switchClassroomSubtab('curriculum');
+    // Default to 'doubts' (Comment tab) directly under video player!
+    switchClassroomSubtab('doubts');
   } catch (err) {
     toast('Lesson load failed: ' + err.message, false);
+  }
+}
+
+function updatePlayerCompleteButton(isDone) {
+  const completeBtn = document.getElementById('btn-toggle-complete');
+  if (!completeBtn) return;
+  completeBtn.classList.toggle('done', isDone);
+  const icon = document.getElementById('complete-icon');
+  const text = document.getElementById('complete-text');
+  if (icon) icon.textContent = isDone ? '✓' : '○';
+  if (text) text.textContent = isDone ? 'Completed' : 'Mark Complete';
+}
+
+function handleLessonVideoEnded() {
+  if (activeCourse && activeLesson && !activeLesson.isCompleted) {
+    toggleCurrentLessonComplete();
+  }
+}
+
+function replayCurrentLesson() {
+  const video = document.getElementById('main-video-el');
+  if (video) {
+    video.currentTime = 0;
+    const p = video.play();
+    if (p && p.catch) p.catch(() => {});
+    toast('↺ Video restarted');
+    return;
+  }
+  const iframe = document.getElementById('cr-video-iframe');
+  if (iframe && activeLesson && activeLesson.streamUrl) {
+    const sep = activeLesson.streamUrl.includes('?') ? '&' : '?';
+    iframe.src = activeLesson.streamUrl + sep + '_t=' + Date.now() + '&autoplay=true';
+    toast('↺ Video reloaded');
+    return;
+  }
+  if (activeCourse && activeLesson) {
+    loadLessonToPlayer(activeCourse.id, activeLesson.id);
   }
 }
 
@@ -1014,22 +1088,185 @@ async function toggleCurrentLessonComplete() {
       currentStudent.completedLessons[courseId].push(lessonId);
       nowDone = true;
     }
+    activeLesson.isCompleted = nowDone;
     localStorage.setItem('qaa_student_info', JSON.stringify(currentStudent));
 
-    const completeBtn = document.getElementById('btn-toggle-complete');
-    completeBtn.classList.toggle('done', nowDone);
-    completeBtn.textContent = nowDone ? 'Completed ✓' : 'Mark Complete ✓';
+    updatePlayerCompleteButton(nowDone);
 
     const row = document.getElementById(`cr-les-row-${lessonId}`);
     if (row) {
       row.classList.toggle('completed', nowDone);
-      row.querySelector('.lesson-status-icon').textContent = nowDone ? '✓' : '○';
+      const icon = row.querySelector('.lesson-status-icon');
+      if (icon) icon.textContent = nowDone ? '✓' : '○';
+    }
+
+    const drawerRow = document.getElementById(`drawer-les-row-${lessonId}`);
+    if (drawerRow) {
+      drawerRow.classList.toggle('completed', nowDone);
+      const icon = drawerRow.querySelector('.drawer-lesson-icon');
+      if (icon) icon.textContent = drawerRow.classList.contains('playing') ? '▶' : (nowDone ? '✓' : '○');
     }
 
     toast(nowDone ? '🎉 Lesson marked as completed!' : 'Lesson status updated.');
   } catch (err) {
     toast('Progress update failed', false);
   }
+}
+
+function goToNextLesson() {
+  if (!activeCourse || !activeLesson) return;
+  let foundCurrent = false;
+  let nextLesson = null;
+
+  for (const mod of activeCourse.modules || []) {
+    for (const les of mod.lessons || []) {
+      if (foundCurrent) {
+        nextLesson = les;
+        break;
+      }
+      if (les.id === activeLesson.id) {
+        foundCurrent = true;
+      }
+    }
+    if (nextLesson) break;
+  }
+
+  if (nextLesson) {
+    loadLessonToPlayer(activeCourse.id, nextLesson.id);
+  } else {
+    toast('🎓 Congratulations! You reached the end of this course!');
+  }
+}
+
+function openAllLessonsDrawer() {
+  if (!activeCourse) return;
+  const drawer = document.getElementById('modal-all-lessons');
+  if (!drawer) return;
+
+  renderDrawerLessons(activeCourse);
+  drawer.classList.add('active');
+}
+
+function closeAllLessonsDrawer() {
+  const drawer = document.getElementById('modal-all-lessons');
+  if (drawer) drawer.classList.remove('active');
+}
+
+function renderDrawerLessons(course) {
+  const container = document.getElementById('drawer-modules-container');
+  if (!container || !course.modules) return;
+
+  const completedList = (currentStudent && currentStudent.completedLessons && currentStudent.completedLessons[course.id]) || [];
+  
+  let totalCount = 0;
+  let doneCount = 0;
+  course.modules.forEach(m => {
+    (m.lessons || []).forEach(l => {
+      totalCount++;
+      if (completedList.includes(l.id)) doneCount++;
+    });
+  });
+  const pct = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
+
+  const nameEl = document.getElementById('drawer-course-name');
+  if (nameEl) nameEl.textContent = course.title || 'Course Curriculum';
+  const statEl = document.getElementById('drawer-course-stat');
+  if (statEl) statEl.textContent = `${doneCount} of ${totalCount} Lessons Completed (${pct}%)`;
+  const barEl = document.getElementById('drawer-prog-bar');
+  if (barEl) barEl.style.width = `${pct}%`;
+
+  container.innerHTML = course.modules.map((m, mIdx) => `
+    <div class="drawer-module-group">
+      <div class="drawer-module-header" onclick="this.nextElementSibling.classList.toggle('hidden')">
+        <span class="drawer-module-title">${escHtml(m.title)}</span>
+        <span class="drawer-module-count">${m.lessons?.length || 0} Lessons ▾</span>
+      </div>
+      <div class="drawer-module-lessons">
+        ${(m.lessons || []).map(l => {
+          const isDone = completedList.includes(l.id);
+          const isPlaying = activeLesson && activeLesson.id === l.id;
+          return `
+            <div id="drawer-les-row-${l.id}" class="drawer-lesson-item ${isPlaying ? 'playing' : ''} ${isDone ? 'completed' : ''}" onclick="selectLessonFromDrawer('${course.id}', '${l.id}')">
+              <div class="drawer-lesson-left">
+                <span class="drawer-lesson-icon">${isPlaying ? '▶' : (isDone ? '✓' : '○')}</span>
+                <div class="drawer-lesson-details">
+                  <div class="drawer-lesson-name">${escHtml(l.title)}</div>
+                  <div class="drawer-lesson-meta">
+                    ${isPlaying ? '<span class="now-playing-tag">NOW PLAYING</span> • ' : ''}
+                    <span>⏱ ${escHtml(l.duration || 'Video')}</span>
+                  </div>
+                </div>
+              </div>
+              <span class="drawer-lesson-arrow">›</span>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectLessonFromDrawer(courseId, lessonId) {
+  closeAllLessonsDrawer();
+  loadLessonToPlayer(courseId, lessonId);
+}
+
+function openAvatarQuickMenu() {
+  if (!currentStudent) return;
+  const drawer = document.getElementById('sheet-avatar-quickmenu');
+  if (!drawer) return;
+
+  const name = currentStudent.name || 'Student';
+  const phone = currentStudent.phone ? `+91 ${currentStudent.phone}` : (currentStudent.email || '');
+  const enrollNo = currentStudent.enrollmentNo || currentStudent.id || 'QAA-STUDENT';
+  const avatar = currentStudent.avatar || currentStudent.avatarUrl || '';
+  const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+
+  document.getElementById('quickmenu-name').textContent = name;
+  document.getElementById('quickmenu-phone').textContent = phone;
+  document.getElementById('quickmenu-id-badge').textContent = `ID: ${enrollNo}`;
+
+  const roleBadge = document.getElementById('quickmenu-role-badge');
+  if (roleBadge) {
+    if (currentStudent.isOfflineStudent || currentStudent.offlineAdmissionId) {
+      roleBadge.textContent = 'OFFLINE ADMISSION';
+      roleBadge.style.color = '#38bdf8';
+    } else {
+      roleBadge.textContent = 'VERIFIED STUDENT';
+      roleBadge.style.color = '#34d399';
+    }
+  }
+
+  const avatarImg = document.getElementById('quickmenu-avatar-img');
+  const avatarFb = document.getElementById('quickmenu-avatar-fallback');
+  if (avatar) {
+    avatarImg.src = avatar;
+    avatarImg.classList.remove('hidden');
+    avatarFb.classList.add('hidden');
+  } else {
+    avatarFb.textContent = initials;
+    avatarFb.classList.remove('hidden');
+    avatarImg.classList.add('hidden');
+  }
+
+  // Calculate course stats
+  const count = (enrolledCourses || []).length;
+  document.getElementById('quickmenu-course-count').textContent = count;
+  
+  let certCount = 0;
+  (enrolledCourses || []).forEach(c => {
+    const tot = c.totalLessons || (c.modules ? c.modules.reduce((a, m) => a + (m.lessons?.length || 0), 0) : 0);
+    const done = c.completedCount || 0;
+    if (tot > 0 && done >= tot) certCount++;
+  });
+  document.getElementById('quickmenu-cert-count').textContent = certCount;
+
+  drawer.classList.add('active');
+}
+
+function closeAvatarQuickMenu() {
+  const drawer = document.getElementById('sheet-avatar-quickmenu');
+  if (drawer) drawer.classList.remove('active');
 }
 
 function switchClassroomSubtab(tabKey) {
@@ -1131,13 +1368,19 @@ async function loadLessonComments(courseId, lessonId) {
     const res = await apiFetch(`discussion-list&courseId=${encodeURIComponent(courseId)}&lessonId=${encodeURIComponent(lessonId)}`);
     const comments = res.comments || [];
     if (!comments.length) {
-      container.innerHTML = `<div style="font-size:12px;color:var(--text-muted);">Abhi tak koi comments nahi hain. Apna doubt pehle puchiye!</div>`;
+      container.innerHTML = `<div style="font-size:12.5px;color:var(--text-muted);text-align:center;padding:22px 10px;background:rgba(255,255,255,0.02);border-radius:var(--radius-md);">
+        <span style="font-size:24px;display:block;margin-bottom:6px;">💬</span>
+        Abhi tak is lesson par koi comment nahi hai.<br><span style="font-size:11px;color:var(--text-dim);">Apna sawaal ya feedback pehle puchiye!</span>
+      </div>`;
       return;
     }
     container.innerHTML = comments.map(c => `
-      <div style="background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:var(--radius-sm);font-size:12px;">
-        <div style="font-weight:700;color:var(--gold);margin-bottom:2px;">${escHtml(c.authorName || 'Student')}</div>
-        <div style="color:#e2e8f0;">${escHtml(c.text || '')}</div>
+      <div class="comment-item">
+        <div class="comment-item-hdr">
+          <span class="comment-author">👤 ${escHtml(c.authorName || c.userName || 'Student')}</span>
+          <span class="comment-time">${escHtml(c.time || c.createdAt || 'Recent')}</span>
+        </div>
+        <div class="comment-text">${escHtml(c.text || '')}</div>
       </div>
     `).join('');
   } catch (_) {}

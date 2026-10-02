@@ -123,25 +123,17 @@ html, body {
 }
 
 .splash-halo {
-  position: absolute;
-  inset: -12px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.35) 0%, transparent 70%);
-  animation: pulseHalo 2s infinite ease-in-out;
-}
-
-@keyframes pulseHalo {
-  0%, 100% { transform: scale(0.95); opacity: 0.6; }
-  50% { transform: scale(1.15); opacity: 1; }
+  display: none;
 }
 
 .splash-logo-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 28px;
-  border: 2px solid var(--border-gold-glow);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), var(--shadow-glow);
+  object-fit: contain;
+  border-radius: 0;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent;
   position: relative;
   z-index: 2;
   animation: logoFloat 3s infinite ease-in-out;
@@ -201,17 +193,13 @@ html, body {
    2. APP HEADER (NATIVE APP BAR)
    ========================================================================== */
 .app-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: calc(var(--header-height) + var(--safe-top));
+  position: relative;
+  width: 100%;
+  min-height: calc(var(--header-height) + var(--safe-top));
   padding-top: var(--safe-top);
-  background: var(--bg-glass);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: var(--bg-surface);
   border-bottom: 1px solid var(--border-subtle);
-  z-index: 1000;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -228,12 +216,13 @@ html, body {
 }
 
 .header-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  object-fit: cover;
-  border: 1px solid rgba(216, 161, 83, 0.35);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  background: transparent;
 }
 
 .header-brand-text {
@@ -370,7 +359,7 @@ html, body {
 .app-viewport {
   width: 100%;
   min-height: 100vh;
-  padding-top: calc(var(--header-height) + var(--safe-top));
+  padding-top: 0;
   padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 16px);
   position: relative;
 }
@@ -1427,47 +1416,124 @@ html, body {
   border: none;
 }
 
-/* Classroom Action Strip */
+.classroom-lessons-toggle-btn {
+  background: rgba(216, 161, 83, 0.14);
+  border: 1px solid rgba(216, 161, 83, 0.4);
+  color: #fde68a;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.classroom-lessons-toggle-btn:active {
+  transform: scale(0.96);
+  background: rgba(216, 161, 83, 0.25);
+}
+
+/* Classroom Action Strip (3 Action Buttons from Website LMS) */
 .classroom-action-strip {
-  padding: 12px 16px;
-  background: var(--bg-secondary);
+  padding: 12px 14px;
+  background: var(--bg-surface);
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 10px;
 }
 
-.lesson-meta-title {
-  font-size: 14.5px;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 2px;
-}
-
-.lesson-meta-sub {
-  font-size: 11.5px;
-  color: var(--text-muted);
-}
-
-.btn-mark-complete {
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  color: #34d399;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 8px 12px;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  white-space: nowrap;
+.lesson-meta-bar {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+  min-width: 0;
 }
 
-.btn-mark-complete.done {
-  background: var(--success-green);
+.lesson-badge-dur {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.lesson-meta-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  margin: 0;
+}
+
+.lesson-ctrl-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.btn-player-action {
+  flex: 1;
+  min-height: 38px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-player-action:active {
+  transform: scale(0.96);
+}
+
+.btn-replay {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+}
+
+.btn-replay:hover, .btn-replay:active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.btn-complete {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+.btn-complete.done {
+  background: #10b981;
+  border-color: #10b981;
   color: #070a12;
+}
+
+.btn-next {
+  background: var(--gold-gradient);
+  border: none;
+  color: #070a12;
+  box-shadow: 0 2px 10px rgba(216, 161, 83, 0.3);
+}
+
+.btn-next:active {
+  box-shadow: none;
 }
 
 /* Lesson Content Tabs */
@@ -1580,6 +1646,320 @@ html, body {
   font-size: 11px;
   color: var(--text-dim);
   white-space: nowrap;
+}
+
+/* Comments & Discussion UI */
+.comments-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.comment-compose-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.comment-compose-input {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 13px;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.comment-compose-input:focus {
+  border-color: var(--gold);
+}
+
+.comments-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.comment-item {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  padding: 11px 13px;
+}
+
+.comment-item-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.comment-author {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.comment-time {
+  font-size: 10.5px;
+  color: var(--text-dim);
+}
+
+.comment-text {
+  font-size: 12.5px;
+  color: #e2e8f0;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+/* All Lessons Curriculum Drawer Styling */
+.drawer-module-group {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.drawer-module-header {
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.drawer-module-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  flex: 1;
+  padding-right: 8px;
+}
+
+.drawer-module-count {
+  font-size: 11px;
+  color: var(--gold-light);
+  white-space: nowrap;
+}
+
+.drawer-lesson-item {
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.drawer-lesson-item:last-child {
+  border-bottom: none;
+}
+
+.drawer-lesson-item:active {
+  background: rgba(216, 161, 83, 0.08);
+}
+
+.drawer-lesson-item.playing {
+  background: rgba(216, 161, 83, 0.12);
+  border-left: 3px solid var(--gold);
+}
+
+.drawer-lesson-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.drawer-lesson-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+}
+
+.drawer-lesson-item.completed .drawer-lesson-icon {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.drawer-lesson-item.playing .drawer-lesson-icon {
+  background: var(--gold);
+  color: #070a12;
+  font-weight: 900;
+}
+
+.drawer-lesson-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.drawer-lesson-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #cbd5e1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drawer-lesson-item.playing .drawer-lesson-name {
+  color: #fde68a;
+  font-weight: 700;
+}
+
+.drawer-lesson-meta {
+  font-size: 10.5px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.now-playing-tag {
+  background: rgba(216, 161, 83, 0.25);
+  color: #fde68a;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.drawer-lesson-arrow {
+  color: var(--text-dim);
+  font-size: 16px;
+  margin-left: 8px;
+}
+
+/* Avatar Quick Menu Luxury Sheet */
+.avatar-sheet-hero {
+  background: linear-gradient(135deg, rgba(216, 161, 83, 0.12) 0%, rgba(15, 22, 40, 0.8) 100%);
+  border: 1px solid var(--border-gold-glow);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.avatar-sheet-img-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #1e293b;
+  border: 2px solid var(--gold);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-sheet-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-sheet-initials {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.avatar-sheet-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.avatar-sheet-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.avatar-sheet-phone {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.avatar-sheet-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.avatar-sheet-id {
+  font-size: 10px;
+  color: var(--gold-light);
+  font-family: monospace;
+}
+
+.avatar-sheet-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.avatar-stat-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.avatar-stat-box:active {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.avatar-stat-val {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.avatar-stat-lbl {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
 }
 
 /* ==========================================================================

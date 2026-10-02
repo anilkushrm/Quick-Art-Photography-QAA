@@ -70,7 +70,7 @@
       </button>
 
       <!-- Profile Avatar Button -->
-      <button id="btn-header-avatar" class="header-avatar-btn" onclick="switchTab('profile')" type="button" aria-label="My Profile">
+      <button id="btn-header-avatar" class="header-avatar-btn" onclick="openAvatarQuickMenu()" type="button" aria-label="My Profile">
         <img id="header-avatar-img" src="" alt="Profile" class="header-avatar-img hidden" />
         <span id="header-avatar-initials">QA</span>
       </button>
@@ -581,8 +581,8 @@
         ← Back
       </button>
       <div id="cr-course-title" class="classroom-top-title">Course Title</div>
-      <button type="button" class="btn-secondary" onclick="shareCurrentLesson()" style="width:auto; padding:4px 8px; font-size:12px;">
-        Share ↗
+      <button type="button" class="classroom-lessons-toggle-btn" onclick="openAllLessonsDrawer()">
+        📚 All Lessons ▾
       </button>
     </div>
 
@@ -591,23 +591,30 @@
       <!-- Injected dynamically -->
     </div>
 
-    <!-- Lesson Action Strip -->
+    <!-- Lesson Action Strip (3 Action Buttons from Website LMS) -->
     <div class="classroom-action-strip">
-      <div style="flex:1; min-width:0;">
+      <div class="lesson-meta-bar">
+        <span class="lesson-badge-dur" id="cr-lesson-dur-badge">⏱ 40:00</span>
         <h3 id="cr-lesson-title" class="lesson-meta-title">Lesson Title</h3>
-        <div id="cr-lesson-sub" class="lesson-meta-sub">Module 1 • Duration: 15 mins</div>
       </div>
-      <button type="button" id="btn-toggle-complete" class="btn-mark-complete" onclick="toggleCurrentLessonComplete()">
-        Mark Complete ✓
-      </button>
+      <div class="lesson-ctrl-buttons">
+        <button type="button" id="btn-replay-lesson" class="btn-player-action btn-replay" onclick="replayCurrentLesson()" title="Replay Video">
+          ↺ Replay
+        </button>
+        <button type="button" id="btn-toggle-complete" class="btn-player-action btn-complete" onclick="toggleCurrentLessonComplete()">
+          <span id="complete-icon">○</span> <span id="complete-text">Mark Complete</span>
+        </button>
+        <button type="button" id="btn-next-lesson" class="btn-player-action btn-next" onclick="goToNextLesson()">
+          Next Lesson →
+        </button>
+      </div>
     </div>
 
-    <!-- Lesson Sub-tabs -->
+    <!-- Lesson Sub-tabs (Comment First & Default Active) -->
     <div class="lesson-nav-tabs">
-      <button type="button" class="lesson-subtab active" data-sub="curriculum" onclick="switchClassroomSubtab('curriculum')">Curriculum</button>
-      <button type="button" class="lesson-subtab" data-sub="resources" onclick="switchClassroomSubtab('resources')">Practice Files 📁</button>
+      <button type="button" class="lesson-subtab active" data-sub="doubts" onclick="switchClassroomSubtab('doubts')">💬 Comment</button>
       <button type="button" class="lesson-subtab" data-sub="notes" onclick="switchClassroomSubtab('notes')">Notes 📝</button>
-      <button type="button" class="lesson-subtab" data-sub="doubts" onclick="switchClassroomSubtab('doubts')">Doubts / Comments 💬</button>
+      <button type="button" class="lesson-subtab" data-sub="resources" onclick="switchClassroomSubtab('resources')">Practice Files 📁</button>
       <button type="button" class="lesson-subtab" data-sub="quiz" onclick="switchClassroomSubtab('quiz')">Quiz ❓</button>
       <button type="button" class="lesson-subtab" data-sub="assignment" onclick="switchClassroomSubtab('assignment')">Assignment 📤</button>
       <button type="button" class="lesson-subtab" data-sub="support" onclick="switchClassroomSubtab('support')">Mentor Chat 🟢</button>
@@ -615,56 +622,61 @@
 
     <!-- Sub-tab Body -->
     <div class="lesson-tab-body">
-      <!-- 1. Curriculum -->
-      <div id="cr-sub-curriculum">
-        <div class="modules-list" id="cr-modules-container">
-          <!-- Injected dynamically -->
+      <!-- 1. Doubts & Discussion / Comments (FIRST & DEFAULT ACTIVE) -->
+      <div id="cr-sub-doubts">
+        <div class="comments-card-header">
+          <div>
+            <div style="font-weight:700; color:#fff; font-size:13.5px;">💬 Lesson Discussion &amp; Comments</div>
+            <span style="font-size:11px; color:var(--text-muted);">Ask questions, get mentor &amp; peer feedback</span>
+          </div>
+        </div>
+        
+        <form onsubmit="handlePostLessonComment(event)" class="comment-compose-card">
+          <textarea id="cr-comment-input" class="comment-compose-input" placeholder="Apna sawaal ya doubt yahan likhein…" rows="2" required></textarea>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+            <span style="font-size:11px; color:var(--text-dim);">Post as Enrolled Student</span>
+            <button type="submit" id="btn-submit-comment" class="btn-primary" style="width:auto; padding:7px 18px; font-size:12.5px;">
+              Post Comment 💬
+            </button>
+          </div>
+        </form>
+
+        <div id="cr-comments-list" class="comments-stream">
+          <!-- Comments loaded dynamically -->
         </div>
       </div>
 
-      <!-- 2. Resources / Practice Files -->
-      <div id="cr-sub-resources" class="hidden">
-        <div style="font-weight:700; margin-bottom:10px;">📁 Downloadable Project Practice Files &amp; Assets</div>
-        <div id="cr-resources-list">
-          <!-- Injected dynamically -->
-        </div>
-      </div>
-
-      <!-- 3. Lesson Notes -->
+      <!-- 2. Lesson Notes -->
       <div id="cr-sub-notes" class="hidden">
-        <div style="font-weight:700; margin-bottom:10px;">📝 Lesson Summary &amp; Key Shortcuts</div>
+        <div style="font-weight:700; margin-bottom:10px; color:#fff; font-size:13.5px;">📝 Lesson Summary &amp; Key Shortcuts</div>
         <div id="cr-notes-content" style="font-size:13px; line-height:1.6; color:#cbd5e1;">
           <!-- Injected dynamically -->
         </div>
       </div>
 
-      <!-- 4. Doubts & Discussion -->
-      <div id="cr-sub-doubts" class="hidden">
-        <div style="font-weight:700; margin-bottom:10px;">💬 Lesson Discussion &amp; Doubts</div>
-        <div id="cr-comments-list" style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;">
+      <!-- 3. Practice Files -->
+      <div id="cr-sub-resources" class="hidden">
+        <div style="font-weight:700; margin-bottom:10px; color:#fff; font-size:13.5px;">📁 Downloadable Project Practice Files &amp; LUTs</div>
+        <div id="cr-resources-list">
           <!-- Injected dynamically -->
         </div>
-        <form onsubmit="handlePostLessonComment(event)" style="display:flex; gap:8px;">
-          <input type="text" id="cr-comment-input" class="app-input" placeholder="Type your doubt for this lesson…" required />
-          <button type="submit" class="btn-primary" style="width:auto; padding:10px 16px;">Post</button>
-        </form>
       </div>
 
-      <!-- 5. Quiz -->
+      <!-- 4. Quiz -->
       <div id="cr-sub-quiz" class="hidden">
         <div id="cr-quiz-container">
           <!-- Injected dynamically -->
         </div>
       </div>
 
-      <!-- 6. Assignment -->
+      <!-- 5. Assignment -->
       <div id="cr-sub-assignment" class="hidden">
         <div id="cr-assignment-container">
           <!-- Injected dynamically -->
         </div>
       </div>
 
-      <!-- 7. Support -->
+      <!-- 6. Mentor Chat -->
       <div id="cr-sub-support" class="hidden">
         <div class="wa-notice-box" style="margin-bottom:16px;">
           <div class="wa-notice-icon">💬</div>
@@ -861,9 +873,128 @@
     </div>
   </div>
 
+  <!-- ================= 11. MODAL: ALL LESSONS DRAWER (CURRICULUM BOTTOM SHEET) ================= -->
+  <div id="modal-all-lessons" class="sheet-backdrop" onclick="closeAllLessonsDrawer()">
+    <div class="bottom-sheet" onclick="event.stopPropagation()" style="max-height:88vh;">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div style="flex:1; min-width:0; padding-right:12px;">
+          <h3 class="sheet-title" id="drawer-course-name">Course Lessons</h3>
+          <div id="drawer-course-stat" style="font-size:11.5px; color:var(--text-muted); margin-top:3px;">
+            0 of 0 Lessons Completed (0%)
+          </div>
+        </div>
+        <button type="button" class="sheet-close-btn" onclick="closeAllLessonsDrawer()">✕</button>
+      </div>
+
+      <!-- Course Progress Track -->
+      <div style="background:rgba(255,255,255,0.08); height:6px; border-radius:3px; overflow:hidden; margin-bottom:14px;">
+        <div id="drawer-prog-bar" style="width:0%; height:100%; background:var(--gold-gradient); transition:width 0.3s ease;"></div>
+      </div>
+
+      <div class="sheet-body" id="drawer-modules-container" style="overflow-y:auto; -webkit-overflow-scrolling:touch; padding-right:2px; flex:1;">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 12. BOTTOM SHEET: PROFESSIONAL AVATAR QUICK MENU ================= -->
+  <div id="sheet-avatar-quickmenu" class="sheet-backdrop" onclick="closeAvatarQuickMenu()">
+    <div class="bottom-sheet" onclick="event.stopPropagation()" style="max-height:86vh;">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <h3 class="sheet-title">🎓 Student Account</h3>
+        <button type="button" class="sheet-close-btn" onclick="closeAvatarQuickMenu()">✕</button>
+      </div>
+
+      <div class="sheet-body" style="overflow-y:auto; -webkit-overflow-scrolling:touch;">
+        <!-- Clean Student Hero Card -->
+        <div class="avatar-sheet-hero">
+          <div class="avatar-sheet-img-wrap">
+            <img id="quickmenu-avatar-img" src="" alt="Avatar" class="avatar-sheet-img hidden" />
+            <div id="quickmenu-avatar-fallback" class="avatar-sheet-initials">QA</div>
+          </div>
+          <div class="avatar-sheet-info">
+            <h4 id="quickmenu-name" class="avatar-sheet-name">Student Name</h4>
+            <div id="quickmenu-phone" class="avatar-sheet-phone">+91 ••••••••••</div>
+            <div style="margin-top:4px;">
+              <span id="quickmenu-role-badge" class="avatar-sheet-badge">VERIFIED STUDENT</span>
+              <span id="quickmenu-id-badge" class="avatar-sheet-id">ID: QAA-••••</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Stats Ribbon -->
+        <div class="avatar-sheet-stats">
+          <div class="avatar-stat-box" onclick="closeAvatarQuickMenu(); switchTab('mycourses');">
+            <div class="avatar-stat-val" id="quickmenu-course-count">0</div>
+            <div class="avatar-stat-lbl">Enrolled Courses</div>
+          </div>
+          <div class="avatar-stat-box" onclick="closeAvatarQuickMenu(); openCertificatesModal();">
+            <div class="avatar-stat-val" id="quickmenu-cert-count">0</div>
+            <div class="avatar-stat-lbl">Certificates</div>
+          </div>
+        </div>
+
+        <!-- Clean Menu Actions -->
+        <div class="profile-menu-group" style="margin-top:14px; margin-bottom:10px;">
+          <button type="button" class="profile-menu-item" onclick="closeAvatarQuickMenu(); switchTab('mycourses');">
+            <div class="profile-menu-left">
+              <span class="profile-menu-icon">🎓</span>
+              <span>My Courses &amp; Lessons</span>
+            </div>
+            <span style="color:var(--text-muted);">›</span>
+          </button>
+          <button type="button" class="profile-menu-item" onclick="closeAvatarQuickMenu(); openStudentIdCardModal();">
+            <div class="profile-menu-left">
+              <span class="profile-menu-icon">🪪</span>
+              <span>Official Student ID Card</span>
+            </div>
+            <span style="color:var(--text-muted);">›</span>
+          </button>
+          <button type="button" class="profile-menu-item" onclick="closeAvatarQuickMenu(); openCertificatesModal();">
+            <div class="profile-menu-left">
+              <span class="profile-menu-icon">🏆</span>
+              <span>My Certificates Vault</span>
+            </div>
+            <span style="color:var(--text-muted);">›</span>
+          </button>
+          <button type="button" class="profile-menu-item" onclick="closeAvatarQuickMenu(); toggleNotificationDrawer();">
+            <div class="profile-menu-left">
+              <span class="profile-menu-icon">🔔</span>
+              <span>Academy Notifications</span>
+            </div>
+            <span style="color:var(--text-muted);">›</span>
+          </button>
+          <a href="https://wa.me/919939800780" target="_blank" rel="noopener" class="profile-menu-item" onclick="closeAvatarQuickMenu();" style="text-decoration:none;">
+            <div class="profile-menu-left">
+              <span class="profile-menu-icon">💬</span>
+              <span>WhatsApp Mentor Support</span>
+            </div>
+            <span style="color:var(--text-muted);">↗</span>
+          </a>
+          <button type="button" class="profile-menu-item" onclick="closeAvatarQuickMenu(); switchTab('profile');">
+            <div class="profile-menu-left">
+              <span class="profile-menu-icon">👤</span>
+              <span>My Profile &amp; Settings</span>
+            </div>
+            <span style="color:var(--text-muted);">›</span>
+          </button>
+          <button type="button" class="profile-menu-item profile-menu-danger" onclick="closeAvatarQuickMenu(); handleLogoutStudent();">
+            <div class="profile-menu-left">
+              <span class="profile-menu-icon">🚪</span>
+              <span>Logout Student Account</span>
+            </div>
+            <span style="color:#f87171;">›</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- HTML2Canvas & QR Code Libraries for ID Card Generation -->
   <script src="../portal/html2canvas.min.js"></script>
   <script src="../portal/qrcode.min.js"></script>
-  <script src="app.js?v=20261002_02"></script>
+  <script src="app.js?v=20261002_03"></script>
 </body>
 </html>

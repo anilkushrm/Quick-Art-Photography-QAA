@@ -1035,7 +1035,7 @@
             </div>
             <span style="color:var(--text-muted);">›</span>
           </button>
-          <button type="button" class="profile-menu-item profile-menu-danger" onclick="closeAvatarQuickMenu(); handleLogoutStudent();">
+          <button type="button" class="profile-menu-item profile-menu-danger" onclick="closeAvatarQuickMenu(); handleStudentLogout();">
             <div class="profile-menu-left">
               <span class="profile-menu-icon">🚪</span>
               <span>Logout Student Account</span>
@@ -1045,6 +1045,8 @@
         </div>
       </div>
     </div>
+  </div>
+
   <!-- ================= 12. MODAL: ALL COURSES CATALOG ================= -->
   <div id="modal-all-courses" class="sheet-backdrop" onclick="closeAllCoursesModal()">
     <div class="bottom-sheet catalog-sheet" onclick="event.stopPropagation()" style="max-height:88vh;">

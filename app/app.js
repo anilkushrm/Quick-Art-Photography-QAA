@@ -12,6 +12,30 @@ let notificationsList = [];
 let liveCheckInterval = null;
 
 // ==========================================================================
+// 0. MOBILE SCROLL & REFRESH CONFLICT RESOLVER
+// ==========================================================================
+// Fixes: Scrolling freezing when lifting finger, and accidental page reloads
+let touchStartClientY = 0;
+window.addEventListener('touchstart', (e) => {
+  if (e.touches && e.touches.length === 1) {
+    touchStartClientY = e.touches[0].clientY;
+  }
+}, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+  if (e.touches && e.touches.length === 1) {
+    const currentY = e.touches[0].clientY;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    // When already at the top of document, prevent accidental pull-to-refresh
+    if (scrollTop <= 0 && currentY > touchStartClientY) {
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+    }
+  }
+}, { passive: false });
+
+// ==========================================================================
 // 1. SMART API CLIENT (ZERO JSON CRASHES, AUTO-FALLBACK & CORS COMPATIBLE)
 // ==========================================================================
 
@@ -588,7 +612,13 @@ function togglePasswordVisibility(inputId, triggerBtn) {
 // ==========================================================================
 // 4. BOTTOM NAVIGATION (4 CLEAN TABS)
 // ==========================================================================
-function switchTab(tabName) {
+let currentTab = 'dashboard';
+
+function switchTab(tabName, fromPopstate = false) {
+  if (!['dashboard', 'mycourses', 'live', 'profile'].includes(tabName)) return;
+  const prevTab = currentTab;
+  currentTab = tabName;
+
   ['dashboard', 'mycourses', 'live', 'profile'].forEach(t => {
     const btn = document.getElementById(`nav-btn-${t}`);
     const panel = document.getElementById(`tab-${t}`);
@@ -602,6 +632,10 @@ function switchTab(tabName) {
   if (tabName === 'mycourses') loadCoursesTab();
   if (tabName === 'live') loadLiveClassesTab();
   if (tabName === 'profile') loadProfileData();
+
+  if (!fromPopstate && tabName !== 'dashboard' && tabName !== prevTab) {
+    pushNavState({ screen: 'tab', tab: tabName });
+  }
 }
 
 function setupURLRouter() {
@@ -848,6 +882,7 @@ function renderDashboardAllCoursesStrip() {
 }
 
 function openAllCoursesModal() {
+  pushNavState({ screen: 'modal', modal: 'allcourses' });
   const modal = document.getElementById('modal-all-courses');
   if (modal) modal.classList.add('active');
   if (!allAcademyCourses.length) {
@@ -857,9 +892,12 @@ function openAllCoursesModal() {
   }
 }
 
-function closeAllCoursesModal() {
+function closeAllCoursesModal(fromPopstate = false) {
   const modal = document.getElementById('modal-all-courses');
   if (modal) modal.classList.remove('active');
+  if (!fromPopstate && window.history.state && window.history.state.modal === 'allcourses') {
+    try { window.history.back(); } catch (e) {}
+  }
 }
 
 function filterCatalogModal(filter) {
@@ -1129,6 +1167,7 @@ function filterCourses(filter) {
 // 7. CLASSROOM PLAYER ENGINE (SEAMLESS IN-APP EXPERIENCE)
 // ==========================================================================
 async function openClassroomPlayer(courseId, initialLessonId = null) {
+  pushNavState({ screen: 'classroom', courseId });
   const playerView = document.getElementById('view-classroom-player');
   playerView.classList.remove('hidden');
 
@@ -1161,10 +1200,13 @@ async function openClassroomPlayer(courseId, initialLessonId = null) {
   }
 }
 
-function closeClassroomPlayer() {
+function closeClassroomPlayer(fromPopstate = false) {
   document.getElementById('view-classroom-player').classList.add('hidden');
   document.getElementById('cr-video-mount').innerHTML = '';
   closeAllLessonsDrawer();
+  if (!fromPopstate && window.history.state && window.history.state.screen === 'classroom') {
+    try { window.history.back(); } catch (e) {}
+  }
 }
 
 function renderClassroomModules(course) {
@@ -1510,11 +1552,15 @@ function openAvatarQuickMenu() {
   document.getElementById('quickmenu-cert-count').textContent = certCount;
 
   drawer.classList.add('active');
+  pushNavState({ screen: 'modal', modal: 'avatar' });
 }
 
-function closeAvatarQuickMenu() {
+function closeAvatarQuickMenu(fromPopstate = false) {
   const drawer = document.getElementById('sheet-avatar-quickmenu');
   if (drawer) drawer.classList.remove('active');
+  if (!fromPopstate && window.history.state && window.history.state.modal === 'avatar') {
+    try { window.history.back(); } catch (e) {}
+  }
 }
 
 function switchClassroomSubtab(tabKey) {
@@ -2714,10 +2760,14 @@ function openStudentIdCardModal() {
   document.getElementById('idcard-photo').src = photo;
 
   document.getElementById('modal-id-card').classList.add('active');
+  pushNavState({ screen: 'modal', modal: 'idcard' });
 }
 
-function closeStudentIdCardModal() {
+function closeStudentIdCardModal(fromPopstate = false) {
   document.getElementById('modal-id-card').classList.remove('active');
+  if (!fromPopstate && window.history.state && window.history.state.modal === 'idcard') {
+    try { window.history.back(); } catch (e) {}
+  }
 }
 
 async function downloadStudentIdCard() {
@@ -2754,7 +2804,7 @@ function openChangePasswordModal() {
 }
 
 // ==========================================================================
-// 9.5 APP INSTALL & APK DOWNLOAD ENGINE
+// 9.5 APP INSTALL & APK DOWNLOAD ENGINE (ONLY IN AVATAR MENU)
 // ==========================================================================
 let deferredInstallPrompt = null;
 
@@ -2763,15 +2813,11 @@ window.addEventListener('beforeinstallprompt', (e) => {
   deferredInstallPrompt = e;
   const pwaBtn = document.getElementById('btn-pwa-install-action');
   if (pwaBtn) pwaBtn.style.display = 'flex';
-  const headerBtn = document.getElementById('header-install-btn');
-  if (headerBtn) headerBtn.classList.remove('hidden');
 });
 
 window.addEventListener('appinstalled', () => {
   deferredInstallPrompt = null;
   toast('🎉 Quick Art Academy App Installed Successfully!');
-  const promptEl = document.getElementById('dash-app-prompt');
-  if (promptEl) promptEl.style.display = 'none';
 });
 
 function openInstallModal() {
@@ -2789,11 +2835,15 @@ function openInstallModal() {
 
   const modal = document.getElementById('modal-install-app');
   if (modal) modal.classList.add('active');
+  pushNavState({ screen: 'modal', modal: 'install' });
 }
 
-function closeInstallModal() {
+function closeInstallModal(fromPopstate = false) {
   const modal = document.getElementById('modal-install-app');
   if (modal) modal.classList.remove('active');
+  if (!fromPopstate && window.history.state && window.history.state.modal === 'install') {
+    try { window.history.back(); } catch (e) {}
+  }
 }
 
 function handleApkDownloadClick(event) {
@@ -2837,13 +2887,121 @@ async function triggerPwaInstall() {
 }
 
 // ==========================================================================
+// 9.9 UNIVERSAL NAVIGATION & HARDWARE BACK BUTTON HANDLER
+// ==========================================================================
+function pushNavState(state) {
+  try {
+    window.history.pushState(state, '', window.location.href);
+  } catch (e) {
+    console.warn('pushState error:', e);
+  }
+}
+
+function handleAppBack() {
+  // 1. If All Lessons drawer inside classroom is open
+  const lessonsDrawer = document.getElementById('cr-lessons-drawer');
+  if (lessonsDrawer && !lessonsDrawer.classList.contains('hidden')) {
+    closeAllLessonsDrawer();
+    return true;
+  }
+
+  // 2. If Install modal is open
+  const installModal = document.getElementById('modal-install-app');
+  if (installModal && installModal.classList.contains('active')) {
+    closeInstallModal(true);
+    return true;
+  }
+
+  // 3. If All Courses modal is open
+  const coursesModal = document.getElementById('modal-all-courses');
+  if (coursesModal && coursesModal.classList.contains('active')) {
+    closeAllCoursesModal(true);
+    return true;
+  }
+
+  // 4. If Student ID Card modal is open
+  const idModal = document.getElementById('modal-id-card');
+  if (idModal && idModal.classList.contains('active')) {
+    closeStudentIdCardModal(true);
+    return true;
+  }
+
+  // 5. If Avatar Quick Menu is open
+  const avatarMenu = document.getElementById('sheet-avatar-quickmenu');
+  if (avatarMenu && avatarMenu.classList.contains('active')) {
+    closeAvatarQuickMenu(true);
+    return true;
+  }
+
+  // 6. If Notification Drawer is open
+  const notifBackdrop = document.getElementById('notification-backdrop');
+  if (notifBackdrop && notifBackdrop.classList.contains('active')) {
+    toggleNotificationDrawer(true);
+    return true;
+  }
+
+  // 7. If Registration or Forgot Password sheet is open
+  const regModal = document.getElementById('modal-register');
+  if (regModal && regModal.classList.contains('active')) {
+    closeRegistrationSheet();
+    return true;
+  }
+  const forgotSheet = document.getElementById('sheet-forgot-pw');
+  if (forgotSheet && forgotSheet.classList.contains('active')) {
+    closeForgotPasswordSheet();
+    return true;
+  }
+
+  // 8. If Classroom Player is open -> close it!
+  const player = document.getElementById('view-classroom-player');
+  if (player && !player.classList.contains('hidden')) {
+    closeClassroomPlayer(true);
+    return true;
+  }
+
+  // 9. If not on Dashboard tab, navigate to Dashboard tab
+  if (currentTab !== 'dashboard') {
+    switchTab('dashboard', true);
+    return true;
+  }
+
+  return false; // Already on dashboard and nothing open
+}
+
+// Global hook for Android WebView
+window.handleNativeAppBack = handleAppBack;
+
+// Browser / Mobile hardware/gesture back button listener
+let lastBackToastTime = 0;
+window.addEventListener('popstate', (e) => {
+  const handled = handleAppBack();
+  if (!handled) {
+    const now = Date.now();
+    if (now - lastBackToastTime > 2500) {
+      toast('Tap back again to exit', false);
+      lastBackToastTime = now;
+      pushNavState({ screen: 'dashboard' });
+    }
+  }
+});
+
+// Seed initial history state
+try {
+  window.history.replaceState({ screen: 'dashboard' }, '', window.location.href);
+  window.history.pushState({ screen: 'dashboard' }, '', window.location.href);
+} catch (e) {}
+
+// ==========================================================================
 // 10. NOTIFICATION CENTER ENGINE
 // ==========================================================================
-function toggleNotificationDrawer() {
+function toggleNotificationDrawer(fromPopstate = false) {
   const backdrop = document.getElementById('notification-backdrop');
   backdrop.classList.toggle('active');
   if (backdrop.classList.contains('active')) {
     loadNotifications();
+    pushNavState({ screen: 'modal', modal: 'notifications' });
+  } else if (!fromPopstate && window.history.state && window.history.state.modal === 'notifications') {
+    try { window.history.back(); } catch (e) {}
   }
 }
 

@@ -242,21 +242,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private var backPressedTime: Long = 0
+
     private fun setupSwipeRefresh() {
-        swipeRefresh.setColorSchemeColors(
-            ContextCompat.getColor(this, R.color.gold)
-        )
-        swipeRefresh.setProgressBackgroundColorSchemeColor(
-            ContextCompat.getColor(this, R.color.surface_dark)
-        )
-        swipeRefresh.setOnRefreshListener {
-            if (isNetworkAvailable()) {
-                webView.reload()
-            } else {
-                swipeRefresh.isRefreshing = false
-                showErrorView()
-            }
-        }
+        swipeRefresh.isEnabled = false // Disable touch interception to allow 100% smooth WebView scrolling
     }
 
     private fun setupRetryButton() {
@@ -270,10 +259,26 @@ class MainActivity : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 if (customVideoView != null) {
                     webView.webChromeClient?.onHideCustomView()
-                } else if (webView.canGoBack()) {
-                    webView.goBack()
-                } else {
-                    finish()
+                    return
+                }
+
+                // Check if web app JavaScript has a back handler (classroom player, sheet, tab, etc.)
+                webView.evaluateJavascript("typeof window.handleNativeAppBack === 'function' ? window.handleNativeAppBack() : false") { result ->
+                    val handled = result != null && (result == "true" || result.trim('"') == "true")
+                    if (!handled) {
+                        runOnUiThread {
+                            if (webView.canGoBack()) {
+                                webView.goBack()
+                            } else {
+                                if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                                    finish()
+                                } else {
+                                    Toast.makeText(this@MainActivity, "Press back again to exit", Toast.LENGTH_SHORT).show()
+                                    backPressedTime = System.currentTimeMillis()
+                                }
+                            }
+                        }
+                    }
                 }
             }
         })

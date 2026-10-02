@@ -154,10 +154,11 @@ body {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 50%;
+  border-radius: 0;
   border: none !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(216, 161, 83, 0.3) !important;
-  background: transparent;
+  box-shadow: none !important;
+  filter: drop-shadow(0 0 20px rgba(216, 161, 83, 0.35));
+  background: transparent !important;
   position: relative;
   z-index: 2;
   animation: logoFloat 3s infinite ease-in-out;
@@ -240,13 +241,14 @@ body {
 }
 
 .header-logo {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   object-fit: contain;
-  border-radius: 50% !important;
+  background: transparent !important;
   border: none !important;
-  box-shadow: 0 0 16px rgba(216, 161, 83, 0.28) !important;
-  background: transparent;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
   flex-shrink: 0;
   display: block;
 }
@@ -562,11 +564,13 @@ body {
 .auth-logo-img {
   width: 84px;
   height: 84px;
-  border-radius: 50%;
   object-fit: contain;
   display: block;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 28px rgba(216, 161, 83, 0.35);
-  background: transparent;
+  border-radius: 0;
+  border: none !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 0 20px rgba(216, 161, 83, 0.38));
+  background: transparent !important;
 }
 
 .auth-badge {

@@ -350,11 +350,11 @@ body {
   100% { transform: scale(0.95); opacity: 1; }
 }
 
-/* Header Notification Bell (Clean & Minimalist - No Circle Background) */
+/* Header Notification Bell (Clean & Minimalist - Perfectly Balanced) */
 .header-icon-btn {
   position: relative;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   background: transparent;
   border: none;
   color: #e2e8f0;
@@ -369,10 +369,10 @@ body {
 }
 
 .header-icon-btn .bell-svg {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   stroke: #cbd5e1;
-  stroke-width: 2;
+  stroke-width: 2.1;
   transition: stroke 0.2s ease, transform 0.2s ease;
 }
 
@@ -392,15 +392,15 @@ body {
 
 .header-notif-dot {
   position: absolute;
-  top: 0px;
-  right: 0px;
-  min-width: 14px;
-  height: 14px;
+  top: 1px;
+  right: 1px;
+  min-width: 15px;
+  height: 15px;
   padding: 0 3px;
   background: var(--live-red);
   color: #ffffff;
   border-radius: 10px;
-  font-size: 8.5px;
+  font-size: 9px;
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -475,12 +475,12 @@ body {
     height: 23px;
   }
   .header-icon-btn {
-    width: 30px;
-    height: 30px;
+    width: 33px;
+    height: 33px;
   }
   .header-icon-btn .bell-svg {
-    width: 18px;
-    height: 18px;
+    width: 21px;
+    height: 21px;
   }
   .header-avatar-btn {
     width: 32px;

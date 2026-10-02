@@ -2754,6 +2754,89 @@ function openChangePasswordModal() {
 }
 
 // ==========================================================================
+// 9.5 APP INSTALL & APK DOWNLOAD ENGINE
+// ==========================================================================
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  const pwaBtn = document.getElementById('btn-pwa-install-action');
+  if (pwaBtn) pwaBtn.style.display = 'flex';
+  const headerBtn = document.getElementById('header-install-btn');
+  if (headerBtn) headerBtn.classList.remove('hidden');
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  toast('🎉 Quick Art Academy App Installed Successfully!');
+  const promptEl = document.getElementById('dash-app-prompt');
+  if (promptEl) promptEl.style.display = 'none';
+});
+
+function openInstallModal() {
+  const isWebView = /FBAN|FBAV|Instagram|WhatsApp|wv/i.test(navigator.userAgent);
+  const warningEl = document.getElementById('inapp-browser-warning');
+  if (warningEl) {
+    if (isWebView) warningEl.classList.remove('hidden');
+    else warningEl.classList.add('hidden');
+  }
+
+  const pwaBtn = document.getElementById('btn-pwa-install-action');
+  if (pwaBtn) {
+    pwaBtn.style.display = 'flex';
+  }
+
+  const modal = document.getElementById('modal-install-app');
+  if (modal) modal.classList.add('active');
+}
+
+function closeInstallModal() {
+  const modal = document.getElementById('modal-install-app');
+  if (modal) modal.classList.remove('active');
+}
+
+function handleApkDownloadClick(event) {
+  const isWebView = /FBAN|FBAV|Instagram|WhatsApp|wv/i.test(navigator.userAgent);
+  if (isWebView) {
+    if (event) event.preventDefault();
+    toast('⚠️ WhatsApp/Instagram me APK download block hota hai. Upar 3 dots dabakar "Open in Chrome" karein!', false);
+    openInstallModal();
+    return;
+  }
+
+  toast('⬇ Downloading Quick Art Academy APK (4.7 MB)…');
+  // Auto open guide after 1 second so student knows how to allow unknown source
+  setTimeout(() => {
+    openInstallModal();
+  }, 1000);
+}
+
+function triggerApkDownload() {
+  handleApkDownloadClick();
+  const link = document.createElement('a');
+  link.href = '/downloads/quickart-academy.apk';
+  link.setAttribute('download', 'quickart-academy.apk');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+async function triggerPwaInstall() {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    const { outcome } = await deferredInstallPrompt.userChoice;
+    if (outcome === 'accepted') {
+      toast('Installing Quick Art LMS App…');
+      closeInstallModal();
+    }
+    deferredInstallPrompt = null;
+  } else {
+    toast('📱 Phone browser menu (⋮) me jakar "Add to Home screen" / "Install App" chunein.');
+  }
+}
+
+// ==========================================================================
 // 10. NOTIFICATION CENTER ENGINE
 // ==========================================================================
 function toggleNotificationDrawer() {

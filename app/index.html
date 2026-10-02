@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="app.css?v=20261002_02" />
+  <link rel="stylesheet" href="app.css?v=20261002_03" />
 </head>
 <body>
 
@@ -61,6 +61,12 @@
       <button id="header-live-btn" class="header-live-badge hidden" onclick="switchTab('live')" type="button" title="Live Class Active">
         <span class="live-beacon"></span>
         <span>LIVE NOW</span>
+      </button>
+
+      <!-- Install / Download App Button -->
+      <button id="header-install-btn" class="header-install-btn" onclick="openInstallModal()" type="button" title="Install Official Android App">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.996-3.456a.416.416 0 00-.1523-.5676.416.416 0 00-.568.1523l-2.0223 3.503C15.58 8.411 13.84 8.082 12 8.082s-3.58.329-5.1308.871L4.8468 5.45a.4161.4161 0 00-.568-.1523.4157.4157 0 00-.1523.5676l1.996 3.456C2.688 11.086.326 14.588 0 18.77h24c-.326-4.182-2.688-7.684-6.1185-9.4486"/></svg>
+        <span>App</span>
       </button>
 
       <!-- Notification Bell -->
@@ -185,6 +191,25 @@
       </div>
     </div>
 
+    <!-- Native Android App Download Card in Auth Gate -->
+    <div class="auth-app-download-card">
+      <div class="aad-icon-wrap">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.996-3.456a.416.416 0 00-.1523-.5676.416.416 0 00-.568.1523l-2.0223 3.503C15.58 8.411 13.84 8.082 12 8.082s-3.58.329-5.1308.871L4.8468 5.45a.4161.4161 0 00-.568-.1523.4157.4157 0 00-.1523.5676l1.996 3.456C2.688 11.086.326 14.588 0 18.77h24c-.326-4.182-2.688-7.684-6.1185-9.4486"/></svg>
+      </div>
+      <div class="aad-content">
+        <div class="aad-title">Quick Art Android App (.APK)</div>
+        <div class="aad-desc">Mobile me bina browser direct chalane ke liye Official App download karein (4.7 MB)</div>
+      </div>
+      <div class="aad-actions">
+        <a href="/downloads/quickart-academy.apk" download="quickart-academy.apk" class="aad-btn-download" onclick="handleApkDownloadClick(event)">
+          <span>⬇ Download APK</span>
+        </a>
+        <button type="button" class="aad-btn-guide" onclick="openInstallModal()">
+          <span>Guide ℹ️</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Helpline & Mentor WhatsApp -->
     <div style="margin-top: 24px; text-align: center; font-size: 12px; color: var(--text-dim);">
       Need help logging in? <a href="https://wa.me/919939800780" target="_blank" style="color:var(--gold); text-decoration:none; font-weight:600;">Chat with Mentor Anil Sharma</a> or Call <a href="tel:+919939800780" style="color:#cbd5e1; text-decoration:none;">+91 9939800780</a>
@@ -214,6 +239,23 @@
             <span class="dash-sub-pulse"></span>
             <span>Quick Art Photography Academy LMS</span>
           </div>
+        </div>
+      </div>
+
+      <!-- App Install Prompt for Mobile Web Visitors -->
+      <div id="dash-app-prompt" class="dash-app-prompt">
+        <div class="dap-left">
+          <div class="dap-badge">📲 OFFICIAL ANDROID APP</div>
+          <div class="dap-title">Quick Art Academy App Phone Me Chalayein</div>
+          <div class="dap-sub">Direct phone me bina browser 4K video player, zero-buffering live classes aur push notifications ke liye app download karein.</div>
+        </div>
+        <div class="dap-actions">
+          <a href="/downloads/quickart-academy.apk" download="quickart-academy.apk" class="dap-btn-download" onclick="handleApkDownloadClick(event)">
+            ⬇ Download APK (4.7 MB)
+          </a>
+          <button type="button" class="dap-btn-guide" onclick="openInstallModal()">
+            Installation Guide ℹ️
+          </button>
         </div>
       </div>
 
@@ -467,6 +509,20 @@
             <span class="prof-row-label">Project Files &amp; LUTs</span>
           </div>
           <span class="prof-row-right">
+            <span class="prof-chevron">›</span>
+          </span>
+        </button>
+
+        <button type="button" class="prof-row-btn" onclick="openInstallModal()">
+          <div class="prof-row-left">
+            <span class="prof-row-icon">📲</span>
+            <div>
+              <span class="prof-row-label">Install Mobile App (.APK)</span>
+              <div style="font-size:11px;color:var(--text-dim);">Android APK v1.0.0 • 4.7 MB Fast Install</div>
+            </div>
+          </div>
+          <span class="prof-row-right">
+            <span class="prof-row-tag" style="background:rgba(52,211,153,0.15);color:#34d399;border-color:rgba(52,211,153,0.3);">Download ⬇</span>
             <span class="prof-chevron">›</span>
           </span>
         </button>
@@ -1242,9 +1298,105 @@
     </div>
   </div>
 
+  <!-- ================= 13. MODAL: APP INSTALL & APK DOWNLOAD GUIDE ================= -->
+  <div id="modal-install-app" class="sheet-backdrop" onclick="closeInstallModal()">
+    <div class="bottom-sheet install-sheet" onclick="event.stopPropagation()" style="max-height:92vh; overflow-y:auto;">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div style="flex:1; min-width:0; padding-right:12px;">
+          <h3 class="sheet-title" style="display:flex; align-items:center; gap:8px;">
+            <span>📱 Install Quick Art App</span>
+          </h3>
+          <p style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">Official Android APK (v1.0.0) • 4.7 MB Fast Install</p>
+        </div>
+        <button type="button" class="sheet-close-btn" onclick="closeInstallModal()">✕</button>
+      </div>
+
+      <!-- In-App Browser Warning (Shown if opened via WhatsApp/Instagram WebView) -->
+      <div id="inapp-browser-warning" class="inapp-warning-box hidden">
+        <div class="inapp-warning-icon">⚠️</div>
+        <div class="inapp-warning-text">
+          <b>WhatsApp/Instagram Browser Detected!</b>
+          <div>Yahan se APK download block ho sakta hai. Kripya upar right side ke <b>3 dots (⋮)</b> par tap karke <b>"Open in Chrome" (क्रोम में खोलें)</b> karein.</div>
+        </div>
+      </div>
+
+      <!-- Primary Direct APK Download CTA -->
+      <div class="install-cta-wrap">
+        <a href="/downloads/quickart-academy.apk" download="quickart-academy.apk" class="btn-primary install-download-btn" onclick="handleApkDownloadClick(event)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.996-3.456a.416.416 0 00-.1523-.5676.416.416 0 00-.568.1523l-2.0223 3.503C15.58 8.411 13.84 8.082 12 8.082s-3.58.329-5.1308.871L4.8468 5.45a.4161.4161 0 00-.568-.1523.4157.4157 0 00-.1523.5676l1.996 3.456C2.688 11.086.326 14.588 0 18.77h24c-.326-4.182-2.688-7.684-6.1185-9.4486"/></svg>
+          <div style="text-align:left;">
+            <div style="font-size:15px; font-weight:800; line-height:1.2;">Download Android APK ⬇</div>
+            <div style="font-size:11px; opacity:0.9; font-weight:500;">4.7 MB • 100% Safe &amp; Official Build</div>
+          </div>
+        </a>
+
+        <!-- 1-Click PWA Install Option -->
+        <button type="button" id="btn-pwa-install-action" class="pwa-install-row-btn" onclick="triggerPwaInstall()">
+          <span style="font-size:18px;">⚡</span>
+          <div style="flex:1; text-align:left;">
+            <div style="font-size:13px; font-weight:700; color:#fff;">1-Click Add to Home Screen (Instant PWA)</div>
+            <div style="font-size:11px; color:var(--text-muted);">Bina APK file download kiye direct phone me lagayein</div>
+          </div>
+          <span style="color:var(--gold); font-size:12px; font-weight:700;">Install ›</span>
+        </button>
+      </div>
+
+      <!-- Step-by-Step Installation Visual Guide -->
+      <div class="install-guide-title">Mobile Me App Install Kaise Karein (3-Steps Guide):</div>
+      <div class="install-steps-container">
+        <div class="install-step-card">
+          <div class="isc-num">1</div>
+          <div class="isc-content">
+            <div class="isc-heading">"Download anyway" par tap karein</div>
+            <div class="isc-desc">Upar <b>Download Android APK</b> dabane par agar Google Chrome <i>"File might be harmful" (फ़ाइल हानिकारक हो सकती है)</i> dikhaye, to <b>"Download anyway" (डाउनलोड जारी रखें)</b> par tap karein.</div>
+            <div class="isc-note">✓ Ye Quick Art Academy ka official safe app hai. Google Play Store ke alawa direct browser se download karne par Chrome ye standard security warning hamesha dikhata hai.</div>
+          </div>
+        </div>
+
+        <div class="install-step-card">
+          <div class="isc-num">2</div>
+          <div class="isc-content">
+            <div class="isc-heading">Download Complete hone par File Kholein</div>
+            <div class="isc-desc">Download pura hone ke baad apne notification bar se <b>quickart-academy.apk</b> par tap karein ya phone ke <b>Files / Downloads</b> folder me jaakar file ko kholein.</div>
+          </div>
+        </div>
+
+        <div class="install-step-card">
+          <div class="isc-num">3</div>
+          <div class="isc-content">
+            <div class="isc-heading">"Allow from this source" ON karke Install karein</div>
+            <div class="isc-desc">Agar phone screen par <i>"Install blocked"</i> ya <i>"Settings - Install unknown apps"</i> ka popup aaye:</div>
+            <div class="isc-substeps">
+              <div>1. <b>Settings</b> button dabayein</div>
+              <div>2. <b>"Allow from this source"</b> (इस स्रोत से अनुमति दें) ko ON karein</div>
+              <div>3. Back button dabakar <b>"Install"</b> par tap karein</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="install-step-card">
+          <div class="isc-num">✓</div>
+          <div class="isc-content">
+            <div class="isc-heading">App Open Karein &amp; Padhai Shuru!</div>
+            <div class="isc-desc">App aapke phone me install ho chuka hai! App icon open karein aur registered WhatsApp mobile number se OTP verification karke padhai continue karein.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Helpline / WhatsApp Contact -->
+      <div class="install-help-box">
+        <div style="font-size:12.5px; color:#cbd5e1; margin-bottom:8px;">Agar download ya install hone me koi dikkat aaye to sir se WhatsApp par help lein:</div>
+        <a href="https://wa.me/919939800780?text=Sir%20mujhe%20Quick%20Art%20Academy%20app%20download%20karne%20me%20help%20chahiye" target="_blank" rel="noopener" class="install-help-btn">
+          💬 WhatsApp Help: +91 9939800780
+        </a>
+      </div>
+    </div>
+  </div>
+
   <!-- HTML2Canvas & QR Code Libraries for ID Card Generation -->
   <script src="../portal/html2canvas.min.js"></script>
   <script src="../portal/qrcode.min.js"></script>
-  <script src="app.js?v=20261002_03"></script>
+  <script src="app.js?v=20261002_04"></script>
 </body>
 </html>

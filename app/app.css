@@ -129,22 +129,34 @@ body {
 
 .splash-logo-wrap {
   position: relative;
-  width: 110px;
-  height: 110px;
+  width: 130px;
+  height: 130px;
   margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .splash-halo {
-  display: none;
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(216, 161, 83, 0.3) 0%, transparent 70%);
+  animation: pulseHalo 2.5s infinite ease-in-out;
+}
+
+@keyframes pulseHalo {
+  0%, 100% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1.15); opacity: 0.9; }
 }
 
 .splash-logo-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 0;
+  border-radius: 50%;
   border: none !important;
-  box-shadow: none !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(216, 161, 83, 0.3) !important;
   background: transparent;
   position: relative;
   z-index: 2;
@@ -228,13 +240,15 @@ body {
 }
 
 .header-logo {
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
+  border-radius: 50% !important;
   border: none !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
+  box-shadow: 0 0 16px rgba(216, 161, 83, 0.28) !important;
   background: transparent;
+  flex-shrink: 0;
+  display: block;
 }
 
 .header-brand-text {
@@ -542,16 +556,17 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 }
 
 .auth-logo-img {
-  width: 66px;
-  height: 66px;
-  border-radius: 16px;
-  object-fit: cover;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  object-fit: contain;
   display: block;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 24px rgba(216, 161, 83, 0.22);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 28px rgba(216, 161, 83, 0.35);
+  background: transparent;
 }
 
 .auth-badge {

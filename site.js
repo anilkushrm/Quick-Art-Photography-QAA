@@ -18,7 +18,7 @@
             if (faq) faq.remove();
             if (!nav.querySelector('.qa-resources')) {
                 const resources = document.createElement('details'); resources.className = 'qa-resources';
-                resources.innerHTML = `<summary>Resources <span class="qa-chevron" aria-hidden="true">⌄</span></summary><div class="qa-resources-menu"><a href="${about?.getAttribute('href') || '../about-us/'}">About Us</a><a href="${blog?.getAttribute('href') || '../blog/'}">Blog</a><a href="${faq?.getAttribute('href') || '../#faq'}">FAQ</a><a href="https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes&amp;hl=en" target="_blank" rel="noreferrer">Download Our App</a><a href="https://www.youtube.com/@QuickartPhotographyAcademy/videos" target="_blank" rel="noreferrer">YouTube</a><a href="https://wa.me/919939800780" target="_blank" rel="noreferrer">WhatsApp</a></div>`;
+                resources.innerHTML = `<summary>Resources <span class="qa-chevron" aria-hidden="true">⌄</span></summary><div class="qa-resources-menu"><a href="${about?.getAttribute('href') || '../about-us/'}">About Us</a><a href="${blog?.getAttribute('href') || '../blog/'}">Blog</a><a href="${faq?.getAttribute('href') || '../#faq'}">FAQ</a><a href="/downloads/quickart-academy-release.apk" download="quickart-academy.apk">Download Our App (APK)</a><a href="https://www.youtube.com/@QuickartPhotographyAcademy/videos" target="_blank" rel="noreferrer">YouTube</a><a href="https://wa.me/919939800780" target="_blank" rel="noreferrer">WhatsApp</a></div>`;
                 const contact = links.find(a => a.textContent.trim() === 'Contact');
                 if (contact && nav.insertBefore) nav.insertBefore(resources, contact); else nav.append(resources);
             }

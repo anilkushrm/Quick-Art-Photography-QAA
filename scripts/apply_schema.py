@@ -120,7 +120,7 @@ def get_base_org(include_aggregate_rating=False):
             "https://www.youtube.com/@QuickartPhotographyAcademy",
             "https://www.instagram.com/quick.art.photography.academy/",
             "https://www.facebook.com/Quick.art.Photography.Academy",
-            "https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes"
+            "https://quickartphotography.in/downloads/quickart-academy-release.apk"
         ]
     }
     if include_aggregate_rating:
@@ -561,7 +561,7 @@ def generate_schema_for_page(rel_path, html):
             "name": "Quick Art Academy",
             "operatingSystem": "Android",
             "applicationCategory": "EducationalApplication",
-            "installUrl": "https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes",
+            "installUrl": "https://quickartphotography.in/downloads/quickart-academy-release.apk",
             "offers": {
                 "@type": "Offer",
                 "price": "0",

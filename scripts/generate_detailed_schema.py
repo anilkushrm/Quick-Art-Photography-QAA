@@ -38,7 +38,7 @@ YT_CHANNEL = "https://www.youtube.com/@QuickartPhotographyAcademy"
 YT_CHANNEL_ID = "https://www.youtube.com/channel/UC0vO4XSniOSkqobyGDc5kfA"
 FB = "https://www.facebook.com/Quick.art.Photography.Academy"
 IG = "https://www.instagram.com/quick.art.photography.academy/"
-PLAY = "https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes"
+PLAY = "https://quickartphotography.in/downloads/quickart-academy-release.apk"
 
 LOGO = SITE + "/home-assets/ec55a6be3747a9.webp"
 DEFAULT_IMG = SITE + "/assets/editing-timeline.jpg"

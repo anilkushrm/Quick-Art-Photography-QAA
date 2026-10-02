@@ -13,6 +13,10 @@ rsync -avz -e ssh \
   --exclude='data/' \
   --exclude='uploads/' \
   --exclude='scratch/' \
+  --exclude='android/' \
+  --exclude='release-apk/' \
+  --exclude='.agents/' \
+  --exclude='.gemini/' \
   ./ "$SERVER:$DEST/"
 
 echo "🔒 Setting server file permissions..."

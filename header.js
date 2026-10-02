@@ -257,18 +257,18 @@
           svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>'
         },
         {
-          href: 'https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes&hl=en',
-          title: 'Download Our App',
+          href: `${navPrefix}downloads/quickart-academy-release.apk`,
+          title: 'Download Our App (APK)',
           iconColor: '#34d399',
-          target: '_blank',
-          svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>'
+          download: 'quickart-academy.apk',
+          svg: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>'
         }
       ];
 
       freeResPanel.innerHTML = `
         <div class="ref-res-list">
           ${resItems.map(item => `
-            <a href="${item.href}" class="ref-res-item${item.isActive ? ' ref-res-active' : ''}"${item.target ? ` target="${item.target}" rel="noopener noreferrer"` : ''}>
+            <a href="${item.href}" class="ref-res-item${item.isActive ? ' ref-res-active' : ''}"${item.target ? ` target="${item.target}" rel="noopener noreferrer"` : ''}${item.download ? ` download="${item.download}"` : ''}>
               <span class="ref-res-icon-box" style="color:${item.iconColor};">
                 ${item.svg}
               </span>
@@ -394,16 +394,15 @@
   if(label.id==='ref-online-tab-1')label.firstChild.textContent='Wedding Filmmaking Course';
   else label.textContent='Wedding Filmmaking Course';
  });
- const appLink=document.createElement('a');appLink.href='https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes&hl=en';appLink.target='_blank';appLink.rel='noopener noreferrer';appLink.textContent='Download Our App';
- const resources=header.querySelector('#ref-resources');if(resources&&!resources.querySelector('a[href*="com.lmwkkjh799.classes"]'))resources.append(appLink);
+ const appLink=document.createElement('a');appLink.href=`${navPrefix}downloads/quickart-academy-release.apk`;appLink.setAttribute('download','quickart-academy.apk');appLink.textContent='Download Our App (APK)';
+ const resources=header.querySelector('#ref-resources');if(resources&&!resources.querySelector('a[href*="quickart-academy"]'))resources.append(appLink);
  const mobileResources=[...header.querySelectorAll('#ref-mobile details')].find(detail=>detail.querySelector('summary')?.textContent.trim()==='Free Resources');
- if(mobileResources&&!mobileResources.querySelector('a[href*="com.lmwkkjh799.classes"]')){
+ if(mobileResources&&!mobileResources.querySelector('a[href*="quickart-academy"]')){
    const mobileAppLink=document.createElement('a');
    mobileAppLink.className='ref-course';
-   mobileAppLink.href='https://play.google.com/store/apps/details?id=com.lmwkkjh799.classes&hl=en';
-   mobileAppLink.target='_blank';
-   mobileAppLink.rel='noopener noreferrer';
-   mobileAppLink.innerHTML='<span class="ref-course-icon" aria-hidden="true">Ap</span><span>Download Our App</span>';
+   mobileAppLink.href=`${navPrefix}downloads/quickart-academy-release.apk`;
+   mobileAppLink.setAttribute('download','quickart-academy.apk');
+   mobileAppLink.innerHTML='<span class="ref-course-icon" aria-hidden="true">Ap</span><span>Download Our App (APK)</span>';
    mobileResources.append(mobileAppLink);
  }
  header.querySelectorAll('.ref-ai-label').forEach(label=>label.classList.add('ref-highlight-badge'));

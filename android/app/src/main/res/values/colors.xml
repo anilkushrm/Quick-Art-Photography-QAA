@@ -4,4 +4,5 @@
     <color name="gold_dark">#B88235</color>
     <color name="surface_dark">#0D1322</color>
     <color name="white">#FFFFFF</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
 </resources>

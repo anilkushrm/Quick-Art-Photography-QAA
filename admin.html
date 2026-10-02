@@ -1568,7 +1568,7 @@ fbq('track', 'PageView');
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button onclick="openLandingPageEditorModal()" class="btn btn-outline" style="border-color:rgba(216,161,83,0.7);color:#f59e0b;font-weight:700">🎨 Edit Landing Page Content</button>
           <a href="/master-class/live.html" target="_blank" class="btn btn-outline" style="border-color:rgba(255,255,255,0.2);color:#cbd5e1">👁️ View Page</a>
-          <button onclick="openObsGuideModal()" class="btn btn-outline" style="border-color:rgba(129,140,248,0.4);color:#a5b4fc">🎥 OBS 60FPS Guide</button>
+          <button onclick="openSendAnnouncementModal()" class="btn btn-outline" style="border-color:rgba(239,68,68,0.5);color:#fca5a5;font-weight:700">📢 Send Push to App</button>
           <button onclick="openScheduleLiveModal()" class="btn btn-gold" style="background:linear-gradient(135deg,#d8a153,#f59e0b);color:#080d18;font-weight:700">+ Schedule New Live Session</button>
           <button onclick="loadLiveClassesAdmin()" class="btn btn-outline">🔄 Refresh</button>
         </div>
@@ -6549,17 +6549,109 @@ async function saveLiveClassAdmin() {
 
 async function updateLiveStatusAdmin(id, newStatus) {
   try {
-    await lmsAdmin('update-live-status', {
+    const res = await lmsAdmin('update-live-status', {
       method: 'POST',
       body: { id, status: newStatus }
     });
-    toast(`✅ Status changed to ${newStatus.toUpperCase()}`);
+    if (newStatus === 'live') {
+      toast(`🔴 Class is LIVE! Sent Push Notification to ${res.recipientCount || 0} enrolled students.`);
+    } else {
+      toast(`✅ Status changed to ${newStatus.toUpperCase()}`);
+    }
     loadLiveClassesAdmin();
   } catch (err) {
     alert('Status update failed: ' + err.message);
     loadLiveClassesAdmin();
   }
 }
+
+// Admin Send Push Announcement to Mobile App Students
+function openSendAnnouncementModal() {
+  const existing = document.getElementById('adminAnnouncementModal');
+  if (existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'adminAnnouncementModal';
+  modal.className = 'modal-backdrop';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);';
+  modal.innerHTML = `
+    <div style="background:#0f172a;border:1.5px solid rgba(216,161,83,0.4);border-radius:16px;max-width:520px;width:100%;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,0.8);position:relative;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h3 style="color:#fff;font-size:17px;font-weight:800;margin:0;">📢 Send Push Notification to Mobile App</h3>
+        <button onclick="document.getElementById('adminAnnouncementModal').remove()" style="background:none;border:none;color:#94a3b8;font-size:20px;cursor:pointer;">✕</button>
+      </div>
+
+      <div style="font-size:12.5px;color:#94a3b8;margin-bottom:16px;">
+        Enrolled students ko direct mobile app push notification aur in-app alert deliver hoga (app band hone par bhi).
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:12px;font-weight:700;color:#cbd5e1;display:block;margin-bottom:4px;">Target Students</label>
+        <select id="admAnnTarget" style="width:100%;padding:10px;background:#090d16;color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:13px;">
+          <option value="all">👥 All Enrolled Students (Broadcast)</option>
+          <option value="course-premiere-pro">Premiere Pro Students</option>
+          <option value="course-edius-pro">EDIUS Pro Students</option>
+          <option value="course-davinci-resolve">DaVinci Resolve Students</option>
+          <option value="course-cinematic-wedding">Cinematic Wedding Filmmaking Students</option>
+          <option value="course-album-design">Album Design Students</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:12px;font-weight:700;color:#cbd5e1;display:block;margin-bottom:4px;">Notification Title *</label>
+        <input type="text" id="admAnnTitle" value="🔴 Live Class Starting in 15 Minutes — Quick Art Academy" style="width:100%;padding:10px;background:#090d16;color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:13px;" />
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="font-size:12px;font-weight:700;color:#cbd5e1;display:block;margin-bottom:4px;">Message Body *</label>
+        <textarea id="admAnnBody" rows="3" style="width:100%;padding:10px;background:#090d16;color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:13px;resize:vertical;">Mentor Anil Sharma is starting today's live class. Open the Quick Art Academy App to join live timeline demonstration!</textarea>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <button onclick="document.getElementById('adminAnnouncementModal').remove()" class="btn btn-outline" style="padding:10px 16px;">Cancel</button>
+        <button onclick="submitAdminPushAnnouncement()" class="btn btn-gold" id="btnSendAdmPush" style="padding:10px 18px;font-weight:800;background:linear-gradient(135deg,#d8a153,#f59e0b);color:#080d18;">
+          🚀 Dispatch Push Notification
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+async function submitAdminPushAnnouncement() {
+  const target = document.getElementById('admAnnTarget').value;
+  const title = document.getElementById('admAnnTitle').value.trim();
+  const body = document.getElementById('admAnnBody').value.trim();
+  const btn = document.getElementById('btnSendAdmPush');
+
+  if (!title || !body) {
+    alert('Title aur message dono required hain');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Dispatching…';
+
+  try {
+    const res = await lmsAdmin('send-admin-announcement', {
+      method: 'POST',
+      body: {
+        title,
+        message: body,
+        courseId: target,
+        type: 'announcement',
+        url: '/app/?tab=live'
+      }
+    });
+    document.getElementById('adminAnnouncementModal')?.remove();
+    toast(`🚀 Push notification sent to ${res.recipients || 0} students!`);
+  } catch (err) {
+    alert('Failed to send push: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = '🚀 Dispatch Push Notification';
+  }
+}
+
 
 async function deleteLiveClassAdmin(id) {
   if (!confirm('Are you sure you want to delete this live session? Students will lose access to its live room.')) return;

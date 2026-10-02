@@ -137,12 +137,14 @@ if (!function_exists('save_all_students')) {
     }
 }
 
-function clean_phone($p) {
-    $num = preg_replace('/[^0-9]/', '', (string)$p);
-    if (strlen($num) === 12 && substr($num, 0, 2) === '91') {
-        $num = substr($num, 2);
+if (!function_exists('clean_phone')) {
+    function clean_phone($p) {
+        $num = preg_replace('/[^0-9]/', '', (string)$p);
+        if (strlen($num) === 12 && substr($num, 0, 2) === '91') {
+            $num = substr($num, 2);
+        }
+        return $num;
     }
-    return $num;
 }
 
 // Helper to map offline admission program to LMS Course ID
@@ -3327,7 +3329,91 @@ if ($action === 'get-my-assignments' && $method === 'GET') {
     json_ok(['submissions' => $mySubs]);
 }
 
+// 28. Save Push Subscription for Mobile App / PWA
+if ($action === 'save-push-subscription' && $method === 'POST') {
+    $body = read_json_body();
+    $subData   = $body['subscription'] ?? [];
+    $studentId = trim($body['studentId'] ?? '');
+    $phone     = clean_phone($body['phone'] ?? '');
+    $courses   = $body['courses'] ?? [];
+
+    // Optional student validation via token if provided
+    $authTok = $_SERVER['HTTP_X_STUDENT_TOKEN'] ?? ($body['token'] ?? '');
+    if ($authTok && function_exists('get_student_from_token')) {
+        $stu = get_student_from_token($authTok);
+        if ($stu) {
+            $studentId = $stu['id'];
+            $phone = clean_phone($stu['phone']);
+            $courses = $stu['enrolledCourses'] ?? [];
+        }
+    }
+
+    if (empty($subData['endpoint'])) {
+        json_err('Push subscription endpoint required', 400);
+    }
+
+    $ok = register_student_push_sub($studentId, $phone, $courses, $subData);
+    json_ok([
+        'registered' => $ok,
+        'message' => 'Push notifications successfully registered'
+    ]);
+}
+
+// 29. Get Notifications for Student
+if ($action === 'get-notifications' && ($method === 'GET' || $method === 'POST')) {
+    $authTok = $_SERVER['HTTP_X_STUDENT_TOKEN'] ?? ($_GET['token'] ?? '');
+    $student = null;
+    if ($authTok && function_exists('get_student_from_token')) {
+        $student = get_student_from_token($authTok);
+    }
+
+    $studentId = $student ? $student['id'] : trim($_GET['studentId'] ?? ($_POST['studentId'] ?? ''));
+    $courses = $student ? ($student['enrolledCourses'] ?? []) : [];
+
+    $notifications = get_student_notifications_list($studentId, $courses);
+    $unreadCount = 0;
+    foreach ($notifications as $n) {
+        if (empty($n['isRead'])) $unreadCount++;
+    }
+
+    json_ok([
+        'notifications' => $notifications,
+        'unreadCount'   => $unreadCount
+    ]);
+}
+
+// 30. Mark Notification as Read
+if ($action === 'mark-notification-read' && $method === 'POST') {
+    $body = read_json_body();
+    $notifId = trim($body['id'] ?? ($body['notificationId'] ?? ''));
+    $studentId = trim($body['studentId'] ?? '');
+
+    $authTok = $_SERVER['HTTP_X_STUDENT_TOKEN'] ?? '';
+    if ($authTok && function_exists('get_student_from_token')) {
+        $stu = get_student_from_token($authTok);
+        if ($stu) $studentId = $stu['id'];
+    }
+
+    if ($notifId && $studentId) {
+        $allNotifs = load_notifications();
+        foreach ($allNotifs as &$n) {
+            if ($n['id'] === $notifId) {
+                if (!isset($n['readBy']) || !is_array($n['readBy'])) $n['readBy'] = [];
+                if (!in_array($studentId, $n['readBy'])) {
+                    $n['readBy'][] = $studentId;
+                }
+                break;
+            }
+        }
+        unset($n);
+        save_notifications($allNotifs);
+    }
+
+    json_ok(['updated' => true]);
+}
+
 json_err('Unknown LMS action', 404);
+
 
 
 

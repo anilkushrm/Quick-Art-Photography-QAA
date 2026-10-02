@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Quick Art Academy — Student LMS Mobile App</title>
+  <meta name="description" content="Quick Art Photography Academy Official Mobile LMS App. Watch 4K courses, attend live classes, submit assignments, and earn certifications." />
+
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="theme-color" content="#070a12" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Quick Art LMS" />
+  <link rel="manifest" href="manifest.json" />
+
+  <link rel="icon" href="../home-assets/ec55a6be3747a9.webp" type="image/webp" />
+  <link rel="apple-touch-icon" href="../home-assets/ec55a6be3747a9.webp" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="app.css?v=20261002_01" />
+</head>
+<body>
+
+  <!-- ================= 1. BRANDED SPLASH SCREEN ================= -->
+  <div id="app-splash">
+    <div class="splash-logo-wrap">
+      <div class="splash-halo"></div>
+      <img src="../home-assets/ec55a6be3747a9.webp" alt="Quick Art Academy" class="splash-logo-img" />
+    </div>
+    <h1 class="splash-title">Quick <span>Art</span> Academy</h1>
+    <div class="splash-sub">STUDENT LEARNING MANAGEMENT APP</div>
+    <div class="splash-loader">
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="app-toast" class="app-toast" role="alert" aria-live="polite">
+    <span id="toast-icon">⚡</span>
+    <span id="toast-text">Message</span>
+  </div>
+
+  <!-- ================= 2. APP HEADER (NATIVE APP BAR) ================= -->
+  <header id="app-header" class="app-header hidden">
+    <a href="javascript:void(0)" class="header-brand" onclick="switchTab('dashboard')">
+      <img src="../home-assets/ec55a6be3747a9.webp" alt="Quick Art Academy" class="header-logo" />
+      <div class="header-brand-text">
+        <span class="header-brand-name">Quick <b>Art</b></span>
+        <span class="header-brand-tag">Photography Academy</span>
+      </div>
+    </a>
+
+    <div class="header-actions">
+      <!-- Live Indicator (only visible when a class is live) -->
+      <button id="header-live-btn" class="header-live-badge hidden" onclick="switchTab('live')" type="button" title="Live Class Active">
+        <span class="live-beacon"></span>
+        <span>LIVE NOW</span>
+      </button>
+
+      <!-- Notification Bell -->
+      <button id="btn-notifications" class="header-icon-btn" onclick="toggleNotificationDrawer()" type="button" aria-label="Notifications">
+        🔔
+        <span id="notif-badge" class="header-notif-dot hidden">0</span>
+      </button>
+
+      <!-- Profile Avatar Button -->
+      <button id="btn-header-avatar" class="header-avatar-btn" onclick="switchTab('profile')" type="button" aria-label="My Profile">
+        <img id="header-avatar-img" src="" alt="Profile" class="header-avatar-img hidden" />
+        <span id="header-avatar-initials">QA</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= 3. AUTH GATE (STUDENT LOGIN) ================= -->
+  <div id="view-auth-gate" class="hidden">
+    <div class="auth-header">
+      <div class="auth-badge">🎓 OFFICIAL STUDENT LMS</div>
+      <h2 class="auth-title">Welcome Back</h2>
+      <p class="auth-sub">Login to your courses, live classes &amp; study material.</p>
+    </div>
+
+    <div class="auth-card">
+      <!-- Auth Mode Tabs -->
+      <div class="auth-tabs" role="tablist">
+        <button id="tab-btn-whatsapp" class="auth-tab-btn active" onclick="switchAuthTab('whatsapp')" type="button">
+          💬 WhatsApp OTP
+        </button>
+        <button id="tab-btn-email" class="auth-tab-btn" onclick="switchAuthTab('email')" type="button">
+          ✉️ Email Login
+        </button>
+      </div>
+
+      <!-- Form 1: WhatsApp OTP Login -->
+      <div id="auth-panel-whatsapp">
+        <!-- Step A: Enter Phone -->
+        <form id="form-phone-step" onsubmit="handleSendPhoneOtp(event)">
+          <div class="form-group">
+            <label class="form-label" for="login-phone">Registered WhatsApp Number</label>
+            <div class="phone-input-wrap">
+              <span class="phone-prefix">+91</span>
+              <input type="tel" id="login-phone" class="app-input" placeholder="98765 43210" maxlength="10" autocomplete="tel" required inputmode="numeric" />
+            </div>
+            <span style="font-size: 11px; color: var(--text-dim); display: block; margin-top: 5px;">
+              Enrolled students apne WhatsApp mobile number se instant login karein.
+            </span>
+          </div>
+          <button type="submit" id="btn-send-whatsapp-otp" class="btn-primary">
+            Send WhatsApp OTP 💬
+          </button>
+        </form>
+
+        <!-- Step B: Enter OTP -->
+        <form id="form-otp-step" class="hidden" onsubmit="handleVerifyPhoneOtp(event)">
+          <div class="wa-notice-box">
+            <div class="wa-notice-icon">💬</div>
+            <div class="wa-notice-text">
+              <div>OTP aapke <b>WhatsApp (+91 <span id="wa-display-phone">••••••••••</span>)</b> par bheja gaya hai.</div>
+              <span style="font-size: 11px; opacity: 0.85;">Apna WhatsApp app kholein (SMS nahi).</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="login-otp">6-Digit Verification Code</label>
+            <input type="text" id="login-otp" class="app-input otp-input-large" placeholder="••••••" maxlength="6" inputmode="numeric" required />
+            <div id="demo-otp-slot" class="hidden" style="margin-top:6px; font-size:12px; color:var(--gold); text-align:center;">
+              Demo Code: <b id="demo-otp-val">123456</b>
+            </div>
+          </div>
+
+          <button type="submit" id="btn-verify-whatsapp-otp" class="btn-primary" style="margin-bottom: 12px;">
+            Verify &amp; Enter Classroom ✓
+          </button>
+
+          <div style="display:flex; justify-content:space-between; font-size: 12px; color: var(--text-muted);">
+            <button type="button" class="auth-link-btn" onclick="resetToPhoneInput()">Change Number</button>
+            <button type="button" id="btn-resend-wa-otp" class="auth-link-btn" onclick="resendPhoneOtp()">Resend OTP</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Form 2: Email + Password Login -->
+      <div id="auth-panel-email" class="hidden">
+        <form id="form-email-login" onsubmit="handleEmailLogin(event)">
+          <div class="form-group">
+            <label class="form-label" for="login-email">Email Address</label>
+            <input type="email" id="login-email" class="app-input" placeholder="student@gmail.com" autocomplete="email" required />
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label class="form-label" for="login-password" style="margin-bottom:0;">Password</label>
+              <button type="button" class="auth-link-btn" onclick="openForgotPasswordSheet()" style="font-size:11.5px;">
+                Forgot Password?
+              </button>
+            </div>
+            <div style="position: relative;">
+              <input type="password" id="login-password" class="app-input" placeholder="••••••••" autocomplete="current-password" required style="padding-right: 42px;" />
+              <button type="button" onclick="togglePasswordVisibility('login-password', this)" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:16px;">👁️</button>
+            </div>
+          </div>
+
+          <button type="submit" id="btn-submit-email-login" class="btn-primary" style="margin-top: 10px;">
+            Login &amp; Enter App →
+          </button>
+        </form>
+
+        <div style="margin-top: 16px; text-align: center; font-size: 12.5px; color: var(--text-muted);">
+          New Student?
+          <button type="button" class="auth-link-btn" onclick="openRegistrationSheet()" style="font-weight:700; color:var(--gold);">
+            Create Account with Email OTP →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Helpline & Mentor WhatsApp -->
+    <div style="margin-top: 24px; text-align: center; font-size: 12px; color: var(--text-dim);">
+      Need help logging in? <a href="https://wa.me/919939800780" target="_blank" style="color:var(--gold); text-decoration:none; font-weight:600;">Chat with Mentor Anil Sharma</a> or Call <a href="tel:+919939800780" style="color:#cbd5e1; text-decoration:none;">+91 9939800780</a>
+    </div>
+  </div>
+
+  <!-- ================= 4. APP VIEWPORT (4 CLEAN TABS) ================= -->
+  <main id="app-viewport" class="app-viewport hidden">
+
+    <!-- ──────────────── TAB 1: DASHBOARD ──────────────── -->
+    <section id="tab-dashboard" class="app-tab-panel active-tab">
+
+      <!-- Student Profile Card -->
+      <div class="dash-profile-card">
+        <div class="dash-avatar-ring">
+          <img id="dash-avatar-img" src="" alt="Student Avatar" class="dash-avatar-img hidden" />
+          <div id="dash-avatar-fallback" class="dash-avatar-fallback">QA</div>
+          <div class="dash-avatar-badge" title="Enrolled Student">✓</div>
+        </div>
+        <div class="dash-profile-info">
+          <div class="dash-role-row">
+            <span class="dash-role-pill">OFFICIAL ACADEMY STUDENT</span>
+            <span id="dash-student-id" class="dash-student-id">ID: ••••••</span>
+          </div>
+          <h2 id="dash-student-name" class="dash-name">Namaste, Student!</h2>
+          <span style="font-size:11.5px; color:var(--text-muted);">Quick Art Photography Academy LMS</span>
+        </div>
+      </div>
+
+      <!-- KPI Stats Row -->
+      <div class="dash-kpis-grid">
+        <div class="dash-kpi-item">
+          <span class="kpi-num gold" id="kpi-enrolled-count">0</span>
+          <span class="kpi-label">Courses</span>
+        </div>
+        <div class="dash-kpi-item">
+          <span class="kpi-num" id="kpi-completed-lessons">0</span>
+          <span class="kpi-label">Lessons Done</span>
+        </div>
+        <div class="dash-kpi-item">
+          <span class="kpi-num" id="kpi-cert-count">0</span>
+          <span class="kpi-label">Certificates</span>
+        </div>
+        <div class="dash-kpi-item">
+          <span class="kpi-num gold" id="kpi-avg-progress">0%</span>
+          <span class="kpi-label">Progress</span>
+        </div>
+      </div>
+
+      <!-- Live Now Alert Banner (Appears dynamically if any class is live) -->
+      <div id="dash-live-banner" class="live-alert-card hidden">
+        <div class="live-alert-header">
+          <span class="live-now-tag">
+            <span class="live-beacon"></span>
+            🔴 LIVE NOW
+          </span>
+          <span class="live-attendees-pill" id="dash-live-attendees">👥 480+ Students Live</span>
+        </div>
+        <div>
+          <h3 id="dash-live-title" class="live-alert-title">Live Masterclass with Anil Sharma</h3>
+          <p id="dash-live-sub" class="live-alert-desc">Live timeline demonstration, practical wedding editing and Q&amp;A in session.</p>
+        </div>
+        <button type="button" class="btn-join-live" onclick="switchTab('live')">
+          Join Live Studio Now ➔
+        </button>
+      </div>
+
+      <!-- Continue Learning Spotlight Card -->
+      <div id="dash-resume-card" class="resume-card hidden">
+        <div class="resume-header">
+          <span class="resume-tag">⚡ CONTINUE LEARNING</span>
+          <span id="resume-course-title" class="resume-course-name">Course</span>
+        </div>
+        <div class="resume-body">
+          <div class="resume-thumb-wrap">
+            <img id="resume-thumb" src="" alt="Lesson Thumbnail" class="resume-thumb-img" />
+            <div class="resume-thumb-play">▶</div>
+          </div>
+          <div class="resume-details">
+            <div id="resume-lesson-title" class="resume-lesson-title">Lesson Title</div>
+            <div id="resume-lesson-sub" class="resume-lesson-sub">Duration • Tap to continue</div>
+          </div>
+        </div>
+        <div class="resume-progress-bar">
+          <div id="resume-progress-fill" class="resume-progress-fill" style="width: 25%;"></div>
+        </div>
+        <button type="button" id="btn-resume-lesson" class="resume-btn">
+          ▶ Resume Watching
+        </button>
+      </div>
+
+      <!-- Upcoming Scheduled Class Preview -->
+      <div id="dash-scheduled-card" class="scheduled-class-card hidden">
+        <div class="scheduled-left">
+          <div class="cal-box">
+            <span id="sched-cal-month" class="cal-month">OCT</span>
+            <span id="sched-cal-day" class="cal-day">05</span>
+          </div>
+          <div>
+            <div id="sched-class-title" class="scheduled-title">Next Live Class</div>
+            <div id="sched-class-time" class="scheduled-time">Sunday • 7:00 PM IST</div>
+          </div>
+        </div>
+        <button type="button" class="auth-link-btn" onclick="switchTab('live')" style="color:var(--gold); white-space:nowrap; font-weight:700;">
+          View Room ➔
+        </button>
+      </div>
+
+      <!-- Pending Quiz & Assignment Card -->
+      <div class="resume-card" style="border-color: rgba(59, 130, 246, 0.3); background: linear-gradient(135deg, rgba(30, 58, 138, 0.25) 0%, rgba(15, 23, 42, 0.9) 100%);">
+        <div class="resume-header">
+          <span class="resume-tag" style="color:#60a5fa;">📝 ASSIGNMENTS &amp; QUIZZES</span>
+          <span class="badge-subtle" style="font-size:10px; background:rgba(59,130,246,0.18); color:#bfdbfe; padding:2px 7px; border-radius:4px;">PORTFOLIO CHECK</span>
+        </div>
+        <p style="font-size:12.5px; color:#cbd5e1; margin-bottom:12px; line-height:1.4;">
+          Course certification ke liye apne assignment projects submit karein aur module quizzes complete karein.
+        </p>
+        <button type="button" class="btn-secondary" onclick="switchTab('mycourses')" style="border-color:rgba(59,130,246,0.4); color:#93c5fd;">
+          Open Classroom Tasks ➔
+        </button>
+      </div>
+
+      <!-- Certificates Vault Preview -->
+      <div class="pvc-id-card-promo" onclick="switchTab('profile')">
+        <div class="pvc-id-card-icon">🏆</div>
+        <div class="pvc-id-card-text">
+          <h4>Accredited Certifications</h4>
+          <p>ISO &amp; Academy verified QR-enabled course certificates</p>
+        </div>
+        <span style="font-size:16px; color:var(--gold);">➔</span>
+      </div>
+
+      <!-- Academy Announcements Feed -->
+      <div class="section-hdr">
+        <h3 class="section-hdr-title">📢 Academy Announcements</h3>
+        <span class="section-hdr-link" onclick="toggleNotificationDrawer()">View All</span>
+      </div>
+      <div id="dash-announcements-container">
+        <!-- Injected dynamically -->
+      </div>
+    </section>
+
+    <!-- ──────────────── TAB 2: MY COURSES ──────────────── -->
+    <section id="tab-mycourses" class="app-tab-panel">
+      <div class="section-hdr" style="margin-top: 0;">
+        <h2 class="section-hdr-title">🎓 My Enrolled Courses</h2>
+        <span id="courses-count-tag" style="font-size:11.5px; color:var(--text-muted);">Active Programs</span>
+      </div>
+
+      <!-- Filter Chips -->
+      <div class="filter-chips">
+        <button type="button" class="filter-chip active" data-filter="all" onclick="filterCourses('all')">All Courses</button>
+        <button type="button" class="filter-chip" data-filter="in-progress" onclick="filterCourses('in-progress')">In Progress</button>
+        <button type="button" class="filter-chip" data-filter="completed" onclick="filterCourses('completed')">Completed 🎓</button>
+      </div>
+
+      <!-- Courses List Container -->
+      <div id="app-courses-list">
+        <div style="text-align:center; padding: 40px 10px; color: var(--text-muted);">
+          Loading your courses…
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────── TAB 3: LIVE & WEBINARS ──────────────── -->
+    <section id="tab-live" class="app-tab-panel">
+      <div class="section-hdr" style="margin-top: 0;">
+        <h2 class="section-hdr-title">🔴 Live Masterclasses &amp; Webinars</h2>
+        <span class="live-attendees-pill" id="live-tab-status-pill">📡 Studio Ready</span>
+      </div>
+
+      <!-- Live Stream Player Container -->
+      <div id="live-player-card" class="live-stream-box">
+        <div id="live-stream-mount" style="width:100%; height:100%;">
+          <div class="live-standby-placeholder">
+            <div style="font-size: 36px; margin-bottom: 8px;">📡</div>
+            <h3 id="live-standby-title" style="font-family:var(--font-heading); color:#fff; font-size:17px; margin-bottom:6px;">Live Studio Standby</h3>
+            <p id="live-standby-sub" style="font-size:12px; color:var(--text-muted); max-width: 320px; margin-bottom: 16px;">
+              Admin ya Mentor Anil Sharma jab class live karenge, stream automatically yahin play hogi.
+            </p>
+            <button type="button" class="btn-primary" onclick="requestPushNotificationPermission()" style="width:auto; padding:10px 18px; font-size:12.5px;">
+              🔔 Enable Live Class Alerts
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Interactive Panel (Visible during active stream) -->
+      <div id="live-interactive-section">
+        <!-- Interactive Reactions -->
+        <div class="live-reactions-strip">
+          <span style="font-size:11px; color:var(--text-muted); align-self:center; margin-right:4px;">React:</span>
+          <button type="button" class="reaction-btn" onclick="sendLiveReaction('❤️')">❤️</button>
+          <button type="button" class="reaction-btn" onclick="sendLiveReaction('🔥')">🔥</button>
+          <button type="button" class="reaction-btn" onclick="sendLiveReaction('👏')">👏</button>
+          <button type="button" class="reaction-btn" onclick="sendLiveReaction('💡')">💡</button>
+          <button type="button" class="reaction-btn" onclick="sendLiveReaction('🚀')">🚀</button>
+        </div>
+
+        <!-- Live Doubts & Chat -->
+        <div class="live-chat-panel">
+          <div class="live-chat-header">
+            <span style="font-weight:700; font-size:12.5px; color:#fff;">💬 Live Classroom Doubts &amp; Chat</span>
+            <span style="font-size:11px; color:var(--success-green);">● Connected</span>
+          </div>
+          <div id="live-chat-messages" class="live-chat-messages">
+            <div class="chat-bubble">
+              <div class="chat-author">Mentor Anil Sharma</div>
+              <div>Namaste students! Apne video editing, album design aur DaVinci Resolve ke doubts niche type karke bhejein.</div>
+            </div>
+          </div>
+          <form id="form-live-doubt" class="live-chat-input-bar" onsubmit="handleSendLiveDoubt(event)">
+            <input type="text" id="input-live-doubt" class="app-input" placeholder="Ask doubt to mentor…" style="padding:9px 12px; font-size:13px;" required />
+            <button type="submit" class="btn-primary" style="width:auto; padding:9px 14px; font-size:13px;">Send</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Upcoming Sessions List -->
+      <div class="section-hdr">
+        <h3 class="section-hdr-title">📅 Upcoming Live Classes</h3>
+      </div>
+      <div id="upcoming-live-list">
+        <!-- Injected dynamically -->
+      </div>
+
+      <!-- Previous Class Recordings Archive -->
+      <div class="section-hdr">
+        <h3 class="section-hdr-title">📼 Previous Class Recordings</h3>
+      </div>
+      <div id="past-recordings-list">
+        <!-- Injected dynamically -->
+      </div>
+    </section>
+
+    <!-- ──────────────── TAB 4: MY PROFILE ──────────────── -->
+    <section id="tab-profile" class="app-tab-panel">
+
+      <!-- Profile Hero -->
+      <div class="profile-hero">
+        <div class="profile-avatar-big" onclick="triggerAvatarUpload()">
+          <img id="prof-avatar-img" src="" alt="Student Profile" class="hidden" />
+          <div id="prof-avatar-fallback" class="dash-avatar-fallback" style="font-size:28px;">QA</div>
+          <div class="profile-avatar-edit-icon">✏️</div>
+        </div>
+        <input type="file" id="file-avatar-input" accept="image/*" class="hidden" onchange="handleProfilePhotoUpload(event)" />
+        <h2 id="prof-name" class="profile-name">Student Name</h2>
+        <div id="prof-student-id" class="profile-id-tag">STUDENT ID: ••••••</div>
+        <div style="margin-top:6px;">
+          <span class="dash-role-pill">OFFICIAL ENROLLED STUDENT</span>
+        </div>
+      </div>
+
+      <!-- Official CR80 PVC Student ID Card Preview Card -->
+      <div class="pvc-id-card-promo" onclick="openStudentIdCardModal()">
+        <div class="pvc-id-card-icon">🪪</div>
+        <div class="pvc-id-card-text">
+          <h4>Official Student ID Card (CR80 PVC)</h4>
+          <p>Verified Academy Identity Badge with QR Code</p>
+        </div>
+        <button type="button" class="btn-secondary" style="width:auto; padding:6px 12px; font-size:11.5px; border-color:var(--border-card); color:var(--gold);">
+          View 🪪
+        </button>
+      </div>
+
+      <!-- Section: Student Information -->
+      <div class="section-hdr">
+        <h3 class="section-hdr-title">👤 Student Information</h3>
+      </div>
+      <div class="profile-menu-group">
+        <div class="profile-menu-item">
+          <div class="profile-menu-left">
+            <span class="profile-menu-icon">📱</span>
+            <div>
+              <div style="font-size:11px; color:var(--text-dim);">WhatsApp Mobile</div>
+              <div id="prof-phone" style="font-weight:700;">+91 ••••••••••</div>
+            </div>
+          </div>
+        </div>
+        <div class="profile-menu-item">
+          <div class="profile-menu-left">
+            <span class="profile-menu-icon">✉️</span>
+            <div>
+              <div style="font-size:11px; color:var(--text-dim);">Email Address</div>
+              <div id="prof-email" style="font-weight:700;">student@example.com</div>
+            </div>
+          </div>
+        </div>
+        <div class="profile-menu-item">
+          <div class="profile-menu-left">
+            <span class="profile-menu-icon">📍</span>
+            <div>
+              <div style="font-size:11px; color:var(--text-dim);">City / Location</div>
+              <div id="prof-city" style="font-weight:700;">Bihar, India</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Learning & Records -->
+      <div class="section-hdr">
+        <h3 class="section-hdr-title">🎓 Learning &amp; Records</h3>
+      </div>
+      <div class="profile-menu-group">
+        <button type="button" class="profile-menu-item" onclick="openCertificatesModal()">
+          <div class="profile-menu-left">
+            <span class="profile-menu-icon">🏆</span>
+            <span>My Accredited Certificates</span>
+          </div>
+          <span style="font-size:12px; color:var(--gold);">View Vault ➔</span>
+        </button>
+        <button type="button" class="profile-menu-item" onclick="openDownloadsModal()">
+          <div class="profile-menu-left">
+            <span class="profile-menu-icon">💾</span>
+            <span>Practice Files &amp; Resources (.ZIP / LUTs)</span>
+          </div>
+          <span style="font-size:14px; color:var(--text-dim);">➔</span>
+        </button>
+        <button type="button" class="profile-menu-item" onclick="openChangePasswordModal()">
+          <div class="profile-menu-left">
+            <span class="profile-menu-icon">🔒</span>
+            <span>Change Account Password</span>
+          </div>
+          <span style="font-size:14px; color:var(--text-dim);">➔</span>
+        </button>
+      </div>
+
+      <!-- Section: Help & Mentor Support -->
+      <div class="section-hdr">
+        <h3 class="section-hdr-title">💬 Helpline &amp; Mentorship</h3>
+      </div>
+      <div class="profile-menu-group">
+        <a href="https://wa.me/919939800780" target="_blank" class="profile-menu-item">
+          <div class="profile-menu-left">
+            <span class="profile-menu-icon">💬</span>
+            <div>
+              <div style="font-weight:700; color:#34d399;">WhatsApp Mentor Support</div>
+              <div style="font-size:11px; color:var(--text-dim);">Chat directly with Mentor Anil Sharma</div>
+            </div>
+          </div>
+          <span style="font-size:14px; color:var(--gold);">↗</span>
+        </a>
+        <a href="tel:+919939800780" class="profile-menu-item">
+          <div class="profile-menu-left">
+            <span class="profile-menu-icon">📞</span>
+            <div>
+              <div style="font-weight:700;">Academy Helpline Call</div>
+              <div style="font-size:11px; color:var(--text-dim);">+91 9939800780 (10 AM - 7 PM)</div>
+            </div>
+          </div>
+          <span style="font-size:14px; color:var(--text-dim);">➔</span>
+        </a>
+      </div>
+
+      <!-- Section: App & Session -->
+      <div class="profile-menu-group" style="margin-top: 24px;">
+        <button type="button" class="profile-menu-item profile-menu-danger" onclick="handleStudentLogout()">
+          <div class="profile-menu-left">
+            <span class="profile-menu-icon">🚪</span>
+            <span style="font-weight:700;">Logout from Mobile App</span>
+          </div>
+          <span>➔</span>
+        </button>
+      </div>
+
+      <div style="text-align:center; margin-top:20px; font-size:11px; color:var(--text-dim);">
+        Quick Art Photography Academy LMS App • Version 2.4<br />
+        Same student credentials work on Mobile App &amp; Website
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= 5. PERMANENT BOTTOM NAVIGATION ================= -->
+  <nav id="bottom-nav" class="bottom-nav hidden" aria-label="Bottom Navigation">
+    <button id="nav-btn-dashboard" class="nav-tab-item active" onclick="switchTab('dashboard')" type="button">
+      <span class="nav-tab-icon">🏠</span>
+      <span class="nav-tab-label">Dashboard</span>
+    </button>
+    <button id="nav-btn-mycourses" class="nav-tab-item" onclick="switchTab('mycourses')" type="button">
+      <span class="nav-tab-icon">🎓</span>
+      <span class="nav-tab-label">My Courses</span>
+    </button>
+    <button id="nav-btn-live" class="nav-tab-item" onclick="switchTab('live')" type="button">
+      <span class="nav-tab-icon">
+        🔴
+        <span id="nav-live-dot" class="live-nav-dot hidden"></span>
+      </span>
+      <span class="nav-tab-label">Live &amp; Webinars</span>
+    </button>
+    <button id="nav-btn-profile" class="nav-tab-item" onclick="switchTab('profile')" type="button">
+      <span class="nav-tab-icon">👤</span>
+      <span class="nav-tab-label">My Profile</span>
+    </button>
+  </nav>
+
+  <!-- ================= 6. CLASSROOM PLAYER VIEW ================= -->
+  <div id="view-classroom-player" class="hidden">
+    <div class="classroom-top-bar">
+      <button type="button" class="classroom-back-btn" onclick="closeClassroomPlayer()">
+        ← Back
+      </button>
+      <div id="cr-course-title" class="classroom-top-title">Course Title</div>
+      <button type="button" class="btn-secondary" onclick="shareCurrentLesson()" style="width:auto; padding:4px 8px; font-size:12px;">
+        Share ↗
+      </button>
+    </div>
+
+    <!-- Video Mount Container -->
+    <div class="player-mount-container" id="cr-video-mount">
+      <!-- Injected dynamically -->
+    </div>
+
+    <!-- Lesson Action Strip -->
+    <div class="classroom-action-strip">
+      <div style="flex:1; min-width:0;">
+        <h3 id="cr-lesson-title" class="lesson-meta-title">Lesson Title</h3>
+        <div id="cr-lesson-sub" class="lesson-meta-sub">Module 1 • Duration: 15 mins</div>
+      </div>
+      <button type="button" id="btn-toggle-complete" class="btn-mark-complete" onclick="toggleCurrentLessonComplete()">
+        Mark Complete ✓
+      </button>
+    </div>
+
+    <!-- Lesson Sub-tabs -->
+    <div class="lesson-nav-tabs">
+      <button type="button" class="lesson-subtab active" data-sub="curriculum" onclick="switchClassroomSubtab('curriculum')">Curriculum</button>
+      <button type="button" class="lesson-subtab" data-sub="resources" onclick="switchClassroomSubtab('resources')">Practice Files 📁</button>
+      <button type="button" class="lesson-subtab" data-sub="notes" onclick="switchClassroomSubtab('notes')">Notes 📝</button>
+      <button type="button" class="lesson-subtab" data-sub="doubts" onclick="switchClassroomSubtab('doubts')">Doubts / Comments 💬</button>
+      <button type="button" class="lesson-subtab" data-sub="quiz" onclick="switchClassroomSubtab('quiz')">Quiz ❓</button>
+      <button type="button" class="lesson-subtab" data-sub="assignment" onclick="switchClassroomSubtab('assignment')">Assignment 📤</button>
+      <button type="button" class="lesson-subtab" data-sub="support" onclick="switchClassroomSubtab('support')">Mentor Chat 🟢</button>
+    </div>
+
+    <!-- Sub-tab Body -->
+    <div class="lesson-tab-body">
+      <!-- 1. Curriculum -->
+      <div id="cr-sub-curriculum">
+        <div class="modules-list" id="cr-modules-container">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+
+      <!-- 2. Resources / Practice Files -->
+      <div id="cr-sub-resources" class="hidden">
+        <div style="font-weight:700; margin-bottom:10px;">📁 Downloadable Project Practice Files &amp; Assets</div>
+        <div id="cr-resources-list">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+
+      <!-- 3. Lesson Notes -->
+      <div id="cr-sub-notes" class="hidden">
+        <div style="font-weight:700; margin-bottom:10px;">📝 Lesson Summary &amp; Key Shortcuts</div>
+        <div id="cr-notes-content" style="font-size:13px; line-height:1.6; color:#cbd5e1;">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+
+      <!-- 4. Doubts & Discussion -->
+      <div id="cr-sub-doubts" class="hidden">
+        <div style="font-weight:700; margin-bottom:10px;">💬 Lesson Discussion &amp; Doubts</div>
+        <div id="cr-comments-list" style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;">
+          <!-- Injected dynamically -->
+        </div>
+        <form onsubmit="handlePostLessonComment(event)" style="display:flex; gap:8px;">
+          <input type="text" id="cr-comment-input" class="app-input" placeholder="Type your doubt for this lesson…" required />
+          <button type="submit" class="btn-primary" style="width:auto; padding:10px 16px;">Post</button>
+        </form>
+      </div>
+
+      <!-- 5. Quiz -->
+      <div id="cr-sub-quiz" class="hidden">
+        <div id="cr-quiz-container">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+
+      <!-- 6. Assignment -->
+      <div id="cr-sub-assignment" class="hidden">
+        <div id="cr-assignment-container">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+
+      <!-- 7. Support -->
+      <div id="cr-sub-support" class="hidden">
+        <div class="wa-notice-box" style="margin-bottom:16px;">
+          <div class="wa-notice-icon">💬</div>
+          <div class="wa-notice-text">
+            <b>1-on-1 Mentor WhatsApp Support</b><br />
+            Is lesson ke project me koi problem aaye to directly screenshot/video bhej kar solution le sakte hain.
+          </div>
+        </div>
+        <a href="https://wa.me/919939800780" target="_blank" class="btn-primary" style="background:#25D366; color:#fff; text-decoration:none;">
+          💬 Chat with Mentor on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 7. NOTIFICATION CENTER BOTTOM SHEET ================= -->
+  <div id="notification-backdrop" class="sheet-backdrop" onclick="toggleNotificationDrawer()">
+    <div class="bottom-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <h3 class="sheet-title">🔔 Academy Notifications</h3>
+        <button type="button" class="sheet-close-btn" onclick="toggleNotificationDrawer()">✕</button>
+      </div>
+
+      <!-- Push Permission Strip -->
+      <div id="push-permission-strip" style="background:rgba(216,161,83,0.12); border:1px solid var(--border-card); border-radius:var(--radius-md); padding:10px 12px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <div style="font-size:12px; color:#fde68a;">
+          <b>Live Class Push Notifications</b><br />
+          Jab class LIVE shuru ho to instant alert paayein.
+        </div>
+        <button type="button" class="btn-primary" onclick="requestPushNotificationPermission()" style="width:auto; padding:6px 12px; font-size:11.5px; white-space:nowrap;">
+          Enable 🔔
+        </button>
+      </div>
+
+      <div class="sheet-body" id="notif-sheet-list">
+        <div style="text-align:center; padding:30px 10px; color:var(--text-muted);">
+          Loading notifications…
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 8. MODAL: FORGOT PASSWORD (EMAIL OTP) ================= -->
+  <div id="modal-forgot-pw" class="sheet-backdrop" onclick="closeForgotPasswordSheet()">
+    <div class="bottom-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <h3 class="sheet-title">🔑 Reset Password</h3>
+        <button type="button" class="sheet-close-btn" onclick="closeForgotPasswordSheet()">✕</button>
+      </div>
+      <div class="sheet-body">
+        <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:14px;">
+          Apna registered email address enter karein. Hum 6-digit OTP bhejenge.
+        </p>
+
+        <!-- Step 1: Send OTP -->
+        <div id="fp-step-1">
+          <div class="form-group">
+            <label class="form-label" for="fp-email">Registered Email</label>
+            <input type="email" id="fp-email" class="app-input" placeholder="student@gmail.com" required />
+          </div>
+          <button type="button" id="btn-fp-send-otp" class="btn-primary" onclick="sendForgotEmailOtp()">
+            Send 6-Digit Email OTP ✉️
+          </button>
+        </div>
+
+        <!-- Step 2: Verify & Reset -->
+        <div id="fp-step-2" class="hidden">
+          <div style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); border-radius:var(--radius-md); padding:10px; font-size:12px; color:#34d399; margin-bottom:14px;">
+            ✉️ OTP sent to your email. Please check your inbox.
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="fp-otp">6-Digit Email OTP</label>
+            <input type="text" id="fp-otp" class="app-input otp-input-large" placeholder="••••••" maxlength="6" inputmode="numeric" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="fp-new-password">Choose New Password</label>
+            <input type="password" id="fp-new-password" class="app-input" placeholder="••••••••" minlength="6" required />
+          </div>
+          <button type="button" id="btn-fp-verify-reset" class="btn-primary" onclick="submitPasswordReset()">
+            Set New Password &amp; Login ➔
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 9. MODAL: NEW STUDENT REGISTRATION (EMAIL OTP) ================= -->
+  <div id="modal-register" class="sheet-backdrop" onclick="closeRegistrationSheet()">
+    <div class="bottom-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <h3 class="sheet-title">🎓 Student Registration</h3>
+        <button type="button" class="sheet-close-btn" onclick="closeRegistrationSheet()">✕</button>
+      </div>
+      <div class="sheet-body">
+        <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:14px;">
+          Create your Quick Art Academy student account with instant Email OTP.
+        </p>
+        <form id="form-register-student" onsubmit="handleRegistrationSubmit(event)">
+          <div class="form-group">
+            <label class="form-label" for="reg-name">Full Name *</label>
+            <input type="text" id="reg-name" class="app-input" placeholder="Rahul Sharma" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-phone">WhatsApp Mobile *</label>
+            <div class="phone-input-wrap">
+              <span class="phone-prefix">+91</span>
+              <input type="tel" id="reg-phone" class="app-input" placeholder="98765 43210" maxlength="10" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-email">Email Address *</label>
+            <div style="display:flex; gap:8px;">
+              <input type="email" id="reg-email" class="app-input" placeholder="student@gmail.com" required style="flex:1;" />
+              <button type="button" id="btn-reg-send-otp" class="btn-primary" onclick="sendRegistrationEmailOtp()" style="width:auto; padding:10px 14px; font-size:12px; white-space:nowrap;">
+                Send OTP
+              </button>
+            </div>
+          </div>
+          <div id="reg-otp-group" class="form-group hidden">
+            <label class="form-label" for="reg-otp">6-Digit Email OTP *</label>
+            <input type="text" id="reg-otp" class="app-input otp-input-large" placeholder="••••••" maxlength="6" inputmode="numeric" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-password">Password * (Min 6 chars)</label>
+            <input type="password" id="reg-password" class="app-input" placeholder="••••••••" minlength="6" required />
+          </div>
+          <button type="submit" id="btn-submit-register" class="btn-primary" style="margin-top:14px;">
+            Create Student Account ✓
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 10. MODAL: OFFICIAL STUDENT ID CARD (CR80 PVC) ================= -->
+  <div id="modal-id-card" class="sheet-backdrop" onclick="closeStudentIdCardModal()">
+    <div class="bottom-sheet" onclick="event.stopPropagation()" style="max-height:92vh;">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <h3 class="sheet-title">🪪 Official Student ID Card</h3>
+        <button type="button" class="sheet-close-btn" onclick="closeStudentIdCardModal()">✕</button>
+      </div>
+      <div class="sheet-body" style="text-align:center;">
+        <!-- ID Card Canvas Container -->
+        <div id="idcard-canvas-container" style="max-width:320px; margin:0 auto 16px; background:#0b1120; border:2px solid var(--gold); border-radius:16px; padding:18px 16px; box-shadow:0 15px 35px rgba(0,0,0,0.7); position:relative; overflow:hidden;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:12px;">
+            <img src="../home-assets/ec55a6be3747a9.webp" style="width:34px; height:34px; border-radius:8px; border:1px solid var(--gold);" />
+            <div style="text-align:left;">
+              <div style="font-family:var(--font-heading); font-size:12px; font-weight:800; color:#fff; line-height:1.2;">QUICK ART PHOTOGRAPHY ACADEMY</div>
+              <div style="font-size:8px; color:var(--gold); letter-spacing:1px;">ACCREDITED MEDIA ARTS INSTITUTE</div>
+            </div>
+          </div>
+
+          <div style="width:84px; height:84px; border-radius:50%; margin:0 auto 10px; border:2.5px solid var(--gold); overflow:hidden; background:#1e293b;">
+            <img id="idcard-photo" src="" style="width:100%; height:100%; object-fit:cover;" />
+          </div>
+
+          <h3 id="idcard-name" style="font-family:var(--font-heading); font-size:16px; font-weight:800; color:#fff; margin-bottom:2px;">Student Name</h3>
+          <div id="idcard-role" style="font-size:10px; color:var(--gold-light); font-weight:700; margin-bottom:10px;">OFFICIAL ACADEMY STUDENT</div>
+
+          <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:8px 10px; font-size:11px; text-align:left; margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+              <span style="color:var(--text-dim);">Enrollment No:</span>
+              <b id="idcard-enrollno" style="color:#fff; font-family:monospace;">QAA-2026-••••</b>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+              <span style="color:var(--text-dim);">Phone:</span>
+              <b id="idcard-phone" style="color:#fff;">+91 ••••••••••</b>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="color:var(--text-dim);">Program:</span>
+              <b id="idcard-program" style="color:#fff;">Media Arts LMS</b>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; padding-top:6px; border-top:1px solid rgba(255,255,255,0.08);">
+            <div style="text-align:left; font-size:9px; color:var(--text-dim);">
+              Verified Institutional Badge<br />
+              Founder: Anil Sharma
+            </div>
+            <div style="width:40px; height:40px; background:#fff; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:18px;">
+              🏁
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn-primary" onclick="downloadStudentIdCard()" style="max-width:320px; margin:0 auto;">
+          ⬇ Download Official Student ID Card
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HTML2Canvas & QR Code Libraries for ID Card Generation -->
+  <script src="../portal/html2canvas.min.js"></script>
+  <script src="../portal/qrcode.min.js"></script>
+  <script src="app.js?v=20261002_01"></script>
+</body>
+</html>

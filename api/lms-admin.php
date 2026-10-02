@@ -1101,6 +1101,10 @@ if ($action === 'save-live-class' && $method === 'POST') {
         }
     }
 
+    if (($record['status'] ?? '') === 'live' && function_exists('send_live_class_push_notification')) {
+        send_live_class_push_notification($record);
+    }
+
     json_ok(['saved' => true, 'liveClass' => $record]);
 }
 
@@ -1141,8 +1145,56 @@ if ($action === 'update-live-status' && $method === 'POST') {
 
     if (!$updatedClass) json_err('Live class not found', 404);
     save_all_live_classes($classes);
-    json_ok(['updated' => true, 'liveClass' => $updatedClass]);
+
+    // Auto-dispatch push notification when Admin starts class LIVE
+    $notifInfo = null;
+    if ($status === 'live' && function_exists('send_live_class_push_notification')) {
+        $notifInfo = send_live_class_push_notification($updatedClass);
+    }
+
+    json_ok([
+        'updated' => true,
+        'liveClass' => $updatedClass,
+        'pushSent' => ($notifInfo && !empty($notifInfo['ok'])) ? true : false,
+        'recipientCount' => $notifInfo['recipientCount'] ?? 0
+    ]);
 }
+
+// 20.4b Admin Manual Push Announcement & Class Reminder
+if ($action === 'send-admin-announcement' && $method === 'POST') {
+    $body = read_json_body();
+    $title     = trim($body['title'] ?? '');
+    $msg       = trim($body['message'] ?? ($body['body'] ?? ''));
+    $courseId  = trim($body['courseId'] ?? 'all');
+    $targetUrl = trim($body['url'] ?? '/app/');
+    $type      = trim($body['type'] ?? 'announcement'); // 'announcement' or 'reminder'
+
+    if (!$title || !$msg) {
+        json_err('Title and message are required for announcement', 400);
+    }
+
+    if (function_exists('send_custom_push_announcement')) {
+        $res = send_custom_push_announcement($title, $msg, $courseId, $targetUrl, $type);
+        json_ok([
+            'delivered' => true,
+            'recipients' => $res['recipientCount'] ?? 0,
+            'notification' => $res['notification'] ?? null
+        ]);
+    } else {
+        json_err('Push notification service unavailable', 500);
+    }
+}
+
+// 20.4c Get Push Notification Devices Count
+if ($action === 'get-push-subscribers-count' && ($method === 'GET' || $method === 'POST')) {
+    $subs = function_exists('load_push_subscriptions') ? load_push_subscriptions() : [];
+    $notifs = function_exists('load_notifications') ? load_notifications() : [];
+    json_ok([
+        'subscribersCount' => count($subs),
+        'notificationsCount' => count($notifs)
+    ]);
+}
+
 
 // 20.5 Get Live Chat / Doubts for Admin
 if ($action === 'get-admin-live-chat' && ($method === 'GET' || $method === 'POST')) {

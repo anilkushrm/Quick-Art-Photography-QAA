@@ -26,6 +26,14 @@ Header set X-Robots-Tag "index, follow, max-image-preview:large, max-snippet:-1,
 <FilesMatch "(admin\.html|email-template-preview\.html)">
   Header set X-Robots-Tag "noindex, nofollow"
 </FilesMatch>
+<FilesMatch "sw\.js$">
+  Header set Cache-Control "no-cache, no-store, must-revalidate"
+  Header set Pragma "no-cache"
+  Header set Expires 0
+</FilesMatch>
+<FilesMatch "manifest\.json$">
+  Header set Content-Type "application/manifest+json; charset=utf-8"
+</FilesMatch>
 </IfModule>
 
 # ─── GZIP Compression (deduped, single block) ───────────────────────────────

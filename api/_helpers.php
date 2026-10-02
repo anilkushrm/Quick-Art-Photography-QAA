@@ -52,6 +52,17 @@ function json_err($msg, $status = 400) {
     exit;
 }
 
+if (!function_exists('clean_phone')) {
+    function clean_phone($p) {
+        $num = preg_replace('/[^0-9]/', '', (string)$p);
+        if (strlen($num) === 12 && substr($num, 0, 2) === '91') {
+            $num = substr($num, 2);
+        }
+        return $num;
+    }
+}
+
+
 // ---------- Storage: settings ----------
 function load_settings() {
     if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
@@ -787,5 +798,8 @@ function consume_email_otp($email) {
         save_email_otps($otps);
     }
 }
+
+require_once __DIR__ . '/_notifications.php';
+
 
 

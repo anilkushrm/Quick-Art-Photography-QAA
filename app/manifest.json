@@ -1,0 +1,42 @@
+{
+  "name": "Quick Art Photography Academy LMS",
+  "short_name": "Quick Art LMS",
+  "description": "Official Student LMS & Classroom App for Quick Art Photography Academy. Watch 4K courses, attend live masterclasses, submit assignments, and earn certifications.",
+  "start_url": "/app/",
+  "scope": "/app/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#080c14",
+  "theme_color": "#080c14",
+  "categories": ["education", "photography", "video-editing"],
+  "icons": [
+    {
+      "src": "/home-assets/ec55a6be3747a9.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/home-assets/ec55a6be3747a9.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "My Courses",
+      "short_name": "Courses",
+      "description": "View enrolled courses",
+      "url": "/app/?tab=mycourses",
+      "icons": [{ "src": "/home-assets/ec55a6be3747a9.webp", "sizes": "192x192" }]
+    },
+    {
+      "name": "Live Classes",
+      "short_name": "Live",
+      "description": "Join live class or masterclass",
+      "url": "/app/?tab=live",
+      "icons": [{ "src": "/home-assets/ec55a6be3747a9.webp", "sizes": "192x192" }]
+    }
+  ]
+}

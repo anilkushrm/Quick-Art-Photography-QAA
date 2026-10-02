@@ -131,6 +131,10 @@ class MainActivity : AppCompatActivity() {
         settings.displayZoomControls = false
         settings.mediaPlaybackRequiresUserGesture = false
 
+        webView.isVerticalScrollBarEnabled = true
+        webView.isHorizontalScrollBarEnabled = false
+        webView.overScrollMode = View.OVER_SCROLL_NEVER
+
         val defaultUa = settings.userAgentString
         settings.userAgentString = "$defaultUa QuickArtAcademyApp/2.4 (Android)"
 

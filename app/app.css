@@ -512,6 +512,22 @@ html, body {
   margin-bottom: 24px;
 }
 
+.auth-logo-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.auth-logo-img {
+  width: 66px;
+  height: 66px;
+  border-radius: 16px;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 24px rgba(216, 161, 83, 0.22);
+}
+
 .auth-badge {
   display: inline-flex;
   align-items: center;

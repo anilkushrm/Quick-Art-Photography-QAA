@@ -3,7 +3,6 @@
 // Unified Student Credentials & Real-Time Sync with Website LMS
 // ==========================================================================
 
-const API_BASE = '../api/lms.php';
 let currentStudent = null;
 let enrolledCourses = [];
 let allLiveClasses = [];
@@ -13,7 +12,95 @@ let notificationsList = [];
 let liveCheckInterval = null;
 
 // ==========================================================================
-// 1. INITIALIZATION & SESSION VALIDATION
+// 1. SMART API CLIENT (ZERO JSON CRASHES, AUTO-FALLBACK & CORS COMPATIBLE)
+// ==========================================================================
+
+function getLmsApiBase() {
+  const isStaticLocal = ['5500', '5501', '5502', '3000', '5173', '8080'].includes(window.location.port)
+    || window.location.protocol === 'file:'
+    || (window.location.hostname === 'localhost' && !window.location.port.startsWith('80'));
+
+  // If running in local static preview or file protocol, use live backend
+  if (isStaticLocal) {
+    return 'https://quickartphotography.in/api/lms.php';
+  }
+  return '../api/lms.php';
+}
+
+/**
+ * Robust API fetcher:
+ * - Automatically falls back to live domain if local server doesn't execute PHP
+ * - Safely parses text before JSON to eliminate 'Unexpected end of JSON input'
+ * - Injects 'X-Student-Token' seamlessly
+ */
+async function apiFetch(action, opts = {}) {
+  let base = getLmsApiBase();
+  let url = `${base}?action=${action}`;
+
+  const token = localStorage.getItem('qaa_student_token') || '';
+  const headers = Object.assign({
+    'Content-Type': 'application/json',
+    'X-Student-Token': token
+  }, opts.headers || {});
+
+  const fetchOptions = {
+    method: opts.method || 'GET',
+    headers: headers
+  };
+
+  if (opts.body) {
+    fetchOptions.body = typeof opts.body === 'string' ? opts.body : JSON.stringify(opts.body);
+  }
+
+  let res;
+  let usedLiveFallback = false;
+
+  try {
+    res = await fetch(url, fetchOptions);
+  } catch (netErr) {
+    // If local relative request failed (CORS/offline/network), fallback to production API
+    if (!url.startsWith('https://quickartphotography.in')) {
+      url = `https://quickartphotography.in/api/lms.php?action=${action}`;
+      usedLiveFallback = true;
+      res = await fetch(url, fetchOptions);
+    } else {
+      throw new Error('Network error. Please check your internet connection.');
+    }
+  }
+
+  const rawText = await res.text();
+  let data = null;
+
+  try {
+    data = JSON.parse(rawText);
+  } catch (parseErr) {
+    // If local server returned empty or non-JSON (e.g. VS Code Live Server static file), try live API
+    if (!usedLiveFallback && !url.startsWith('https://quickartphotography.in')) {
+      const fallbackUrl = `https://quickartphotography.in/api/lms.php?action=${action}`;
+      try {
+        const fbRes = await fetch(fallbackUrl, fetchOptions);
+        const fbText = await fbRes.text();
+        data = JSON.parse(fbText);
+      } catch (e2) {
+        throw new Error('Server returned invalid response. Please try again.');
+      }
+    } else {
+      throw new Error(rawText || 'Server error occurred');
+    }
+  }
+
+  if (!data || !data.ok) {
+    throw new Error((data && data.error) || 'Request failed');
+  }
+
+  return data;
+}
+
+// Alias for legacy calls
+const callLmsApi = apiFetch;
+
+// ==========================================================================
+// 2. INITIALIZATION & SESSION VALIDATION
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
   initServiceWorker();
@@ -23,9 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Register Service Worker for Background Push Notifications
 async function initServiceWorker() {
-  if ('serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
     try {
-      const reg = await navigator.serviceWorker.register('sw.js?v=20261002_01');
+      const reg = await navigator.serviceWorker.register('sw.js?v=20261002_02');
       console.log('QAA LMS ServiceWorker registered successfully:', reg.scope);
 
       // Check if already subscribed to push
@@ -58,12 +145,10 @@ async function requestPushNotificationPermission() {
       try {
         let sub = await reg.pushManager.getSubscription();
         if (!sub) {
-          // Subscribe with generic or custom endpoint
           sub = await reg.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array('BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZ_WJJn52SkqdG3W5NA10DWDV73W4nKPuhbUxio')
           }).catch(async () => {
-            // Fallback: subscription without key if browser supports
             return await reg.pushManager.subscribe({ userVisibleOnly: true }).catch(() => null);
           });
         }
@@ -93,18 +178,14 @@ function urlBase64ToUint8Array(base64String) {
 async function syncPushSubscriptionWithServer(subscription) {
   const student = currentStudent || JSON.parse(localStorage.getItem('qaa_student_info') || '{}');
   try {
-    await fetch(`${API_BASE}?action=save-push-subscription`, {
+    await apiFetch('save-push-subscription', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Student-Token': localStorage.getItem('qaa_student_token') || ''
-      },
-      body: JSON.stringify({
+      body: {
         subscription: subscription,
         studentId: student.id || '',
         phone: student.phone || '',
         courses: student.enrolledCourses || []
-      })
+      }
     });
   } catch (err) {
     console.warn('Failed to sync push subscription:', err);
@@ -126,7 +207,7 @@ async function initAppSession() {
   }
 
   try {
-    const res = await callLmsApi('me');
+    const res = await apiFetch('me');
     if (res && res.student) {
       currentStudent = res.student;
       localStorage.setItem('qaa_student_info', JSON.stringify(currentStudent));
@@ -189,7 +270,7 @@ function updateHeaderUI() {
 }
 
 // ==========================================================================
-// 2. AUTHENTICATION (SAME STUDENT CREDENTIALS AS WEBSITE)
+// 3. AUTHENTICATION (SAME STUDENT CREDENTIALS AS WEBSITE)
 // ==========================================================================
 function switchAuthTab(type) {
   const tabWa = document.getElementById('tab-btn-whatsapp');
@@ -211,7 +292,6 @@ function switchAuthTab(type) {
 }
 
 // WhatsApp OTP: Send Step
-let phoneOtpTimer = null;
 let currentPhoneTarget = '';
 
 async function handleSendPhoneOtp(e) {
@@ -229,16 +309,10 @@ async function handleSendPhoneOtp(e) {
   btn.textContent = 'Sending WhatsApp OTP…';
 
   try {
-    const res = await fetch(`${API_BASE}?action=send-otp`, {
+    const data = await apiFetch('send-otp', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone: rawPhone })
+      body: { phone: rawPhone }
     });
-    const data = await res.json();
-
-    if (!res.ok || !data.ok) {
-      throw new Error(data.error || 'OTP delivery failed');
-    }
 
     currentPhoneTarget = rawPhone;
     document.getElementById('wa-display-phone').textContent = rawPhone;
@@ -280,16 +354,10 @@ async function handleVerifyPhoneOtp(e) {
   btn.textContent = 'Verifying OTP…';
 
   try {
-    const res = await fetch(`${API_BASE}?action=verify-otp`, {
+    const data = await apiFetch('verify-otp', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone: currentPhoneTarget, otp: otpVal })
+      body: { phone: currentPhoneTarget, otp: otpVal }
     });
-    const data = await res.json();
-
-    if (!res.ok || !data.ok) {
-      throw new Error(data.error || 'Verification failed');
-    }
 
     // Save Unified Token & Student Object
     localStorage.setItem('qaa_student_token', data.token);
@@ -326,16 +394,10 @@ async function handleEmailLogin(e) {
   btn.textContent = 'Logging in…';
 
   try {
-    const res = await fetch(`${API_BASE}?action=email-login`, {
+    const data = await apiFetch('email-login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: { email, password }
     });
-    const data = await res.json();
-
-    if (!res.ok || !data.ok) {
-      throw new Error(data.error || 'Login failed');
-    }
 
     localStorage.setItem('qaa_student_token', data.token);
     currentStudent = data.student || {};
@@ -374,13 +436,10 @@ async function sendForgotEmailOtp() {
   btn.textContent = 'Sending Email OTP…';
 
   try {
-    const res = await fetch(`${API_BASE}?action=send-email-otp`, {
+    await apiFetch('send-email-otp', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, purpose: 'reset' })
+      body: { email, purpose: 'reset' }
     });
-    const data = await res.json();
-    if (!res.ok || !data.ok) throw new Error(data.error || 'Failed to send OTP');
 
     document.getElementById('fp-step-1').classList.add('hidden');
     document.getElementById('fp-step-2').classList.remove('hidden');
@@ -408,13 +467,10 @@ async function submitPasswordReset() {
   btn.textContent = 'Updating Password…';
 
   try {
-    const res = await fetch(`${API_BASE}?action=email-reset-password`, {
+    const data = await apiFetch('email-reset-password', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, otp, newPassword })
+      body: { email, otp, newPassword }
     });
-    const data = await res.json();
-    if (!res.ok || !data.ok) throw new Error(data.error || 'Password reset failed');
 
     closeForgotPasswordSheet();
     if (data.token) {
@@ -454,13 +510,10 @@ async function sendRegistrationEmailOtp() {
   btn.textContent = 'Sending…';
 
   try {
-    const res = await fetch(`${API_BASE}?action=send-email-otp`, {
+    await apiFetch('send-email-otp', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, purpose: 'signup' })
+      body: { email, purpose: 'signup' }
     });
-    const data = await res.json();
-    if (!res.ok || !data.ok) throw new Error(data.error || 'OTP failed');
 
     document.getElementById('reg-otp-group').classList.remove('hidden');
     toast('✉️ 6-digit verification code sent to your email!');
@@ -485,13 +538,10 @@ async function handleRegistrationSubmit(e) {
   btn.textContent = 'Creating Account…';
 
   try {
-    const res = await fetch(`${API_BASE}?action=email-signup`, {
+    const data = await apiFetch('email-signup', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, email, otp, password })
+      body: { name, phone, email, otp, password }
     });
-    const data = await res.json();
-    if (!res.ok || !data.ok) throw new Error(data.error || 'Registration failed');
 
     closeRegistrationSheet();
     localStorage.setItem('qaa_student_token', data.token);
@@ -531,10 +581,9 @@ function togglePasswordVisibility(inputId, triggerBtn) {
 }
 
 // ==========================================================================
-// 3. BOTTOM NAVIGATION (4 CLEAN TABS)
+// 4. BOTTOM NAVIGATION (4 CLEAN TABS)
 // ==========================================================================
 function switchTab(tabName) {
-  // Update nav buttons
   ['dashboard', 'mycourses', 'live', 'profile'].forEach(t => {
     const btn = document.getElementById(`nav-btn-${t}`);
     const panel = document.getElementById(`tab-${t}`);
@@ -544,7 +593,6 @@ function switchTab(tabName) {
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // Tab-specific initializers
   if (tabName === 'dashboard') loadDashboardData();
   if (tabName === 'mycourses') loadCoursesTab();
   if (tabName === 'live') loadLiveClassesTab();
@@ -557,7 +605,6 @@ function setupURLRouter() {
   const targetId = params.get('id');
 
   if (targetTab && ['dashboard', 'mycourses', 'live', 'profile'].includes(targetTab)) {
-    // Wait for session check to complete, then switch
     setTimeout(() => {
       switchTab(targetTab);
       if (targetTab === 'live' && targetId) {
@@ -568,7 +615,7 @@ function setupURLRouter() {
 }
 
 // ==========================================================================
-// 4. TAB 1: DASHBOARD ENGINE
+// 5. TAB 1: DASHBOARD ENGINE
 // ==========================================================================
 async function loadDashboardData() {
   if (!currentStudent) return;
@@ -594,7 +641,7 @@ async function loadDashboardData() {
 
   // 2. Fetch Enrolled Courses & Calculate Progress
   try {
-    const res = await callLmsApi('my-courses');
+    const res = await apiFetch('my-courses');
     enrolledCourses = res.courses || [];
 
     let totalLessons = 0;
@@ -616,16 +663,12 @@ async function loadDashboardData() {
     document.getElementById('kpi-cert-count').textContent = certCount;
     document.getElementById('kpi-avg-progress').textContent = `${avgProg}%`;
 
-    // Continue Learning Spotlight
     renderContinueLearningCard();
   } catch (err) {
     console.warn('Dashboard courses fetch failed:', err);
   }
 
-  // 3. Check Live & Scheduled Classes
   checkLiveClassStatus();
-
-  // 4. Announcements
   renderAnnouncementsFeed();
 }
 
@@ -636,7 +679,6 @@ function renderContinueLearningCard() {
     return;
   }
 
-  // Find first active in-progress course, or default to first
   const activeC = enrolledCourses.find(c => {
     const done = c.completedCount || 0;
     const tot = c.totalLessons || 1;
@@ -665,7 +707,7 @@ function renderContinueLearningCard() {
   card.classList.remove('hidden');
 }
 
-// Live Class Watcher (Polls every 15s for instant admin trigger notifications)
+// Live Class Watcher
 function startLiveWatcher() {
   if (liveCheckInterval) clearInterval(liveCheckInterval);
   checkLiveClassStatus();
@@ -674,7 +716,7 @@ function startLiveWatcher() {
 
 async function checkLiveClassStatus() {
   try {
-    const res = await callLmsApi('get-live-classes');
+    const res = await apiFetch('get-live-classes');
     allLiveClasses = res.liveClasses || [];
 
     const enrolledIds = (currentStudent && currentStudent.enrolledCourses) || [];
@@ -683,7 +725,6 @@ async function checkLiveClassStatus() {
       return enrolledIds.includes(c.courseId);
     };
 
-    // Find if any class is LIVE right now
     const liveNow = allLiveClasses.find(c => c.status === 'live' && isStudentEnrolledInClass(c));
     const headerLiveBtn = document.getElementById('header-live-btn');
     const navLiveDot = document.getElementById('nav-live-dot');
@@ -704,7 +745,6 @@ async function checkLiveClassStatus() {
       dashLiveBanner?.classList.add('hidden');
     }
 
-    // Next scheduled class
     const upcoming = allLiveClasses.filter(c => c.status === 'scheduled' && isStudentEnrolledInClass(c));
     const schedCard = document.getElementById('dash-scheduled-card');
     if (upcoming.length && !liveNow) {
@@ -725,7 +765,6 @@ async function checkLiveClassStatus() {
   }
 }
 
-// Announcements Feed
 function renderAnnouncementsFeed() {
   const container = document.getElementById('dash-announcements-container');
   if (!container) return;
@@ -758,14 +797,14 @@ function renderAnnouncementsFeed() {
 }
 
 // ==========================================================================
-// 5. TAB 2: MY COURSES ENGINE
+// 6. TAB 2: MY COURSES ENGINE
 // ==========================================================================
 async function loadCoursesTab() {
   const listEl = document.getElementById('app-courses-list');
   listEl.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--text-muted);">Loading your courses…</div>';
 
   try {
-    const res = await callLmsApi('my-courses');
+    const res = await apiFetch('my-courses');
     enrolledCourses = res.courses || [];
     filterCourses('all');
   } catch (err) {
@@ -844,22 +883,20 @@ function filterCourses(filter) {
 }
 
 // ==========================================================================
-// 6. CLASSROOM PLAYER ENGINE (SEAMLESS IN-APP EXPERIENCE)
+// 7. CLASSROOM PLAYER ENGINE (SEAMLESS IN-APP EXPERIENCE)
 // ==========================================================================
 async function openClassroomPlayer(courseId, initialLessonId = null) {
   const playerView = document.getElementById('view-classroom-player');
   playerView.classList.remove('hidden');
 
   try {
-    const res = await callLmsApi(`course-details&courseId=${encodeURIComponent(courseId)}`);
+    const res = await apiFetch(`course-details&courseId=${encodeURIComponent(courseId)}`);
     activeCourse = res.course;
 
     document.getElementById('cr-course-title').textContent = activeCourse.title;
 
-    // Render Curriculum Modules List
     renderClassroomModules(activeCourse);
 
-    // Pick lesson
     let targetLesson = null;
     if (initialLessonId) {
       activeCourse.modules?.forEach(m => {
@@ -882,7 +919,7 @@ async function openClassroomPlayer(courseId, initialLessonId = null) {
 
 function closeClassroomPlayer() {
   document.getElementById('view-classroom-player').classList.add('hidden');
-  document.getElementById('cr-video-mount').innerHTML = ''; // Stop video playback
+  document.getElementById('cr-video-mount').innerHTML = '';
 }
 
 function renderClassroomModules(course) {
@@ -917,25 +954,21 @@ function renderClassroomModules(course) {
 
 async function loadLessonToPlayer(courseId, lessonId) {
   try {
-    const res = await callLmsApi(`get-lesson&courseId=${encodeURIComponent(courseId)}&lessonId=${encodeURIComponent(lessonId)}`);
+    const res = await apiFetch(`get-lesson&courseId=${encodeURIComponent(courseId)}&lessonId=${encodeURIComponent(lessonId)}`);
     activeLesson = res.lesson;
 
-    // Highlight row
     document.querySelectorAll('.lesson-row-item').forEach(r => r.classList.remove('active'));
     document.getElementById(`cr-les-row-${lessonId}`)?.classList.add('active');
 
-    // Title & duration
     document.getElementById('cr-lesson-title').textContent = activeLesson.title;
     document.getElementById('cr-lesson-sub').textContent = `⏱ Duration: ${activeLesson.duration || 'Video'} • 4K HD`;
 
-    // Completion Status Button
     const completedList = (currentStudent && currentStudent.completedLessons && currentStudent.completedLessons[courseId]) || [];
     const isDone = completedList.includes(lessonId);
     const completeBtn = document.getElementById('btn-toggle-complete');
     completeBtn.classList.toggle('done', isDone);
     completeBtn.textContent = isDone ? 'Completed ✓' : 'Mark Complete ✓';
 
-    // Mount Video Embed
     const mount = document.getElementById('cr-video-mount');
     if (activeLesson.bunnyIframeUrl) {
       mount.innerHTML = `<iframe src="${activeLesson.bunnyIframeUrl}" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen></iframe>`;
@@ -947,14 +980,12 @@ async function loadLessonToPlayer(courseId, lessonId) {
       mount.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#fff;">Video lecture is being prepared</div>`;
     }
 
-    // Render Sub-tab contents
     renderLessonResources(activeLesson);
     renderLessonNotes(activeLesson);
     renderLessonQuiz(activeLesson);
     renderLessonAssignment(activeLesson);
     loadLessonComments(courseId, lessonId);
 
-    // Switch to curriculum or notes by default
     switchClassroomSubtab('curriculum');
   } catch (err) {
     toast('Lesson load failed: ' + err.message, false);
@@ -967,18 +998,11 @@ async function toggleCurrentLessonComplete() {
   const lessonId = activeLesson.id;
 
   try {
-    const res = await fetch(`${API_BASE}?action=update-progress`, {
+    await apiFetch('update-progress', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Student-Token': localStorage.getItem('qaa_student_token') || ''
-      },
-      body: JSON.stringify({ courseId, lessonId })
+      body: { courseId, lessonId }
     });
-    const data = await res.json();
-    if (!res.ok || !data.ok) throw new Error(data.error || 'Failed');
 
-    // Update local state
     if (!currentStudent.completedLessons) currentStudent.completedLessons = {};
     if (!currentStudent.completedLessons[courseId]) currentStudent.completedLessons[courseId] = [];
 
@@ -1032,7 +1056,7 @@ function renderLessonResources(lesson) {
         <div style="font-weight:700;color:#fff;font-size:13px;">${escHtml(r.name || r.title || 'Practice File')}</div>
         <div style="font-size:11px;color:var(--text-dim);">${escHtml(r.size || 'Downloadable Asset')}</div>
       </div>
-      <a href="${r.url ? `../${r.url}` : '#'}" download target="_blank" class="btn-primary" style="width:auto;padding:6px 12px;font-size:11.5px;text-decoration:none;">
+      <a href="${r.url ? (r.url.startsWith('http') ? r.url : `../${r.url}`) : '#'}" download target="_blank" class="btn-primary" style="width:auto;padding:6px 12px;font-size:11.5px;text-decoration:none;">
         Download ⬇
       </a>
     </div>
@@ -1083,22 +1107,16 @@ async function submitLessonAssignment() {
     return;
   }
   try {
-    const res = await fetch(`${API_BASE}?action=submit-assignment`, {
+    await apiFetch('submit-assignment', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Student-Token': localStorage.getItem('qaa_student_token') || ''
-      },
-      body: JSON.stringify({
+      body: {
         courseId: activeCourse.id,
         assignmentId: activeLesson.id,
         assignmentTitle: activeLesson.title,
         submissionUrl: link,
         notes: 'Submitted via Mobile App'
-      })
+      }
     });
-    const data = await res.json();
-    if (!res.ok || !data.ok) throw new Error(data.error || 'Submission failed');
     toast('🎉 Assignment submitted successfully! Mentor review karenge.');
     document.getElementById('cr-assign-link').value = '';
   } catch (err) {
@@ -1110,7 +1128,7 @@ async function loadLessonComments(courseId, lessonId) {
   const container = document.getElementById('cr-comments-list');
   if (!container) return;
   try {
-    const res = await callLmsApi(`discussion-list&courseId=${encodeURIComponent(courseId)}&lessonId=${encodeURIComponent(lessonId)}`);
+    const res = await apiFetch(`discussion-list&courseId=${encodeURIComponent(courseId)}&lessonId=${encodeURIComponent(lessonId)}`);
     const comments = res.comments || [];
     if (!comments.length) {
       container.innerHTML = `<div style="font-size:12px;color:var(--text-muted);">Abhi tak koi comments nahi hain. Apna doubt pehle puchiye!</div>`;
@@ -1132,17 +1150,13 @@ async function handlePostLessonComment(e) {
   if (!text || !activeCourse || !activeLesson) return;
 
   try {
-    await fetch(`${API_BASE}?action=discussion-post`, {
+    await apiFetch('discussion-post', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Student-Token': localStorage.getItem('qaa_student_token') || ''
-      },
-      body: JSON.stringify({
+      body: {
         courseId: activeCourse.id,
         lessonId: activeLesson.id,
         text: text
-      })
+      }
     });
     input.value = '';
     loadLessonComments(activeCourse.id, activeLesson.id);
@@ -1165,20 +1179,19 @@ function shareCurrentLesson() {
 }
 
 // ==========================================================================
-// 7. TAB 3: LIVE & WEBINARS ENGINE
+// 8. TAB 3: LIVE & WEBINARS ENGINE
 // ==========================================================================
 async function loadLiveClassesTab() {
   const upcomingListEl = document.getElementById('upcoming-live-list');
   const pastListEl = document.getElementById('past-recordings-list');
 
   try {
-    const res = await callLmsApi('get-live-classes');
+    const res = await apiFetch('get-live-classes');
     allLiveClasses = res.liveClasses || [];
 
     const enrolledIds = (currentStudent && currentStudent.enrolledCourses) || [];
     const isAuth = (c) => (c.courseId === 'all' || c.type === 'workshop' || enrolledIds.includes(c.courseId));
 
-    // Active Live Session Check
     const activeLive = allLiveClasses.find(c => c.status === 'live' && isAuth(c));
     const mount = document.getElementById('live-stream-mount');
     const pill = document.getElementById('live-tab-status-pill');
@@ -1196,7 +1209,6 @@ async function loadLiveClassesTab() {
       pill.style.color = '#94a3b8';
     }
 
-    // Upcoming Classes
     const upcoming = allLiveClasses.filter(c => c.status === 'scheduled');
     if (upcomingListEl) {
       if (!upcoming.length) {
@@ -1222,7 +1234,6 @@ async function loadLiveClassesTab() {
       }
     }
 
-    // Previous Recordings
     const past = allLiveClasses.filter(c => c.status === 'completed' || c.replayUrl);
     if (pastListEl) {
       pastListEl.innerHTML = `
@@ -1279,7 +1290,7 @@ async function handleSendLiveDoubt(e) {
 }
 
 // ==========================================================================
-// 8. TAB 4: MY PROFILE ENGINE
+// 9. TAB 4: MY PROFILE ENGINE
 // ==========================================================================
 function loadProfileData() {
   if (!currentStudent) return;
@@ -1323,15 +1334,10 @@ function handleProfilePhotoUpload(e) {
       updateHeaderUI();
       toast('Photo updated successfully!');
 
-      // Save to server
       try {
-        await fetch(`${API_BASE}?action=update-profile`, {
+        await apiFetch('update-profile', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Student-Token': localStorage.getItem('qaa_student_token') || ''
-          },
-          body: JSON.stringify({ avatar: dataUrl })
+          body: { avatar: dataUrl }
         });
       } catch (_) {}
     }
@@ -1391,7 +1397,7 @@ function openChangePasswordModal() {
 }
 
 // ==========================================================================
-// 9. NOTIFICATION CENTER ENGINE
+// 10. NOTIFICATION CENTER ENGINE
 // ==========================================================================
 function toggleNotificationDrawer() {
   const backdrop = document.getElementById('notification-backdrop');
@@ -1406,7 +1412,7 @@ async function loadNotifications() {
   const badge = document.getElementById('notif-badge');
 
   try {
-    const res = await callLmsApi('get-notifications');
+    const res = await apiFetch('get-notifications');
     notificationsList = res.notifications || [];
     const unread = res.unreadCount || 0;
 
@@ -1447,15 +1453,10 @@ async function loadNotifications() {
 async function handleNotificationTap(notifId, targetUrl) {
   toggleNotificationDrawer();
 
-  // Mark read
   try {
-    await fetch(`${API_BASE}?action=mark-notification-read`, {
+    await apiFetch('mark-notification-read', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Student-Token': localStorage.getItem('qaa_student_token') || ''
-      },
-      body: JSON.stringify({ id: notifId })
+      body: { id: notifId }
     });
   } catch (_) {}
 
@@ -1469,25 +1470,8 @@ async function handleNotificationTap(notifId, targetUrl) {
 }
 
 // ==========================================================================
-// 10. SHARED HELPERS & TOAST
+// 11. SHARED HELPERS & TOAST
 // ==========================================================================
-async function callLmsApi(actionWithParams, options = {}) {
-  const token = localStorage.getItem('qaa_student_token') || '';
-  const url = `${API_BASE}?action=${actionWithParams}`;
-
-  const headers = Object.assign({
-    'X-Student-Token': token
-  }, options.headers || {});
-
-  const res = await fetch(url, Object.assign({}, options, { headers }));
-  const data = await res.json();
-
-  if (!res.ok || !data.ok) {
-    throw new Error(data.error || 'LMS request failed');
-  }
-  return data;
-}
-
 function toast(msg, isSuccess = true) {
   const toastEl = document.getElementById('app-toast');
   const textEl = document.getElementById('toast-text');

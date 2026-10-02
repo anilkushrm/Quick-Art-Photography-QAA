@@ -944,18 +944,28 @@ function startLiveWatcher() {
   liveCheckInterval = setInterval(checkLiveClassStatus, 15000);
 }
 
+function isStudentEnrolledInLive(c) {
+  if (!currentStudent || !c) return false;
+  if (c.isAuthorized === true) return true;
+
+  const enrolledIds = currentStudent.enrolledCourses || [];
+  if (enrolledIds.includes('all-access')) return true;
+  if (c.id && enrolledIds.includes(c.id)) return true;
+  if (c.courseId && c.courseId !== 'all' && enrolledIds.includes(c.courseId)) return true;
+
+  if (c.type === 'workshop') {
+    return enrolledIds.includes('masterclass-live') || enrolledIds.includes('live_demo_01') || (c.id && enrolledIds.includes(c.id));
+  }
+
+  return false;
+}
+
 async function checkLiveClassStatus() {
   try {
     const res = await apiFetch('get-live-classes');
     allLiveClasses = res.liveClasses || [];
 
-    const enrolledIds = (currentStudent && currentStudent.enrolledCourses) || [];
-    const isStudentEnrolledInClass = (c) => {
-      if (c.courseId === 'all' || c.type === 'workshop') return true;
-      return enrolledIds.includes(c.courseId);
-    };
-
-    const liveNow = allLiveClasses.find(c => c.status === 'live' && isStudentEnrolledInClass(c));
+    const liveNow = allLiveClasses.find(c => c.status === 'live' && isStudentEnrolledInLive(c));
     const headerLiveBtn = document.getElementById('header-live-btn');
     const navLiveDot = document.getElementById('nav-live-dot');
     const dashLiveBanner = document.getElementById('dash-live-banner');
@@ -975,7 +985,7 @@ async function checkLiveClassStatus() {
       dashLiveBanner?.classList.add('hidden');
     }
 
-    const upcoming = allLiveClasses.filter(c => c.status === 'scheduled' && isStudentEnrolledInClass(c));
+    const upcoming = allLiveClasses.filter(c => c.status === 'scheduled' && isStudentEnrolledInLive(c));
     const schedCard = document.getElementById('dash-scheduled-card');
     if (upcoming.length && !liveNow) {
       const next = upcoming[0];
@@ -983,15 +993,18 @@ async function checkLiveClassStatus() {
       document.getElementById('sched-class-title').textContent = next.title;
       if (next.scheduledAt) {
         const dt = new Date(next.scheduledAt);
-        document.getElementById('sched-cal-month').textContent = dt.toLocaleString('en-US', { month: 'short' }).toUpperCase();
-        document.getElementById('sched-cal-day').textContent = String(dt.getDate()).padStart(2, '0');
-        document.getElementById('sched-class-time').textContent = dt.toLocaleString('en-IN', { weekday: 'short', hour: '2-digit', minute: '2-digit' }) + ' IST';
+        const schedMonthEl = document.getElementById('sched-cal-month');
+        if (schedMonthEl) schedMonthEl.textContent = dt.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+        const schedDayEl = document.getElementById('sched-cal-day');
+        if (schedDayEl) schedDayEl.textContent = String(dt.getDate()).padStart(2, '0');
+        const schedTimeEl = document.getElementById('sched-class-time');
+        if (schedTimeEl) schedTimeEl.textContent = dt.toLocaleString('en-IN', { weekday: 'short', hour: '2-digit', minute: '2-digit' }) + ' IST';
       }
     } else {
       schedCard?.classList.add('hidden');
     }
   } catch (err) {
-    console.warn('Live classes poll error:', err);
+    console.warn('Live class status check error:', err);
   }
 }
 
@@ -1664,6 +1677,9 @@ function shareCurrentLesson() {
 // 8. TAB 3: LIVE & WEBINARS ENGINE
 // ==========================================================================
 async function loadLiveClassesTab() {
+  const mount = document.getElementById('live-stream-mount');
+  const pill = document.getElementById('live-tab-status-pill');
+  const interactiveSection = document.getElementById('live-interactive-section');
   const upcomingListEl = document.getElementById('upcoming-live-list');
   const pastListEl = document.getElementById('past-recordings-list');
 
@@ -1671,30 +1687,55 @@ async function loadLiveClassesTab() {
     const res = await apiFetch('get-live-classes');
     allLiveClasses = res.liveClasses || [];
 
-    const enrolledIds = (currentStudent && currentStudent.enrolledCourses) || [];
-    const isAuth = (c) => (c.courseId === 'all' || c.type === 'workshop' || enrolledIds.includes(c.courseId));
-
-    const activeLive = allLiveClasses.find(c => c.status === 'live' && isAuth(c));
-    const mount = document.getElementById('live-stream-mount');
-    const pill = document.getElementById('live-tab-status-pill');
+    // STRICT: Only live classes that the current student is actually enrolled in
+    const enrolledLiveClasses = allLiveClasses.filter(c => isStudentEnrolledInLive(c));
+    const activeLive = enrolledLiveClasses.find(c => c.status === 'live');
 
     if (activeLive) {
-      pill.textContent = '🔴 LIVE BROADCASTING';
-      pill.style.color = '#ef4444';
-      mount.innerHTML = `
-        <div style="position:relative; width:100%; height:100%;">
-          <iframe src="https://www.youtube-nocookie.com/embed/${activeLive.streamId || 'XWFnwJowfx4'}?autoplay=1&modestbranding=1" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>
-        </div>
-      `;
+      let streamId = activeLive.streamId;
+      if (!streamId) {
+        try {
+          const sessRes = await apiFetch(`get-live-session&liveId=${encodeURIComponent(activeLive.id)}`);
+          if (sessRes && sessRes.streamId) {
+            streamId = sessRes.streamId;
+            activeLive.streamId = streamId;
+          }
+        } catch (e) {
+          console.warn('Failed to fetch streamId:', e);
+        }
+      }
+
+      if (streamId) {
+        if (pill) {
+          pill.textContent = '🔴 LIVE BROADCASTING';
+          pill.style.color = '#ef4444';
+        }
+        if (mount) {
+          mount.innerHTML = `
+            <div style="position:relative; width:100%; height:100%;">
+              <iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(streamId)}?autoplay=1&modestbranding=1" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>
+            </div>
+          `;
+        }
+        if (interactiveSection) interactiveSection.style.display = 'block';
+      } else {
+        renderLiveStandby(mount, pill, interactiveSection);
+      }
     } else {
-      pill.textContent = '📡 Studio Standby';
-      pill.style.color = '#94a3b8';
+      renderLiveStandby(mount, pill, interactiveSection);
     }
 
-    const upcoming = allLiveClasses.filter(c => c.status === 'scheduled');
+    // Upcoming Live Classes: ONLY for enrolled courses
+    const upcoming = allLiveClasses.filter(c => c.status === 'scheduled' && isStudentEnrolledInLive(c));
     if (upcomingListEl) {
       if (!upcoming.length) {
-        upcomingListEl.innerHTML = `<div style="font-size:12px;color:var(--text-muted);padding:14px;background:var(--bg-card);border-radius:var(--radius-md);">Agli live class jald hi schedule hogi. Push notification enable rakhein.</div>`;
+        upcomingListEl.innerHTML = `
+          <div style="font-size:12.5px; color:var(--text-muted); padding:18px; background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); text-align:center;">
+            <div style="font-size:24px; margin-bottom:6px;">📡</div>
+            <div style="font-weight:600; color:#fff; margin-bottom:4px;">Koi Live Class Scheduled Nahi Hai</div>
+            <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">Aapke enrolled courses ke liye agli live masterclass jald hi schedule hogi. Notifications on rakhein.</div>
+          </div>
+        `;
       } else {
         upcomingListEl.innerHTML = upcoming.map(c => `
           <div class="scheduled-class-card" style="margin-bottom:10px;">
@@ -1716,33 +1757,104 @@ async function loadLiveClassesTab() {
       }
     }
 
-    const past = allLiveClasses.filter(c => c.status === 'completed' || c.replayUrl);
+    // Past Recordings: ONLY for enrolled courses
+    const past = allLiveClasses.filter(c => (c.status === 'completed' || c.replayUrl) && isStudentEnrolledInLive(c));
     if (pastListEl) {
-      pastListEl.innerHTML = `
-        <div class="announcement-card" onclick="toast('Loading masterclass recording…')">
-          <div class="announcement-meta">
-            <span class="announcement-badge" style="background:rgba(16,185,129,0.15);color:#34d399;border-color:rgba(16,185,129,0.3);">RECORDING 4K</span>
-            <span class="announcement-date">Available</span>
+      if (!past.length) {
+        pastListEl.innerHTML = `
+          <div style="font-size:12px; color:var(--text-muted); padding:16px; background:var(--bg-card); border-radius:var(--radius-md); border:1px solid var(--border-subtle); text-align:center;">
+            Abhi aapke enrolled courses ki koi past live recording uplabdh nahi hai.
           </div>
-          <div class="announcement-title">Wedding Video Editing Me AI Ka Sahi Use (Live Workshop Replay)</div>
-          <div class="announcement-body">Full 2-hour timeline recording with practice project files.</div>
-        </div>
-      `;
+        `;
+      } else {
+        pastListEl.innerHTML = past.map(c => `
+          <div class="announcement-card" onclick="openLiveRecording('${c.id}')">
+            <div class="announcement-meta">
+              <span class="announcement-badge" style="background:rgba(16,185,129,0.15);color:#34d399;border-color:rgba(16,185,129,0.3);">RECORDING 4K</span>
+              <span class="announcement-date">Available</span>
+            </div>
+            <div class="announcement-title">${escHtml(c.title)}</div>
+            <div class="announcement-body">${escHtml(c.description || 'Full class recording')}</div>
+          </div>
+        `).join('');
+      }
     }
   } catch (err) {
     console.warn('Live classes tab load failed:', err);
   }
 }
 
-function openLiveClassPlayerById(classId) {
+function renderLiveStandby(mount, pill, interactiveSection) {
+  if (pill) {
+    pill.textContent = '📡 Studio Standby';
+    pill.style.color = '#94a3b8';
+  }
+  if (mount) {
+    mount.innerHTML = `
+      <div class="live-standby-placeholder">
+        <div style="font-size: 38px; margin-bottom: 8px;">📡</div>
+        <h3 id="live-standby-title" style="font-family:var(--font-heading); color:#fff; font-size:17px; margin-bottom:6px;">Live Studio Standby</h3>
+        <p id="live-standby-sub" style="font-size:12px; color:var(--text-muted); max-width: 340px; margin-bottom: 16px; line-height: 1.5;">
+          Abhi aapke enrolled courses ke liye koi live class broadcast nahi ho rahi hai. Mentor Anil Sharma jab class live karenge, stream automatically yahin play hogi.
+        </p>
+        <button type="button" class="btn-primary" onclick="requestPushNotificationPermission()" style="width:auto; padding:10px 18px; font-size:12.5px;">
+          🔔 Enable Live Class Alerts
+        </button>
+      </div>
+    `;
+  }
+  if (interactiveSection) interactiveSection.style.display = 'none';
+}
+
+async function openLiveClassPlayerById(classId) {
   switchTab('live');
   const session = allLiveClasses.find(c => c.id === classId);
-  if (session && session.streamId) {
+  if (!session) return;
+  if (!isStudentEnrolledInLive(session)) {
+    toast('Aap is live session ke liye enrolled nahi hain.');
+    return;
+  }
+  let streamId = session.streamId;
+  if (!streamId) {
+    try {
+      const sessRes = await apiFetch(`get-live-session&liveId=${encodeURIComponent(session.id)}`);
+      if (sessRes && sessRes.streamId) streamId = sessRes.streamId;
+    } catch (e) {
+      toast(e.message || 'Stream access restricted.');
+      return;
+    }
+  }
+  if (streamId) {
     const mount = document.getElementById('live-stream-mount');
-    mount.innerHTML = `
-      <iframe src="https://www.youtube-nocookie.com/embed/${session.streamId}?autoplay=1&modestbranding=1" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>
-    `;
+    const pill = document.getElementById('live-tab-status-pill');
+    const interactive = document.getElementById('live-interactive-section');
+    if (pill) {
+      pill.textContent = '🔴 LIVE BROADCASTING';
+      pill.style.color = '#ef4444';
+    }
+    if (mount) {
+      mount.innerHTML = `
+        <div style="position:relative; width:100%; height:100%;">
+          <iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(streamId)}?autoplay=1&modestbranding=1" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>
+        </div>
+      `;
+    }
+    if (interactive) interactive.style.display = 'block';
     toast(`🔴 Joined Live: ${session.title}`);
+  }
+}
+
+async function openLiveRecording(classId) {
+  const session = allLiveClasses.find(c => c.id === classId);
+  if (!session) return;
+  if (!isStudentEnrolledInLive(session)) {
+    toast('Aap is recording ke liye enrolled nahi hain.');
+    return;
+  }
+  if (session.replayUrl) {
+    window.open(session.replayUrl, '_blank');
+  } else {
+    toast('Recording jald hi upload ho jayegi.');
   }
 }
 

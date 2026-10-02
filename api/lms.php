@@ -2261,9 +2261,9 @@ if ($action === 'get-live-classes' && $method === 'GET') {
             }
         }
 
-        // If it's a private course batch and student is not enrolled/authorized,
-        // hide it completely so other students don't see banner or enter classroom
-        if ($cType === 'course' && !$isAuth) {
+        // If student is logged in and not enrolled/authorized for this live class or workshop,
+        // hide it completely so students ONLY see their enrolled live classes & webinars!
+        if ($stu && !$isAuth) {
             continue;
         }
 
@@ -2282,8 +2282,11 @@ if ($action === 'get-live-classes' && $method === 'GET') {
             'isAuthorized'  => $isAuth
         ];
 
-        // Only reveal resources & replay url if authorized
+        // Only reveal stream credentials, resources & replay url if authorized
         if ($isAuth) {
+            if (!empty($c['streamId'])) {
+                $safeItem['streamId'] = $c['streamId'];
+            }
             $safeItem['resources'] = $c['resources'] ?? [];
             if ($c['status'] === 'completed' && !empty($c['replayUrl'])) {
                 $safeItem['replayUrl'] = $c['replayUrl'];

@@ -675,6 +675,7 @@ async function loadDashboardData() {
 
   checkLiveClassStatus();
   renderAnnouncementsFeed();
+  loadDashboardAllCourses();
 }
 
 function renderContinueLearningCard() {
@@ -710,6 +711,230 @@ function renderContinueLearningCard() {
   };
 
   card.classList.remove('hidden');
+}
+
+// ==========================================================================
+// ALL ACADEMY COURSES ENGINE (ENROLLED + AVAILABLE PROGRAMS)
+// ==========================================================================
+let allAcademyCourses = [];
+let currentCatalogFilter = 'all';
+
+function safeCourseHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+async function loadDashboardAllCourses() {
+  const stripEl = document.getElementById('dash-all-courses-strip');
+  if (!stripEl) return;
+
+  try {
+    if (!allAcademyCourses.length) {
+      let list = [];
+      try {
+        const res = await apiFetch('catalog');
+        if (res && Array.isArray(res.catalog) && res.catalog.length) {
+          list = res.catalog;
+        }
+      } catch (_) {}
+
+      if (!list.length) {
+        const res = await fetch('../data/courses.json');
+        list = await res.json();
+      }
+      allAcademyCourses = Array.isArray(list) ? list : [];
+    }
+
+    renderDashboardAllCoursesStrip();
+  } catch (err) {
+    if (stripEl) {
+      stripEl.innerHTML = '<div style="padding:14px; font-size:11.5px; color:var(--text-muted); text-align:center; width:100%;">Academy curriculum synced.</div>';
+    }
+  }
+}
+
+function isStudentEnrolledIn(course) {
+  if (!enrolledCourses || !enrolledCourses.length) return false;
+  return enrolledCourses.some(e => {
+    if (e.id && course.id && e.id === course.id) return true;
+    if (e.slug && course.slug && e.slug === course.slug) return true;
+    if (e.title && course.title && e.title.toLowerCase().trim() === course.title.toLowerCase().trim()) return true;
+    return false;
+  });
+}
+
+function getEnrolledCourseData(course) {
+  if (!enrolledCourses || !enrolledCourses.length) return null;
+  return enrolledCourses.find(e => {
+    if (e.id && course.id && e.id === course.id) return true;
+    if (e.slug && course.slug && e.slug === course.slug) return true;
+    if (e.title && course.title && e.title.toLowerCase().trim() === course.title.toLowerCase().trim()) return true;
+    return false;
+  });
+}
+
+function renderDashboardAllCoursesStrip() {
+  const stripEl = document.getElementById('dash-all-courses-strip');
+  if (!stripEl) return;
+
+  if (!allAcademyCourses.length) {
+    stripEl.innerHTML = '<div style="padding:14px; font-size:12px; color:var(--text-muted); text-align:center; width:100%;">No courses available.</div>';
+    return;
+  }
+
+  // Sort enrolled courses first, then other available courses
+  const sorted = [...allAcademyCourses].sort((a, b) => {
+    const aEnrolled = isStudentEnrolledIn(a) ? 1 : 0;
+    const bEnrolled = isStudentEnrolledIn(b) ? 1 : 0;
+    return bEnrolled - aEnrolled;
+  });
+
+  stripEl.innerHTML = sorted.map(c => {
+    const enrolled = isStudentEnrolledIn(c);
+    const enrolledData = enrolled ? getEnrolledCourseData(c) : null;
+    const thumb = c.thumbnail ? (c.thumbnail.startsWith('http') || c.thumbnail.startsWith('/') ? c.thumbnail : `../${c.thumbnail}`) : '../assets/course-premiere-pro-hindi.webp';
+    const duration = c.duration || '60+ Hours';
+    const price = c.price ? `₹${Number(c.price).toLocaleString('en-IN')}` : '₹4,999';
+
+    if (enrolled) {
+      const tot = (enrolledData && enrolledData.totalLessons) || 1;
+      const done = (enrolledData && enrolledData.completedCount) || 0;
+      const pct = Math.round((done / tot) * 100);
+
+      return `
+        <div class="dash-course-strip-card" onclick="openClassroomPlayer('${c.id}')">
+          <div class="dash-strip-thumb-wrap">
+            <img src="${thumb}" alt="${safeCourseHtml(c.title)}" class="dash-strip-thumb-img" onerror="this.src='../assets/course-premiere-pro-hindi.webp'" />
+            <span class="dash-strip-badge enrolled">✓ Enrolled (${pct}%)</span>
+          </div>
+          <div class="dash-strip-content">
+            <div class="dash-strip-title">${safeCourseHtml(c.title)}</div>
+            <div class="dash-strip-meta">
+              <span>⏱ ${safeCourseHtml(duration)}</span>
+              <span style="color:#34d399; font-weight:700;">Enrolled</span>
+            </div>
+            <button type="button" class="dash-strip-btn btn-continue" onclick="event.stopPropagation(); openClassroomPlayer('${c.id}')">
+              ▶ Continue Course
+            </button>
+          </div>
+        </div>
+      `;
+    } else {
+      return `
+        <div class="dash-course-strip-card" onclick="handleExploreCourse('${c.id}')">
+          <div class="dash-strip-thumb-wrap">
+            <img src="${thumb}" alt="${safeCourseHtml(c.title)}" class="dash-strip-thumb-img" onerror="this.src='../assets/course-premiere-pro-hindi.webp'" />
+            <span class="dash-strip-badge available">⭐ Available • ${price}</span>
+          </div>
+          <div class="dash-strip-content">
+            <div class="dash-strip-title">${safeCourseHtml(c.title)}</div>
+            <div class="dash-strip-meta">
+              <span>⏱ ${safeCourseHtml(duration)}</span>
+              <span style="color:var(--gold); font-weight:700;">${price}</span>
+            </div>
+            <button type="button" class="dash-strip-btn btn-enroll" onclick="event.stopPropagation(); handleExploreCourse('${c.id}')">
+              Enroll / Details ➔
+            </button>
+          </div>
+        </div>
+      `;
+    }
+  }).join('');
+}
+
+function openAllCoursesModal() {
+  const modal = document.getElementById('modal-all-courses');
+  if (modal) modal.classList.add('active');
+  if (!allAcademyCourses.length) {
+    loadDashboardAllCourses().then(() => renderCatalogModalList());
+  } else {
+    renderCatalogModalList();
+  }
+}
+
+function closeAllCoursesModal() {
+  const modal = document.getElementById('modal-all-courses');
+  if (modal) modal.classList.remove('active');
+}
+
+function filterCatalogModal(filter) {
+  currentCatalogFilter = filter;
+  document.getElementById('chip-cat-all')?.classList.toggle('active', filter === 'all');
+  document.getElementById('chip-cat-enrolled')?.classList.toggle('active', filter === 'enrolled');
+  document.getElementById('chip-cat-available')?.classList.toggle('active', filter === 'available');
+  renderCatalogModalList();
+}
+
+function renderCatalogModalList() {
+  const listEl = document.getElementById('modal-catalog-list');
+  if (!listEl) return;
+
+  let filtered = allAcademyCourses;
+  if (currentCatalogFilter === 'enrolled') {
+    filtered = allAcademyCourses.filter(c => isStudentEnrolledIn(c));
+  } else if (currentCatalogFilter === 'available') {
+    filtered = allAcademyCourses.filter(c => !isStudentEnrolledIn(c));
+  }
+
+  if (!filtered.length) {
+    listEl.innerHTML = `
+      <div style="text-align:center; padding:35px 16px; color:var(--text-muted);">
+        <div style="font-size:28px; margin-bottom:8px;">📚</div>
+        <div style="color:#fff; font-weight:700; margin-bottom:4px;">Koi course nahi mila</div>
+        <div style="font-size:12px;">Is category me abhi koi program nahi hai.</div>
+      </div>
+    `;
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(c => {
+    const enrolled = isStudentEnrolledIn(c);
+    const thumb = c.thumbnail ? (c.thumbnail.startsWith('http') || c.thumbnail.startsWith('/') ? c.thumbnail : `../${c.thumbnail}`) : '../assets/course-premiere-pro-hindi.webp';
+    const duration = c.duration || '60+ Hours';
+    const price = c.price ? `₹${Number(c.price).toLocaleString('en-IN')}` : '₹4,999';
+
+    if (enrolled) {
+      return `
+        <div class="modal-course-card" onclick="closeAllCoursesModal(); openClassroomPlayer('${c.id}');">
+          <img src="${thumb}" alt="${safeCourseHtml(c.title)}" class="modal-course-thumb" onerror="this.src='../assets/course-premiere-pro-hindi.webp'" />
+          <div class="modal-course-info">
+            <span class="modal-course-tag enrolled">✓ Enrolled</span>
+            <div class="modal-course-title">${safeCourseHtml(c.title)}</div>
+            <div class="modal-course-sub">⏱ ${safeCourseHtml(duration)} • Active Classroom</div>
+          </div>
+          <button type="button" class="modal-course-btn" style="background:var(--gold-gradient); color:#090d18;">
+            Study ➔
+          </button>
+        </div>
+      `;
+    } else {
+      return `
+        <div class="modal-course-card" onclick="handleExploreCourse('${c.id}');">
+          <img src="${thumb}" alt="${safeCourseHtml(c.title)}" class="modal-course-thumb" onerror="this.src='../assets/course-premiere-pro-hindi.webp'" />
+          <div class="modal-course-info">
+            <span class="modal-course-tag available">⭐ Available • ${price}</span>
+            <div class="modal-course-title">${safeCourseHtml(c.title)}</div>
+            <div class="modal-course-sub">⏱ ${safeCourseHtml(duration)} • Full Lifetime Access</div>
+          </div>
+          <button type="button" class="modal-course-btn" style="background:rgba(216,161,83,0.18); border:1px solid rgba(216,161,83,0.35); color:var(--gold);">
+            Enroll ➔
+          </button>
+        </div>
+      `;
+    }
+  }).join('');
+}
+
+function handleExploreCourse(courseId) {
+  const course = allAcademyCourses.find(c => c.id === courseId);
+  const title = course ? course.title : 'Quick Art Photography Academy Program';
+  const url = `https://wa.me/919939800780?text=${encodeURIComponent(`Namaste Anil Sir! Mujhe Quick Art Academy ke '${title}' program me admission/enrollment lena hai. Kripya details provide karein.`)}`;
+  window.open(url, '_blank');
 }
 
 // Live Class Watcher

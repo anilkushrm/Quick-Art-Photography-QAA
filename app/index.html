@@ -194,20 +194,23 @@
     <!-- ──────────────── TAB 1: DASHBOARD ──────────────── -->
     <section id="tab-dashboard" class="app-tab-panel">
 
-      <!-- Student Profile Card -->
+      <!-- Student Profile Card (Executive Luxury & Clean) -->
       <div class="dash-profile-card">
         <div class="dash-avatar-ring">
           <img id="dash-avatar-img" src="" alt="Student Avatar" class="dash-avatar-img hidden" />
           <div id="dash-avatar-fallback" class="dash-avatar-fallback">QA</div>
-          <div class="dash-avatar-badge" title="Enrolled Student">✓</div>
+          <div class="dash-avatar-badge" title="Verified Student">✓</div>
         </div>
         <div class="dash-profile-info">
           <div class="dash-role-row">
-            <span class="dash-role-pill">OFFICIAL ACADEMY STUDENT</span>
+            <span class="dash-role-pill">OFFICIAL STUDENT</span>
             <span id="dash-student-id" class="dash-student-id">ID: ••••••</span>
           </div>
           <h2 id="dash-student-name" class="dash-name">Namaste, Student!</h2>
-          <span style="font-size:11.5px; color:var(--text-muted);">Quick Art Photography Academy LMS</span>
+          <div class="dash-portal-sub">
+            <span class="dash-sub-pulse"></span>
+            <span>Quick Art Photography Academy LMS</span>
+          </div>
         </div>
       </div>
 
@@ -228,6 +231,25 @@
         <div class="dash-kpi-item">
           <span class="kpi-num gold" id="kpi-avg-progress">0%</span>
           <span class="kpi-label">Progress</span>
+        </div>
+      </div>
+
+      <!-- All Courses Explorer Section on Dashboard -->
+      <div class="dash-all-courses-card">
+        <div class="dash-all-courses-header">
+          <div>
+            <div class="dash-all-courses-tag">📚 COMPLETE CURRICULUM</div>
+            <h3 class="dash-all-courses-title">All Academy Courses</h3>
+            <p class="dash-all-courses-sub">Enrolled &amp; new programs dono yahan se dekhein</p>
+          </div>
+          <button type="button" class="btn-all-courses-view" onclick="openAllCoursesModal()">
+            View All Courses ➔
+          </button>
+        </div>
+        <div id="dash-all-courses-strip" class="dash-courses-horizontal-strip">
+          <div style="padding:16px; font-size:12px; color:var(--text-muted); text-align:center; width:100%;">
+            Loading academy courses…
+          </div>
         </div>
       </div>
 
@@ -1020,6 +1042,31 @@
             </div>
             <span style="color:#f87171;">›</span>
           </button>
+        </div>
+      </div>
+    </div>
+  <!-- ================= 12. MODAL: ALL COURSES CATALOG ================= -->
+  <div id="modal-all-courses" class="sheet-backdrop" onclick="closeAllCoursesModal()">
+    <div class="bottom-sheet catalog-sheet" onclick="event.stopPropagation()" style="max-height:88vh;">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div style="flex:1; min-width:0; padding-right:12px;">
+          <h3 class="sheet-title">📚 All Academy Courses</h3>
+          <p style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">Enrolled programs aur academy ke sabhi masterclasses</p>
+        </div>
+        <button type="button" class="sheet-close-btn" onclick="closeAllCoursesModal()">✕</button>
+      </div>
+
+      <!-- Catalog Filters -->
+      <div class="filter-chips" style="padding:0 16px 10px; margin-bottom:0; justify-content:flex-start;">
+        <button type="button" class="filter-chip active" id="chip-cat-all" onclick="filterCatalogModal('all')">All Courses</button>
+        <button type="button" class="filter-chip" id="chip-cat-enrolled" onclick="filterCatalogModal('enrolled')">My Enrolled (✓)</button>
+        <button type="button" class="filter-chip" id="chip-cat-available" onclick="filterCatalogModal('available')">Available (+)</button>
+      </div>
+
+      <div class="sheet-body" id="modal-catalog-list" style="padding:10px 16px 30px;">
+        <div style="text-align:center; padding:30px; color:var(--text-muted);">
+          Loading catalog courses…
         </div>
       </div>
     </div>

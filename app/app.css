@@ -1378,15 +1378,24 @@ html, body {
 }
 
 .classroom-back-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-weight: 700;
+  gap: 5px;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.classroom-back-btn:active {
+  transform: scale(0.96);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .classroom-top-title {

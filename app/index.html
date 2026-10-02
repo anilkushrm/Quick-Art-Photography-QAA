@@ -417,136 +417,155 @@
     <!-- ──────────────── TAB 4: MY PROFILE ──────────────── -->
     <section id="tab-profile" class="app-tab-panel">
 
-      <!-- Profile Hero -->
-      <div class="profile-hero">
-        <div class="profile-avatar-big" onclick="triggerAvatarUpload()">
-          <img id="prof-avatar-img" src="" alt="Student Profile" class="hidden" />
-          <div id="prof-avatar-fallback" class="dash-avatar-fallback" style="font-size:28px;">QA</div>
-          <div class="profile-avatar-edit-icon">✏️</div>
-        </div>
-        <input type="file" id="file-avatar-input" accept="image/*" class="hidden" onchange="handleProfilePhotoUpload(event)" />
-        <h2 id="prof-name" class="profile-name">Student Name</h2>
-        <div id="prof-student-id" class="profile-id-tag">STUDENT ID: ••••••</div>
-        <div style="margin-top:6px;">
-          <span class="dash-role-pill">OFFICIAL ENROLLED STUDENT</span>
-        </div>
-      </div>
-
-      <!-- Official CR80 PVC Student ID Card Preview Card -->
-      <div class="pvc-id-card-promo" onclick="openStudentIdCardModal()">
-        <div class="pvc-id-card-icon">🪪</div>
-        <div class="pvc-id-card-text">
-          <h4>Official Student ID Card (CR80 PVC)</h4>
-          <p>Verified Academy Identity Badge with QR Code</p>
-        </div>
-        <button type="button" class="btn-secondary" style="width:auto; padding:6px 12px; font-size:11.5px; border-color:var(--border-card); color:var(--gold);">
-          View 🪪
-        </button>
-      </div>
-
-      <!-- Section: Student Information -->
-      <div class="section-hdr">
-        <h3 class="section-hdr-title">👤 Student Information</h3>
-      </div>
-      <div class="profile-menu-group">
-        <div class="profile-menu-item">
-          <div class="profile-menu-left">
-            <span class="profile-menu-icon">📱</span>
-            <div>
-              <div style="font-size:11px; color:var(--text-dim);">WhatsApp Mobile</div>
-              <div id="prof-phone" style="font-weight:700;">+91 ••••••••••</div>
+      <!-- Executive Profile Card -->
+      <div class="prof-card-executive">
+        <div class="prof-card-top">
+          <div class="prof-avatar-wrap" onclick="triggerAvatarUpload()">
+            <img id="prof-avatar-img" src="" alt="Student Profile" class="prof-avatar-photo hidden" />
+            <div id="prof-avatar-fallback" class="prof-avatar-initials">QA</div>
+            <div class="prof-avatar-badge" title="Change Photo">📷</div>
+          </div>
+          <input type="file" id="file-avatar-input" accept="image/*" class="hidden" onchange="handleProfilePhotoUpload(event)" />
+          
+          <div class="prof-identity">
+            <h2 id="prof-name" class="prof-name">Student Name</h2>
+            <div class="prof-enroll-row">
+              <span id="prof-role-badge" class="prof-pill-verified">VERIFIED STUDENT</span>
+              <span id="prof-student-id" class="prof-enroll-id">QAA-STUDENT</span>
             </div>
           </div>
         </div>
-        <div class="profile-menu-item">
-          <div class="profile-menu-left">
-            <span class="profile-menu-icon">✉️</span>
-            <div>
-              <div style="font-size:11px; color:var(--text-dim);">Email Address</div>
-              <div id="prof-email" style="font-weight:700;">student@example.com</div>
-            </div>
+
+        <!-- Academic Stats Ribbon -->
+        <div class="prof-stats-ribbon">
+          <div class="prof-stat-cell" onclick="switchTab('mycourses')">
+            <span class="prof-stat-number" id="prof-course-count">0</span>
+            <span class="prof-stat-label">Enrolled Courses</span>
           </div>
-        </div>
-        <div class="profile-menu-item">
-          <div class="profile-menu-left">
-            <span class="profile-menu-icon">📍</span>
-            <div>
-              <div style="font-size:11px; color:var(--text-dim);">City / Location</div>
-              <div id="prof-city" style="font-weight:700;">Bihar, India</div>
-            </div>
+          <div class="prof-stat-divider"></div>
+          <div class="prof-stat-cell" onclick="openCertificatesModal()">
+            <span class="prof-stat-number" id="prof-cert-count">0</span>
+            <span class="prof-stat-label">Certificates</span>
           </div>
         </div>
       </div>
 
-      <!-- Section: Learning & Records -->
-      <div class="section-hdr">
-        <h3 class="section-hdr-title">🎓 Learning &amp; Records</h3>
+      <!-- Quick Action: Official PVC Student ID Card -->
+      <div class="prof-id-tile" onclick="openStudentIdCardModal()">
+        <div class="prof-id-tile-left">
+          <div class="prof-id-tile-icon">🪪</div>
+          <div>
+            <div class="prof-id-tile-title">Official Student ID Card</div>
+            <div class="prof-id-tile-sub">Accredited PVC Badge with QR Verification</div>
+          </div>
+        </div>
+        <span class="prof-chevron">View ›</span>
       </div>
-      <div class="profile-menu-group">
-        <button type="button" class="profile-menu-item" onclick="openCertificatesModal()">
-          <div class="profile-menu-left">
-            <span class="profile-menu-icon">🏆</span>
-            <span>My Accredited Certificates</span>
+
+      <!-- Settings Block 1: ACADEMIC & RECORDS -->
+      <div class="prof-group-card">
+        <div class="prof-group-header">ACADEMIC &amp; LEARNING</div>
+        
+        <button type="button" class="prof-row-btn" onclick="openCertificatesModal()">
+          <div class="prof-row-left">
+            <span class="prof-row-icon">🏆</span>
+            <span class="prof-row-label">My Course Certificates</span>
           </div>
-          <span style="font-size:12px; color:var(--gold);">View Vault ➔</span>
+          <span class="prof-row-right">
+            <span class="prof-row-tag">Accredited</span>
+            <span class="prof-chevron">›</span>
+          </span>
         </button>
-        <button type="button" class="profile-menu-item" onclick="openDownloadsModal()">
-          <div class="profile-menu-left">
-            <span class="profile-menu-icon">💾</span>
-            <span>Practice Files &amp; Resources (.ZIP / LUTs)</span>
+
+        <button type="button" class="prof-row-btn" onclick="openDownloadsModal()">
+          <div class="prof-row-left">
+            <span class="prof-row-icon">📁</span>
+            <span class="prof-row-label">Project Files &amp; LUTs</span>
           </div>
-          <span style="font-size:14px; color:var(--text-dim);">➔</span>
-        </button>
-        <button type="button" class="profile-menu-item" onclick="openChangePasswordModal()">
-          <div class="profile-menu-left">
-            <span class="profile-menu-icon">🔒</span>
-            <span>Change Account Password</span>
-          </div>
-          <span style="font-size:14px; color:var(--text-dim);">➔</span>
+          <span class="prof-row-right">
+            <span class="prof-chevron">›</span>
+          </span>
         </button>
       </div>
 
-      <!-- Section: Help & Mentor Support -->
-      <div class="section-hdr">
-        <h3 class="section-hdr-title">💬 Helpline &amp; Mentorship</h3>
+      <!-- Settings Block 2: CONTACT & ACCOUNT -->
+      <div class="prof-group-card">
+        <div class="prof-group-header">ACCOUNT DETAILS</div>
+
+        <div class="prof-row-info">
+          <div class="prof-row-left">
+            <span class="prof-row-icon">📱</span>
+            <span class="prof-row-label">Registered Phone</span>
+          </div>
+          <span id="prof-phone" class="prof-row-val">+91 ••••••••••</span>
+        </div>
+
+        <div class="prof-row-info">
+          <div class="prof-row-left">
+            <span class="prof-row-icon">✉️</span>
+            <span class="prof-row-label">Email Address</span>
+          </div>
+          <span id="prof-email" class="prof-row-val">student@gmail.com</span>
+        </div>
+
+        <div class="prof-row-info">
+          <div class="prof-row-left">
+            <span class="prof-row-icon">📍</span>
+            <span class="prof-row-label">Campus / City</span>
+          </div>
+          <span id="prof-city" class="prof-row-val">Siwan / Ballia</span>
+        </div>
+
+        <button type="button" class="prof-row-btn" onclick="openChangePasswordModal()">
+          <div class="prof-row-left">
+            <span class="prof-row-icon">🔒</span>
+            <span class="prof-row-label">Change Password</span>
+          </div>
+          <span class="prof-chevron">›</span>
+        </button>
       </div>
-      <div class="profile-menu-group">
-        <a href="https://wa.me/919939800780" target="_blank" class="profile-menu-item">
-          <div class="profile-menu-left">
-            <span class="profile-menu-icon">💬</span>
+
+      <!-- Settings Block 3: HELP & MENTOR -->
+      <div class="prof-group-card">
+        <div class="prof-group-header">SUPPORT &amp; MENTORSHIP</div>
+
+        <a href="https://wa.me/919939800780" target="_blank" rel="noopener" class="prof-row-btn" style="text-decoration:none;">
+          <div class="prof-row-left">
+            <span class="prof-row-icon">💬</span>
             <div>
-              <div style="font-weight:700; color:#34d399;">WhatsApp Mentor Support</div>
-              <div style="font-size:11px; color:var(--text-dim);">Chat directly with Mentor Anil Sharma</div>
+              <span class="prof-row-label" style="color:#34d399;">WhatsApp Mentor Support</span>
+              <div style="font-size:10.5px; color:var(--text-dim);">Direct chat with Anil Sharma</div>
             </div>
           </div>
-          <span style="font-size:14px; color:var(--gold);">↗</span>
+          <span class="prof-row-tag" style="background:rgba(37,211,102,0.15); color:#34d399;">Chat ↗</span>
         </a>
-        <a href="tel:+919939800780" class="profile-menu-item">
-          <div class="profile-menu-left">
-            <span class="profile-menu-icon">📞</span>
+
+        <a href="tel:+919939800780" class="prof-row-btn" style="text-decoration:none;">
+          <div class="prof-row-left">
+            <span class="prof-row-icon">📞</span>
             <div>
-              <div style="font-weight:700;">Academy Helpline Call</div>
-              <div style="font-size:11px; color:var(--text-dim);">+91 9939800780 (10 AM - 7 PM)</div>
+              <span class="prof-row-label">Academy Helpline Call</span>
+              <div style="font-size:10.5px; color:var(--text-dim);">+91 9939800780 (10 AM - 7 PM)</div>
             </div>
           </div>
-          <span style="font-size:14px; color:var(--text-dim);">➔</span>
+          <span class="prof-chevron">›</span>
         </a>
       </div>
 
-      <!-- Section: App & Session -->
-      <div class="profile-menu-group" style="margin-top: 24px;">
-        <button type="button" class="profile-menu-item profile-menu-danger" onclick="handleStudentLogout()">
-          <div class="profile-menu-left">
-            <span class="profile-menu-icon">🚪</span>
-            <span style="font-weight:700;">Logout from Mobile App</span>
+      <!-- Settings Block 4: SESSION -->
+      <div class="prof-group-card" style="margin-top:20px;">
+        <button type="button" class="prof-row-btn prof-row-danger" onclick="handleStudentLogout()">
+          <div class="prof-row-left">
+            <span class="prof-row-icon">🚪</span>
+            <span class="prof-row-label">Logout Student Account</span>
           </div>
-          <span>➔</span>
+          <span class="prof-chevron">›</span>
         </button>
       </div>
 
-      <div style="text-align:center; margin-top:20px; font-size:11px; color:var(--text-dim);">
-        Quick Art Photography Academy LMS App • Version 2.4<br />
-        Same student credentials work on Mobile App &amp; Website
+      <div class="prof-footer-info">
+        Quick Art Photography Academy • Official LMS App v2.4<br />
+        Same credentials sync seamlessly with Website Portal
       </div>
     </section>
   </main>

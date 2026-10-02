@@ -1551,22 +1551,71 @@ async function handleSendLiveDoubt(e) {
 // ==========================================================================
 function loadProfileData() {
   if (!currentStudent) return;
-  document.getElementById('prof-name').textContent = currentStudent.name || 'Student Name';
-  document.getElementById('prof-student-id').textContent = `STUDENT ID: ${currentStudent.enrollmentNo || currentStudent.id || 'QAA-STUDENT'}`;
-  document.getElementById('prof-phone').textContent = `+91 ${currentStudent.phone || '••••••••••'}`;
-  document.getElementById('prof-email').textContent = currentStudent.email || 'Email not provided';
-  document.getElementById('prof-city').textContent = currentStudent.city || currentStudent.workCity || 'India';
+  const nameEl = document.getElementById('prof-name');
+  if (nameEl) nameEl.textContent = currentStudent.name || 'Student Name';
+
+  const idEl = document.getElementById('prof-student-id');
+  if (idEl) {
+    const rawId = currentStudent.enrollmentNo || currentStudent.id || 'QAA-STUDENT';
+    idEl.textContent = rawId.startsWith('ID:') || rawId.startsWith('QAA') ? rawId : `ID: ${rawId}`;
+  }
+
+  const roleEl = document.getElementById('prof-role-badge');
+  if (roleEl) {
+    roleEl.textContent = currentStudent.role === 'admin' ? 'ACADEMY ADMIN' : 'VERIFIED STUDENT';
+  }
+
+  const phoneEl = document.getElementById('prof-phone');
+  if (phoneEl) {
+    const rawPhone = String(currentStudent.phone || '').trim();
+    if (!rawPhone || rawPhone === '••••••••••') {
+      phoneEl.textContent = '+91 ••••••••••';
+    } else if (rawPhone.startsWith('+')) {
+      phoneEl.textContent = rawPhone;
+    } else if (rawPhone.startsWith('91') && rawPhone.length === 12) {
+      phoneEl.textContent = `+${rawPhone}`;
+    } else {
+      phoneEl.textContent = `+91 ${rawPhone}`;
+    }
+  }
+
+  const emailEl = document.getElementById('prof-email');
+  if (emailEl) emailEl.textContent = currentStudent.email || 'student@quickart.in';
+
+  const cityEl = document.getElementById('prof-city');
+  if (cityEl) cityEl.textContent = currentStudent.city || currentStudent.workCity || 'India';
+
+  // Live Stats: Courses & Certificates
+  const courseCountEl = document.getElementById('prof-course-count');
+  if (courseCountEl) {
+    courseCountEl.textContent = Array.isArray(enrolledCourses) ? enrolledCourses.length : 0;
+  }
+
+  const certCountEl = document.getElementById('prof-cert-count');
+  if (certCountEl) {
+    const certCount = Array.isArray(enrolledCourses)
+      ? enrolledCourses.filter(c => (Number(c.progress) || 0) >= 100 || c.certificateIssued).length
+      : 0;
+    certCountEl.textContent = certCount;
+  }
 
   const avatar = currentStudent.avatar || currentStudent.avatarUrl || '';
-  const initials = (currentStudent.name || 'Student').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+  const initials = (currentStudent.name || 'Student')
+    .split(' ')
+    .filter(Boolean)
+    .map(w => w[0])
+    .join('')
+    .substring(0, 2)
+    .toUpperCase() || 'QA';
+
   const imgEl = document.getElementById('prof-avatar-img');
   const fbEl = document.getElementById('prof-avatar-fallback');
 
-  if (avatar) {
+  if (avatar && imgEl && fbEl) {
     imgEl.src = avatar;
     imgEl.classList.remove('hidden');
     fbEl.classList.add('hidden');
-  } else {
+  } else if (fbEl && imgEl) {
     fbEl.textContent = initials;
     fbEl.classList.remove('hidden');
     imgEl.classList.add('hidden');

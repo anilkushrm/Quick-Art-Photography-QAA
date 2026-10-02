@@ -2099,143 +2099,382 @@ html, body {
 }
 
 /* ==========================================================================
-   10. TAB 4: MY PROFILE
+   10. TAB 4: MY PROFILE (EXECUTIVE LUXURY SUITE)
    ========================================================================== */
-.profile-hero {
-  text-align: center;
-  padding: 20px 16px;
-  background: linear-gradient(180deg, rgba(216, 161, 83, 0.12) 0%, transparent 100%);
-  border-radius: var(--radius-lg);
-  margin-bottom: 18px;
+.prof-card-executive {
+  position: relative;
+  background: linear-gradient(145deg, rgba(23, 32, 53, 0.9) 0%, rgba(12, 17, 30, 0.96) 100%);
+  border: 1px solid rgba(216, 161, 83, 0.25);
+  border-radius: 18px;
+  padding: 20px 18px 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.38);
+  overflow: hidden;
 }
 
-.profile-avatar-big {
-  width: 80px;
-  height: 80px;
+.prof-card-executive::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(216, 161, 83, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.prof-card-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.prof-avatar-wrap {
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
-  margin: 0 auto 12px;
   position: relative;
   cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2.5px rgba(216, 161, 83, 0.85), 0 6px 18px rgba(0, 0, 0, 0.45);
 }
 
-.profile-avatar-big img {
+.prof-avatar-photo {
   width: 100%;
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--gold);
+  display: block;
 }
 
-.profile-avatar-edit-icon {
+.prof-avatar-initials {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #25334d 0%, #131b2c 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px;
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: 0.5px;
+}
+
+.prof-avatar-badge {
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: -2px;
+  right: -2px;
   width: 24px;
   height: 24px;
   border-radius: 50%;
   background: var(--gold);
-  color: #000;
+  color: #0c101c;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 11px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  border: 2px solid #0d1322;
 }
 
-.profile-name {
+.prof-identity {
+  flex: 1;
+  min-width: 0;
+}
+
+.prof-name {
   font-family: var(--font-heading);
-  font-size: 20px;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 2px;
+  font-size: 18.5px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 5px;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
 }
 
-.profile-id-tag {
-  font-size: 11px;
-  color: var(--text-muted);
+.prof-enroll-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+
+.prof-pill-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2.5px 8px;
+  border-radius: 100px;
+  background: rgba(52, 211, 153, 0.12);
+  color: #34d399;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  text-transform: uppercase;
+}
+
+.prof-enroll-id {
   font-family: monospace;
+  font-size: 11px;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
 }
 
-/* PVC Student ID Card Preview */
-.pvc-id-card-promo {
-  background: linear-gradient(135deg, rgba(216, 161, 83, 0.18) 0%, rgba(13, 19, 34, 0.95) 100%);
-  border: 1.5px solid var(--border-card);
-  border-radius: var(--radius-lg);
-  padding: 16px;
+/* Academic Stats Ribbon */
+.prof-stats-ribbon {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: rgba(9, 13, 24, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 10px 8px;
+  margin-top: 4px;
+}
+
+.prof-stat-cell {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+
+.prof-stat-cell:active {
+  transform: scale(0.96);
+}
+
+.prof-stat-number {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--gold);
+  font-family: var(--font-heading);
+  line-height: 1.1;
+}
+
+.prof-stat-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.prof-stat-divider {
+  width: 1px;
+  height: 26px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Quick Action: PVC Student ID Card Tile */
+.prof-id-tile {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
-  box-shadow: var(--shadow-card);
+  background: linear-gradient(135deg, rgba(216, 161, 83, 0.14) 0%, rgba(26, 35, 58, 0.65) 100%);
+  border: 1px solid rgba(216, 161, 83, 0.35);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.2s;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+  -webkit-tap-highlight-color: transparent;
 }
 
-.pvc-id-card-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-sm);
-  background: rgba(216, 161, 83, 0.15);
+.prof-id-tile:active {
+  transform: scale(0.985);
+}
+
+.prof-id-tile-left {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.prof-id-tile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(216, 161, 83, 0.18);
+  border: 1px solid rgba(216, 161, 83, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 20px;
   flex-shrink: 0;
 }
 
-.pvc-id-card-text h4 {
+.prof-id-tile-title {
   font-size: 13.5px;
   font-weight: 700;
-  color: #fff;
+  color: #ffffff;
+  letter-spacing: -0.1px;
 }
 
-.pvc-id-card-text p {
+.prof-id-tile-sub {
   font-size: 11px;
-  color: var(--text-muted);
+  color: rgba(216, 161, 83, 0.9);
+  margin-top: 1px;
 }
 
-/* Profile List Group */
-.profile-menu-group {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+/* Grouped Settings Cards */
+.prof-group-card {
+  background: rgba(18, 24, 38, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
   overflow: hidden;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
 }
 
-.profile-menu-item {
+.prof-group-header {
+  padding: 11px 16px 7px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--gold);
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.prof-row-btn,
+.prof-row-info {
   width: 100%;
-  padding: 14px 16px;
+  padding: 13px 16px;
   background: none;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  cursor: pointer;
+  gap: 12px;
   text-decoration: none;
-  font-size: 13.5px;
+  font-size: 13px;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease;
+  box-sizing: border-box;
 }
 
-.profile-menu-item:last-child {
+.prof-group-card > *:last-child {
   border-bottom: none;
 }
 
-.profile-menu-item:active {
-  background: rgba(255, 255, 255, 0.05);
+button.prof-row-btn:active,
+a.prof-row-btn:active {
+  background: rgba(255, 255, 255, 0.045);
 }
 
-.profile-menu-left {
+.prof-row-left {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
+  flex: 1;
 }
 
-.profile-menu-icon {
-  font-size: 18px;
+.prof-row-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.045);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
 }
 
-.profile-menu-danger {
+.prof-row-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #f1f5f9;
+  line-height: 1.3;
+}
+
+.prof-row-val {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #94a3b8;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  text-align: right;
+  max-width: 55%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.prof-row-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.prof-row-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 100px;
+  background: rgba(216, 161, 83, 0.15);
+  color: var(--gold);
+  border: 1px solid rgba(216, 161, 83, 0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.prof-chevron {
+  font-size: 15px;
+  color: #64748b;
+  font-weight: 600;
+  line-height: 1;
+  margin-left: 2px;
+}
+
+.prof-row-danger {
+  color: #f87171 !important;
+}
+
+.prof-row-danger .prof-row-label {
+  color: #f87171 !important;
+  font-weight: 600;
+}
+
+.prof-row-danger .prof-row-icon {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.prof-row-danger .prof-chevron {
   color: #f87171;
+}
+
+button.prof-row-danger:active {
+  background: rgba(239, 68, 68, 0.08) !important;
+}
+
+.prof-footer-info {
+  text-align: center;
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.6;
+  padding: 16px 12px 36px;
+  letter-spacing: 0.2px;
 }
 
 /* ==========================================================================

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Quick Art Academy</string>
+    <string name="no_internet">Internet connection nahi hai. Kripya network check karein.</string>
+    <string name="retry">Dobara Koshish Karein</string>
+</resources>

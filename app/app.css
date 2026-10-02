@@ -238,6 +238,7 @@ body {
   gap: 10px;
   text-decoration: none;
   color: inherit;
+  flex-shrink: 0;
 }
 
 .header-logo {
@@ -256,6 +257,8 @@ body {
 .header-brand-text {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  white-space: nowrap;
 }
 
 .header-brand-name {
@@ -264,6 +267,7 @@ body {
   font-weight: 700;
   color: #fff;
   line-height: 1.2;
+  white-space: nowrap;
 }
 
 .header-brand-name b {
@@ -271,10 +275,13 @@ body {
 }
 
 .header-brand-tag {
-  font-size: 9px;
+  font-size: 8.5px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   color: var(--text-muted);
+  white-space: nowrap;
+  line-height: 1.2;
+  margin-top: 1px;
 }
 
 .header-actions {

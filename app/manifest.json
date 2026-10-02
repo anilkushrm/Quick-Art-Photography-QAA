@@ -11,25 +11,25 @@
   "categories": ["education", "photography", "video-editing"],
   "icons": [
     {
-      "src": "/app/icons/app-launcher-3d-192.png",
+      "src": "/app/icons/qaa-launcher-v3-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/app/icons/app-launcher-3d-512.png",
+      "src": "/app/icons/qaa-launcher-v3-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/app/icons/app-launcher-3d-maskable-192.png",
+      "src": "/app/icons/qaa-launcher-v3-maskable-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/app/icons/app-launcher-3d-maskable-512.png",
+      "src": "/app/icons/qaa-launcher-v3-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -41,14 +41,14 @@
       "short_name": "Courses",
       "description": "View enrolled courses",
       "url": "/app/?tab=mycourses",
-      "icons": [{ "src": "/app/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/app/icons/qaa-launcher-v3-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Live Classes",
       "short_name": "Live",
       "description": "Join live class or masterclass",
       "url": "/app/?tab=live",
-      "icons": [{ "src": "/app/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/app/icons/qaa-launcher-v3-192.png", "sizes": "192x192" }]
     }
   ]
 }

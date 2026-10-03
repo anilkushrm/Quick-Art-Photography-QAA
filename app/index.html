@@ -374,27 +374,45 @@
     <!-- ──────────────── TAB 3: LIVE SESSIONS (PAID ENROLLED ONLY) ──────────────── -->
     <section id="tab-live" class="app-tab-panel">
       <div class="section-hdr" style="margin-top: 0;">
-        <h2 class="section-hdr-title">🔴 Live Mentorship Classes</h2>
+        <h2 class="section-hdr-title">🔴 Live &amp; Webinars</h2>
         <span class="live-attendees-pill" id="live-tab-status-pill">🎓 Paid Enrolled Access</span>
       </div>
 
-      <!-- Active Ongoing Live Class Mount (Only displayed if a live class is currently active) -->
-      <div id="live-active-mount" class="hidden"></div>
+      <!-- Segmented Switcher: Upcoming vs Completed -->
+      <div class="live-subtab-bar" role="tablist" aria-label="Live Sessions Navigation">
+        <button type="button" class="live-subtab-btn active" id="btn-live-tab-upcoming" onclick="switchLiveSubTab('upcoming')" role="tab" aria-selected="true">
+          <span>⏳ Upcoming Live</span>
+          <span class="live-subtab-badge" id="live-upcoming-count-badge">0</span>
+        </button>
+        <button type="button" class="live-subtab-btn" id="btn-live-tab-completed" onclick="switchLiveSubTab('completed')" role="tab" aria-selected="false">
+          <span>✓ Completed (Replay)</span>
+          <span class="live-subtab-badge" id="live-completed-count-badge">0</span>
+        </button>
+      </div>
 
-      <!-- Paid Courses Live Classes Schedule & Details -->
-      <div class="section-hdr">
-        <h3 class="section-hdr-title">📅 Enrolled Courses Live Schedule</h3>
-      </div>
-      <div id="paid-live-classes-list">
-        <!-- Injected dynamically based on currentStudent.enrolledCourses -->
+      <!-- 1. UPCOMING & ACTIVE LIVE NOW SECTION (DEFAULT ACTIVE) -->
+      <div id="panel-live-upcoming" class="live-subtab-panel">
+        <!-- Active Ongoing Live Class Mount (Only displayed if a live class is currently active) -->
+        <div id="live-active-mount" class="hidden"></div>
+
+        <!-- Paid Courses Live Classes Schedule & Details -->
+        <div class="section-hdr" style="margin-top: 8px;">
+          <h3 class="section-hdr-title">📅 Enrolled Courses Live Schedule</h3>
+        </div>
+        <div id="paid-live-classes-list">
+          <!-- Injected dynamically based on currentStudent.enrolledCourses -->
+        </div>
       </div>
 
-      <!-- Previous Class Recordings Archive for Enrolled Courses -->
-      <div class="section-hdr" style="margin-top: 24px;">
-        <h3 class="section-hdr-title">📼 Previous Class Recordings</h3>
-      </div>
-      <div id="past-recordings-list">
-        <!-- Injected dynamically -->
+      <!-- 2. COMPLETED REPLAYS SECTION (SIDE TAB) -->
+      <div id="panel-live-completed" class="live-subtab-panel" style="display: none;">
+        <!-- Previous Class Recordings Archive for Enrolled Courses -->
+        <div class="section-hdr" style="margin-top: 8px;">
+          <h3 class="section-hdr-title">📼 Completed Class Recordings (4K Replay)</h3>
+        </div>
+        <div id="past-recordings-list">
+          <!-- Injected dynamically -->
+        </div>
       </div>
     </section>
 

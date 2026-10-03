@@ -607,7 +607,11 @@ function switchTab(tabName, fromPopstate = false) {
 
   if (tabName === 'dashboard') loadDashboardData();
   if (tabName === 'mycourses') loadCoursesTab();
-  if (tabName === 'live') loadLiveClassesTab();
+  if (tabName === 'live') {
+    currentLiveSubTab = 'upcoming';
+    switchLiveSubTab('upcoming');
+    loadLiveClassesTab();
+  }
   if (tabName === 'profile') loadProfileData();
 
   if (!fromPopstate && tabName !== 'dashboard' && tabName !== prevTab) {
@@ -2083,6 +2087,40 @@ function shareCurrentLesson() {
   }
 }
 
+let currentLiveSubTab = 'upcoming';
+
+function switchLiveSubTab(tab = 'upcoming') {
+  currentLiveSubTab = tab;
+  const btnUpcoming = document.getElementById('btn-live-tab-upcoming');
+  const btnCompleted = document.getElementById('btn-live-tab-completed');
+  const panelUpcoming = document.getElementById('panel-live-upcoming');
+  const panelCompleted = document.getElementById('panel-live-completed');
+
+  if (tab === 'upcoming') {
+    if (btnUpcoming) {
+      btnUpcoming.classList.add('active');
+      btnUpcoming.setAttribute('aria-selected', 'true');
+    }
+    if (btnCompleted) {
+      btnCompleted.classList.remove('active');
+      btnCompleted.setAttribute('aria-selected', 'false');
+    }
+    if (panelUpcoming) panelUpcoming.style.display = 'block';
+    if (panelCompleted) panelCompleted.style.display = 'none';
+  } else {
+    if (btnUpcoming) {
+      btnUpcoming.classList.remove('active');
+      btnUpcoming.setAttribute('aria-selected', 'false');
+    }
+    if (btnCompleted) {
+      btnCompleted.classList.add('active');
+      btnCompleted.setAttribute('aria-selected', 'true');
+    }
+    if (panelUpcoming) panelUpcoming.style.display = 'none';
+    if (panelCompleted) panelCompleted.style.display = 'block';
+  }
+}
+
 // ==========================================================================
 // 8. TAB 3: LIVE SESSIONS (PAID ENROLLED ONLY)
 // ==========================================================================
@@ -2099,6 +2137,21 @@ async function loadLiveClassesTab() {
     // STRICT: Filter to only live classes for the current student's PAID enrolled courses
     const paidEnrolledClasses = allLiveClasses.filter(c => isStudentEnrolledInLive(c));
     const activeLive = paidEnrolledClasses.find(c => c.status === 'live');
+    const scheduled = paidEnrolledClasses.filter(c => c.status === 'scheduled');
+    const past = paidEnrolledClasses.filter(c => (c.status === 'completed' || c.replayUrl));
+
+    // Update Sub-Tab Badges
+    const upcomingCount = (activeLive ? 1 : 0) + scheduled.length;
+    const completedCount = past.length;
+
+    const upcomingBadge = document.getElementById('live-upcoming-count-badge');
+    if (upcomingBadge) upcomingBadge.textContent = upcomingCount;
+
+    const completedBadge = document.getElementById('live-completed-count-badge');
+    if (completedBadge) completedBadge.textContent = completedCount;
+
+    // Apply active subtab (defaults to 'upcoming')
+    switchLiveSubTab(currentLiveSubTab || 'upcoming');
 
     // 1. ACTIVE LIVE CLASS MOUNT (Only shown if student has a paid class live RIGHT NOW)
     if (activeLive && activeMount) {
@@ -2141,8 +2194,7 @@ async function loadLiveClassesTab() {
       }
     }
 
-    // 2. PAID ENROLLED SCHEDULED SESSIONS
-    const scheduled = paidEnrolledClasses.filter(c => c.status === 'scheduled');
+    // 2. PAID ENROLLED SCHEDULED SESSIONS (UPCOMING TAB)
     if (paidListEl) {
       if (!scheduled.length) {
         const enrolledNames = (enrolledCourses || []).map(c => c.title || c.name || c.id);
@@ -2166,6 +2218,13 @@ async function loadLiveClassesTab() {
             <div class="empty-paid-live-tip">
               📌 Agli live class schedule hote hi uski date, time aur join button yahin update ho jayegi.
             </div>
+            ${past.length ? `
+              <div style="margin-top:14px; text-align:center;">
+                <button type="button" class="btn btn-outline" onclick="switchLiveSubTab('completed')" style="width:auto; padding:9px 18px; font-size:12.5px; margin:0 auto; display:inline-flex; align-items:center; gap:6px; border-color:#38bdf8; color:#38bdf8;">
+                  <span>📼 Pichli Class Recordings Dekhein (${past.length}) →</span>
+                </button>
+              </div>
+            ` : ''}
           </div>
         `;
       } else {
@@ -2174,26 +2233,67 @@ async function loadLiveClassesTab() {
       }
     }
 
-    // 3. PAST CLASS RECORDINGS (ONLY FOR ENROLLED PAID COURSES)
-    const past = paidEnrolledClasses.filter(c => (c.status === 'completed' || c.replayUrl));
+    // 3. PAST CLASS RECORDINGS (COMPLETED REPLAYS TAB)
     if (pastListEl) {
       if (!past.length) {
         pastListEl.innerHTML = `
-          <div style="font-size:12px; color:var(--text-muted); padding:16px; background:var(--bg-card); border-radius:var(--radius-md); border:1px solid var(--border-subtle); text-align:center;">
-            Abhi aapke enrolled courses ki koi past live recording uplabdh nahi hai.
+          <div class="empty-paid-live-card">
+            <div class="empty-paid-live-icon">📼</div>
+            <div class="empty-paid-live-title">No Completed Recordings Yet</div>
+            <p class="empty-paid-live-sub">
+              Aapke enrolled courses ki live classes complete hone ke turant baad unki 4K masterclass recording yahan automatically add ho jayegi.
+            </p>
+            <div class="empty-paid-live-tip">
+              💡 Upcoming schedule dekhne ke liye upar <b>Upcoming Live</b> tab par click karein.
+            </div>
           </div>
         `;
       } else {
-        pastListEl.innerHTML = past.map(c => `
-          <div class="announcement-card" onclick="openLiveRecording('${c.id}')">
-            <div class="announcement-meta">
-              <span class="announcement-badge" style="background:rgba(16,185,129,0.15);color:#34d399;border-color:rgba(16,185,129,0.3);">RECORDING 4K</span>
-              <span class="announcement-date">Available</span>
+        pastListEl.innerHTML = past.map(c => {
+          const courseLabel = getCourseTitleById(c.courseId);
+          const dt = c.scheduledAt ? new Date(c.scheduledAt) : null;
+          const timeStr = dt ? dt.toLocaleString('en-IN', {
+            weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+          }) + ' IST' : 'Completed Session';
+
+          return `
+            <div class="paid-live-card" onclick="openLiveRecording('${c.id}')" style="cursor:pointer; margin-bottom:14px;">
+              <div class="paid-live-header">
+                <span class="paid-live-course-tag">🎓 ${escHtml(courseLabel)}</span>
+                <span class="paid-live-status-tag" style="background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.35);">
+                  ✓ RECORDING UNLOCKED
+                </span>
+              </div>
+              <div class="paid-live-title" style="font-size:15px; margin-top:4px;">${escHtml(c.title)}</div>
+              ${c.description ? `<div class="paid-live-desc">${escHtml(c.description)}</div>` : ''}
+
+              <div class="paid-live-meta-grid" style="margin-top:10px;">
+                <div class="paid-live-meta-item">
+                  <span class="paid-live-meta-lbl">Broadcast Date</span>
+                  <span class="paid-live-meta-val">📅 ${escHtml(timeStr)}</span>
+                </div>
+                <div class="paid-live-meta-item">
+                  <span class="paid-live-meta-lbl">Mentor</span>
+                  <span class="paid-live-meta-val">👨‍🏫 Anil Sharma</span>
+                </div>
+                <div class="paid-live-meta-item">
+                  <span class="paid-live-meta-lbl">Duration</span>
+                  <span class="paid-live-meta-val">⏱️ ${escHtml(c.duration || '90 Mins')}</span>
+                </div>
+                <div class="paid-live-meta-item">
+                  <span class="paid-live-meta-lbl">Quality</span>
+                  <span class="paid-live-meta-val" style="color:#38bdf8;">🎥 1080p 60fps</span>
+                </div>
+              </div>
+
+              <div style="margin-top:12px;">
+                <button type="button" class="btn btn-outline" style="width:100%; border-color:#38bdf8; color:#38bdf8; background:rgba(56,189,248,0.06); font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px; padding:11px 16px; border-radius:10px;">
+                  <span>▶</span> <span>Watch 4K Replay Studio ➔</span>
+                </button>
+              </div>
             </div>
-            <div class="announcement-title">${escHtml(c.title)}</div>
-            <div class="announcement-body">${escHtml(c.description || 'Full class recording for enrolled students')}</div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       }
     }
   } catch (err) {

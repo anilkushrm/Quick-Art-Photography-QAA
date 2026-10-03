@@ -21,7 +21,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="app.css?v=20261003_bell" />
+  <link rel="stylesheet" href="app.css?v=20261003_checkout" />
+
+  <!-- Razorpay Official Checkout Gateway -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
 
@@ -1231,11 +1234,20 @@
         <button type="button" class="sheet-close-btn" onclick="closeAllCoursesModal()">✕</button>
       </div>
 
-      <!-- Catalog Filters -->
-      <div class="filter-chips" style="padding:0 16px 10px; margin-bottom:0; justify-content:flex-start;">
-        <button type="button" class="filter-chip active" id="chip-cat-all" onclick="filterCatalogModal('all')">All Courses</button>
-        <button type="button" class="filter-chip" id="chip-cat-enrolled" onclick="filterCatalogModal('enrolled')">My Enrolled (✓)</button>
-        <button type="button" class="filter-chip" id="chip-cat-available" onclick="filterCatalogModal('available')">Available (+)</button>
+      <!-- Catalog Filters (Professional Segmented Tabs) -->
+      <div class="catalog-tabs-container">
+        <button type="button" class="catalog-tab-btn active" id="chip-cat-all" onclick="filterCatalogModal('all')">
+          <span>All Courses</span>
+          <span class="catalog-tab-badge" id="badge-cat-all">0</span>
+        </button>
+        <button type="button" class="catalog-tab-btn" id="chip-cat-enrolled" onclick="filterCatalogModal('enrolled')">
+          <span>My Enrolled</span>
+          <span class="catalog-tab-badge" id="badge-cat-enrolled">0</span>
+        </button>
+        <button type="button" class="catalog-tab-btn" id="chip-cat-available" onclick="filterCatalogModal('available')">
+          <span>Available</span>
+          <span class="catalog-tab-badge" id="badge-cat-available">0</span>
+        </button>
       </div>
 
       <div class="sheet-body" id="modal-catalog-list" style="padding:10px 16px 30px;">
@@ -1342,9 +1354,118 @@
     </div>
   </div>
 
+  <!-- ================= 14. MODAL: IN-APP COURSE CHECKOUT & PAYMENT ================= -->
+  <div id="modal-course-checkout" class="sheet-backdrop" onclick="closeCourseCheckoutModal()">
+    <div class="bottom-sheet checkout-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      
+      <div class="sheet-header">
+        <div style="flex:1; min-width:0; padding-right:12px;">
+          <h3 class="sheet-title" style="display:flex; align-items:center; gap:8px;">
+            <span>🎓 Course Enrollment</span>
+          </h3>
+          <p style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">
+            Instant Razorpay Checkout • 4K Full Access • QR Certificate
+          </p>
+        </div>
+        <button type="button" class="sheet-close-btn" onclick="closeCourseCheckoutModal()">✕</button>
+      </div>
+
+      <div class="sheet-body checkout-body" id="checkout-sheet-body">
+        <!-- Dynamic Course Hero Card -->
+        <div class="checkout-course-hero" id="checkout-course-hero"></div>
+
+        <!-- Student Details Card -->
+        <div class="checkout-student-card">
+          <div class="checkout-section-title">
+            <span>👤 Student Information</span>
+            <span class="checkout-verified-badge" id="checkout-verified-badge">✓ Auto-Linked</span>
+          </div>
+          <div class="checkout-inputs-grid">
+            <div class="checkout-input-group">
+              <label for="checkout-user-name">Full Name</label>
+              <input type="text" id="checkout-user-name" placeholder="Enter Full Name" autocomplete="name" />
+            </div>
+            <div class="checkout-input-group">
+              <label for="checkout-user-phone">Mobile / WhatsApp Number</label>
+              <div class="checkout-phone-wrap">
+                <span class="checkout-phone-prefix">+91</span>
+                <input type="tel" id="checkout-user-phone" maxlength="10" placeholder="10-digit number" autocomplete="tel" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coupon / Discount Code Box -->
+        <div class="checkout-coupon-card">
+          <div class="checkout-coupon-header">
+            <span>🎟 Have a Promo / Coupon Code?</span>
+          </div>
+          <div class="checkout-coupon-input-wrap">
+            <input type="text" id="checkout-coupon-code" placeholder="e.g. SPECIAL50" autocomplete="off" />
+            <button type="button" id="btn-checkout-coupon" onclick="handleApplyCheckoutCoupon()">Apply</button>
+          </div>
+          <div id="checkout-coupon-status" class="checkout-coupon-status"></div>
+        </div>
+
+        <!-- Price Breakdown -->
+        <div class="checkout-price-card">
+          <div class="checkout-price-row">
+            <span class="label">Course Regular Price:</span>
+            <span class="value strikethrough" id="checkout-price-original">₹9,999</span>
+          </div>
+          <div class="checkout-price-row">
+            <span class="label">Academy Special Offer:</span>
+            <span class="value" id="checkout-price-base">₹4,999</span>
+          </div>
+          <div class="checkout-price-row discount-row" id="checkout-row-discount" style="display:none;">
+            <span class="label">🎉 Coupon Discount:</span>
+            <span class="value discount-val" id="checkout-price-discount">-₹0</span>
+          </div>
+          <div class="checkout-price-divider"></div>
+          <div class="checkout-price-row total-row">
+            <span class="label">Total Payable:</span>
+            <span class="value total-val" id="checkout-price-total">₹4,999</span>
+          </div>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="checkout-trust-row">
+          <div class="trust-item">
+            <span class="trust-icon">🔒</span>
+            <span>256-Bit SSL Secure</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">⚡</span>
+            <span>Instant Auto-Unlock</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">🛡</span>
+            <span>Razorpay Verified</span>
+          </div>
+        </div>
+
+        <!-- Pay Button & Support -->
+        <div class="checkout-action-wrap">
+          <button type="button" id="btn-checkout-pay" class="checkout-pay-btn" onclick="startCourseCheckoutPayment()">
+            <span class="pay-icon">🔒</span>
+            <span class="pay-text" id="checkout-btn-label">Pay ₹4,999 &amp; Unlock Instantly ➔</span>
+          </button>
+          <div class="checkout-support-text">
+            UPI (GPay, PhonePe, Paytm), Cards &amp; NetBanking supported.<br/>
+            <span>Need admission help?</span>
+            <a href="javascript:void(0)" onclick="openWhatsAppCheckoutQuery()" class="checkout-wa-link">
+              💬 Chat on WhatsApp (+91 9939800780)
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- HTML2Canvas & QR Code Libraries for ID Card Generation -->
   <script src="../portal/html2canvas.min.js"></script>
   <script src="../portal/qrcode.min.js"></script>
-  <script src="app.js?v=20261002_15"></script>
+  <script src="app.js?v=20261003_checkout"></script>
 </body>
 </html>

@@ -837,7 +837,7 @@ function renderDashboardAllCoursesStrip() {
       `;
     } else {
       return `
-        <div class="dash-course-strip-card" onclick="handleExploreCourse('${c.id}')">
+        <div class="dash-course-strip-card" onclick="openCourseCheckoutModal('${c.id}')">
           <div class="dash-strip-thumb-wrap">
             <img src="${thumb}" alt="${safeCourseHtml(c.title)}" class="dash-strip-thumb-img" onerror="this.src='../assets/course-premiere-pro-hindi.webp'" />
             <span class="dash-strip-badge available">⭐ Available • ${price}</span>
@@ -848,7 +848,7 @@ function renderDashboardAllCoursesStrip() {
               <span>⏱ ${safeCourseHtml(duration)}</span>
               <span style="color:var(--gold); font-weight:700;">${price}</span>
             </div>
-            <button type="button" class="dash-strip-btn btn-enroll" onclick="event.stopPropagation(); handleExploreCourse('${c.id}')">
+            <button type="button" class="dash-strip-btn btn-enroll" onclick="event.stopPropagation(); openCourseCheckoutModal('${c.id}')">
               Enroll / Details ➔
             </button>
           </div>
@@ -858,13 +858,31 @@ function renderDashboardAllCoursesStrip() {
   }).join('');
 }
 
+function updateCatalogTabCounts() {
+  const allCount = allAcademyCourses.length;
+  const enrolledCount = allAcademyCourses.filter(c => isStudentEnrolledIn(c)).length;
+  const availableCount = Math.max(0, allCount - enrolledCount);
+
+  const bAll = document.getElementById('badge-cat-all');
+  const bEnrolled = document.getElementById('badge-cat-enrolled');
+  const bAvailable = document.getElementById('badge-cat-available');
+
+  if (bAll) bAll.textContent = allCount;
+  if (bEnrolled) bEnrolled.textContent = enrolledCount;
+  if (bAvailable) bAvailable.textContent = availableCount;
+}
+
 function openAllCoursesModal() {
   pushNavState({ screen: 'modal', modal: 'allcourses' });
   const modal = document.getElementById('modal-all-courses');
   if (modal) modal.classList.add('active');
   if (!allAcademyCourses.length) {
-    loadDashboardAllCourses().then(() => renderCatalogModalList());
+    loadDashboardAllCourses().then(() => {
+      updateCatalogTabCounts();
+      renderCatalogModalList();
+    });
   } else {
+    updateCatalogTabCounts();
     renderCatalogModalList();
   }
 }
@@ -886,6 +904,7 @@ function filterCatalogModal(filter) {
 }
 
 function renderCatalogModalList() {
+  updateCatalogTabCounts();
   const listEl = document.getElementById('modal-catalog-list');
   if (!listEl) return;
 
@@ -922,21 +941,21 @@ function renderCatalogModalList() {
             <div class="modal-course-title">${safeCourseHtml(c.title)}</div>
             <div class="modal-course-sub">⏱ ${safeCourseHtml(duration)} • Active Classroom</div>
           </div>
-          <button type="button" class="modal-course-btn" style="background:var(--gold-gradient); color:#090d18;">
+          <button type="button" class="modal-course-btn" style="background:var(--gold-gradient); color:#090d18;" onclick="event.stopPropagation(); closeAllCoursesModal(); openClassroomPlayer('${c.id}');">
             Study ➔
           </button>
         </div>
       `;
     } else {
       return `
-        <div class="modal-course-card" onclick="handleExploreCourse('${c.id}');">
+        <div class="modal-course-card" onclick="openCourseCheckoutModal('${c.id}');">
           <img src="${thumb}" alt="${safeCourseHtml(c.title)}" class="modal-course-thumb" onerror="this.src='../assets/course-premiere-pro-hindi.webp'" />
           <div class="modal-course-info">
             <span class="modal-course-tag available">⭐ Available • ${price}</span>
             <div class="modal-course-title">${safeCourseHtml(c.title)}</div>
             <div class="modal-course-sub">⏱ ${safeCourseHtml(duration)} • Full Lifetime Access</div>
           </div>
-          <button type="button" class="modal-course-btn" style="background:rgba(216,161,83,0.18); border:1px solid rgba(216,161,83,0.35); color:var(--gold);">
+          <button type="button" class="modal-course-btn" style="background:rgba(216,161,83,0.18); border:1px solid rgba(216,161,83,0.35); color:var(--gold);" onclick="event.stopPropagation(); openCourseCheckoutModal('${c.id}');">
             Enroll ➔
           </button>
         </div>
@@ -945,11 +964,375 @@ function renderCatalogModalList() {
   }).join('');
 }
 
-function handleExploreCourse(courseId) {
-  const course = allAcademyCourses.find(c => c.id === courseId);
-  const title = course ? course.title : 'Quick Art Photography Academy Program';
-  const url = `https://wa.me/919939800780?text=${encodeURIComponent(`Namaste Anil Sir! Mujhe Quick Art Academy ke '${title}' program me admission/enrollment lena hai. Kripya details provide karein.`)}`;
+// ==========================================================================
+// 8.5 IN-APP COURSE CHECKOUT & RAZORPAY PAYMENT GATEWAY SYSTEM
+// ==========================================================================
+let activeCheckoutCourse = null;
+let activeCheckoutCoupon = null;
+
+function openCourseCheckoutModal(courseId) {
+  let course = allAcademyCourses.find(c => c.id === courseId);
+  if (!course && enrolledCourses) {
+    course = enrolledCourses.find(c => c.id === courseId);
+  }
+
+  if (!course) {
+    toast('Course details load ho rahe hain...', false);
+    loadDashboardAllCourses().then(() => {
+      const found = allAcademyCourses.find(c => c.id === courseId);
+      if (found) openCourseCheckoutModal(courseId);
+      else toast('Course information uplabdh nahi hai. Helpline par sampark karein.', false);
+    });
+    return;
+  }
+
+  // If student is already enrolled in this course, directly open classroom player!
+  if (isStudentEnrolledIn(course)) {
+    closeAllCoursesModal();
+    openClassroomPlayer(course.id);
+    return;
+  }
+
+  activeCheckoutCourse = course;
+  activeCheckoutCoupon = null;
+
+  // Prefill student details from current student account if logged in
+  const nameInp = document.getElementById('checkout-user-name');
+  const phoneInp = document.getElementById('checkout-user-phone');
+  const verifiedBadge = document.getElementById('checkout-verified-badge');
+
+  if (currentStudent && currentStudent.phone) {
+    if (nameInp) nameInp.value = currentStudent.name || '';
+    if (phoneInp) phoneInp.value = String(currentStudent.phone).replace(/\D/g, '').slice(-10);
+    if (verifiedBadge) {
+      verifiedBadge.textContent = '✓ Verified Student';
+      verifiedBadge.style.display = 'inline-flex';
+    }
+  } else {
+    const cachedName = localStorage.getItem('qaa_cached_name') || '';
+    const cachedPhone = localStorage.getItem('qaa_cached_phone') || '';
+    if (nameInp) nameInp.value = cachedName;
+    if (phoneInp) phoneInp.value = cachedPhone;
+    if (verifiedBadge) {
+      verifiedBadge.textContent = '⚡ Instant Access';
+      verifiedBadge.style.display = 'inline-flex';
+    }
+  }
+
+  // Reset coupon state
+  const couponInp = document.getElementById('checkout-coupon-code');
+  if (couponInp) couponInp.value = '';
+  const couponStatus = document.getElementById('checkout-coupon-status');
+  if (couponStatus) {
+    couponStatus.textContent = '';
+    couponStatus.className = 'checkout-coupon-status';
+    couponStatus.style.display = 'none';
+  }
+
+  // Render course details & prices
+  renderCheckoutCourseDetails();
+
+  // Push navigation state & display sheet
+  pushNavState({ screen: 'modal', modal: 'coursecheckout' });
+  const modal = document.getElementById('modal-course-checkout');
+  if (modal) modal.classList.add('active');
+}
+
+function closeCourseCheckoutModal(fromPopstate = false) {
+  const modal = document.getElementById('modal-course-checkout');
+  if (modal) modal.classList.remove('active');
+  if (!fromPopstate && window.history.state && window.history.state.modal === 'coursecheckout') {
+    try { window.history.back(); } catch (e) {}
+  }
+}
+
+function renderCheckoutCourseDetails() {
+  if (!activeCheckoutCourse) return;
+  const c = activeCheckoutCourse;
+  const thumb = c.thumbnail ? (c.thumbnail.startsWith('http') || c.thumbnail.startsWith('/') ? c.thumbnail : `../${c.thumbnail}`) : '../assets/course-premiere-pro-hindi.webp';
+  const duration = c.duration || '60+ Hours';
+  const basePrice = Number(c.price) || 4999;
+  const originalPrice = Number(c.originalPrice) || Math.round(basePrice * 2);
+
+  const heroEl = document.getElementById('checkout-course-hero');
+  if (heroEl) {
+    heroEl.innerHTML = `
+      <div class="checkout-course-hero-inner">
+        <img src="${thumb}" alt="${safeCourseHtml(c.title)}" class="checkout-hero-thumb" onerror="this.src='../assets/course-premiere-pro-hindi.webp'" />
+        <div class="checkout-hero-info">
+          <div class="checkout-hero-badge">⭐ Certified Academy Masterclass</div>
+          <div class="checkout-hero-title">${safeCourseHtml(c.title)}</div>
+          <div class="checkout-hero-sub">⏱ ${safeCourseHtml(duration)} • 4K Full HD Video • Lifetime</div>
+        </div>
+      </div>
+      <div class="checkout-hero-perks">
+        <span class="perk-chip">✓ Lifetime Access</span>
+        <span class="perk-chip">✓ RAW Project Files</span>
+        <span class="perk-chip">✓ QR-Verified Certificate</span>
+        <span class="perk-chip">✓ Doubt Support</span>
+      </div>
+    `;
+  }
+
+  // Pricing calculation
+  let discount = 0;
+  if (activeCheckoutCoupon && activeCheckoutCoupon.valid) {
+    discount = Number(activeCheckoutCoupon.discountAmount) || 0;
+  }
+  const finalPrice = Math.max(0, basePrice - discount);
+
+  const pOrig = document.getElementById('checkout-price-original');
+  const pBase = document.getElementById('checkout-price-base');
+  const pTotal = document.getElementById('checkout-price-total');
+  const btnLabel = document.getElementById('checkout-btn-label');
+  const discountRow = document.getElementById('checkout-row-discount');
+  const pDiscount = document.getElementById('checkout-price-discount');
+
+  if (pOrig) pOrig.textContent = `₹${originalPrice.toLocaleString('en-IN')}`;
+  if (pBase) pBase.textContent = `₹${basePrice.toLocaleString('en-IN')}`;
+
+  if (discount > 0 && discountRow && pDiscount) {
+    discountRow.style.display = 'flex';
+    pDiscount.textContent = `-₹${discount.toLocaleString('en-IN')}`;
+  } else if (discountRow) {
+    discountRow.style.display = 'none';
+  }
+
+  if (pTotal) pTotal.textContent = `₹${finalPrice.toLocaleString('en-IN')}`;
+  if (btnLabel) btnLabel.innerHTML = `Pay ₹${finalPrice.toLocaleString('en-IN')} &amp; Unlock Instantly ➔`;
+}
+
+async function handleApplyCheckoutCoupon() {
+  if (!activeCheckoutCourse) return;
+  const codeInp = document.getElementById('checkout-coupon-code');
+  const code = (codeInp?.value || '').trim();
+  const statusEl = document.getElementById('checkout-coupon-status');
+  const btn = document.getElementById('btn-checkout-coupon');
+
+  if (!code) {
+    if (statusEl) {
+      statusEl.textContent = 'Kripya promo ya coupon code enter karein.';
+      statusEl.className = 'checkout-coupon-status error';
+      statusEl.style.display = 'block';
+    }
+    return;
+  }
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '...';
+  }
+
+  try {
+    const basePrice = Number(activeCheckoutCourse.price) || 4999;
+    const res = await apiFetch('apply-coupon', {
+      method: 'POST',
+      body: {
+        code: code,
+        courseId: activeCheckoutCourse.id,
+        price: basePrice
+      }
+    });
+
+    if (!res.valid) {
+      throw new Error(res.error || 'Invalid ya expired coupon code.');
+    }
+
+    activeCheckoutCoupon = res;
+    if (statusEl) {
+      statusEl.textContent = `✓ '${res.code}' applied! Flat ₹${Number(res.discountAmount).toLocaleString('en-IN')} discount mila.`;
+      statusEl.className = 'checkout-coupon-status success';
+      statusEl.style.display = 'block';
+    }
+    renderCheckoutCourseDetails();
+    toast(`🎉 Coupon code applied! Discount: ₹${Number(res.discountAmount).toLocaleString('en-IN')}`);
+
+  } catch (err) {
+    activeCheckoutCoupon = null;
+    if (statusEl) {
+      statusEl.textContent = `✕ ${err.message || 'Invalid coupon code.'}`;
+      statusEl.className = 'checkout-coupon-status error';
+      statusEl.style.display = 'block';
+    }
+    renderCheckoutCourseDetails();
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Apply';
+    }
+  }
+}
+
+async function startCourseCheckoutPayment() {
+  if (!activeCheckoutCourse) {
+    toast('Koi course chuna nahi gaya.', false);
+    return;
+  }
+
+  const nameInp = document.getElementById('checkout-user-name');
+  const phoneInp = document.getElementById('checkout-user-phone');
+  const btn = document.getElementById('btn-checkout-pay');
+
+  const name = (nameInp ? nameInp.value : (currentStudent?.name || '')).trim();
+  const rawPhone = phoneInp ? phoneInp.value : (currentStudent?.phone || '');
+  const phone = String(rawPhone).replace(/\D/g, '').slice(-10);
+
+  if (!name || name.length < 2) {
+    toast('Kripya apna poora naam darj karein.', false);
+    nameInp?.focus();
+    return;
+  }
+
+  if (!phone || phone.length !== 10) {
+    toast('Kripya 10-digit mobile number darj karein.', false);
+    phoneInp?.focus();
+    return;
+  }
+
+  localStorage.setItem('qaa_cached_name', name);
+  localStorage.setItem('qaa_cached_phone', phone);
+
+  const courseId = activeCheckoutCourse.id;
+  const courseTitle = activeCheckoutCourse.title || 'Quick Art Photography Academy Program';
+  const couponCode = activeCheckoutCoupon && activeCheckoutCoupon.valid ? activeCheckoutCoupon.code : '';
+
+  if (typeof Razorpay === 'undefined') {
+    toast('Payment gateway load ho raha hai, kripya 2 second intazaar karein...', false);
+    return;
+  }
+
+  const originalBtnHtml = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<span class="pay-icon">⏳</span><span class="pay-text">Connecting Payment Gateway...</span>`;
+  }
+
+  try {
+    // 1. Create Razorpay Order on LMS Server
+    const orderRes = await apiFetch('create-razorpay-order', {
+      method: 'POST',
+      body: {
+        courseId,
+        name,
+        phone,
+        email: currentStudent?.email || `${phone}@quickartstudent.in`,
+        couponCode
+      }
+    });
+
+    if (!orderRes.ok || !orderRes.orderId) {
+      throw new Error(orderRes.error || orderRes.message || 'Payment order create karne me dikkat aayi.');
+    }
+
+    // 2. Open Razorpay Checkout Sheet
+    const rzpOptions = {
+      key: orderRes.keyId,
+      amount: orderRes.amount,
+      currency: orderRes.currency || 'INR',
+      name: 'Quick Art Photography Academy',
+      description: orderRes.courseTitle || courseTitle,
+      order_id: orderRes.orderId,
+      prefill: {
+        name: name,
+        contact: phone,
+        email: currentStudent?.email || `${phone}@quickartstudent.in`
+      },
+      readonly: {
+        contact: true,
+        name: true
+      },
+      theme: { color: '#d8a153' },
+      modal: {
+        ondismiss: () => {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+          }
+          toast('Payment cancel kiya gaya. Dubara koshish kar sakte hain.', false);
+        }
+      },
+      handler: async (response) => {
+        if (btn) {
+          btn.innerHTML = `<span class="pay-icon">⚡</span><span class="pay-text">Verifying Payment &amp; Unlocking...</span>`;
+        }
+        try {
+          const verifyRes = await apiFetch('verify-razorpay-payment', {
+            method: 'POST',
+            body: {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              courseId,
+              name,
+              phone,
+              email: currentStudent?.email || `${phone}@quickartstudent.in`,
+              couponCode
+            }
+          });
+
+          if (!verifyRes.ok || !verifyRes.verified) {
+            throw new Error(verifyRes.error || 'Payment verification failed');
+          }
+
+          // Auto-login / update session
+          if (verifyRes.token) {
+            localStorage.setItem('qaa_student_token', verifyRes.token);
+            localStorage.setItem('qa_student_token', verifyRes.token);
+          }
+          if (verifyRes.student) {
+            currentStudent = verifyRes.student;
+            localStorage.setItem('qaa_student_info', JSON.stringify(currentStudent));
+          }
+
+          // Close all checkout modals
+          closeCourseCheckoutModal();
+          closeAllCoursesModal();
+
+          // Refresh dashboard data
+          await loadDashboardData();
+          await loadDashboardAllCourses();
+
+          toast(`🎉 Badhai ho ${name}! '${courseTitle}' successfully unlock ho gaya.`);
+
+          // Seamless transition directly into the course classroom!
+          setTimeout(() => {
+            openClassroomPlayer(courseId);
+          }, 350);
+
+        } catch (verifyErr) {
+          console.error('Verify error:', verifyErr);
+          toast(`Verification error: ${verifyErr.message}. Payment ID: ${response.razorpay_payment_id}`, false);
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+          }
+        }
+      }
+    };
+
+    const rzp = new Razorpay(rzpOptions);
+    rzp.open();
+
+  } catch (err) {
+    console.error('Order creation error:', err);
+    toast(err.message || 'Payment initiation failed. Kripya helpline par sampark karein.', false);
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalBtnHtml;
+    }
+  }
+}
+
+function openWhatsAppCheckoutQuery() {
+  const courseTitle = activeCheckoutCourse ? activeCheckoutCourse.title : 'Quick Art Photography Course';
+  const name = (document.getElementById('checkout-user-name')?.value || currentStudent?.name || '').trim();
+  const text = `Namaste Anil Sir! Mujhe Quick Art Academy ke '${courseTitle}' program me admission/enrollment lena hai.${name ? ` Mera naam ${name} hai.` : ''} Kripya details provide karein.`;
+  const url = `https://wa.me/919939800780?text=${encodeURIComponent(text)}`;
   window.open(url, '_blank');
+}
+
+function handleExploreCourse(courseId) {
+  openCourseCheckoutModal(courseId);
 }
 
 // Live Class Watcher
@@ -2921,6 +3304,13 @@ function handleAppBack() {
   const installModal = document.getElementById('modal-install-app');
   if (installModal && installModal.classList.contains('active')) {
     closeInstallModal(true);
+    return true;
+  }
+
+  // 2.5 If Course Checkout modal is open
+  const checkoutModal = document.getElementById('modal-course-checkout');
+  if (checkoutModal && checkoutModal.classList.contains('active')) {
+    closeCourseCheckoutModal(true);
     return true;
   }
 

@@ -1472,6 +1472,8 @@ fbq('track', 'PageView');
         <input type="text" id="studentSearch" oninput="filterLmsStudents()" placeholder="Search by student name, phone, city, course, studio..." style="flex:1;min-width:220px" />
         <select id="studentTypeFilter" onchange="filterLmsStudents()" style="width:auto;min-width:180px">
           <option value="">All Student Types</option>
+          <option value="pending_approval">⏳ Pending Admin Approval</option>
+          <option value="online_batch">🌐 Online Live Batches (Batch 114, 115...)</option>
           <option value="offline_paid">🏛️ Offline Lab (₹500 Paid)</option>
           <option value="offline_cash">⏳ Offline (Pay at Campus)</option>
           <option value="online">🌐 Online Course Enrolled</option>
@@ -4732,7 +4734,12 @@ function renderLmsStudents() {
   const filterCourseId = document.getElementById('studentCourseFilter')?.value || '';
 
   const filtered = allLmsStudents.filter(s => {
+    const isOnlineBatch = !!s.isOnlineBatch || (s.offlineAdmissionId && String(s.offlineAdmissionId).includes('-ON-')) || /batch\s*[-_]?\s*\d+/i.test(s.appliedCourse || '') || (s.enrolledCourseNames || []).some(cn => /batch\s*[-_]?\s*\d+/i.test(cn));
+    const isAppr = (s.isApproved === true || s.status === 'active' || s.status === 'approved') && s.status !== 'pending_approval';
+
     // Type filter
+    if (filterType === 'pending_approval' && isAppr) return false;
+    if (filterType === 'online_batch' && !isOnlineBatch) return false;
     if (filterType === 'offline_paid' && (!s.isOfflineStudent || (!s.isPaid500 && s.paymentStatus !== 'paid'))) return false;
     if (filterType === 'offline_cash' && (!s.isOfflineStudent || s.isPaid500 || s.paymentStatus === 'paid')) return false;
     if (filterType === 'online' && (s.isOfflineStudent && !s.enrolledCourses?.length)) return false;
@@ -4760,8 +4767,8 @@ function renderLmsStudents() {
   tbody.innerHTML = filtered.map(s => {
     const isOnlineBatch = !!s.isOnlineBatch || (s.offlineAdmissionId && String(s.offlineAdmissionId).includes('-ON-')) || /batch\s*[-_]?\s*\d+/i.test(s.appliedCourse || '') || (s.enrolledCourseNames || []).some(cn => /batch\s*[-_]?\s*\d+/i.test(cn));
     const isOffline = (!!s.isOfflineStudent || !!s.offlineAdmissionId) && !isOnlineBatch;
-    const isPaid = !!s.isPaid500 || s.paymentStatus === 'paid' || isOnlineBatch;
-    const isApproved = !!s.isApproved || s.status === 'active' || s.status === 'approved' || isOnlineBatch;
+    const isPaid = !!s.isPaid500 || s.paymentStatus === 'paid';
+    const isApproved = (s.isApproved === true || s.status === 'active' || s.status === 'approved') && s.status !== 'pending_approval';
     const photoUrl = resolveMediaUrl(s.photoUrl || s.avatar || s.avatarUrl || (s.offlineData && (s.offlineData.photoUrl || s.offlineData.avatar || s.offlineData.avatarUrl)) || '');
     const certCode = `QAA-PR-${(s.phone || '0000').slice(-4)}`;
     const hasAdmission = isOffline || isOnlineBatch || !!s.offlineAdmissionId || !!s.offlineData || !!s.photoUrl || (typeof allOfflineAdmissions !== 'undefined' && allOfflineAdmissions.some(a => String(a.phone || '').replace(/[^0-9]/g, '') === String(s.phone || '').replace(/[^0-9]/g, '')));
@@ -4836,12 +4843,21 @@ function renderLmsStudents() {
     // Status & Payment Markup
     let statusMarkup = '';
     if (isOnlineBatch) {
-      statusMarkup = `
-        <div style="color:#34d399;font-weight:700;font-size:12px;display:flex;align-items:center;gap:4px">
-          <span>✓</span><span>Batch Active &amp; Enrolled</span>
-        </div>
-        <div style="font-size:10.5px;color:#38bdf8">Online Verified</div>
-      `;
+      if (isApproved) {
+        statusMarkup = `
+          <div style="color:#34d399;font-weight:700;font-size:12px;display:flex;align-items:center;gap:4px">
+            <span>✓</span><span>Batch Active &amp; Approved</span>
+          </div>
+          <div style="font-size:10.5px;color:#38bdf8">Online Verified</div>
+        `;
+      } else {
+        statusMarkup = `
+          <div style="color:#fbbf24;font-weight:700;font-size:12px;display:flex;align-items:center;gap:4px">
+            <span>⏳</span><span>Pending Admin Approval</span>
+          </div>
+          <div style="font-size:10.5px;color:#f87171">Access Locked until Approved</div>
+        `;
+      }
       if (s.totalCompletedLessons > 0) {
         statusMarkup += `<div style="font-size:10.5px;color:#94a3b8;margin-top:3px"><b>${s.totalCompletedLessons}</b> lessons done</div>`;
       }
@@ -4888,10 +4904,10 @@ function renderLmsStudents() {
           📋 Details
         </button>
       `;
-      if (isOffline && (!isPaid || !isApproved)) {
+      if (!isApproved) {
         actionsHtml += `
-          <button onclick="quickApproveOfflineStudent('${s.offlineAdmissionId || ''}', '${s.phone}')" class="btn btn-gold" style="padding:5px 9px;font-size:11px" title="Mark ₹500 Paid &amp; Approve">
-            💰 Mark Paid
+          <button onclick="quickApproveOfflineStudent('${s.offlineAdmissionId || ''}', '${s.phone}')" class="btn btn-gold" style="padding:5px 9px;font-size:11px" title="Approve Admission &amp; Unlock Access">
+            ✓ Approve
           </button>
         `;
       }
@@ -4998,8 +5014,8 @@ function viewOfflineStudentModal(phoneOrId) {
   }
 
   const isOnlineBatch = !!adm.isOnlineBatch || String(adm.id || adm.offlineAdmissionId || '').includes('-ON-') || /batch\s*[-_]?\s*\d+/i.test(adm.courseTitle || adm.appliedCourse || '');
-  const isPaid = (adm.paymentStatus === 'paid') || (adm.isPaid500 === true) || isOnlineBatch;
-  const isApproved = (adm.status === 'approved') || (adm.isApproved === true) || (adm.status === 'active') || isOnlineBatch;
+  const isPaid = (adm.paymentStatus === 'paid') || (adm.isPaid500 === true);
+  const isApproved = ((adm.status === 'approved') || (adm.isApproved === true) || (adm.status === 'active')) && adm.status !== 'pending_approval';
   const photoSrc = resolveMediaUrl(adm.photoUrl || adm.avatar || adm.avatarUrl || '');
   const aadhaarSrc = resolveMediaUrl(adm.aadhaarUrl || adm.aadhaarDocUrl || '');
   const certSrc = resolveMediaUrl(adm.certUrl || adm.prevCertUrl || '');
@@ -5032,9 +5048,15 @@ function viewOfflineStudentModal(phoneOrId) {
               <span class="badge" style="background:rgba(14,165,233,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.4);font-weight:700;font-size:11px">
                 🌐 ONLINE LIVE BATCH
               </span>
-              <span class="badge" style="background:rgba(16,185,129,0.2);color:#34d399;border:1px solid rgba(16,185,129,0.4);font-weight:700;font-size:11px">
-                ✓ ADMISSION ACTIVE
-              </span>
+              ${isApproved ? `
+                <span class="badge" style="background:rgba(16,185,129,0.2);color:#34d399;border:1px solid rgba(16,185,129,0.4);font-weight:700;font-size:11px">
+                  ✓ BATCH ACTIVE &amp; APPROVED
+                </span>
+              ` : `
+                <span class="badge" style="background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.4);font-weight:700;font-size:11px">
+                  ⏳ PENDING ADMIN APPROVAL
+                </span>
+              `}
             ` : (isPaid ? `
               <span class="badge" style="background:rgba(16,185,129,0.2);color:#34d399;border:1px solid rgba(16,185,129,0.4);font-weight:700;font-size:11px">
                 ✓ ₹500 SEAT FEE PAID
@@ -5045,7 +5067,7 @@ function viewOfflineStudentModal(phoneOrId) {
               </span>
             `)}
 
-            ${!isOnlineBatch && (isApproved ? `
+            ${!isOnlineBatch ? (isApproved ? `
               <span class="badge" style="background:rgba(59,130,246,0.2);color:#60a5fa;border:1px solid rgba(59,130,246,0.4);font-weight:700;font-size:11px">
                 ✓ APPROVED &amp; ACTIVE
               </span>
@@ -5053,7 +5075,7 @@ function viewOfflineStudentModal(phoneOrId) {
               <span class="badge" style="background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.4);font-weight:700;font-size:11px">
                 ⏳ PENDING ADMIN APPROVAL
               </span>
-            `)}
+            `) : ''}
           </div>
           <div style="font-size:12.5px;color:#cbd5e1;margin-top:6px;display:flex;gap:14px;flex-wrap:wrap">
             <span>📱 <strong style="color:var(--gold)">+91 ${escapeHtml(phone)}</strong></span>
@@ -5065,7 +5087,7 @@ function viewOfflineStudentModal(phoneOrId) {
 
       <!-- 2 Columns Info Grids -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:18px">
-        <!-- Personal & Contact -->
+        <!-- Personal & Family Info -->
         <div style="background:#080d1a;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px">
           <h4 style="margin:0 0 10px;font-size:12px;color:#fcd34d;text-transform:uppercase;letter-spacing:0.5px">👤 Personal &amp; Family Info</h4>
           <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;color:#cbd5e1">
@@ -5175,13 +5197,13 @@ function viewOfflineStudentModal(phoneOrId) {
       <a href="admission/verify.html?id=${encodeURIComponent(admId)}&name=${encodeURIComponent(fullName)}&course=${encodeURIComponent(courseTitle)}&phone=${encodeURIComponent(phone)}&photo=${encodeURIComponent(photoSrc)}" target="_blank" class="btn btn-outline" style="font-size:12px;padding:8px 14px;color:#fde68a;border-color:rgba(216,161,83,0.4);background:rgba(216,161,83,0.1);text-decoration:none">
         🪪 View Official ID Card
       </a>
-      ${!isPaid ? `
+      ${!isPaid && isOffline ? `
         <button onclick="quickApproveOfflineStudent('${admId}', '${phone}', true)" class="btn btn-gold" style="font-size:12px;padding:8px 16px">
           💰 Mark ₹500 Paid &amp; Approve
         </button>
       ` : (!isApproved ? `
         <button onclick="quickApproveOfflineStudent('${admId}', '${phone}', false)" class="btn btn-gold" style="font-size:12px;padding:8px 16px">
-          ✓ Approve Admission
+          ✓ Approve Admission &amp; Unlock Access
         </button>
       ` : `
         <span style="color:#34d399;font-size:12px;font-weight:700;display:flex;align-items:center;gap:4px">
@@ -5216,12 +5238,12 @@ function closeOfflineDetailModal() {
 }
 
 async function quickApproveOfflineStudent(admissionId, phone, markPaid = true) {
-  if (!confirm(`Are you sure you want to approve this admission${markPaid ? ' and mark the ₹500 seat fee paid' : ''}?`)) return;
+  if (!confirm(`Are you sure you want to approve this admission${markPaid ? ' and mark the seat fee paid' : ''}?`)) return;
 
   try {
     const res = await lmsAdmin('approve-offline-admission', {
       method: 'POST',
-      body: { id: admissionId, markPaid }
+      body: { id: admissionId, phone: phone, markPaid }
     });
 
     if (res.approved) {

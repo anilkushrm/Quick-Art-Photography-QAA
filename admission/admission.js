@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
         batchPillEl.textContent = batchNum ? ('BATCH #' + batchNum) : 'ONLINE BATCH';
       }
       if (batchSubEl) {
-        batchSubEl.textContent = 'Official Direct Batch Admission. Form submit karte hi instant Official PVC Identity Card & Student LMS Portal Classroom unlock ho jayega.';
+        batchSubEl.textContent = 'Official Direct Batch Admission. Form submit hone ke baad Academy Admin approval milte hi Live Batch Classroom & ID Card unlock ho jayega.';
       }
 
       // Update Form Titles & Kicker for Online batch context
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
 
-      // Mark online batch mode for KYC & instant ID card issuance
+      // Mark online batch mode for KYC & ID card issuance
       window.isOnlineBatchMode = true;
       window.dynamicBatchNum = batchNum || '';
 
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var pTitle = payBlock.querySelector('h3');
         if (pTitle) pTitle.textContent = 'Batch KYC Registration & PVC Identity Card';
         var pSub = payBlock.querySelector('small');
-        if (pSub) pSub.textContent = 'Form submit hote hi aapka official PVC Student Identity Card generate ho jayega aur Classroom unlock hoga.';
+        if (pSub) pSub.textContent = 'Form submit hone par Admin approval ke baad aapka Live Batch Classroom aur ID Card unlock hoga.';
       }
 
       var feeCard = document.querySelector('.adm-fee-summary-card');
@@ -149,8 +149,8 @@ document.addEventListener('DOMContentLoaded', function () {
             <strong style="color:#10b981;">CONFIRMED / VERIFIED BATCH</strong>
           </div>
           <div class="adm-fee-row adm-fee-muted">
-            <span>PVC Student ID Card & LMS Portal:</span>
-            <span style="color:#fbbf24;">Instant Access & Verification Issued</span>
+            <span>Classroom Access &amp; ID Card:</span>
+            <span style="color:#fbbf24;">Admin Approval ke baad unlock</span>
           </div>
         `;
       }
@@ -162,10 +162,10 @@ document.addEventListener('DOMContentLoaded', function () {
             <input type="radio" name="paymentMode" value="online_batch_direct" checked>
             <div class="adm-choice-box">
               <div class="adm-choice-header">
-                <strong>⚡ Direct Batch Enrollment & Instant PVC ID Card</strong>
-                <span class="adm-badge-instant">RECOMMENDED</span>
+                <strong>⚡ Batch Registration (Pending Admin Approval)</strong>
+                <span class="adm-badge-instant">OFFICIAL BATCH</span>
               </div>
-              <p>Official registration confirm karte hi aapka verifiable PVC Student ID Card issue hoga aur Portal Classroom access active ho jayega.</p>
+              <p>Registration submit hone ke baad Academy Admin approval dete hi aapka Live Class &amp; Official ID Card activate hoga.</p>
             </div>
           </label>
           <label class="adm-pay-choice">
@@ -672,8 +672,16 @@ document.addEventListener('DOMContentLoaded', function () {
             if (data.paymentMode === 'online' && data.razorpay && window.Razorpay && !data.isOnlineBatch) {
               handleRazorpayPayment(data);
             } else {
-              // Direct confirmed or online batch enrolled
-              showSuccessModal(data, true);
+              // Form submitted (Batch or Offline) - Redirect directly to Webinar section
+              qaTrackAdmission(data, true);
+              if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '✓ Form Submitted! Redirecting...';
+              }
+              showStatus('✓ Admission Form safalta se submit ho gaya hai! Admin approval ke baad access unlock hoga. Aap baad me apna ID Card "My Profile" section se download kar sakte hain. Live & Webinars section me redirect kiya ja raha hai...', 'success');
+              setTimeout(function () {
+                window.location.href = '../app/?tab=live';
+              }, 1200);
             }
           })
           .catch(function (err) {
@@ -730,7 +738,15 @@ document.addEventListener('DOMContentLoaded', function () {
                   localStorage.setItem('qa_student_token', verifyData.token);
                 } catch (e) { }
               }
-              showSuccessModal(admissionData, true);
+              qaTrackAdmission(admissionData, true);
+              if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '✓ Payment Successful! Redirecting...';
+              }
+              showStatus('✓ Payment verify ho gaya hai! Admin approval ke baad admission confirm hoga. Aap baad me apna ID Card "My Profile" section se download kar sakte hain. Live & Webinars section me redirect kiya ja raha hai...', 'success');
+              setTimeout(function () {
+                window.location.href = '../app/?tab=live';
+              }, 1200);
             } else {
               showStatus('Payment verification failed. Please contact academy support: +91 9939800780', 'error');
             }

@@ -288,8 +288,8 @@ if ($action === 'get-students' && $method === 'GET') {
             $existingPhones[$p] = true;
             $isPaid = ($adm['paymentStatus'] ?? '') === 'paid';
             $isAppr = ($adm['status'] ?? '') === 'approved' || ($adm['status'] ?? '') === 'active';
-            $cId = map_offline_course_id($adm['courseTitle'] ?? '');
-            $enrolledCourses = ($isPaid && $cId) ? [$cId] : [];
+            $cId = !empty($adm['batchCourseId']) ? $adm['batchCourseId'] : map_offline_course_id($adm['courseTitle'] ?? '');
+            $enrolledCourses = ($isAppr && $cId) ? [$cId] : [];
             $enrolledNames = [];
             foreach ($enrolledCourses as $cid) {
                 if (isset($courseMap[$cid])) $enrolledNames[] = $courseMap[$cid];
@@ -1480,6 +1480,7 @@ if ($action === 'get-offline-admissions' && ($method === 'GET' || $method === 'P
 if ($action === 'approve-offline-admission' && $method === 'POST') {
     $body = read_json_body() ?: $_POST;
     $admissionId = trim($body['id'] ?? '');
+    $phone = clean_phone($body['phone'] ?? '');
     $markPaid = !empty($body['markPaid']);
 
     $admissionsFile = DATA_DIR . '/offline-admissions.json';
@@ -1487,37 +1488,65 @@ if ($action === 'approve-offline-admission' && $method === 'POST') {
     $found = false;
 
     foreach ($admissions as &$adm) {
-        if ($adm['id'] === $admissionId) {
+        $admPhone = clean_phone($adm['phone'] ?? '');
+        if ((!empty($admissionId) && $adm['id'] === $admissionId) || (!empty($phone) && $admPhone === $phone)) {
             $adm['status'] = 'approved';
             $adm['isApproved'] = true;
-            if ($markPaid) {
-                $adm['paymentStatus'] = 'paid';
-                $adm['paidAt'] = date('c');
-            }
+            $adm['paymentStatus'] = 'paid';
+            $adm['paidAt'] = date('c');
 
             // Update student record in students.json
             $students = get_all_students();
-            foreach ($students as &$stu) {
-                if (($stu['phone'] ?? '') === ($adm['phone'] ?? '')) {
-                    $stu['status'] = $markPaid ? 'active' : 'approved';
-                    $stu['isApproved'] = true;
-                    if ($markPaid) {
-                        $stu['isPaid500'] = true;
-                        $stu['paymentStatus'] = 'paid';
-                        $stu['appliedCourse'] = $adm['courseTitle'] ?? '';
+            $admCleanPhone = !empty($admPhone) ? $admPhone : $phone;
+            $foundStu = false;
+            $cId = !empty($adm['batchCourseId']) ? $adm['batchCourseId'] : map_offline_course_id($adm['courseTitle'] ?? '');
 
-                        $cId = map_offline_course_id($adm['courseTitle'] ?? '');
-                        if (!isset($stu['enrolledCourses']) || !is_array($stu['enrolledCourses'])) {
-                            $stu['enrolledCourses'] = [];
-                        }
-                        if ($cId && !in_array($cId, $stu['enrolledCourses'])) {
-                            $stu['enrolledCourses'][] = $cId;
-                        }
+            foreach ($students as &$stu) {
+                if ((!empty($admCleanPhone) && clean_phone($stu['phone'] ?? '') === $admCleanPhone) ||
+                    (!empty($adm['id']) && (($stu['offlineAdmissionId'] ?? '') === $adm['id'] || ($stu['enrollmentNo'] ?? '') === $adm['id']))) {
+                    $stu['status'] = 'active';
+                    $stu['isApproved'] = true;
+                    $stu['isPaid500'] = true;
+                    $stu['paymentStatus'] = 'paid';
+                    $stu['appliedCourse'] = $adm['courseTitle'] ?? ($stu['appliedCourse'] ?? '');
+                    if (!empty($adm['isOnlineBatch'])) {
+                        $stu['isOnlineBatch'] = true;
                     }
+
+                    if (!isset($stu['enrolledCourses']) || !is_array($stu['enrolledCourses'])) {
+                        $stu['enrolledCourses'] = [];
+                    }
+                    if ($cId && !in_array($cId, $stu['enrolledCourses'])) {
+                        $stu['enrolledCourses'][] = $cId;
+                    }
+                    $foundStu = true;
                     break;
                 }
             }
             unset($stu);
+
+            if (!$foundStu && !empty($admCleanPhone)) {
+                $students[] = [
+                    'id'                 => 'stu_' . time() . '_' . substr(md5($admCleanPhone), 0, 4),
+                    'name'               => $adm['fullName'] ?? 'Student',
+                    'phone'              => $admCleanPhone,
+                    'email'              => $adm['email'] ?? '',
+                    'avatar'             => $adm['photoUrl'] ?? '',
+                    'avatarUrl'          => $adm['photoUrl'] ?? '',
+                    'photoUrl'           => $adm['photoUrl'] ?? '',
+                    'enrolledCourses'    => $cId ? [$cId] : [],
+                    'isOfflineStudent'   => true,
+                    'isOnlineBatch'      => !empty($adm['isOnlineBatch']),
+                    'offlineAdmissionId' => $admissionId ?: ($adm['id'] ?? ''),
+                    'enrollmentNo'       => $admissionId ?: ($adm['id'] ?? ''),
+                    'appliedCourse'      => $adm['courseTitle'] ?? '',
+                    'paymentStatus'      => 'paid',
+                    'isPaid500'          => true,
+                    'isApproved'         => true,
+                    'status'             => 'active',
+                    'registeredAt'       => date('c')
+                ];
+            }
             save_all_students($students);
 
             $found = true;
@@ -1528,8 +1557,36 @@ if ($action === 'approve-offline-admission' && $method === 'POST') {
 
     if ($found) {
         file_put_contents($admissionsFile, json_encode($admissions, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
-        json_ok(['approved' => true, 'id' => $admissionId]);
+        json_ok(['approved' => true, 'id' => $admissionId, 'phone' => $phone]);
     }
+
+    // Fallback: If not in offline-admissions.json, directly approve in students.json
+    if (!empty($phone)) {
+        $students = get_all_students();
+        foreach ($students as &$stu) {
+            if (clean_phone($stu['phone'] ?? '') === $phone || (!empty($admissionId) && (($stu['offlineAdmissionId'] ?? '') === $admissionId || ($stu['enrollmentNo'] ?? '') === $admissionId))) {
+                $stu['status'] = 'active';
+                $stu['isApproved'] = true;
+                $stu['isPaid500'] = true;
+                $stu['paymentStatus'] = 'paid';
+                $cId = map_offline_course_id($stu['appliedCourse'] ?? '');
+                if (!isset($stu['enrolledCourses']) || !is_array($stu['enrolledCourses'])) {
+                    $stu['enrolledCourses'] = [];
+                }
+                if ($cId && !in_array($cId, $stu['enrolledCourses'])) {
+                    $stu['enrolledCourses'][] = $cId;
+                }
+                $found = true;
+                break;
+            }
+        }
+        unset($stu);
+        if ($found) {
+            save_all_students($students);
+            json_ok(['approved' => true, 'phone' => $phone]);
+        }
+    }
+
     json_err('Admission not found', 404);
 }
 

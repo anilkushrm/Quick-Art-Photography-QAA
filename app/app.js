@@ -621,16 +621,18 @@ function switchTab(tabName, fromPopstate = false) {
 
 function setupURLRouter() {
   const params = new URLSearchParams(window.location.search);
-  const targetTab = params.get('tab');
+  const hash = (window.location.hash || '').replace('#', '').trim().toLowerCase();
+  const targetTab = params.get('tab') || (['dashboard', 'mycourses', 'live', 'profile'].includes(hash) ? hash : null);
   const targetId = params.get('id');
 
   if (targetTab && ['dashboard', 'mycourses', 'live', 'profile'].includes(targetTab)) {
+    switchTab(targetTab);
     setTimeout(() => {
       switchTab(targetTab);
       if (targetTab === 'live' && targetId) {
         openLiveClassPlayerById(targetId);
       }
-    }, 900);
+    }, 400);
   }
 }
 
@@ -1451,6 +1453,7 @@ async function loadCoursesTab() {
   try {
     const res = await apiFetch('my-courses');
     enrolledCourses = res.courses || [];
+    window.offlinePendingData = res.offlinePending || null;
     filterCourses('all');
   } catch (err) {
     listEl.innerHTML = `
@@ -1484,6 +1487,20 @@ function filterCourses(filter) {
   }
 
   if (!filtered.length) {
+    if (window.offlinePendingData && window.offlinePendingData.isPendingApproval) {
+      listEl.innerHTML = `
+        <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:14px; padding:24px 18px; text-align:center; margin:16px 0;">
+          <div style="font-size:36px; margin-bottom:8px;">⏳</div>
+          <div style="font-size:16px; font-weight:700; color:#fde68a; margin-bottom:6px;">Admission Application Under Review</div>
+          <div style="font-size:13px; color:#cbd5e1; line-height:1.5; max-width:440px; margin:0 auto 12px;">
+            Aapka <strong>${escHtml(window.offlinePendingData.appliedCourse || 'Course')}</strong> admission form submit ho chuka hai. Academy Admin dwara verification ke baad aapka complete Classroom aur lessons access active ho jayega.
+          </div>
+          <div style="font-size:12px; color:#94a3b8;">
+            🪪 Official ID Card dekhne ke liye <strong>"My Profile"</strong> tab par jayein.
+          </div>
+        </div>`;
+      return;
+    }
     listEl.innerHTML = `
       <div style="text-align:center; padding: 40px 16px; color: var(--text-muted);">
         <div style="font-size: 32px; margin-bottom: 8px;">🎓</div>
@@ -2210,11 +2227,19 @@ async function loadLiveClassesTab() {
               <div class="enrolled-courses-pills">
                 ${enrolledNames.map(name => `<span class="enrolled-course-pill">✓ ${escHtml(name)}</span>`).join('')}
               </div>
+            ` : (currentStudent && (!currentStudent.isApproved || currentStudent.status === 'pending_approval') && (currentStudent.isOfflineStudent || currentStudent.appliedCourse) ? `
+              <div class="empty-paid-live-tip" style="color:#fde68a; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); padding:12px; border-radius:10px; font-size:13px; line-height:1.5; margin-bottom:10px;">
+                ⏳ <strong>Batch Admission Application Under Review</strong><br>
+                Aapka admission form receive ho chuka hai (Course: <strong>${escHtml(currentStudent.appliedCourse || 'Live Batch')}</strong>). Academy Admin dwara verify &amp; approve hone ke baad Live Interactive Classroom unlock ho jayega.
+                <div style="margin-top:6px; font-size:11.5px; color:#cbd5e1;">
+                  🪪 <em>Aap apna official ID Card profile tab ("👤 My Profile") me jakar dekh aur download kar sakte hain.</em>
+                </div>
+              </div>
             ` : `
               <div class="empty-paid-live-tip" style="color:#fca5a5; background:rgba(239,68,68,0.08); border-color:rgba(239,68,68,0.2);">
                 ⚠️ Aapka koi paid course active nahi mila. Courses tab me jakar enroll karein.
               </div>
-            `}
+            `)}
             <div class="empty-paid-live-tip">
               📌 Agli live class schedule hote hi uski date, time aur join button yahin update ho jayegi.
             </div>

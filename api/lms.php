@@ -1050,9 +1050,19 @@ if ($action === 'me' && $method === 'GET') {
                     $student['avatarUrl'] = $a['photoUrl'];
                     $student['photoUrl'] = $a['photoUrl'];
                 }
-                if (($a['paymentStatus'] ?? '') === 'paid') {
-                    $student['isPaid500'] = true;
-                    $student['paymentStatus'] = 'paid';
+                $isAdmApproved = (!empty($a['isApproved']) || ($a['status'] ?? '') === 'approved' || ($a['status'] ?? '') === 'active') && (($a['status'] ?? '') !== 'pending_approval');
+                if ($isAdmApproved) {
+                    $student['isApproved'] = true;
+                    $student['status'] = 'active';
+                    if (($a['paymentStatus'] ?? '') === 'paid') {
+                        $student['isPaid500'] = true;
+                        $student['paymentStatus'] = 'paid';
+                    }
+                } else {
+                    if (empty($student['isApproved'])) {
+                        $student['isApproved'] = false;
+                        $student['status'] = 'pending_approval';
+                    }
                 }
                 break;
             }
@@ -1089,26 +1099,25 @@ if ($action === 'my-courses' && $method === 'GET') {
     if (!is_array($enrolledIds)) $enrolledIds = [];
 
     $isOffline = !empty($student['isOfflineStudent']) || !empty($student['offlineAdmissionId']) || !empty($student['appliedCourse']);
-    $isPaid500 = !empty($student['isPaid500']) || (($student['paymentStatus'] ?? '') === 'paid');
+    $isApproved = !empty($student['isApproved']) && in_array($student['status'] ?? '', ['active', 'approved']);
     $appliedCourseTitle = trim($student['appliedCourse'] ?? '');
 
-    // Offline Student Rules:
-    // 1. Offline student must have paid ₹500 to unlock their selected offline course.
-    // 2. If ₹500 is paid, their offline course is guaranteed to be unlocked in enrolledCourses.
-    // 3. If ₹500 is NOT paid, their offline course is locked/hidden from active courses,
-    //    BUT any online courses purchased or courses manually assigned by admin remain active and watchable!
+    // Admission Form Course Rules (Applies to both Offline & Online Batch forms):
+    // 1. MUST BE APPROVED BY ADMIN to unlock applied course in enrolledCourses.
+    // 2. If NOT approved, any course mapped from the form is locked/stripped.
+    // 3. BUT direct recorded online courses (purchased via Razorpay) and workshop tickets (₹21) ALWAYS remain active!
     if ($isOffline && !empty($appliedCourseTitle)) {
-        $offlineCourseId = map_offline_course_id($appliedCourseTitle);
-        if ($isPaid500) {
-            if (!in_array($offlineCourseId, $enrolledIds)) {
-                $enrolledIds[] = $offlineCourseId;
+        $formCourseId = map_offline_course_id($appliedCourseTitle);
+        if ($isApproved) {
+            if (!in_array($formCourseId, $enrolledIds)) {
+                $enrolledIds[] = $formCourseId;
                 $student['enrolledCourses'] = $enrolledIds;
                 $allStudents = load_students();
                 foreach ($allStudents as &$s) {
-                    if (($s['phone'] ?? '') === ($student['phone'] ?? '')) {
+                    if (clean_phone($s['phone'] ?? '') === clean_phone($student['phone'] ?? '')) {
                         $s['enrolledCourses'] = $enrolledIds;
-                        $s['isPaid500'] = true;
-                        $s['paymentStatus'] = 'paid';
+                        $s['isApproved'] = true;
+                        $s['status'] = 'active';
                         break;
                     }
                 }
@@ -1116,9 +1125,9 @@ if ($action === 'my-courses' && $method === 'GET') {
                 save_students($allStudents);
             }
         } else {
-            // Not paid ₹500: strip the offline course from active courses list so it cannot be accessed
-            $enrolledIds = array_values(array_filter($enrolledIds, function($id) use ($offlineCourseId) {
-                return $id !== $offlineCourseId;
+            // NOT APPROVED by Admin yet: strip the form course from active list so it cannot be accessed
+            $enrolledIds = array_values(array_filter($enrolledIds, function($id) use ($formCourseId) {
+                return $id !== $formCourseId;
             }));
         }
     }
@@ -1285,14 +1294,16 @@ if ($action === 'my-courses' && $method === 'GET') {
 
     $response = ['courses' => $result];
 
-    // If offline student has ₹500 fee pending, return clean offlinePending metadata
-    if ($isOffline && !$isPaid500 && !empty($appliedCourseTitle)) {
+    // If student applied via admission form (offline or online batch) and is NOT yet approved by admin
+    if ($isOffline && !$isApproved && !empty($appliedCourseTitle)) {
         $response['offlinePending'] = [
             'hasPendingOffline' => true,
+            'isPendingApproval' => true,
+            'isOnlineBatch'     => !empty($student['isOnlineBatch']),
             'appliedCourse'     => $appliedCourseTitle,
             'admissionId'       => $student['offlineAdmissionId'] ?? '',
-            'feeAmount'         => 500,
-            'paymentStatus'     => $student['paymentStatus'] ?? 'unpaid'
+            'feeAmount'         => !empty($student['isOnlineBatch']) ? 0 : 500,
+            'paymentStatus'     => $student['paymentStatus'] ?? 'pending_approval'
         ];
     }
 
@@ -2563,8 +2574,12 @@ if ($action === 'get-live-session' && ($method === 'GET' || $method === 'POST'))
         $isAuth = true;
     } elseif ($targetType === 'course') {
         // STRICT COURSE BATCH AUTHORIZATION:
-        // Must be enrolled in this course batch or have all-access.
-        // Workshop students (₹21 tickets) CANNOT access!
+        // Must be an admin-approved student and enrolled in this course batch or have all-access.
+        $isApprovedStu = !empty($stu['isApproved']) && in_array($stu['status'] ?? '', ['active', 'approved']);
+        if (!$isApprovedStu) {
+            json_err('Aapka Batch Admission Form review me hai. Admin approval ke baad Live Batch class unlock hogi.', 403);
+        }
+
         $isBatchClass = (bool)preg_match('/batch\s*[-_]?\s*\d+/i', ($target['title'] ?? '') . ' ' . ($target['id'] ?? ''));
         $hasRealCourse = false;
         foreach ($enrolledList as $eid) {
@@ -3070,8 +3085,10 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         'certUrl'       => $certUrl,
         'paymentMode'   => $paymentMode,
         'feeAmount'     => $admissionFee,
-        'paymentStatus' => $isOnlineBatch ? 'paid' : (($paymentMode === 'cash') ? 'pending_campus' : 'awaiting_online_payment'),
-        'status'        => $isOnlineBatch ? 'active' : (($paymentMode === 'cash') ? 'pending_approval' : 'submitted'),
+        'paymentStatus' => $isOnlineBatch ? 'pending_verification' : (($paymentMode === 'cash') ? 'pending_campus' : 'awaiting_online_payment'),
+        'status'        => 'pending_approval',
+        'isApproved'    => false,
+        'isPaid500'     => false,
         'phoneVerified' => $phoneVerified,
         'emailVerified' => $emailVerified,
         'verificationNote' => $phoneVerified ? 'Verified via WhatsApp OTP' : 'Direct Batch Registration',
@@ -3191,26 +3208,22 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         $existingStudent['state'] = $state;
         $existingStudent['pincode'] = $pincode;
 
+        // ALL forms (Online Batch or Offline) require Admin Approval!
+        // Preserve any previously active status or previous course enrollments if student was already approved
+        if (empty($existingStudent['isApproved'])) {
+            $existingStudent['isApproved'] = false;
+            $existingStudent['status'] = 'pending_approval';
+            $existingStudent['paymentStatus'] = $isOnlineBatch ? 'pending_verification' : (($paymentMode === 'cash') ? 'pay_at_campus' : 'unpaid');
+            $existingStudent['isPaid500'] = false;
+        }
         if ($isOnlineBatch) {
             $existingStudent['isOnlineBatch'] = true;
-            if (!isset($existingStudent['enrolledCourses']) || !is_array($existingStudent['enrolledCourses'])) {
-                $existingStudent['enrolledCourses'] = [];
+            if ($batchCourseId) {
+                $existingStudent['pendingCourseId'] = $batchCourseId;
             }
-            if ($batchCourseId && !in_array($batchCourseId, $existingStudent['enrolledCourses'])) {
-                $existingStudent['enrolledCourses'][] = $batchCourseId;
-            }
-            $existingStudent['paymentStatus'] = 'paid';
-            $existingStudent['isPaid500'] = true;
-            $existingStudent['isApproved'] = true;
-            $existingStudent['status'] = 'active';
-        } else if (empty($existingStudent['isPaid500'])) {
-            $existingStudent['paymentStatus'] = ($paymentMode === 'cash') ? 'pay_at_campus' : 'unpaid';
-            $existingStudent['isPaid500'] = false;
-            $existingStudent['isApproved'] = false;
-            $existingStudent['status'] = ($paymentMode === 'cash') ? 'pending_approval' : 'pending_payment';
         }
     } else {
-        $enrolledList = ($isOnlineBatch && $batchCourseId) ? [$batchCourseId] : [];
+        // New student registering via form: NO courses enrolled until Admin approval!
         $students[] = [
             'id'                 => 'stu_' . time() . '_' . substr(md5($phone), 0, 4),
             'name'               => $fullName,
@@ -3219,16 +3232,17 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
             'avatar'             => $photoUrl,
             'avatarUrl'          => $photoUrl,
             'photoUrl'           => $photoUrl,
-            'enrolledCourses'    => $enrolledList,
+            'enrolledCourses'    => [],
             'isOfflineStudent'   => true,
-            'isOnlineBatch'      => $isOnlineBatch,
+            'isOnlineBatch'      => (bool)$isOnlineBatch,
             'offlineAdmissionId' => $admissionId,
             'enrollmentNo'       => $admissionId,
             'appliedCourse'      => $courseTitle,
-            'paymentStatus'      => $isOnlineBatch ? 'paid' : (($paymentMode === 'cash') ? 'pay_at_campus' : 'unpaid'),
-            'isPaid500'          => $isOnlineBatch ? true : false,
-            'isApproved'         => $isOnlineBatch ? true : false,
-            'status'             => $isOnlineBatch ? 'active' : (($paymentMode === 'cash') ? 'pending_approval' : 'pending_payment'),
+            'pendingCourseId'    => $batchCourseId,
+            'paymentStatus'      => $isOnlineBatch ? 'pending_verification' : (($paymentMode === 'cash') ? 'pay_at_campus' : 'unpaid'),
+            'isPaid500'          => false,
+            'isApproved'         => false,
+            'status'             => 'pending_approval',
             'studioName'         => $studioName,
             'currentRole'        => $currentRole,
             'workCity'           => $workCity,
@@ -3254,12 +3268,14 @@ if ($action === 'submit-offline-admission' && $method === 'POST') {
         'feeAmount'     => $admissionFee,
         'paymentMode'   => $paymentMode,
         'isOnlineBatch' => $isOnlineBatch,
+        'status'        => 'pending_approval',
+        'isApproved'    => false,
         'token'         => $sessionToken,
         'razorpay'      => $razorpayData,
         'message'       => $isOnlineBatch
-            ? 'Online Batch Admission form successfully submit ho gaya hai! Aapka Official PVC Identity Card generate ho gaya hai.'
+            ? 'Online Batch Admission form successfully submit ho gaya hai! Admin team dwara verify aur approve hone ke baad aapka Portal aur Batch Classroom unlock hoga.'
             : (($paymentMode === 'cash')
-                ? 'Admission form successfully submit ho gaya hai! ₹500 registration fee aap On-Campus Siwan aakar pay kar sakte hain.'
+                ? 'Admission form successfully submit ho gaya hai! ₹500 registration fee aap On-Campus Siwan aakar pay kar sakte hain. Admin approval ke baad access unlock hoga.'
                 : 'Admission form successfully submit ho gaya hai! Kripya ₹500 registration fee pay karein.')
     ]);
 }
@@ -3295,8 +3311,8 @@ if ($action === 'verify-offline-admission-payment' && $method === 'POST') {
         if ($adm['id'] === $admissionId || (!empty($adm['razorpayOrderId']) && $adm['razorpayOrderId'] === $orderId)) {
             $adm['paymentStatus'] = 'paid';
             $adm['isPaid500'] = true;
-            $adm['isApproved'] = true;
-            $adm['status'] = 'confirmed';
+            $adm['isApproved'] = false; // Requires Admin approval
+            $adm['status'] = 'paid_pending_approval';
             $adm['razorpayPaymentId'] = $paymentId;
             $adm['paidAt'] = date('c');
             $studentPhone = $adm['phone'];
@@ -3330,23 +3346,17 @@ if ($action === 'verify-offline-admission-payment' && $method === 'POST') {
         ];
         file_put_contents($transFile, json_encode($transactions, JSON_PRETTY_PRINT), LOCK_EX);
 
-        // Unlock course in My Courses only for students who paid ₹500
+        // Update student record (marked paid, but pending admin approval)
         $courseId = map_offline_course_id($admCourseTitle);
         $students = get_all_students();
         $foundStu = false;
         foreach ($students as &$stu) {
             if (clean_phone($stu['phone'] ?? '') === clean_phone($studentPhone)) {
-                if (!isset($stu['enrolledCourses']) || !is_array($stu['enrolledCourses'])) {
-                    $stu['enrolledCourses'] = [];
-                }
-                if ($courseId && !in_array($courseId, $stu['enrolledCourses'])) {
-                    $stu['enrolledCourses'][] = $courseId;
-                }
                 $stu['isPaid500'] = true;
                 $stu['paymentStatus'] = 'paid';
                 $stu['appliedCourse'] = $admCourseTitle;
-                $stu['isApproved'] = true;
-                $stu['status'] = 'active';
+                $stu['isApproved'] = false;
+                $stu['status'] = 'pending_approval';
                 if (!empty($admRecord['photoUrl'])) {
                     $stu['avatar'] = $admRecord['photoUrl'];
                     $stu['avatarUrl'] = $admRecord['photoUrl'];
@@ -3370,26 +3380,29 @@ if ($action === 'verify-offline-admission-payment' && $method === 'POST') {
             $students[] = [
                 'id'                 => 'stu_' . time() . '_' . substr(md5($studentPhone), 0, 4),
                 'name'               => $studentName,
-                'phone'              => clean_phone($studentPhone),
+                'phone'              => $studentPhone,
                 'email'              => $admRecord['email'] ?? '',
                 'avatar'             => $admRecord['photoUrl'] ?? '',
                 'avatarUrl'          => $admRecord['photoUrl'] ?? '',
                 'photoUrl'           => $admRecord['photoUrl'] ?? '',
-                'enrolledCourses'    => $courseId ? [$courseId] : [],
+                'enrolledCourses'    => [],
                 'isOfflineStudent'   => true,
                 'offlineAdmissionId' => $admissionId,
                 'enrollmentNo'       => $admissionId,
                 'appliedCourse'      => $admCourseTitle,
                 'paymentStatus'      => 'paid',
                 'isPaid500'          => true,
-                'isApproved'         => true,
-                'status'             => 'active',
+                'isApproved'         => false,
+                'status'             => 'pending_approval',
                 'studioName'         => $admRecord['studioName'] ?? '',
                 'currentRole'        => $admRecord['currentRole'] ?? '',
-                'workCity'           => $admRecord['city'] ?? '',
+                'workCity'           => $admRecord['workCity'] ?? '',
                 'fatherName'         => $admRecord['fatherName'] ?? '',
                 'bloodGroup'         => $admRecord['bloodGroup'] ?? '',
                 'address'            => $admRecord['address'] ?? '',
+                'city'               => $admRecord['city'] ?? '',
+                'state'              => $admRecord['state'] ?? '',
+                'pincode'            => $admRecord['pincode'] ?? '',
                 'registeredAt'       => date('c')
             ];
         }

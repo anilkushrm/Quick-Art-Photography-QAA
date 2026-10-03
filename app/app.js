@@ -2997,14 +2997,11 @@ async function openLiveRecording(classId) {
   const session = allLiveClasses.find(c => c.id === classId);
   if (!session) return;
   if (!isStudentEnrolledInLive(session)) {
-    toast('Aap is recording ke liye enrolled nahi hain.');
+    toast('Aap is recording ke liye enrolled nahi hain.', false);
     return;
   }
-  if (session.replayUrl) {
-    window.open(session.replayUrl, '_blank');
-  } else {
-    toast('Recording jald hi upload ho jayegi.');
-  }
+  // Open directly in the high-definition In-App Cinema Studio
+  openLiveStudio(classId);
 }
 
 // ==========================================================================

@@ -3143,50 +3143,488 @@ function handleProfilePhotoUpload(e) {
 }
 
 
-// Student ID Card Modal
+// ==========================================================================
+// 9.4 OFFICIAL STUDENT ID CARD (CR80 PVC) - IDENTICAL TO WEBSITE PORTAL
+// ==========================================================================
+let currentAppIdCardSide = 'front';
+
 function openStudentIdCardModal() {
-  if (!currentStudent) return;
-  document.getElementById('idcard-name').textContent = currentStudent.name || 'Student';
-  document.getElementById('idcard-enrollno').textContent = currentStudent.enrollmentNo || currentStudent.id || 'QAA-2026-001';
-  document.getElementById('idcard-phone').textContent = `+91 ${currentStudent.phone || '••••••••••'}`;
-  document.getElementById('idcard-program').textContent = currentStudent.appliedCourse || 'Master Media Arts LMS';
+  const stu = currentStudent || JSON.parse(localStorage.getItem('qaa_student_info') || '{}');
+  if (!stu || (!stu.phone && !stu.name)) {
+    toast('Please log in to view your official Student ID Card', false);
+    return;
+  }
 
-  const photo = currentStudent.photoUrl || currentStudent.avatar || currentStudent.avatarUrl || '../home-assets/ec55a6be3747a9.webp';
-  document.getElementById('idcard-photo').src = photo;
+  const stuId = stu.offlineAdmissionId || stu.enrollmentNo || stu.id || ('QAA-2026-' + (stu.phone ? String(stu.phone).slice(-4) : 'ADM'));
+  const stuName = stu.name || 'Verified Student';
+  const rawPhone = stu.phone ? String(stu.phone).replace(/\D/g, '').slice(-10) : '9939800780';
+  const stuPhone = '+91 ' + rawPhone;
+  const stuCourse = stu.appliedCourse || 'Master Photography & Filmmaking Diploma';
+  const stuStudio = stu.studioName || 'Quick Art Photography';
+  const stuCity = stu.workCity || stu.city || 'Patna, Bihar';
+  const stuBlood = stu.bloodGroup || 'O+';
+  const stuAvatar = stu.avatar || stu.avatarUrl || stu.photoUrl || localStorage.getItem('qaa_avatar_' + (stu.id || '')) || localStorage.getItem('qaa_student_avatar') || '../assets/default-student-avatar.svg';
 
-  document.getElementById('modal-id-card').classList.add('active');
+  // Front elements
+  const nameEl = document.getElementById('app-idcard-name');
+  const courseEl = document.getElementById('app-idcard-course');
+  const idEl = document.getElementById('app-idcard-id');
+  const phoneEl = document.getElementById('app-idcard-phone');
+  const studioEl = document.getElementById('app-idcard-studio');
+  const cityEl = document.getElementById('app-idcard-city');
+  const bloodEl = document.getElementById('app-idcard-blood');
+  const photoEl = document.getElementById('app-idcard-photo');
+  const qrEl = document.getElementById('app-idcard-qr');
+  const barcodeValEl = document.getElementById('app-idcard-barcode-val');
+
+  if (nameEl) nameEl.textContent = stuName;
+  if (courseEl) courseEl.textContent = stuCourse;
+  if (idEl) idEl.textContent = stuId;
+  if (phoneEl) phoneEl.textContent = stuPhone;
+  if (studioEl) studioEl.textContent = stuStudio;
+  if (cityEl) cityEl.textContent = stuCity;
+  if (bloodEl) bloodEl.textContent = stuBlood;
+  if (photoEl) {
+    photoEl.src = stuAvatar;
+    photoEl.alt = stuName;
+  }
+
+  // Live QR Verification Link (Identical to Website Portal)
+  const verifyUrl = `https://quickartphotography.in/admission/verify.html?id=${encodeURIComponent(stuId)}&phone=${encodeURIComponent(rawPhone)}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(verifyUrl)}`;
+  if (qrEl) qrEl.src = qrUrl;
+
+  if (barcodeValEl) barcodeValEl.textContent = `* ${stuId} *`;
+
+  // Reset to front side
+  switchAppIdCardSide('front');
+
+  const modal = document.getElementById('modal-id-card');
+  if (modal) modal.classList.add('active');
   pushNavState({ screen: 'modal', modal: 'idcard' });
 }
 
 function closeStudentIdCardModal(fromPopstate = false) {
-  document.getElementById('modal-id-card').classList.remove('active');
+  const modal = document.getElementById('modal-id-card');
+  if (modal) modal.classList.remove('active');
   if (!fromPopstate && window.history.state && window.history.state.modal === 'idcard') {
     try { window.history.back(); } catch (e) {}
   }
 }
 
-async function downloadStudentIdCard() {
-  const cardEl = document.getElementById('idcard-canvas-container');
-  if (!cardEl || typeof html2canvas === 'undefined') {
-    toast('Generating card download…');
-    return;
-  }
-  try {
-    const canvas = await html2canvas(cardEl, { scale: 2, useCORS: true, backgroundColor: '#0b1120' });
-    const link = document.createElement('a');
-    link.download = `QuickArt_StudentID_${currentStudent?.id || 'Student'}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    toast('🪪 Student ID Card downloaded!');
-  } catch (err) {
-    toast('Download error. Please take a screenshot.', false);
+function switchAppIdCardSide(side = 'front') {
+  currentAppIdCardSide = side;
+  const frontEl = document.getElementById('app-idcard-front');
+  const backEl = document.getElementById('app-idcard-back');
+  const frontTab = document.getElementById('btn-idcard-front-tab');
+  const backTab = document.getElementById('btn-idcard-back-tab');
+
+  if (side === 'front') {
+    if (frontEl) frontEl.style.display = 'block';
+    if (backEl) backEl.style.display = 'none';
+    if (frontTab) frontTab.classList.add('active');
+    if (backTab) backTab.classList.remove('active');
+  } else {
+    if (frontEl) frontEl.style.display = 'none';
+    if (backEl) backEl.style.display = 'block';
+    if (frontTab) frontTab.classList.remove('active');
+    if (backTab) backTab.classList.add('active');
   }
 }
 
-function openCertificatesModal() {
-  switchTab('mycourses');
-  filterCourses('completed');
-  toast('Accredited Course Certificates Vault');
+async function downloadAppIdCard(side = 'front') {
+  const targetId = `app-idcard-${side}`;
+  const el = document.getElementById(targetId);
+  if (!el) {
+    toast('ID card element not found', false);
+    return;
+  }
+
+  // Ensure element is visible during capture
+  const prevDisplay = el.style.display;
+  el.style.display = 'block';
+
+  const stu = currentStudent || JSON.parse(localStorage.getItem('qaa_student_info') || '{}');
+  const cleanName = (stu.name || 'Student').replace(/[^a-zA-Z0-9]/g, '_');
+  const filename = `QAA_ID_Card_${side.toUpperCase()}_${cleanName}.png`;
+
+  toast(`Generating High-Resolution ${side.toUpperCase()} ID Card…`);
+
+  if (typeof html2canvas === 'function') {
+    try {
+      const canvas = await html2canvas(el, {
+        scale: 3, // 300 DPI high-definition PVC print quality
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#0a0c13',
+        logging: false
+      });
+      el.style.display = prevDisplay;
+
+      const dataUrl = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      toast(`✅ ${side.toUpperCase()} ID Card downloaded!`);
+      return;
+    } catch (err) {
+      el.style.display = prevDisplay;
+      console.warn('html2canvas download error:', err);
+      toast('Download error. Please take a screenshot.', false);
+    }
+  } else {
+    el.style.display = prevDisplay;
+    toast('Library loading. Please try again in a moment.', false);
+  }
+}
+
+function printAppIdCard() {
+  const front = document.getElementById('app-idcard-front');
+  const back = document.getElementById('app-idcard-back');
+  if (!front || !back) return;
+
+  const printWin = window.open('', '_blank', 'width=880,height=750');
+  if (!printWin) {
+    toast('Please allow popups to print ID card', false);
+    return;
+  }
+
+  printWin.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Quick Art Photography Academy - Student ID Card</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="app.css">
+        <style>
+          @page { size: auto; margin: 15mm; }
+          body {
+            background: #ffffff !important;
+            color: #000000 !important;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          }
+          .print-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+          }
+          .adm-issued-id-card {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15) !important;
+            border: 1px solid rgba(0,0,0,0.2) !important;
+            display: block !important;
+            page-break-inside: avoid;
+          }
+          .print-header {
+            text-align: center;
+            margin-bottom: 24px;
+          }
+          .print-header h2 { margin: 0 0 4px; font-size: 18px; color: #0a0c13; }
+          .print-header p { margin: 0; font-size: 12px; color: #666; }
+        </style>
+      </head>
+      <body>
+        <div class="print-header">
+          <h2>QUICK ART PHOTOGRAPHY ACADEMY</h2>
+          <p>Official Student Identification Card (CR80 PVC Front &amp; Back)</p>
+        </div>
+        <div class="print-container">
+          ${front.outerHTML}
+          ${back.outerHTML}
+        </div>
+        <script>
+          setTimeout(() => {
+            window.print();
+            window.close();
+          }, 500);
+        <\/script>
+      </body>
+    </html>
+  `);
+  printWin.document.close();
+}
+
+// ==========================================================================
+// 9.4B OFFICIAL ACCREDITED CERTIFICATE - IDENTICAL TO WEBSITE PORTAL
+// ==========================================================================
+let activeAppCertData = null;
+
+function getCourseCodeForCert(courseId) {
+  if (!courseId) return 'PR';
+  const id = String(courseId).toLowerCase();
+  if (id.includes('pre-wedding')) return 'PW';
+  if (id.includes('album')) return 'AD';
+  if (id.includes('premiere')) return 'PR';
+  if (id.includes('edius')) return 'ED';
+  if (id.includes('davinci') || id.includes('resolve')) return 'DR';
+  if (id.includes('cinematic') || id.includes('wedding')) return 'CE';
+  if (id.includes('website') || id.includes('web')) return 'WD';
+  if (id.includes('marketing') || id.includes('digital')) return 'DM';
+  if (id.includes('auto')) return 'AU';
+  return 'GEN';
+}
+
+function generateAppCertificateId(courseId, phone) {
+  const code = getCourseCodeForCert(courseId);
+  const enroll = currentStudent && (currentStudent.offlineAdmissionId || currentStudent.enrollmentNo);
+  if (enroll) {
+    const parts = String(enroll).split('-');
+    const suffix = parts[parts.length - 1];
+    return `QAA-2026-${code}-${suffix}`;
+  }
+  const rawPhone = String(phone || (currentStudent ? currentStudent.phone : '0780')).replace(/\D/g, '');
+  const suffix = rawPhone.slice(-4) || '0780';
+  return `QAA-2026-${code}-${suffix}`;
+}
+
+function openCertificatesModal(courseId) {
+  const stu = currentStudent || JSON.parse(localStorage.getItem('qaa_student_info') || '{}');
+  if (!stu || (!stu.phone && !stu.name)) {
+    toast('Please log in to view your Certificates', false);
+    return;
+  }
+
+  // Get enrolled courses list if available
+  let enrolledList = Array.isArray(enrolledCourses) && enrolledCourses.length ? enrolledCourses : [];
+  if (!enrolledList.length && Array.isArray(allAcademyCourses) && allAcademyCourses.length && Array.isArray(stu.enrolledCourses)) {
+    enrolledList = allAcademyCourses.filter(c => stu.enrolledCourses.includes(c.id));
+  }
+
+  // Determine active course
+  let selectedCourse = null;
+  if (courseId) {
+    selectedCourse = enrolledList.find(c => c.id === courseId) || 
+                     (Array.isArray(allAcademyCourses) ? allAcademyCourses.find(c => c.id === courseId) : null);
+  }
+  if (!selectedCourse && enrolledList.length > 0) {
+    selectedCourse = enrolledList[0];
+  }
+  if (!selectedCourse) {
+    selectedCourse = {
+      id: 'master-class',
+      title: stu.appliedCourse || 'Master Video Editing & Filmmaking Diploma'
+    };
+  }
+
+  // Render course picker pills if multiple enrolled courses
+  const pickerRow = document.getElementById('cert-course-picker-row');
+  if (pickerRow) {
+    if (enrolledList.length > 1) {
+      pickerRow.style.display = 'flex';
+      pickerRow.innerHTML = enrolledList.map(c => `
+        <button type="button" class="cert-course-pill ${c.id === selectedCourse.id ? 'active' : ''}" 
+                onclick="openCertificatesModal('${c.id}')"
+                style="padding:6px 14px; font-size:12px; font-weight:600; border-radius:20px; white-space:nowrap; border:1px solid ${c.id === selectedCourse.id ? 'var(--gold)' : 'rgba(255,255,255,0.15)'}; background:${c.id === selectedCourse.id ? 'rgba(216,161,83,0.2)' : 'rgba(255,255,255,0.05)'}; color:${c.id === selectedCourse.id ? '#ecc779' : 'var(--text-muted)'}; cursor:pointer;">
+          ${c.title}
+        </button>
+      `).join('');
+    } else {
+      pickerRow.style.display = 'none';
+      pickerRow.innerHTML = '';
+    }
+  }
+
+  populateAppCertificateUI(stu, selectedCourse);
+
+  const modal = document.getElementById('modal-certificate');
+  if (modal) modal.classList.add('active');
+  pushNavState({ screen: 'modal', modal: 'certificate' });
+}
+
+function populateAppCertificateUI(stu, course) {
+  const name = stu.name || 'Verified Student';
+  const cTitle = (course && course.title) || stu.appliedCourse || 'Master Video Editing & Filmmaking Diploma';
+  const cId = (course && course.id) || 'master-class';
+  const certId = generateAppCertificateId(cId, stu.phone);
+  const enrollNo = stu.offlineAdmissionId || stu.enrollmentNo || ('QAA-2026-' + (stu.phone ? String(stu.phone).slice(-4) : '8842'));
+
+  const today = new Date().toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
+  const nameEl = document.getElementById('app-cert-student-name');
+  const courseEl = document.getElementById('app-cert-course-name');
+  const enrollCodeEl = document.getElementById('app-cert-enroll-code');
+  const certIdEl = document.getElementById('app-cert-id-val');
+  const dateEl = document.getElementById('app-cert-date-val');
+  const qrEl = document.getElementById('app-cert-qr-img');
+
+  if (nameEl) nameEl.textContent = name;
+  if (courseEl) courseEl.textContent = cTitle;
+  if (enrollCodeEl) enrollCodeEl.textContent = enrollNo;
+  if (certIdEl) certIdEl.textContent = `ID: ${certId}`;
+  if (dateEl) dateEl.textContent = today;
+
+  // Verification URL identical to website portal
+  const verifyUrl = `https://quickartphotography.in/portal/?verify=${encodeURIComponent(certId)}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(verifyUrl)}&margin=4`;
+  if (qrEl) {
+    qrEl.crossOrigin = 'anonymous';
+    qrEl.src = qrUrl;
+    qrEl.alt = `Verify ${certId}`;
+  }
+
+  activeAppCertData = {
+    studentName: name,
+    courseTitle: cTitle,
+    courseId: cId,
+    certificateId: certId,
+    issuedDate: today,
+    verifyUrl: verifyUrl
+  };
+}
+
+function closeCertificateModal(fromPopstate = false) {
+  const modal = document.getElementById('modal-certificate');
+  if (modal) modal.classList.remove('active');
+  if (!fromPopstate && window.history.state && window.history.state.modal === 'certificate') {
+    try { window.history.back(); } catch (e) {}
+  }
+}
+
+async function downloadAppCertificatePNG() {
+  if (!activeAppCertData) {
+    toast('Certificate not ready', false);
+    return;
+  }
+  toast('Preparing HD Certificate Download (300 DPI)…');
+
+  if (document.fonts && document.fonts.ready) {
+    try { await document.fonts.ready; } catch (e) {}
+  }
+
+  const certElement = document.getElementById('certificate-print-area');
+  if (typeof html2canvas !== 'undefined' && certElement) {
+    try {
+      const offscreenWrap = document.createElement('div');
+      offscreenWrap.style.position = 'fixed';
+      offscreenWrap.style.left = '-9999px';
+      offscreenWrap.style.top = '0';
+      offscreenWrap.style.width = '1020px';
+      offscreenWrap.style.zIndex = '-9999';
+      offscreenWrap.style.background = '#ffffff';
+
+      const clone = certElement.cloneNode(true);
+      clone.style.width = '1020px';
+      clone.style.maxWidth = '1020px';
+      clone.style.minWidth = '1020px';
+      clone.style.boxSizing = 'border-box';
+      clone.style.margin = '0';
+      offscreenWrap.appendChild(clone);
+      document.body.appendChild(offscreenWrap);
+
+      await new Promise(r => setTimeout(r, 120));
+
+      const h2cCanvas = await html2canvas(clone, {
+        scale: 3, // 300 DPI Ultra-HD
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#fbf6ec',
+        logging: false,
+        imageTimeout: 6000
+      });
+
+      if (offscreenWrap.parentNode) {
+        document.body.removeChild(offscreenWrap);
+      }
+
+      if (h2cCanvas && h2cCanvas.width > 800) {
+        const cleanName = (activeAppCertData.studentName || 'Student').replace(/[^a-zA-Z0-9]/g, '_');
+        const filename = `QuickArt_Certificate_${cleanName}.png`;
+        const dataUrl = h2cCanvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        toast('🎓 Certificate downloaded in Ultra HD (300 DPI)!');
+        return;
+      }
+    } catch (h2cErr) {
+      console.warn('html2canvas download error:', h2cErr);
+      toast('Download error. Please take a screenshot.', false);
+    }
+  } else {
+    toast('Library loading. Please try again in a moment.', false);
+  }
+}
+
+function printAppCertificate() {
+  const cert = document.getElementById('certificate-print-area');
+  if (!cert) return;
+
+  const printWin = window.open('', '_blank', 'width=1100,height=800');
+  if (!printWin) {
+    toast('Please allow popups to print certificate', false);
+    return;
+  }
+
+  printWin.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Quick Art Photography Academy - Official Certificate</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="app.css">
+        <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@600;700;800;900&family=Great+Vibes&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600;1,700&family=Outfit:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+        <style>
+          @page { size: A4 landscape; margin: 0; }
+          html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .certificate-frame {
+            width: 100vw !important;
+            max-width: 297mm !important;
+            height: 100vh !important;
+            max-height: 210mm !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+            page-break-inside: avoid;
+          }
+        </style>
+      </head>
+      <body>
+        ${cert.outerHTML}
+        <script>
+          setTimeout(() => {
+            window.print();
+            window.close();
+          }, 600);
+        <\/script>
+      </body>
+    </html>
+  `);
+  printWin.document.close();
+}
+
+function shareAppCertificateWhatsApp() {
+  if (!activeAppCertData) return;
+  const stuName = activeAppCertData.studentName || 'Student';
+  const cTitle = activeAppCertData.courseTitle || 'Masterclass';
+  const verifyUrl = activeAppCertData.verifyUrl;
+  const text = `🎓 Proud to announce that I have successfully completed the *${cTitle}* from *Quick Art Photography Academy* (ISO 9001:2015 & Govt. MSME Certified)!\n\nVerify my credential online:\n🔗 ${verifyUrl}`;
+  const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+  window.open(waUrl, '_blank');
 }
 
 function openDownloadsModal() {
@@ -3325,6 +3763,13 @@ function handleAppBack() {
   const idModal = document.getElementById('modal-id-card');
   if (idModal && idModal.classList.contains('active')) {
     closeStudentIdCardModal(true);
+    return true;
+  }
+
+  // 4.5 If Certificate modal is open
+  const certModal = document.getElementById('modal-certificate');
+  if (certModal && certModal.classList.contains('active')) {
+    closeCertificateModal(true);
     return true;
   }
 

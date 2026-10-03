@@ -4989,3 +4989,1130 @@ button.prof-row-danger:active {
   box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
 }
 
+/* ==========================================================================
+   15. OFFICIAL STUDENT ID CARD (CR80 PVC DUAL-SIDED) STYLING
+   ========================================================================== */
+.idcard-sheet {
+  max-height: 94vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(var(--safe-bottom) + 16px);
+  background: #0b0f19;
+}
+
+.idcard-side-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 4px;
+  margin: 0 16px 10px;
+}
+
+.idcard-side-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.idcard-side-btn.active {
+  background: linear-gradient(135deg, #d8a153 0%, #b88636 100%);
+  color: #070a12;
+  box-shadow: 0 2px 8px rgba(216, 161, 83, 0.35);
+}
+
+.idcard-cards-viewport {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Authentic Standard CR80 PVC Institutional Identity Badge */
+.adm-issued-id-card {
+  width: 340px;
+  min-height: 540px;
+  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.12) 0%, transparent 60%),
+              linear-gradient(180deg, #131722 0%, #0a0c13 100%);
+  border: 1.5px solid rgba(245, 158, 11, 0.45);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(245, 158, 11, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 16px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  color: #ffffff;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+
+.adm-card-sheen {
+  position: absolute;
+  top: -100px;
+  left: -100px;
+  right: -100px;
+  height: 250px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 60%);
+  transform: rotate(-15deg);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.adm-card-lanyard-slot {
+  width: 48px;
+  height: 8px;
+  background: #05070a;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  margin: 0 auto 10px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-header-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1.5px solid rgba(245, 158, 11, 0.35);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+
+.adm-card-clean-logo {
+  width: 44px !important;
+  height: 44px !important;
+  object-fit: contain !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+
+.adm-card-inst-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 850;
+  color: #fbbf24;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+}
+
+.adm-card-inst-sub {
+  font-size: 8px;
+  font-weight: 700;
+  color: #e2e8f0;
+  letter-spacing: 0.08em;
+}
+
+.adm-card-inst-iso {
+  font-size: 7px;
+  color: #94a3b8;
+}
+
+.adm-card-photo-wrapper {
+  position: relative;
+  width: 100px;
+  height: 120px;
+  margin: 0 auto 8px;
+  border-radius: 14px;
+  padding: 3px;
+  background: linear-gradient(135deg, #f59e0b, #b45309);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+
+.adm-card-photo-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 11px;
+  display: block;
+}
+
+.adm-card-photo-ribbon {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: #042f2c;
+  font-size: 8.5px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1.5px solid #064e3b;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+}
+
+.adm-card-student-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 850;
+  color: #ffffff;
+  margin: 8px 0 2px;
+  letter-spacing: -0.01em;
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adm-card-course-pill {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin: 0 auto 10px;
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90%;
+}
+
+.adm-card-table-grid {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 7px 10px;
+  margin-bottom: 10px;
+  text-align: left;
+  font-size: 10px;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 8px;
+}
+
+.adm-card-table-row span {
+  color: #94a3b8;
+  font-size: 8px;
+  font-weight: 600;
+  display: block;
+}
+
+.adm-card-table-row strong {
+  color: #ffffff;
+  font-size: 10.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.adm-card-footer-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+  margin-top: auto;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+
+.adm-card-qr-block {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.adm-card-qr-img {
+  width: 50px;
+  height: 50px;
+  background: #ffffff;
+  padding: 2px;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+  display: block;
+}
+
+.adm-card-qr-badge {
+  font-size: 8px;
+  color: #fbbf24;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.adm-card-qr-hint {
+  font-size: 6.5px;
+  color: #94a3b8;
+}
+
+.adm-card-hologram {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #f59e0b, #fbbf24, #10b981, #3b82f6, #ec4899, #f59e0b);
+  padding: 1.5px;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adm-card-hologram-inner {
+  width: 100%;
+  height: 100%;
+  background: #0c0f17;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 5.5px;
+  font-weight: 900;
+  color: #fbbf24;
+  line-height: 1;
+  text-align: center;
+}
+
+.adm-card-signatory {
+  text-align: right;
+}
+
+.adm-card-sign-cursive {
+  font-family: 'Great Vibes', 'Brush Script MT', cursive;
+  font-size: 18px;
+  color: #fbbf24;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.adm-card-sign-lead {
+  font-size: 7px;
+  color: #cbd5e1;
+  font-weight: 700;
+}
+
+.adm-card-sign-session {
+  font-size: 6.5px;
+  color: #64748b;
+}
+
+.adm-card-security-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+  width: 240px;
+  height: 240px;
+  opacity: 0.045;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.adm-card-security-watermark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(100%) brightness(300%);
+}
+
+/* Back Side */
+.adm-issued-id-card.adm-card-back-side {
+  text-align: left;
+  padding: 16px 18px 14px;
+}
+
+.adm-card-back-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1.5px solid rgba(245, 158, 11, 0.35);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-back-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adm-card-back-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.adm-card-back-head-text strong {
+  font-family: 'Outfit', sans-serif;
+  font-size: 9.5px;
+  font-weight: 850;
+  color: #fbbf24;
+  display: block;
+}
+
+.adm-card-back-head-text span {
+  font-size: 7px;
+  color: #94a3b8;
+  display: block;
+}
+
+.adm-card-active-pill {
+  font-size: 8px;
+  color: #10b981;
+  font-weight: 850;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.12);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.adm-card-rules-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-rules-heading {
+  font-size: 9px;
+  font-weight: 850;
+  color: #fbbf24;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.adm-card-rules-list {
+  margin: 0;
+  padding: 0 0 0 12px;
+  font-size: 8px;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+.adm-card-rules-list li {
+  margin-bottom: 3px;
+}
+
+.adm-card-emergency-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 8px;
+  padding: 6px 8px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-emergency-row span {
+  font-size: 7px;
+  color: #94a3b8;
+  display: block;
+}
+
+.adm-card-emergency-row strong {
+  font-size: 9px;
+  color: #fbbf24;
+  font-weight: 800;
+}
+
+.adm-card-campus-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  padding: 6px 8px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.adm-card-campus-heading {
+  font-size: 7.5px;
+  color: #fbbf24;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+
+.adm-card-campus-detail {
+  font-size: 7px;
+  color: #cbd5e1;
+  line-height: 1.35;
+}
+
+.adm-card-campus-detail strong {
+  color: #ffffff;
+}
+
+.adm-card-barcode-box {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+}
+
+.adm-card-barcode-graphic {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3px;
+}
+
+.adm-card-barcode-svg {
+  width: 170px;
+  height: 22px;
+  opacity: 0.85;
+}
+
+.adm-card-barcode-number {
+  font-family: monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  color: #cbd5e1;
+}
+
+.adm-card-return-notice {
+  font-size: 6px;
+  color: #64748b;
+  margin: 3px 0 0;
+  line-height: 1.25;
+}
+
+/* ==========================================================================
+   16. ACCREDITED COURSE CERTIFICATE OF COMPLETION (A4 DIPLOMA)
+   ========================================================================== */
+.cert-sheet {
+  background: #090d16;
+}
+
+.cert-course-picker-row {
+  scrollbar-width: none;
+}
+.cert-course-picker-row::-webkit-scrollbar {
+  display: none;
+}
+
+.cert-course-pill {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cert-course-pill.active {
+  background: linear-gradient(135deg, #d8a153 0%, #b88636 100%);
+  color: #070a12;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(216, 161, 83, 0.35);
+}
+
+/* Status Banner above Certificate */
+.cert-status-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cert-status-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+}
+
+.cert-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulse-dot 1.8s infinite;
+}
+
+.cert-status-title {
+  font-weight: 800;
+  color: #34d399;
+  letter-spacing: 0.06em;
+}
+
+.cert-status-sep {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.cert-status-academy {
+  color: #cbd5e1;
+  font-weight: 700;
+}
+
+.cert-status-badges {
+  display: flex;
+  gap: 6px;
+}
+
+.cert-iso-badge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(216, 161, 83, 0.15);
+  border: 1px solid rgba(216, 161, 83, 0.35);
+  color: #fbbf24;
+}
+
+.cert-msme-badge {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+}
+
+/* Scrollable Container */
+.cert-frame-scroll-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Royal Academic Diploma Frame */
+.certificate-frame {
+  width: 840px;
+  min-width: 840px;
+  background: #fdfbf7;
+  background-image: radial-gradient(circle at 50% 50%, #ffffff 0%, #fbf6ec 60%, #f4ebd9 100%);
+  color: #16181f;
+  border: 10px double #c99738;
+  padding: 24px 28px;
+  text-align: center;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.cert-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.85;
+}
+
+.cert-corner {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
+  z-index: 3;
+}
+.cert-corner-tl { top: 6px; left: 6px; }
+.cert-corner-tr { top: 6px; right: 6px; }
+.cert-corner-bl { bottom: 6px; left: 6px; }
+.cert-corner-br { bottom: 6px; right: 6px; }
+
+.cert-microprint-border {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  font-size: 6px;
+  font-family: monospace;
+  letter-spacing: 0.2em;
+  color: rgba(184, 132, 59, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+  text-align: center;
+  z-index: 2;
+}
+
+.cert-inner {
+  position: relative;
+  z-index: 2;
+  border: 1.5px solid rgba(201, 151, 56, 0.5);
+  outline: 1px dashed rgba(201, 151, 56, 0.35);
+  outline-offset: -5px;
+  padding: 18px 24px 14px;
+  text-align: center;
+}
+
+.cert-top {
+  margin-bottom: 8px;
+}
+
+.cert-crest-unified {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.cert-crest-stars {
+  font-size: 8px;
+  letter-spacing: 4px;
+  color: #c99738;
+  margin-bottom: 2px;
+  opacity: 0.92;
+}
+
+.cert-crest-logo-wrapper {
+  position: relative;
+  width: 130px;
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cert-crest-wreath-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 130px;
+  height: 74px;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 2px rgba(184, 132, 59, 0.25));
+}
+
+.cert-academy-logo {
+  position: relative;
+  z-index: 2;
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  display: block;
+  background: transparent;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.1));
+}
+
+.cert-academy-title {
+  font-family: 'Cinzel', serif;
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  color: #141720;
+  margin-top: 1px;
+  text-transform: uppercase;
+}
+
+.cert-subtitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  color: #8c6a28;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.cert-accreditation-line {
+  font-size: 8px;
+  font-weight: 700;
+  color: #5c584e;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 3px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(201, 151, 56, 0.3);
+}
+
+.cert-title-container {
+  margin: 10px 0 6px;
+}
+
+.cert-badge-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #b8843b 0%, #ecd394 50%, #a87224 100%);
+  color: #141006;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  padding: 5px 22px;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(168, 114, 36, 0.25);
+  text-transform: uppercase;
+}
+
+.cert-badge-star {
+  font-size: 10px;
+  color: #141006;
+}
+
+.cert-reg-code {
+  font-size: 8px;
+  font-family: monospace;
+  color: #847761;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+.cert-presented-to {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: #585143;
+  margin: 8px 0 3px;
+}
+
+.cert-name-wrapper {
+  display: inline-block;
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.cert-name {
+  font-family: 'Cinzel', serif;
+  font-size: 32px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #875615 0%, #c99738 40%, #ecd394 65%, #754a0d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.cert-name-underline {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #c99738 20%, #ecd394 50%, #c99738 80%, transparent);
+  margin: 3px auto 0;
+  width: 90%;
+}
+
+.cert-body-text {
+  font-size: 11px;
+  line-height: 1.55;
+  color: #403c35;
+  max-width: 580px;
+  margin: 0 auto 6px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.cert-course {
+  font-family: 'Cinzel', serif;
+  font-size: 19px;
+  font-weight: 800;
+  color: #12151d;
+  margin: 2px 0 8px;
+  letter-spacing: 0.02em;
+}
+
+.cert-meta-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.cert-meta-pill {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #584935;
+  background: rgba(201, 151, 56, 0.12);
+  border: 1px solid rgba(201, 151, 56, 0.35);
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+.cert-meta-pill-gold {
+  background: rgba(201, 151, 56, 0.28);
+  color: #704408;
+  border-color: #b8843b;
+  font-weight: 800;
+}
+
+/* Triad Footer */
+.cert-footer {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: flex-end;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(201, 151, 56, 0.35);
+  margin-top: 8px;
+}
+
+.cert-verify-block {
+  text-align: left;
+}
+
+.cert-qr-frame {
+  display: inline-block;
+  background: #ffffff;
+  padding: 4px;
+  border: 1px solid #c99738;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.cert-qr-img {
+  display: block;
+  width: 68px !important;
+  height: 68px !important;
+  object-fit: contain;
+}
+
+.cert-qr-text {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #6d5423;
+  margin-top: 3px;
+}
+
+.cert-sig-id {
+  font-family: monospace;
+  font-size: 9px;
+  font-weight: 700;
+  color: #141720;
+  margin-top: 1px;
+}
+
+.cert-barcode {
+  display: block;
+  margin-top: 3px;
+  opacity: 0.75;
+}
+
+.cert-seal-block {
+  display: flex;
+  justify-content: center;
+}
+
+.cert-gold-seal-container {
+  position: relative;
+  width: 86px;
+  height: 100px;
+  margin: 0 auto;
+}
+
+.cert-seal-ribbon {
+  position: absolute;
+  bottom: 0;
+  width: 19px;
+  height: 38px;
+  background: linear-gradient(135deg, #7c1a22 0%, #a82732 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
+  z-index: 1;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.cert-ribbon-left {
+  left: 20px;
+  transform: rotate(14deg);
+}
+
+.cert-ribbon-right {
+  right: 20px;
+  transform: rotate(-14deg);
+}
+
+.cert-seal-embossed {
+  position: relative;
+  z-index: 2;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.28));
+}
+
+.cert-seal-svg {
+  display: block;
+  width: 76px;
+  height: 76px;
+}
+
+.cert-sig-block {
+  text-align: right;
+  position: relative;
+}
+
+.cert-date-wrap {
+  margin-bottom: 4px;
+}
+
+.cert-date-val {
+  font-family: 'Cinzel', serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #141720;
+}
+
+.cert-sig-role {
+  font-size: 7.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #847761;
+}
+
+.cert-sig-signature-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.cert-official-stamp {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: 2px dashed rgba(179, 38, 54, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-10deg);
+  pointer-events: none;
+  opacity: 0.92;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(179, 38, 54, 0.12);
+  background: rgba(255, 245, 245, 0.35);
+}
+
+.cert-stamp-inner {
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(179, 38, 54, 0.7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.cert-stamp-circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #a72332;
+  font-family: 'Cinzel', serif;
+  line-height: 1.05;
+}
+
+.cert-stamp-org {
+  font-size: 5.2px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.cert-stamp-title {
+  font-size: 6.5px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  margin: 1px 0;
+  color: #881724;
+}
+
+.cert-stamp-stars {
+  font-size: 5px;
+  letter-spacing: 1px;
+  color: #a72332;
+}
+
+.cert-stamp-status {
+  font-size: 4.5px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  border-top: 1px solid rgba(179, 38, 54, 0.5);
+  padding-top: 1px;
+  margin-top: 1px;
+}
+
+.cert-sig-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.cert-sig-line {
+  font-family: 'Alex Brush', cursive;
+  font-size: 32px;
+  color: #13151e;
+  line-height: 1;
+  transform: rotate(-2deg);
+}
+
+.cert-sig-name {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 900;
+  color: #13151e;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+.cert-sig-org {
+  font-size: 7.5px;
+  color: #726c5e;
+}
+
+.cert-bottom-tamper {
+  font-size: 6.5px;
+  font-family: monospace;
+  letter-spacing: 0.12em;
+  color: #8c826e;
+  border-top: 1px solid rgba(201, 151, 56, 0.25);
+  padding-top: 6px;
+  margin-top: 8px;
+}
+

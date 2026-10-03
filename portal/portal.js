@@ -4156,7 +4156,7 @@ function openMyIdCardModal() {
   const stuCity = stu.workCity || stu.city || 'Patna, Bihar';
   const stuBlood = stu.bloodGroup || 'O+';
   const stuAvatar = stu.avatar || stu.avatarUrl || stu.photoUrl || localStorage.getItem('qaa_avatar_' + stu.id) || localStorage.getItem('qaa_student_avatar') || '../assets/default-student-avatar.svg';
-  const verifyUrl = `https://quickartphotography.com/verify/?id=${encodeURIComponent(stuId)}&phone=${encodeURIComponent(stu.phone || '')}`;
+  const verifyUrl = `https://quickartphotography.in/admission/verify.html?id=${encodeURIComponent(stuId)}&phone=${encodeURIComponent(stu.phone || '')}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(verifyUrl)}`;
 
   const overlay = document.createElement('div');

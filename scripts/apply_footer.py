@@ -66,6 +66,7 @@ def generate_footer(prefix):
             <div>
                 <h3 class="qa-footer-heading">Student &amp; Academy</h3>
                 <ul class="qa-footer-links-list">
+                    <li><a href="{prefix}blog/top-10-video-editing-institutes-in-india/index.html" style="color: #f59e0b; font-weight: 700;">Top 10 Video Editing Institutes in India</a></li>
                     <li><a href="{prefix}admission/index.html" class="qa-footer-highlight-link" style="color: #f59e0b; font-weight: 700;">Apply Admission Form</a></li>
                     <li><a href="{prefix}alumni/index.html">Alumni Directory &amp; Hall of Fame</a></li>
                     <li><a href="{prefix}portal/index.html" class="qa-footer-highlight-link">Student Portal Login</a></li>

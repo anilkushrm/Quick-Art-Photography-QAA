@@ -13,7 +13,7 @@
         "streamId": "jJ85m2dKzBk",
         "replayUrl": "lzsMbgEjl6Y",
         "bunnyVideoId": "",
-        "showViewerCountToStudents": true,
+        "showViewerCountToStudents": false,
         "allowStudentMic": true,
         "allowStudentScreen": true,
         "chatEnabled": true,

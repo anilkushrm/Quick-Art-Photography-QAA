@@ -872,7 +872,7 @@ if ($action === 'get-transactions' && $method === 'GET') {
 
 // 10. List Bunny.net Uploaded Videos
 if ($action === 'list-bunny-videos' && $method === 'GET') {
-    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $settings = load_lms_settings();
     $libraryId = $settings['bunnyLibraryId'] ?? '755385';
     $apiKey = $settings['bunnyApiKey'] ?? '';
     $collectionMap = array_flip($settings['collections'] ?? []);
@@ -904,7 +904,7 @@ if ($action === 'list-bunny-videos' && $method === 'GET') {
 
 // 11. List Bunny.net Course Collections
 if ($action === 'list-bunny-collections' && $method === 'GET') {
-    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $settings = load_lms_settings();
     $libraryId = $settings['bunnyLibraryId'] ?? '755385';
     $apiKey = $settings['bunnyApiKey'] ?? '';
 
@@ -928,7 +928,7 @@ if ($action === 'create-bunny-video' && $method === 'POST') {
     $title = trim($body['title'] ?? 'New Lesson Video');
     $collectionId = trim($body['collectionId'] ?? '');
 
-    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $settings = load_lms_settings();
     $libraryId = $settings['bunnyLibraryId'] ?? '755385';
     $apiKey = $settings['bunnyApiKey'] ?? '';
 
@@ -1015,7 +1015,7 @@ if ($action === 'get-bunny-preview' && ($method === 'GET' || $method === 'POST')
     }
     if (!$videoId) json_err('videoId is required', 400);
 
-    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+    $settings = load_lms_settings();
     $libraryId = $settings['bunnyLibraryId'] ?? '755385';
     $tokenKey  = $settings['bunnyTokenAuthKey'] ?? '';
 

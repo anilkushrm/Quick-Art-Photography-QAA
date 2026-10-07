@@ -2707,23 +2707,51 @@ fbq('track', 'PageView');
       </div>
 
       <!-- 1. Bunny.net Live Stream Box -->
+      <!-- 1. Bunny.net Live Stream Box -->
       <div id="boxBunnyStream" style="background:rgba(99,102,241,0.09);border:1.5px solid rgba(99,102,241,0.35);border-radius:12px;padding:16px;margin-bottom:16px">
         <label style="font-size:13px;font-weight:700;color:#a5b4fc;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
-          <span>🐰 Bunny.net Video GUID / Live Stream ID (Library 755385) *</span>
-          <button type="button" onclick="pickBunnyVideoForLive()" class="btn btn-sm" style="background:#6366f1;color:#fff;font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;font-weight:700;box-shadow:0 2px 8px rgba(99,102,241,0.4)">📂 Pick from Bunny.net</button>
-        </label>
-        <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
-          <div>
-            <label style="font-size:11.5px;color:#cbd5e1;margin-bottom:4px;display:block">Bunny Video GUID *</label>
-            <input type="text" id="liveBunnyVideoId" placeholder="e.g. 7f893a21-xxxx-xxxx-xxxx" style="width:100%;padding:10px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:8px;font-size:12.5px;box-sizing:border-box" />
+          <span>🎬 Bunny.net Video / Lecture Chunein (Library 755385) *</span>
+          <div style="display:flex;gap:6px">
+            <button type="button" onclick="loadBunnyVideosForLiveDropdown()" class="btn btn-sm" style="background:rgba(99,102,241,0.25);border:1px solid #6366f1;color:#fff;font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer">🔄 Refresh</button>
+            <button type="button" onclick="triggerDirectBunnyUploadForLive()" class="btn btn-sm" style="background:#10b981;color:#fff;font-size:11px;padding:4px 12px;border-radius:6px;cursor:pointer;font-weight:700">📤 Nayi Video Upload</button>
           </div>
-          <div>
-            <label style="font-size:11.5px;color:#cbd5e1;margin-bottom:4px;display:block">Replay URL (Auto-Generated / Optional)</label>
-            <input type="text" id="liveReplayUrl" placeholder="Auto-generated or custom embed URL" style="width:100%;padding:10px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:8px;font-size:12.5px;box-sizing:border-box" />
+        </label>
+        
+        <!-- Hidden file input for 1-click Bunny upload -->
+        <input type="file" id="directBunnyLiveFileInput" accept="video/mp4,video/quicktime,video/mkv" style="display:none" onchange="handleDirectBunnyUploadForLive(event)" />
+        
+        <!-- Live Upload Progress Card -->
+        <div id="liveBunnyUploadProgress" style="display:none;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:12px;margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#a7f3d0;font-weight:700;margin-bottom:6px">
+            <span id="liveBunnyUploadStatusText">Uploading to Bunny CDN…</span>
+            <span id="liveBunnyUploadPercent">0%</span>
+          </div>
+          <div style="height:6px;background:rgba(255,255,255,0.15);border-radius:3px;overflow:hidden">
+            <div id="liveBunnyUploadBar" style="height:100%;width:0%;background:#10b981;transition:width 0.2s"></div>
           </div>
         </div>
-        <div style="font-size:12px;color:#94a3b8;margin-top:10px;line-height:1.5;background:rgba(0,0,0,0.3);padding:10px 12px;border-radius:8px;border-left:3px solid #6366f1">
-          ✨ <strong>Zero YouTube &amp; 100% White-Label:</strong> YouTube ka koi link ya logo nahi dikhega. Stream direct Bunny.net CDN se ultra-fast 1080p me deliver hogi aur class khatam hote hi recording yahi save rahegi.
+
+        <select id="liveBunnyVideoSelect" onchange="onBunnyVideoDropdownSelect(this.value)" style="width:100%;padding:11px 14px;background:#060a14;border:1.5px solid rgba(99,102,241,0.5);color:#fff;border-radius:10px;font-size:13px;font-weight:600;box-sizing:border-box">
+          <option value="">⏳ Bunny Videos Load Ho Rahi Hain...</option>
+        </select>
+
+        <div id="bunnyGuidDetailRow" style="display:none;margin-top:12px;background:rgba(0,0,0,0.25);padding:12px;border-radius:8px">
+          <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+            <div>
+              <label style="font-size:11.5px;color:#cbd5e1;margin-bottom:4px;display:block">Bunny Video GUID *</label>
+              <input type="text" id="liveBunnyVideoId" oninput="validateBunnyGuid(this.value)" placeholder="e.g. a0a52c2e-46b5-4d05-80a5-e1668d80b236" style="width:100%;padding:9px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:8px;font-size:12px;box-sizing:border-box" />
+              <div id="bunnyGuidWarning" style="display:none;background:rgba(239,68,68,0.15);border:1px solid #ef4444;color:#fca5a5;padding:6px 10px;border-radius:6px;font-size:11px;margin-top:4px"></div>
+            </div>
+            <div>
+              <label style="font-size:11.5px;color:#cbd5e1;margin-bottom:4px;display:block">Replay URL (Auto-Generated / Optional)</label>
+              <input type="text" id="liveReplayUrl" placeholder="Auto-generated or custom embed URL" style="width:100%;padding:9px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:8px;font-size:12px;box-sizing:border-box" />
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+          <button type="button" onclick="toggleBunnyGuidRow()" style="background:transparent;border:none;color:#94a3b8;font-size:11.5px;cursor:pointer;text-decoration:underline">⚙️ Show / Edit Video GUID</button>
+          <span style="font-size:11.5px;color:#6ee7b7">🔒 100% Private • Student ko koi count nahi dikhega</span>
         </div>
       </div>
 
@@ -2749,9 +2777,9 @@ fbq('track', 'PageView');
         <div style="font-size:12.5px;font-weight:700;color:#e2e8f0;margin-bottom:10px">🎛️ Live Interactivity &amp; Audience Settings:</div>
 
         <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
-          <input type="checkbox" id="liveShowViewerCountToStudents" checked style="width:18px;height:18px;accent-color:#10b981;margin-top:2px" />
+          <input type="checkbox" id="liveShowViewerCountToStudents" style="width:18px;height:18px;accent-color:#10b981;margin-top:2px" />
           <label for="liveShowViewerCountToStudents" style="font-size:13px;color:#f1f5f9;cursor:pointer;line-height:1.4">
-            👥 <strong>Classroom Mode:</strong> Students ko live viewer counter dikhayen. (Uncheck karne par <strong>Stealth Webinar Mode</strong> on hoga jisme counter sirf Admin ko dikhega).
+            👥 <strong>Student Viewer Count:</strong> Default OFF (Stealth Mode) — Kisi bhi student ko nahi dikhega ki kitne log live dekh rahe hain.
           </label>
         </div>
 
@@ -6812,7 +6840,7 @@ function openScheduleLiveModal() {
   document.getElementById('liveStreamId').value = '';
   document.getElementById('liveReplayUrl').value = '';
   if (document.getElementById('liveBunnyVideoId')) document.getElementById('liveBunnyVideoId').value = '';
-  if (document.getElementById('liveShowViewerCountToStudents')) document.getElementById('liveShowViewerCountToStudents').checked = true;
+  if (document.getElementById('liveShowViewerCountToStudents')) document.getElementById('liveShowViewerCountToStudents').checked = false;
   if (document.getElementById('liveAllowStudentMic')) document.getElementById('liveAllowStudentMic').checked = true;
   if (document.getElementById('liveAllowStudentScreen')) document.getElementById('liveAllowStudentScreen').checked = false;
   document.getElementById('liveResources').value = '';
@@ -6834,6 +6862,7 @@ function openScheduleLiveModal() {
   const streamTypeEl = document.getElementById('liveStreamType');
   if (streamTypeEl) streamTypeEl.value = 'bunny';
   onLiveStreamTypeChange();
+  loadBunnyVideosForLiveDropdown('');
   document.getElementById('scheduleLiveModal').classList.add('show');
 }
 
@@ -6845,6 +6874,9 @@ function onLiveStreamTypeChange() {
     if (type === 'bunny') {
       boxBunny.style.display = 'block';
       boxYt.style.display = 'none';
+      if (!allBunnyVideos.length) {
+        loadBunnyVideosForLiveDropdown();
+      }
     } else {
       boxBunny.style.display = 'none';
       boxYt.style.display = 'block';
@@ -6871,7 +6903,7 @@ function editLiveClassAdmin(id) {
   document.getElementById('liveStreamId').value = c.streamId || '';
   document.getElementById('liveReplayUrl').value = c.replayUrl || '';
   if (document.getElementById('liveBunnyVideoId')) document.getElementById('liveBunnyVideoId').value = c.bunnyVideoId || '';
-  if (document.getElementById('liveShowViewerCountToStudents')) document.getElementById('liveShowViewerCountToStudents').checked = c.showViewerCountToStudents !== false;
+  if (document.getElementById('liveShowViewerCountToStudents')) document.getElementById('liveShowViewerCountToStudents').checked = c.showViewerCountToStudents === true;
   if (document.getElementById('liveAllowStudentMic')) document.getElementById('liveAllowStudentMic').checked = c.allowStudentMic !== false;
   if (document.getElementById('liveAllowStudentScreen')) document.getElementById('liveAllowStudentScreen').checked = !!c.allowStudentScreen;
   document.getElementById('liveChatEnabled').checked = c.chatEnabled !== false;
@@ -6905,32 +6937,162 @@ function editLiveClassAdmin(id) {
 
   populateLiveCourseDropdown(c.courseId || '');
   onLiveTypeChange();
+  loadBunnyVideosForLiveDropdown(c.bunnyVideoId || '');
   document.getElementById('scheduleLiveModal').classList.add('show');
 }
 
-async function pickBunnyVideoForLive() {
-  if (!allBunnyVideos.length) {
-    try {
-      const res = await lmsAdmin('list-bunny-videos');
-      allBunnyVideos = res.videos || [];
-    } catch(e) {
-      alert('Bunny.net videos load nahi ho payi: ' + e.message);
-      return;
-    }
+function toggleBunnyGuidRow() {
+  const row = document.getElementById('bunnyGuidDetailRow');
+  if (row) {
+    row.style.display = row.style.display === 'none' ? 'block' : 'none';
   }
-  if (!allBunnyVideos.length) {
-    alert('Bunny.net Library 755385 me abhi tak koi video uploaded nahi hai.');
+}
+
+async function loadBunnyVideosForLiveDropdown(selectedGuid = '') {
+  const selEl = document.getElementById('liveBunnyVideoSelect');
+  if (!selEl) return;
+  selEl.innerHTML = '<option value="">⏳ Bunny Videos Load Ho Rahi Hain...</option>';
+
+  try {
+    const res = await lmsAdmin('list-bunny-videos');
+    allBunnyVideos = res.videos || [];
+    
+    selEl.innerHTML = '<option value="">-- 🎬 Apni Bunny Video Chunein (Library 755385) --</option>';
+    if (allBunnyVideos.length) {
+      allBunnyVideos.forEach(v => {
+        const mins = v.length ? Math.round(v.length / 60) : 0;
+        const durText = mins > 0 ? ` (${mins} Mins)` : '';
+        const opt = document.createElement('option');
+        opt.value = v.guid;
+        opt.textContent = `🎬 ${v.title || 'Untitled'}${durText}`;
+        selEl.appendChild(opt);
+      });
+    } else {
+      const opt = document.createElement('option');
+      opt.value = '';
+      opt.textContent = '⚠️ Library me koi video nahi mili';
+      selEl.appendChild(opt);
+    }
+
+    const customOpt = document.createElement('option');
+    customOpt.value = 'custom';
+    customOpt.textContent = '✏️ Custom Video GUID Manually Likhein';
+    selEl.appendChild(customOpt);
+
+    const currGuid = selectedGuid || (document.getElementById('liveBunnyVideoId') ? document.getElementById('liveBunnyVideoId').value.trim() : '');
+    if (currGuid) {
+      selEl.value = currGuid;
+      if (!selEl.value) {
+        selEl.value = 'custom';
+        const row = document.getElementById('bunnyGuidDetailRow');
+        if (row) row.style.display = 'block';
+      }
+    }
+  } catch (e) {
+    selEl.innerHTML = '<option value="custom">⚠️ Video list load error (Custom GUID use karein)</option>';
+    const row = document.getElementById('bunnyGuidDetailRow');
+    if (row) row.style.display = 'block';
+  }
+}
+
+function onBunnyVideoDropdownSelect(guid) {
+  const inp = document.getElementById('liveBunnyVideoId');
+  const row = document.getElementById('bunnyGuidDetailRow');
+  if (guid === 'custom') {
+    if (row) row.style.display = 'block';
+    if (inp) inp.focus();
     return;
   }
-  const listStr = allBunnyVideos.map((v, i) => `${i + 1}. ${v.title || 'Untitled'} (${(v.guid || '').slice(0, 8)}…)`).join('\n');
-  const pick = prompt(`Bunny.net Live Recording / VOD select karein (Number enter karein 1 se ${allBunnyVideos.length}):\n\n${listStr}\n\nNumber type karein:`);
-  if (!pick) return;
-  const idx = parseInt(pick.trim(), 10) - 1;
-  if (idx >= 0 && allBunnyVideos[idx]) {
-    const chosen = allBunnyVideos[idx];
-    const bunnyInp = document.getElementById('liveBunnyVideoId');
-    if (bunnyInp) bunnyInp.value = chosen.guid;
-    toast(`✅ Bunny Video Selected: ${chosen.title}`);
+  if (guid) {
+    if (inp) inp.value = guid;
+    validateBunnyGuid(guid);
+    const chosen = (allBunnyVideos || []).find(x => x.guid === guid);
+    if (chosen) {
+      toast(`✅ Video Chuni Gayi: ${chosen.title}`);
+    }
+  } else {
+    if (inp) inp.value = '';
+  }
+}
+
+function triggerDirectBunnyUploadForLive() {
+  const fInp = document.getElementById('directBunnyLiveFileInput');
+  if (fInp) fInp.click();
+}
+
+async function handleDirectBunnyUploadForLive(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+
+  const progBox = document.getElementById('liveBunnyUploadProgress');
+  const progBar = document.getElementById('liveBunnyUploadBar');
+  const progText = document.getElementById('liveBunnyUploadStatusText');
+  const progPct = document.getElementById('liveBunnyUploadPercent');
+
+  if (progBox) progBox.style.display = 'block';
+  if (progBar) progBar.style.width = '5%';
+  if (progText) progText.textContent = `Bunny me container ban raha hai: ${file.name}…`;
+  if (progPct) progPct.textContent = '5%';
+
+  try {
+    // 1. Create Video Object in Bunny via API
+    const title = file.name.replace(/\.[^/.]+$/, '');
+    const createRes = await lmsAdmin('create-bunny-video', {
+      method: 'POST',
+      body: { title }
+    });
+
+    if (!createRes.ok || !createRes.videoId) {
+      throw new Error(createRes.error || 'Bunny video container create nahi ho saka');
+    }
+
+    const videoId = createRes.videoId;
+    const libraryId = createRes.libraryId || '755385';
+    const uploadApiKey = createRes.uploadApiKey;
+
+    // 2. Upload file directly to Bunny CDN
+    if (progText) progText.textContent = `Uploading ${(file.size / (1024*1024)).toFixed(1)} MB to Bunny CDN…`;
+
+    await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.upload.onprogress = (pe) => {
+        if (pe.lengthComputable) {
+          const pct = Math.round((pe.loaded / pe.total) * 100);
+          if (progBar) progBar.style.width = pct + '%';
+          if (progPct) progPct.textContent = pct + '%';
+        }
+      };
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) resolve();
+        else reject(new Error('Bunny upload failed: HTTP ' + xhr.status));
+      };
+      xhr.onerror = () => reject(new Error('Network error during Bunny upload'));
+      xhr.open('PUT', `https://video.bunnycdn.com/library/${libraryId}/videos/${videoId}`);
+      xhr.setRequestHeader('AccessKey', uploadApiKey);
+      xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+      xhr.send(file);
+    });
+
+    if (progBar) progBar.style.width = '100%';
+    if (progPct) progPct.textContent = '100%';
+    if (progText) progText.textContent = '✅ Video successfully Bunny.net me upload ho gayi!';
+
+    // 3. Set input and reload dropdown
+    const inp = document.getElementById('liveBunnyVideoId');
+    if (inp) inp.value = videoId;
+    validateBunnyGuid(videoId);
+
+    await loadBunnyVideosForLiveDropdown(videoId);
+    toast(`🎉 Video Bunny.net me Upload aur Select ho gayi!`);
+
+    setTimeout(() => {
+      if (progBox) progBox.style.display = 'none';
+    }, 4000);
+  } catch(err) {
+    alert('Upload Error: ' + err.message);
+    if (progBox) progBox.style.display = 'none';
+  } finally {
+    e.target.value = '';
   }
 }
 
@@ -6942,13 +7104,18 @@ async function saveLiveClassAdmin() {
   }
 
   const streamType = document.getElementById('liveStreamType') ? document.getElementById('liveStreamType').value : 'bunny';
-  const bunnyVideoId = document.getElementById('liveBunnyVideoId') ? document.getElementById('liveBunnyVideoId').value.trim() : '';
+  let bunnyVideoId = document.getElementById('liveBunnyVideoId') ? document.getElementById('liveBunnyVideoId').value.trim() : '';
+  const selEl = document.getElementById('liveBunnyVideoSelect');
+  if (!bunnyVideoId && selEl && selEl.value && selEl.value !== 'custom') {
+    bunnyVideoId = selEl.value;
+    if (document.getElementById('liveBunnyVideoId')) document.getElementById('liveBunnyVideoId').value = bunnyVideoId;
+  }
   const rawStreamVal = (document.getElementById('liveStreamId').value || '').trim();
 
   if (streamType === 'bunny') {
     if (!bunnyVideoId) {
-      alert('Kripya Bunny.net Video GUID daalein ya [📂 Pick from Bunny.net] button se video select karein!');
-      if (document.getElementById('liveBunnyVideoId')) document.getElementById('liveBunnyVideoId').focus();
+      alert('Kripya dropdown se Bunny.net Video chunein ya [📤 Nayi Video Upload] karein!');
+      if (document.getElementById('liveBunnyVideoSelect')) document.getElementById('liveBunnyVideoSelect').focus();
       return;
     }
   } else {

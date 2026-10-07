@@ -1670,8 +1670,8 @@ async function loadLessonToPlayer(courseId, lessonId) {
       window.addEventListener('message', window._bunnyEndedListener);
 
     } else if (videoType === 'youtube' || ytId) {
-      const yUrl = streamUrl || `https://www.youtube-nocookie.com/embed/${ytId}?enablejsapi=1&autoplay=1&rel=0&modestbranding=1&playsinline=1`;
-      mount.innerHTML = `<iframe id="cr-video-iframe" src="${yUrl}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+      const yUrl = streamUrl || `https://www.youtube-nocookie.com/embed/${ytId}?enablejsapi=1&autoplay=1&rel=0&modestbranding=1&playsinline=1&controls=1&fs=1`;
+      mount.innerHTML = `<iframe id="cr-video-iframe" src="${yUrl}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen style="width:100%;height:100%;border:none;pointer-events:auto !important;"></iframe>`;
 
     } else if (streamUrl) {
       mount.innerHTML = `<video id="main-video-el" src="${streamUrl}" controls playsinline style="width:100%;height:100%;object-fit:contain;background:#000;"></video>`;
@@ -2535,7 +2535,7 @@ function toggleLiveRaiseHand() {
   sendStudentLivePing();
 }
 
-async function openLiveStudio(liveId) {
+async function openLiveStudio(liveId, forceReplay = false) {
   if (!liveId || liveId === 'masterclass-live') {
     liveId = 'live_demo_01';
   }
@@ -2558,9 +2558,6 @@ async function openLiveStudio(liveId) {
   if (bottomNav) bottomNav.classList.add('hidden');
   classroom.scrollTop = 0;
 
-  // Display initial 5-second Comment & Fullscreen controls and startup anti-brand mask
-  revealLiveOverlayControls(5000, true);
-
   // Initialize and run dynamic realistic live attendee counter (300-800)
   startLiveAttendeesCounter();
 
@@ -2580,6 +2577,15 @@ async function openLiveStudio(liveId) {
     currentLiveSession = res;
     currentAppLiveSession = res;
 
+    // Detect if this session is a Recording Replay or a Pure Live Broadcast
+    const isReplay = forceReplay ||
+                     res.status === 'completed' ||
+                     res.status === 'ended' ||
+                     Boolean(res.replayUrl && res.replayUrl.trim()) ||
+                     Boolean(res.bunnyVideoId && res.bunnyVideoId.trim()) ||
+                     (res.status !== 'live' && res.scheduledAt && new Date(res.scheduledAt).getTime() < Date.now());
+    window._isCurrentReplaySession = isReplay;
+
     // Update Header
     const titleEl = document.getElementById('live-player-title');
     if (titleEl) titleEl.textContent = res.title || 'Live Masterclass Studio';
@@ -2592,11 +2598,49 @@ async function openLiveStudio(liveId) {
       const dt = new Date(res.scheduledAt).toLocaleString('en-IN', {
         weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
       });
-      descSchedule.textContent = `Broadcast: ${dt} • Duration: ${res.duration || '90 Mins'}`;
+      descSchedule.textContent = isReplay ? `Archived Session • Duration: ${res.duration || '90 Mins'}` : `Broadcast: ${dt} • Duration: ${res.duration || '90 Mins'}`;
     }
 
     const descBody = document.getElementById('live-desc-body');
     if (descBody) descBody.textContent = res.description || 'Hands-on timeline session with Lead Mentor Anil Sharma.';
+
+    // Mode-Specific Badge & Controls
+    const broadcastBadge = document.querySelector('.live-broadcast-badge');
+    const replayControls = document.getElementById('live-replay-controls');
+    const raiseHandBtn = document.getElementById('live-raise-hand-btn');
+    const shield = document.getElementById('live-full-shield');
+    const startMask = document.getElementById('live-start-mask');
+
+    if (isReplay) {
+      if (broadcastBadge) {
+        broadcastBadge.style.background = 'rgba(216,161,83,0.18)';
+        broadcastBadge.style.border = '1px solid rgba(216,161,83,0.4)';
+        broadcastBadge.innerHTML = '<span>📼</span><span class="live-broadcast-text" style="color:var(--gold,#d8a153)">REPLAY</span>';
+      }
+      if (replayControls) replayControls.style.display = 'inline-flex';
+      if (raiseHandBtn) raiseHandBtn.style.display = 'none';
+      if (shield) {
+        shield.style.display = 'none';
+        shield.style.pointerEvents = 'none';
+      }
+      if (startMask) startMask.style.display = 'none';
+    } else {
+      if (broadcastBadge) {
+        broadcastBadge.style.background = '';
+        broadcastBadge.style.border = '';
+        broadcastBadge.innerHTML = '<span class="live-blink-circle"></span><span class="live-broadcast-text">LIVE</span>';
+      }
+      if (replayControls) replayControls.style.display = 'none';
+      if (raiseHandBtn) raiseHandBtn.style.display = 'inline-flex';
+      if (shield) {
+        shield.style.display = 'block';
+        shield.style.pointerEvents = 'auto';
+      }
+      if (startMask) {
+        startMask.style.display = 'block';
+        revealLiveOverlayControls(5000, true);
+      }
+    }
 
     // Resources
     const resList = document.getElementById('live-resources-list');
@@ -2613,19 +2657,23 @@ async function openLiveStudio(liveId) {
       }
     }
 
-    // Classroom Mode vs Webinar Mode: Viewer pill visibility
+    // Classroom Mode vs Stealth Webinar Mode: Viewer pill visibility
     const pill = document.getElementById('live-attendees-pill-mini');
     if (pill) {
-      if (res.showViewerCountToStudents) {
+      if (res.showViewerCountToStudents !== false) {
         pill.style.display = 'inline-flex';
-        if (typeof res.viewerCount === 'number') updateLiveAttendeesDisplay(res.viewerCount, false);
+        if (typeof res.viewerCount === 'number' && res.viewerCount > 10) {
+          updateLiveAttendeesDisplay(res.viewerCount, false);
+        } else {
+          updateLiveAttendeesDisplay(currentLiveAttendeesCount, false);
+        }
       } else {
         pill.style.display = 'none';
       }
     }
 
     // Embed Video Stream with Anti-Leak Protection & Bunny Replay VOD Support
-    embedLiveStream(res.streamId, res.replayUrl, res.status, res.bunnyVideoId);
+    embedLiveStream(res.streamId, res.replayUrl, res.status, res.bunnyVideoId, isReplay);
 
     // Start Live Doubts Polling
     pollLiveDoubtsStudent();
@@ -2637,7 +2685,7 @@ async function openLiveStudio(liveId) {
     sendStudentLivePing();
     livePingTimer = setInterval(sendStudentLivePing, 15000);
 
-    toast(`🔴 Joined Live: ${res.title}`);
+    toast(isReplay ? `📼 Opened Recording: ${res.title}` : `🔴 Joined Live: ${res.title}`);
   } catch (err) {
     toast('Live access failed: ' + (err.message || 'Restricted'), false);
     exitLiveStudio();
@@ -2719,20 +2767,27 @@ function handleLiveShieldTouch(e) {
   revealLiveOverlayControls(5000);
 }
 
-function embedLiveStream(streamId, replayUrl, status, bunnyVideoId) {
+function embedLiveStream(streamId, replayUrl, status, bunnyVideoId, isReplay = false) {
   const mount = document.getElementById('live-video-mount');
   const shield = document.getElementById('live-full-shield');
+  const startMask = document.getElementById('live-start-mask');
   if (!mount) return;
 
-  const isCompleted = status === 'completed';
+  const isCompleted = isReplay || status === 'completed';
 
   // Toggle click shield: In LIVE mode shield prevents pausing and seeking. In COMPLETED replay mode, user has full playback controls!
   if (shield) {
     if (isCompleted) {
       shield.style.display = 'none';
+      shield.style.pointerEvents = 'none';
     } else {
       shield.style.display = 'block';
+      shield.style.pointerEvents = 'auto';
     }
+  }
+
+  if (startMask && isCompleted) {
+    startMask.style.display = 'none';
   }
 
   // REPLAY MODE: Check if Bunny.net Video is available (Library 755385)
@@ -2748,18 +2803,17 @@ function embedLiveStream(streamId, replayUrl, status, bunnyVideoId) {
 
     if (bunnyUrl) {
       mount.innerHTML = `
-        <div style="position:relative;padding-top:56.25%;width:100%;height:100%;background:#000;">
+        <div style="position:relative;width:100%;height:100%;background:#000;">
           <iframe 
             id="live-stream-iframe"
             src="${bunnyUrl}" 
             loading="lazy" 
-            style="border:0;position:absolute;top:0;left:0;height:100%;width:100%;" 
-            allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" 
+            style="border:0;width:100%;height:100%;pointer-events:auto !important;" 
+            allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen" 
             allowfullscreen="true">
           </iframe>
         </div>
       `;
-      revealLiveOverlayControls(4000, true);
       return;
     }
   }
@@ -2787,16 +2841,16 @@ function embedLiveStream(streamId, replayUrl, status, bunnyVideoId) {
 
   const originStr = encodeURIComponent(window.location.origin);
   if (isCompleted) {
-    // Replay Mode: Controls enabled, seekbar active, pause/play enabled
-    const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&controls=1&modestbranding=1&rel=0&showinfo=0&disablekb=0&playsinline=1&enablejsapi=1&origin=${originStr}`;
+    // Replay Mode: Controls enabled, seekbar active, pause/play enabled, keyboard seek enabled, fullscreen enabled
+    const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&controls=1&modestbranding=1&rel=0&showinfo=0&disablekb=0&playsinline=1&enablejsapi=1&fs=1&origin=${originStr}`;
     mount.innerHTML = `
       <iframe 
         id="live-stream-iframe"
         src="${embedUrl}" 
         title="Quick Art Photography Academy Masterclass Replay" 
         frameborder="0" 
-        sandbox="allow-scripts allow-same-origin allow-presentation"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        style="width:100%;height:100%;border:none;pointer-events:auto !important;"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" 
         allowfullscreen>
       </iframe>
     `;
@@ -2816,19 +2870,11 @@ function embedLiveStream(streamId, replayUrl, status, bunnyVideoId) {
         allowfullscreen>
       </iframe>
     `;
-  }
-
-  revealLiveOverlayControls(6500, true);
-
-  const iframeEl = document.getElementById('live-stream-iframe');
-  if (iframeEl) {
-    iframeEl.addEventListener('load', () => {
-      revealLiveOverlayControls(5500, true);
-    });
+    revealLiveOverlayControls(6500, true);
   }
 }
 
-// Zero-Pause Continuous Broadcast Guard
+// Zero-Pause Continuous Broadcast Guard (Only active in Pure Live Mode)
 window.addEventListener('message', (event) => {
   try {
     const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
@@ -2836,17 +2882,155 @@ window.addEventListener('message', (event) => {
       if (data.info === 1) {
         revealLiveOverlayControls(4200, true);
       } else if (data.info === 2) {
-        const liveStudio = document.getElementById('view-live-classroom');
-        if (liveStudio && !liveStudio.classList.contains('hidden')) {
-          const iframe = document.getElementById('live-stream-iframe');
-          if (iframe && iframe.contentWindow) {
-            iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo' }), '*');
+        // ONLY force-play in pure LIVE mode! If it is a recorded class/replay, allow student to pause freely!
+        if (!window._isCurrentReplaySession && currentLiveSession && currentLiveSession.status === 'live') {
+          const liveStudio = document.getElementById('view-live-classroom');
+          if (liveStudio && !liveStudio.classList.contains('hidden')) {
+            const iframe = document.getElementById('live-stream-iframe');
+            if (iframe && iframe.contentWindow) {
+              iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo' }), '*');
+            }
           }
         }
       }
     }
   } catch (e) {}
 });
+
+// Dedicated Replay Controls (⏪ 10s Backward, ⏯️ Pause/Play, ⏩ 10s Forward, Speed)
+let liveReplayCurrentEstTime = 0;
+let liveReplayIsPlaying = true;
+
+function seekLiveReplay(deltaSeconds) {
+  const iframe = document.getElementById('live-stream-iframe');
+  const mount = document.getElementById('live-video-mount');
+  const vid = mount ? mount.querySelector('video') : null;
+
+  if (vid) {
+    vid.currentTime = Math.max(0, vid.currentTime + deltaSeconds);
+    toast(deltaSeconds < 0 ? `⏪ ${Math.abs(deltaSeconds)}s Pichhe` : `⏩ ${deltaSeconds}s Aage`);
+    return;
+  }
+
+  if (iframe && iframe.contentWindow) {
+    liveReplayCurrentEstTime = Math.max(0, liveReplayCurrentEstTime + deltaSeconds);
+    iframe.contentWindow.postMessage(JSON.stringify({
+      event: 'command',
+      func: 'seekTo',
+      args: [liveReplayCurrentEstTime, true]
+    }), '*');
+    toast(deltaSeconds < 0 ? `⏪ ${Math.abs(deltaSeconds)}s Pichhe` : `⏩ ${deltaSeconds}s Aage`);
+  }
+}
+
+function toggleLiveReplayPlayPause() {
+  const iframe = document.getElementById('live-stream-iframe');
+  const mount = document.getElementById('live-video-mount');
+  const vid = mount ? mount.querySelector('video') : null;
+  const btn = document.getElementById('btn-replay-play-pause');
+
+  if (vid) {
+    if (vid.paused) {
+      vid.play();
+      if (btn) btn.innerHTML = '⏸️';
+      toast('▶ Playing');
+    } else {
+      vid.pause();
+      if (btn) btn.innerHTML = '▶';
+      toast('⏸ Paused');
+    }
+    return;
+  }
+
+  if (iframe && iframe.contentWindow) {
+    if (liveReplayIsPlaying) {
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'pauseVideo' }), '*');
+      liveReplayIsPlaying = false;
+      if (btn) btn.innerHTML = '▶';
+      toast('⏸ Paused');
+    } else {
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo' }), '*');
+      liveReplayIsPlaying = true;
+      if (btn) btn.innerHTML = '⏸️';
+      toast('▶ Playing');
+    }
+  }
+}
+
+function setLiveReplaySpeed(rate) {
+  const speed = parseFloat(rate) || 1;
+  const iframe = document.getElementById('live-stream-iframe');
+  const mount = document.getElementById('live-video-mount');
+  const vid = mount ? mount.querySelector('video') : null;
+
+  if (vid) vid.playbackRate = speed;
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.postMessage(JSON.stringify({
+      event: 'command',
+      func: 'setPlaybackRate',
+      args: [speed]
+    }), '*');
+  }
+  toast(`⚡ Speed: ${speed}x`);
+}
+
+// Course Lesson Video Controls (⏪ 10s, ⏯️ Pause/Play, ⏩ 10s)
+let lessonVideoEstTime = 0;
+let lessonVideoIsPlaying = true;
+
+function seekLessonVideo(deltaSeconds) {
+  const vid = document.getElementById('main-video-el');
+  const iframe = document.getElementById('cr-video-iframe');
+
+  if (vid) {
+    vid.currentTime = Math.max(0, vid.currentTime + deltaSeconds);
+    toast(deltaSeconds < 0 ? `⏪ ${Math.abs(deltaSeconds)}s Pichhe` : `⏩ ${deltaSeconds}s Aage`);
+    return;
+  }
+
+  if (iframe && iframe.contentWindow) {
+    lessonVideoEstTime = Math.max(0, lessonVideoEstTime + deltaSeconds);
+    iframe.contentWindow.postMessage(JSON.stringify({
+      event: 'command',
+      func: 'seekTo',
+      args: [lessonVideoEstTime, true]
+    }), '*');
+    toast(deltaSeconds < 0 ? `⏪ ${Math.abs(deltaSeconds)}s Pichhe` : `⏩ ${deltaSeconds}s Aage`);
+  }
+}
+
+function togglePlayPauseLessonVideo() {
+  const vid = document.getElementById('main-video-el');
+  const iframe = document.getElementById('cr-video-iframe');
+  const btn = document.getElementById('btn-lesson-play-pause');
+
+  if (vid) {
+    if (vid.paused) {
+      vid.play();
+      if (btn) btn.innerHTML = '⏸️';
+      toast('▶ Playing');
+    } else {
+      vid.pause();
+      if (btn) btn.innerHTML = '▶';
+      toast('⏸ Paused');
+    }
+    return;
+  }
+
+  if (iframe && iframe.contentWindow) {
+    if (lessonVideoIsPlaying) {
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'pauseVideo' }), '*');
+      lessonVideoIsPlaying = false;
+      if (btn) btn.innerHTML = '▶';
+      toast('⏸ Paused');
+    } else {
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo' }), '*');
+      lessonVideoIsPlaying = true;
+      if (btn) btn.innerHTML = '⏸️';
+      toast('▶ Playing');
+    }
+  }
+}
 
 function toggleLiveAudioMute() {
   const iframe = document.getElementById('live-stream-iframe');
@@ -3266,8 +3450,8 @@ async function openLiveRecording(classId) {
     toast('Aap is recording ke liye enrolled nahi hain.', false);
     return;
   }
-  // Open directly in the high-definition In-App Cinema Studio
-  openLiveStudio(classId);
+  // Open directly in the high-definition In-App Cinema Studio with full replay playback controls
+  openLiveStudio(classId, true);
 }
 
 // ==========================================================================

@@ -715,7 +715,25 @@
             </span>
           </div>
           <div class="live-stream-actions">
-            <!-- 0. Raise Hand / Ask to Speak Button -->
+            <!-- Replay Playback Controls (Active in Recording / Replay Mode) -->
+            <div id="live-replay-controls" class="live-replay-controls" style="display:none;align-items:center;gap:6px">
+              <button type="button" class="live-icon-btn" onclick="seekLiveReplay(-10)" title="Rewind 10s (Pichhe)">
+                ⏪ <span style="font-size:10px;font-weight:700">10s</span>
+              </button>
+              <button type="button" class="live-icon-btn" id="btn-replay-play-pause" onclick="toggleLiveReplayPlayPause()" title="Play / Pause Video">
+                ⏯️
+              </button>
+              <button type="button" class="live-icon-btn" onclick="seekLiveReplay(10)" title="Forward 10s (Aage)">
+                ⏩ <span style="font-size:10px;font-weight:700">10s</span>
+              </button>
+              <select id="select-replay-speed" onchange="setLiveReplaySpeed(this.value)" class="live-icon-btn" style="background:#0b1120;color:#fff;border:1px solid rgba(255,255,255,0.2);padding:4px 6px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer" title="Playback Speed">
+                <option value="1">1x</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+              </select>
+            </div>
+            <!-- 0. Raise Hand / Ask to Speak Button (Live Mode Only) -->
             <button type="button" class="live-icon-btn" id="live-raise-hand-btn"
               onclick="toggleLiveRaiseHand()" title="Raise Hand / Request to Speak" aria-label="Raise Hand">
               ✋
@@ -841,6 +859,15 @@
         <h3 id="cr-lesson-title" class="lesson-meta-title">Lesson Title</h3>
       </div>
       <div class="lesson-ctrl-buttons">
+        <button type="button" class="btn-player-action" onclick="seekLessonVideo(-10)" title="Rewind 10 Seconds (Pichhe)">
+          ⏪ 10s
+        </button>
+        <button type="button" class="btn-player-action" id="btn-lesson-play-pause" onclick="togglePlayPauseLessonVideo()" title="Play / Pause">
+          ⏯️
+        </button>
+        <button type="button" class="btn-player-action" onclick="seekLessonVideo(10)" title="Forward 10 Seconds (Aage)">
+          ⏩ 10s
+        </button>
         <button type="button" id="btn-replay-lesson" class="btn-player-action btn-replay" onclick="replayCurrentLesson()" title="Replay Video">
           ↺ Replay
         </button>

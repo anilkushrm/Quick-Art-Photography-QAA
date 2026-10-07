@@ -2827,9 +2827,16 @@ fbq('track', 'PageView');
       <div style="display:flex;align-items:center;gap:24px">
         <div>
           <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;font-weight:700;letter-spacing:0.5px">Active Students Watching</div>
-          <div style="font-size:26px;font-weight:900;color:#38bdf8;display:flex;align-items:center;gap:8px">
+          <div style="font-size:26px;font-weight:900;color:#10b981;display:flex;align-items:center;gap:8px">
             <span id="crTotalViewers">0</span>
             <span style="font-size:13px;font-weight:600;color:#64748b">Live Viewers</span>
+          </div>
+        </div>
+        <div style="border-left:1px solid rgba(255,255,255,0.1);padding-left:20px">
+          <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;font-weight:700;letter-spacing:0.5px">Total Enrolled / Registered</div>
+          <div style="font-size:26px;font-weight:900;color:#38bdf8;display:flex;align-items:center;gap:8px">
+            <span id="crTotalEnrolled">0</span>
+            <span style="font-size:13px;font-weight:600;color:#64748b">Enrolled</span>
           </div>
         </div>
         <div style="border-left:1px solid rgba(255,255,255,0.1);padding-left:20px">
@@ -7013,7 +7020,10 @@ async function pollControlRoomViewers() {
 
     // Metrics
     const totEl = document.getElementById('crTotalViewers');
-    if (totEl) totEl.textContent = res.totalViewers || currentControlRoomViewers.length;
+    if (totEl) totEl.textContent = res.activeCount != null ? res.activeCount : (res.totalViewers || 0);
+
+    const enrolEl = document.getElementById('crTotalEnrolled');
+    if (enrolEl) enrolEl.textContent = res.enrolledCount != null ? res.enrolledCount : currentControlRoomViewers.length;
 
     const handsCount = currentControlRoomViewers.filter(v => !!v.handRaised).length;
     const handsEl = document.getElementById('crHandsRaisedCount');
@@ -7089,16 +7099,23 @@ function renderControlRoomViewers() {
   if (countEl) countEl.textContent = filtered.length;
 
   if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:#64748b">Filhal koi live student active nahi hai. Jaise hi students judenge, yahan live list aa jayegi.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:#64748b">Filhal koi registered ya live student active nahi hai. Jaise hi students judenge, yahan live list aa jayegi.</td></tr>';
     return;
   }
 
   tbody.innerHTML = filtered.map(v => {
+    const isOnline = !!v.isOnline;
     const isHandRaised = !!v.handRaised;
     const isMicAllowed = !!v.micAllowed;
     const isScreenAllowed = !!v.screenAllowed;
 
     let interactionBadges = [];
+    if (isOnline) {
+      interactionBadges.push('<span class="badge" style="background:#10b981;color:#fff;font-weight:700;box-shadow:0 0 10px rgba(16,185,129,0.4)">🟢 Watching Live Now</span>');
+    } else {
+      interactionBadges.push('<span class="badge" style="background:rgba(148,163,184,0.12);color:#94a3b8;border:1px solid rgba(255,255,255,0.08)">⚪ Registered Student</span>');
+    }
+
     if (isHandRaised) {
       interactionBadges.push('<span class="badge" style="background:#fbbf24;color:#000;font-weight:700">✋ Hand Raised!</span>');
     }
@@ -7108,16 +7125,16 @@ function renderControlRoomViewers() {
     if (isScreenAllowed) {
       interactionBadges.push('<span class="badge" style="background:#6366f1;color:#fff">🖥️ Screen On</span>');
     }
-    if (!interactionBadges.length) {
-      interactionBadges.push('<span class="muted" style="font-size:11.5px">👀 Listening Live</span>');
-    }
 
-    const joinTime = v.joinedAt ? new Date(v.joinedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now';
+    const joinTime = v.joinedAt ? new Date(v.joinedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : (isOnline ? 'Just now' : 'Registered');
 
     return `
-      <tr style="${isHandRaised ? 'background:rgba(251,191,36,0.08);border-left:3px solid #fbbf24' : ''}">
+      <tr style="${isHandRaised ? 'background:rgba(251,191,36,0.08);border-left:3px solid #fbbf24' : (isOnline ? 'background:rgba(16,185,129,0.05);border-left:3px solid #10b981' : '')}">
         <td style="padding:10px 14px">
-          <div style="font-weight:700;color:#fff">${escapeHtml(v.name || 'Student')}</div>
+          <div style="font-weight:700;color:#fff;display:flex;align-items:center;gap:6px">
+            <span>${escapeHtml(v.name || 'Student')}</span>
+            ${isOnline ? '<span style="font-size:10px;color:#10b981;background:rgba(16,185,129,0.2);padding:2px 6px;border-radius:4px">LIVE</span>' : ''}
+          </div>
         </td>
         <td style="padding:10px 14px;color:#94a3b8;font-size:12.5px">+91 ${escapeHtml(v.phone || '')}</td>
         <td style="padding:10px 14px;color:#cbd5e1;font-size:12.5px">${escapeHtml(v.city || 'India')}</td>

@@ -1341,21 +1341,16 @@ if ($action === 'get-live-viewers' && ($method === 'GET' || $method === 'POST'))
 
     $now = time();
     $viewers = $data['viewers'] ?? [];
-    $activeList = [];
+    $activeMap = [];
 
     foreach ($viewers as $p => $v) {
-        if (($now - ($v['lastSeen'] ?? 0)) <= 35) {
-            $activeList[] = $v;
+        $pClean = clean_phone($p);
+        if (($now - ($v['lastSeen'] ?? 0)) <= 45) {
+            $v['isOnline'] = true;
+            $v['phone'] = $pClean;
+            $activeMap[$pClean] = $v;
         }
     }
-
-    // Sort so students with hand raised are on top
-    usort($activeList, function($a, $b) {
-        if (!empty($a['handRaised']) !== !empty($b['handRaised'])) {
-            return !empty($b['handRaised']) ? 1 : -1;
-        }
-        return strcmp($b['joinedAt'] ?? '', $a['joinedAt'] ?? '');
-    });
 
     $allClasses = get_all_live_classes();
     $targetClass = null;
@@ -1363,10 +1358,94 @@ if ($action === 'get-live-viewers' && ($method === 'GET' || $method === 'POST'))
         if ($c['id'] === $sessionId) { $targetClass = $c; break; }
     }
 
+    // Load registered & enrolled students
+    $studentsFile = LMS_STUDENTS_FILE;
+    $allStudents = file_exists($studentsFile) ? (json_decode(file_get_contents($studentsFile), true) ?: []) : [];
+    $offFile = DATA_DIR . '/offline-admissions.json';
+    $offAdmissions = file_exists($offFile) ? (json_decode(file_get_contents($offFile), true) ?: []) : [];
+
+    $rosterMap = [];
+
+    // First add active pingers
+    foreach ($activeMap as $p => $v) {
+        $rosterMap[$p] = $v;
+    }
+
+    // Next add students registered in students.json
+    $targetCourseId = $targetClass['courseId'] ?? '';
+    $isWorkshop = ($targetClass['type'] ?? 'workshop') === 'workshop';
+
+    foreach ($allStudents as $st) {
+        $p = clean_phone($st['phone'] ?? '');
+        if (!$p) continue;
+
+        $courses = $st['enrolledCourses'] ?? [];
+        $isEnrolled = false;
+
+        if ($p === '9939800780') {
+            $isEnrolled = true;
+        } elseif ($isWorkshop) {
+            $isEnrolled = in_array($sessionId, $courses) || in_array('masterclass-live', $courses) || in_array('live_demo_01', $courses) || count($courses) > 0;
+        } else {
+            $isEnrolled = in_array($sessionId, $courses) || ($targetCourseId && in_array($targetCourseId, $courses));
+        }
+
+        if ($isEnrolled && !isset($rosterMap[$p])) {
+            $rosterMap[$p] = [
+                'phone'         => $p,
+                'name'          => $st['name'] ?? 'Student',
+                'city'          => $st['city'] ?? ($st['workCity'] ?? 'India'),
+                'isOnline'      => false,
+                'handRaised'    => false,
+                'micAllowed'    => false,
+                'screenAllowed' => false,
+                'joinedAt'      => $st['enrolledAt'] ?? ($st['registeredAt'] ?? ''),
+                'status'        => 'registered'
+            ];
+        }
+    }
+
+    // Add offline admissions if workshop or batch
+    foreach ($offAdmissions as $adm) {
+        $p = clean_phone($adm['phone'] ?? '');
+        if (!$p) continue;
+        if (!isset($rosterMap[$p])) {
+            $rosterMap[$p] = [
+                'phone'         => $p,
+                'name'          => $adm['name'] ?? 'Offline Student',
+                'city'          => $adm['city'] ?? ($adm['workCity'] ?? 'India'),
+                'isOnline'      => false,
+                'handRaised'    => false,
+                'micAllowed'    => false,
+                'screenAllowed' => false,
+                'joinedAt'      => $adm['registeredAt'] ?? '',
+                'status'        => 'registered'
+            ];
+        }
+    }
+
+    $rosterList = array_values($rosterMap);
+
+    // Sort: Hand Raised first, then Online Watching, then Registered
+    usort($rosterList, function($a, $b) {
+        if (!empty($a['handRaised']) !== !empty($b['handRaised'])) {
+            return !empty($b['handRaised']) ? 1 : -1;
+        }
+        if (!empty($a['isOnline']) !== !empty($b['isOnline'])) {
+            return !empty($b['isOnline']) ? 1 : -1;
+        }
+        return strcmp($b['joinedAt'] ?? '', $a['joinedAt'] ?? '');
+    });
+
+    $activeCount = count($activeMap);
+    $enrolledCount = count($rosterList);
+
     json_ok([
-        'totalViewers'              => count($activeList),
-        'viewers'                   => $activeList,
-        'showViewerCountToStudents' => !empty($targetClass['showViewerCountToStudents']),
+        'totalViewers'              => $activeCount,
+        'activeCount'               => $activeCount,
+        'enrolledCount'             => $enrolledCount,
+        'viewers'                   => $rosterList,
+        'showViewerCountToStudents' => !isset($targetClass['showViewerCountToStudents']) || !empty($targetClass['showViewerCountToStudents']),
         'allowStudentMic'           => !empty($targetClass['allowStudentMic']),
         'allowStudentScreen'        => !empty($targetClass['allowStudentScreen']),
         'status'                    => $targetClass['status'] ?? 'scheduled',

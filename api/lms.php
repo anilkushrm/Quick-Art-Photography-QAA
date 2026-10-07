@@ -2677,7 +2677,7 @@ if ($action === 'get-live-session' && ($method === 'GET' || $method === 'POST'))
         $finalReplayUrl = generate_bunny_video_url($libId, $bunnyVid, $tokenKey);
     }
 
-    $showViewers = !empty($target['showViewerCountToStudents']);
+    $showViewers = !isset($target['showViewerCountToStudents']) || !empty($target['showViewerCountToStudents']);
     $viewerCount = null;
     if ($showViewers) {
         $attendanceFile = DATA_DIR . '/live-viewers-' . preg_replace('/[^a-zA-Z0-9_-]/', '', $target['id']) . '.json';
@@ -2826,7 +2826,7 @@ if ($action === 'live-ping' && $method === 'POST') {
         }
     }
 
-    $showViewerCount = !empty($targetClass['showViewerCountToStudents']);
+    $showViewerCount = !isset($targetClass['showViewerCountToStudents']) || !empty($targetClass['showViewerCountToStudents']);
     $totalCount = count($activeViewers);
 
     json_ok([

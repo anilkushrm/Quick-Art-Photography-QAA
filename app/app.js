@@ -2506,16 +2506,106 @@ async function sendStudentLivePing() {
       }
     }
 
-    // 2-Way Stage Interaction Mic Alert
+    // Save Stage Session Details
+    if (res.stageGuestUrl) window._currentStageGuestUrl = res.stageGuestUrl;
+    if (res.stageRoom) window._currentStageRoom = res.stageRoom;
+
+    // 2-Way Stage Interaction Mic Alert & Live Connect
     const micBanner = document.getElementById('live-mic-permission-banner');
-    if (micBanner) {
-      if (res.micAllowed) {
-        micBanner.classList.remove('hidden');
-      } else {
-        micBanner.classList.add('hidden');
+    if (res.micAllowed) {
+      if (!window._isStudentOnStage) {
+        if (micBanner) micBanner.classList.remove('hidden');
+      }
+    } else {
+      if (micBanner) micBanner.classList.add('hidden');
+      if (window._isStudentOnStage) {
+        disconnectLiveStage(true);
+        toast('🎙️ Live mic stage ended by mentor');
       }
     }
   } catch (e) {}
+}
+
+function connectLiveStage(mode = 'mic') {
+  if (!window._currentStageGuestUrl && currentLiveSession) {
+    const stageRoom = 'qaa_stage_' + (currentLiveSession.id || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 12);
+    const stuPhone = (currentStudent && currentStudent.phone) || 'guest';
+    const stuName = (currentStudent && currentStudent.name) || 'Student';
+    window._currentStageGuestUrl = `https://vdo.ninja/?room=${stageRoom}&push=${encodeURIComponent(stuPhone)}&label=${encodeURIComponent(stuName)}`;
+  }
+
+  if (!window._currentStageGuestUrl) {
+    toast('Stage link not ready yet. Please try again in 5 seconds.');
+    return;
+  }
+
+  window._isStudentOnStage = true;
+  const micBanner = document.getElementById('live-mic-permission-banner');
+  if (micBanner) micBanner.classList.add('hidden');
+
+  const stageDock = document.getElementById('live-stage-active-dock');
+  if (stageDock) stageDock.classList.remove('hidden');
+
+  const modeLabel = document.getElementById('live-stage-mode-label');
+  const frameContainer = document.getElementById('live-stage-frame-container');
+
+  let targetUrl = window._currentStageGuestUrl;
+  if (mode === 'screen') {
+    if (modeLabel) modeLabel.textContent = '🖥️ SCREEN / TIMELINE LIVE';
+    targetUrl += '&screenshare=1&webcam=0&mic=1&darkmode=1&transparent=1&cleanoutput=1';
+    if (frameContainer) {
+      frameContainer.style.display = 'block';
+      frameContainer.innerHTML = `<iframe id="live-stage-iframe" src="${targetUrl}" allow="camera; microphone; display-capture; autoplay; clipboard-write" style="width:100%; height:260px; border:none; border-radius:10px;" allowfullscreen></iframe>`;
+    }
+    toast('🖥️ Screen Share Stage Active! Select your editing window to share.');
+  } else {
+    if (modeLabel) modeLabel.textContent = '🎙️ MIC CONNECTED & LIVE';
+    targetUrl += '&webcam=0&mic=1&darkmode=1&transparent=1&cleanoutput=1';
+    if (frameContainer) {
+      frameContainer.style.display = 'block';
+      frameContainer.innerHTML = `<iframe id="live-stage-iframe" src="${targetUrl}" allow="camera; microphone; display-capture; autoplay; clipboard-write" style="width:100%; height:110px; border:none; border-radius:10px;" allowfullscreen></iframe>`;
+    }
+    toast('🎙️ Microphone Live! Aap bol sakte hain.');
+  }
+}
+
+function disconnectLiveStage(byMentor = false) {
+  window._isStudentOnStage = false;
+  const frameContainer = document.getElementById('live-stage-frame-container');
+  if (frameContainer) {
+    frameContainer.innerHTML = '';
+    frameContainer.style.display = 'none';
+  }
+
+  const stageDock = document.getElementById('live-stage-active-dock');
+  if (stageDock) stageDock.classList.add('hidden');
+
+  const micBanner = document.getElementById('live-mic-permission-banner');
+  if (micBanner) micBanner.classList.add('hidden');
+
+  if (!byMentor) {
+    isStudentHandRaised = false;
+    const btn = document.getElementById('live-raise-hand-btn');
+    if (btn) {
+      btn.classList.remove('hand-active');
+      btn.title = 'Raise Hand / Request to Speak';
+    }
+    sendStudentLivePing();
+    toast('⏹️ Live stage disconnected. Aap mute ho gaye hain.');
+  }
+}
+
+function declineLiveStage() {
+  const micBanner = document.getElementById('live-mic-permission-banner');
+  if (micBanner) micBanner.classList.add('hidden');
+  isStudentHandRaised = false;
+  const btn = document.getElementById('live-raise-hand-btn');
+  if (btn) {
+    btn.classList.remove('hand-active');
+    btn.title = 'Raise Hand / Request to Speak';
+  }
+  sendStudentLivePing();
+  toast('Stage request declined');
 }
 
 function toggleLiveRaiseHand() {
@@ -3426,6 +3516,9 @@ function exitLiveStudio() {
   if (handBtn) {
     handBtn.classList.remove('hand-active');
     handBtn.title = 'Raise Hand / Request to Speak';
+  }
+  if (window._isStudentOnStage) {
+    disconnectLiveStage(true);
   }
   const micBanner = document.getElementById('live-mic-permission-banner');
   if (micBanner) micBanner.classList.add('hidden');

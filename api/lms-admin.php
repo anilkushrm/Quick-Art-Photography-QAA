@@ -1440,6 +1440,10 @@ if ($action === 'get-live-viewers' && ($method === 'GET' || $method === 'POST'))
     $activeCount = count($activeMap);
     $enrolledCount = count($rosterList);
 
+    $stageRoom = 'qaa_stage_' . substr(md5('qaa_stage_salt_' . $sessionId), 0, 12);
+    $stageObsUrl = "https://vdo.ninja/?room={$stageRoom}&view={$stageRoom}&transparent=1&cleanoutput=1&audioonly=0";
+    $stageDirectorUrl = "https://vdo.ninja/?director={$stageRoom}";
+
     json_ok([
         'totalViewers'              => $activeCount,
         'activeCount'               => $activeCount,
@@ -1448,6 +1452,9 @@ if ($action === 'get-live-viewers' && ($method === 'GET' || $method === 'POST'))
         'showViewerCountToStudents' => !isset($targetClass['showViewerCountToStudents']) || !empty($targetClass['showViewerCountToStudents']),
         'allowStudentMic'           => !empty($targetClass['allowStudentMic']),
         'allowStudentScreen'        => !empty($targetClass['allowStudentScreen']),
+        'stageRoom'                 => $stageRoom,
+        'stageObsUrl'               => $stageObsUrl,
+        'stageDirectorUrl'          => $stageDirectorUrl,
         'status'                    => $targetClass['status'] ?? 'scheduled',
         'bunnyVideoId'              => $targetClass['bunnyVideoId'] ?? '',
         'replayUrl'                 => $targetClass['replayUrl'] ?? ''

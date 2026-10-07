@@ -2828,6 +2828,9 @@ if ($action === 'live-ping' && $method === 'POST') {
 
     $showViewerCount = !isset($targetClass['showViewerCountToStudents']) || !empty($targetClass['showViewerCountToStudents']);
     $totalCount = count($activeViewers);
+    $stageRoom = 'qaa_stage_' . substr(md5('qaa_stage_salt_' . $sessionId), 0, 12);
+    $stuName = $stu['name'] ?? 'Student';
+    $stageGuestUrl = "https://vdo.ninja/?room={$stageRoom}&push=" . urlencode($stuPhone) . "&label=" . urlencode($stuName) . "&autostart=1&cleanoutput=1";
 
     json_ok([
         'showViewerCount' => $showViewerCount,
@@ -2836,6 +2839,8 @@ if ($action === 'live-ping' && $method === 'POST') {
         'cameraAllowed'   => $cameraAllowed,
         'screenAllowed'   => $screenAllowed,
         'handRaised'      => $finalHandRaised,
+        'stageRoom'       => $stageRoom,
+        'stageGuestUrl'   => $stageGuestUrl,
         'status'          => $targetClass['status'] ?? 'live'
     ]);
 }

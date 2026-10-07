@@ -608,13 +608,46 @@
       </div>
     </div>
 
-    <!-- Live 2-Way Stage Interaction Alert Banner -->
-    <div id="live-mic-permission-banner" class="hidden" style="margin: 8px 16px; background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(5,150,105,0.3)); border: 1px solid #10b981; color: #a7f3d0; padding: 10px 14px; border-radius: 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span style="font-size:18px;">🎙️</span>
-        <span>Mentor Anil Sharma ne aapko mic / bolne ki permission di hai! Aap live stream me interact kar sakte hain.</span>
+    <!-- Live 2-Way Stage Interaction Banner & Active Stage Dock -->
+    <div id="live-mic-permission-banner" class="hidden" style="margin: 8px 16px; background: linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.35)); border: 1.5px solid #10b981; color: #fff; padding: 12px 16px; border-radius: 14px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 20px rgba(16,185,129,0.25);">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:24px;">🎙️</span>
+        <div>
+          <div style="font-weight:800;color:#6ee7b7;font-size:14px">Mentor Anil Sharma ne aapko Stage par bulaya hai!</div>
+          <div style="font-size:12px;color:#d1fae5;margin-top:2px">Aap live mic se sawal pooch sakte hain ya editing screen share kar sakte hain.</div>
+        </div>
       </div>
-      <button type="button" onclick="document.getElementById('live-mic-permission-banner').classList.add('hidden')" style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer;padding:2px 6px;">✕</button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button type="button" onclick="connectLiveStage('mic')" class="btn" style="background:#10b981;color:#fff;font-weight:800;font-size:12px;padding:7px 14px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 2px 10px rgba(16,185,129,0.4)">
+          🎙️ Bolna Shuru Karein (Mic On)
+        </button>
+        <button type="button" onclick="connectLiveStage('screen')" class="btn" style="background:rgba(99,102,241,0.9);color:#fff;font-weight:700;font-size:12px;padding:7px 12px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;gap:6px">
+          🖥️ Screen / Timeline
+        </button>
+        <button type="button" onclick="declineLiveStage()" style="background:none;border:none;color:#cbd5e1;font-size:12px;cursor:pointer;padding:6px 8px;text-decoration:underline">Baad me</button>
+      </div>
+    </div>
+
+    <!-- Active Stage Dock (When on stage) -->
+    <div id="live-stage-active-dock" class="hidden" style="margin: 8px 16px; background: #0f172a; border: 2px solid #ef4444; color: #fff; padding: 12px 16px; border-radius: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 25px rgba(239,68,68,0.35);">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:12px;height:12px;background:#ef4444;border-radius:50%;box-shadow:0 0 10px #ef4444;"></div>
+          <div>
+            <div style="font-weight:800;color:#fff;font-size:13.5px;display:flex;align-items:center;gap:8px">
+              <span>🔴 LIVE ON STAGE WITH MENTOR</span>
+              <span id="live-stage-mode-label" style="font-size:11px;background:rgba(239,68,68,0.25);color:#fca5a5;padding:2px 8px;border-radius:6px;font-weight:700">MIC CONNECTED</span>
+            </div>
+            <div style="font-size:11.5px;color:#94a3b8;margin-top:2px">Aapki aawaz live YouTube stream me mentor aur students ko sunayi de rahi hai.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button type="button" onclick="disconnectLiveStage()" class="btn" style="background:#ef4444;color:#fff;font-weight:800;font-size:12px;padding:7px 14px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;gap:6px">
+            ⏹️ Stage Chhodein (Mute)
+          </button>
+        </div>
+      </div>
+      <div id="live-stage-frame-container" style="display:none;width:100%;border-radius:10px;overflow:hidden;background:#090d16;border:1px solid rgba(255,255,255,0.1)"></div>
     </div>
 
     <!-- Cinema Layout Grid -->

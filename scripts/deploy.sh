@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-SERVER="root@88.222.242.85"
+SERVER="root@srv1981820.hstgr.cloud"
 DEST="/var/www/quickartphotography"
 
 echo "🚀 Syncing website files to live server..."

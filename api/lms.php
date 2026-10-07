@@ -201,11 +201,20 @@ function map_offline_course_id($courseTitle) {
 function extract_youtube_id($input) {
     if (empty($input) || !is_string($input)) return '';
     $input = trim($input);
-    if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i', $input, $m)) {
+    if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|live|shorts)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i', $input, $m)) {
         return $m[1];
     }
     if (preg_match('/^[a-zA-Z0-9_-]{11}$/', $input) && strpos($input, 'demo-') !== 0 && strpos($input, 'les-') !== 0) {
         return $input;
+    }
+    return '';
+}
+
+function extract_bunny_video_id($input) {
+    if (empty($input) || !is_string($input)) return '';
+    $input = trim($input);
+    if (preg_match('/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i', $input, $m)) {
+        return $m[0];
     }
     return '';
 }
@@ -1539,25 +1548,23 @@ if ($action === 'get-lesson' && $method === 'GET') {
     $streamUrl = $targetLesson['videoUrl'] ?? '';
     $rawVideoId = $targetLesson['videoId'] ?? '';
     $ytId = extract_youtube_id($rawVideoId) ?: extract_youtube_id($streamUrl);
+    $bunnyId = '';
 
     if ($ytId) {
         $videoType = 'youtube';
-        // youtube-nocookie embed with privacy, minimal branding, disabled kb shortcuts and jsapi enabled
-        $streamUrl = "https://www.youtube-nocookie.com/embed/{$ytId}?enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3&controls=1&showinfo=0&disablekb=0&playsinline=1";
+        // youtube-nocookie embed with privacy, full player controls, fullscreen enabled, and jsapi enabled
+        $streamUrl = "https://www.youtube-nocookie.com/embed/{$ytId}?enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3&controls=1&showinfo=0&disablekb=0&playsinline=1&fs=1";
     } else {
-        // If videoId is a real Bunny Stream Video ID (not a placeholder demo-*), activate secure Bunny player
-        $isBunnyVideo = !empty($rawVideoId) && 
-                        strpos($rawVideoId, 'demo-') !== 0 && 
-                        !empty($settings['bunnyLibraryId']) &&
-                        strlen($rawVideoId) > 15;
-
-        if ($isBunnyVideo) {
+        $bunnyId = extract_bunny_video_id($rawVideoId) ?: extract_bunny_video_id($streamUrl);
+        if ($bunnyId) {
             $videoType = 'bunny_stream';
             $streamUrl = generate_bunny_video_url(
-                $settings['bunnyLibraryId'],
-                $rawVideoId,
+                $settings['bunnyLibraryId'] ?: '755385',
+                $bunnyId,
                 $settings['bunnyTokenAuthKey'] ?? ''
             );
+        } elseif (strpos($streamUrl, 'iframe.mediadelivery.net') !== false || strpos($streamUrl, 'video.bunnycdn.com') !== false) {
+            $videoType = 'bunny_stream';
         }
     }
 
@@ -1573,6 +1580,7 @@ if ($action === 'get-lesson' && $method === 'GET') {
             'videoType' => $videoType,
             'streamUrl' => $streamUrl,
             'youtubeId' => $ytId ?: '',
+            'bunnyVideoId' => $bunnyId ?: '',
             'isCompleted' => in_array($targetLesson['id'], $completed)
         ],
         'watermark' => [
@@ -2515,9 +2523,17 @@ if ($action === 'get-live-classes' && $method === 'GET') {
 
         // Only reveal stream credentials, resources & replay url if authorized
         if ($isAuth) {
+            $safeItem['streamType'] = $c['streamType'] ?? (!empty($c['bunnyVideoId']) ? 'bunny' : 'cloudflare');
             if (!empty($c['streamId'])) {
                 $safeItem['streamId'] = $c['streamId'];
             }
+            $safeItem['cloudflareVideoId'] = $c['cloudflareVideoId'] ?? '';
+            $safeItem['bunnyVideoId'] = $c['bunnyVideoId'] ?? '';
+            $safeItem['meetUrl'] = $c['meetUrl'] ?? '';
+            $safeItem['zoomUrl'] = $c['zoomUrl'] ?? '';
+            $safeItem['zoomMeetingId'] = $c['zoomMeetingId'] ?? '';
+            $safeItem['zoomPasscode'] = $c['zoomPasscode'] ?? '';
+            $safeItem['zoomEmbedMode'] = !empty($c['zoomEmbedMode']);
             $safeItem['resources'] = $c['resources'] ?? [];
             if ($c['status'] === 'completed' && !empty($c['replayUrl'])) {
                 $safeItem['replayUrl'] = $c['replayUrl'];
@@ -2702,9 +2718,16 @@ if ($action === 'get-live-session' && ($method === 'GET' || $method === 'POST'))
         'status'                    => $target['status'] ?? 'scheduled',
         'scheduledAt'               => $target['scheduledAt'] ?? '',
         'duration'                  => $target['duration'] ?? '90 Mins',
+        'streamType'                => $target['streamType'] ?? (!empty($bunnyVid) ? 'bunny' : 'cloudflare'),
         'streamId'                  => $target['streamId'] ?? '',
         'replayUrl'                 => $finalReplayUrl,
         'bunnyVideoId'              => $bunnyVid,
+        'cloudflareVideoId'         => $target['cloudflareVideoId'] ?? '',
+        'meetUrl'                   => $target['meetUrl'] ?? '',
+        'zoomUrl'                   => $target['zoomUrl'] ?? '',
+        'zoomMeetingId'             => $target['zoomMeetingId'] ?? '',
+        'zoomPasscode'              => $target['zoomPasscode'] ?? '',
+        'zoomEmbedMode'             => !empty($target['zoomEmbedMode']),
         'showViewerCountToStudents' => $showViewers,
         'viewerCount'               => $viewerCount,
         'allowStudentMic'           => !empty($target['allowStudentMic']),
@@ -2764,14 +2787,74 @@ if ($action === 'send-live-doubt' && $method === 'POST') {
 }
 
 // 21.41 Student Live Attendance Heartbeat & Interactivity Ping
-if ($action === 'live-ping' && $method === 'POST') {
-    $stu = require_student();
+if ($action === 'live-ping' && ($method === 'POST' || $method === 'GET')) {
     $body = read_json_body() ?: $_POST;
-    $sessionId = trim($body['sessionId'] ?? '');
+    if (empty($body)) {
+        $raw = file_get_contents('php://input');
+        if ($raw) {
+            $dec = json_decode($raw, true);
+            if (is_array($dec)) $body = $dec;
+            elseif (is_string($dec)) {
+                $dec2 = json_decode($dec, true);
+                if (is_array($dec2)) $body = $dec2;
+            }
+        }
+    }
+    $sessionId = trim($body['sessionId'] ?? ($_POST['sessionId'] ?? ($_GET['sessionId'] ?? '')));
+    if (!$sessionId) {
+        // Auto-detect currently live session
+        foreach (get_all_live_classes() as $c) {
+            if (($c['status'] ?? '') === 'live') {
+                $sessionId = $c['id'];
+                break;
+            }
+        }
+    }
     if (!$sessionId) json_err('Session ID required', 400);
 
-    $handRaised = !empty($body['handRaised']);
+    // Identify student (authenticated or guest fallback)
+    $token = $_SERVER['HTTP_X_STUDENT_TOKEN'] ?? ($_GET['token'] ?? '');
+    if (!$token) {
+        $auth = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '');
+        if (preg_match('/Bearer\s+(.+)$/i', $auth, $m)) $token = trim($m[1]);
+    }
+
+    $stu = null;
+    if ($token && file_exists(LMS_SESSIONS_FILE)) {
+        $sessions = json_decode(file_get_contents(LMS_SESSIONS_FILE), true);
+        if (isset($sessions[$token]) && $sessions[$token]['expiresAt'] >= time()) {
+            $sessionPhone = clean_phone($sessions[$token]['phone'] ?? '');
+            $students = load_students();
+            foreach ($students as $s) {
+                if (clean_phone($s['phone'] ?? '') === $sessionPhone) {
+                    $stu = $s;
+                    break;
+                }
+            }
+            if (!$stu) {
+                $stu = [
+                    'id'    => 'stu_' . substr(md5($sessionPhone), 0, 8),
+                    'name'  => $sessions[$token]['name'] ?? 'Student',
+                    'phone' => $sessionPhone,
+                    'city'  => 'India'
+                ];
+            }
+        }
+    }
+
+    if (!$stu) {
+        $ipHash = substr(md5($_SERVER['REMOTE_ADDR'] ?? 'guest'), 0, 8);
+        $stu = [
+            'id'    => 'guest_' . $ipHash,
+            'name'  => 'Guest Viewer',
+            'phone' => 'guest_' . $ipHash,
+            'city'  => 'Live Viewer'
+        ];
+    }
+
+    $handRaised = !empty($body['handRaised']) || !empty($_POST['handRaised']);
     $stuPhone = clean_phone($stu['phone'] ?? '');
+    if (!$stuPhone) $stuPhone = $stu['phone'] ?? ('guest_' . substr(md5(uniqid()), 0, 6));
 
     $attendanceFile = DATA_DIR . '/live-viewers-' . preg_replace('/[^a-zA-Z0-9_-]/', '', $sessionId) . '.json';
     $data = file_exists($attendanceFile) ? (json_decode(file_get_contents($attendanceFile), true) ?: []) : [];
@@ -2780,9 +2863,9 @@ if ($action === 'live-ping' && $method === 'POST') {
     $viewers = $data['viewers'] ?? [];
     $activeViewers = [];
 
-    // Prune viewers older than 35s
+    // Prune viewers older than 60s
     foreach ($viewers as $p => $v) {
-        if (($now - ($v['lastSeen'] ?? 0)) <= 35) {
+        if (($now - ($v['lastSeen'] ?? 0)) <= 60) {
             $activeViewers[$p] = $v;
         }
     }
@@ -2792,8 +2875,8 @@ if ($action === 'live-ping' && $method === 'POST') {
     $cameraAllowed = !empty($existing['cameraAllowed']);
     $screenAllowed = !empty($existing['screenAllowed']);
 
-    // If student manually cancelled hand raise
-    if (isset($body['handRaised'])) {
+    // If student manually toggled hand raise
+    if (isset($body['handRaised']) || isset($_POST['handRaised'])) {
         $finalHandRaised = $handRaised;
     } else {
         $finalHandRaised = !empty($existing['handRaised']);

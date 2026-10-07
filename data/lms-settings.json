@@ -4,6 +4,8 @@
     "bunnyTokenAuthKey": "436c7112-8150-409c-b5f3-d29a1856b06b",
     "bunnyHostname": "iframe.mediadelivery.net",
     "bunnyAccountApiKey": "174c5167-ecb1-4d9d-9b47-d085ebf2e098dd0da2e5-9071-45ad-b088-9683075c7ed1",
+    "cloudflareAccountId": "",
+    "cloudflareApiToken": "",
     "razorpayEnabled": true,
     "razorpayKeyId": "",
     "razorpayKeySecret": "",

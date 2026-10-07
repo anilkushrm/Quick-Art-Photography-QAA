@@ -672,16 +672,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if (data.paymentMode === 'online' && data.razorpay && window.Razorpay && !data.isOnlineBatch) {
               handleRazorpayPayment(data);
             } else {
-              // Form submitted (Batch or Offline) - Redirect directly to Webinar section
-              qaTrackAdmission(data, true);
+              // Form submitted (Batch or Offline) - Show ID Card and Confirmation
               if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '✓ Form Submitted! Redirecting...';
+                submitBtn.innerHTML = '✓ Form Submitted Successfully!';
               }
-              showStatus('✓ Admission Form safalta se submit ho gaya hai! Admin approval ke baad access unlock hoga. Aap baad me apna ID Card "My Profile" section se download kar sakte hain. Live & Webinars section me redirect kiya ja raha hai...', 'success');
-              setTimeout(function () {
-                window.location.href = '../app/?tab=live';
-              }, 1200);
+              showStatus('✓ Admission Form safalta se submit ho gaya hai! Aapka Student ID Card issue ho gaya hai.', 'success');
+              showSuccessModal(data, false);
             }
           })
           .catch(function (err) {
@@ -738,15 +735,12 @@ document.addEventListener('DOMContentLoaded', function () {
                   localStorage.setItem('qa_student_token', verifyData.token);
                 } catch (e) { }
               }
-              qaTrackAdmission(admissionData, true);
               if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '✓ Payment Successful! Redirecting...';
+                submitBtn.innerHTML = '✓ Payment Successful!';
               }
-              showStatus('✓ Payment verify ho gaya hai! Admin approval ke baad admission confirm hoga. Aap baad me apna ID Card "My Profile" section se download kar sakte hain. Live & Webinars section me redirect kiya ja raha hai...', 'success');
-              setTimeout(function () {
-                window.location.href = '../app/?tab=live';
-              }, 1200);
+              showStatus('✓ Payment verify ho gaya hai! Aapka Student ID Card issue ho gaya hai.', 'success');
+              showSuccessModal(admissionData, true);
             } else {
               showStatus('Payment verification failed. Please contact academy support: +91 9939800780', 'error');
             }
@@ -792,12 +786,7 @@ document.addEventListener('DOMContentLoaded', function () {
       } catch (e) { }
 
       var origin = window.location.origin;
-      var virtualPath = '/admission/thank-you/';
-      var virtualUrl = origin + virtualPath + '?type=offline-admission' + (isPaid ? '&fee=paid' : '&fee=cash');
-
-      // Page reload kiye bina URL thodi der ke liye virtual thank-you URL par
-      var originalUrl = window.location.href;
-      try { history.replaceState(history.state, '', virtualPath + '?type=offline-admission'); } catch (e) { }
+      var thankYouUrl = origin + '/thank-you/?type=offline-admission' + (isPaid ? '&fee=paid' : '&fee=cash');
 
       // Facebook Pixel
       if (typeof fbq === 'function') {
@@ -806,28 +795,28 @@ document.addEventListener('DOMContentLoaded', function () {
           content_name: 'Offline Admission Form',
           content_category: 'Offline',
           currency: 'INR',
-          value: 0
+          value: isPaid ? 500 : 0
         }, { eventID: 'adm_' + admId });
       }
 
       // Google Analytics 4 (G-H6DKT8Y659)
       if (typeof gtag === 'function') {
+        gtag('event', 'generate_lead', {
+          event_category: 'Offline Admission',
+          event_label: admId,
+          value: isPaid ? 500 : 0,
+          currency: 'INR'
+        });
         gtag('event', 'page_view', {
-          page_location: virtualUrl,
-          page_path: virtualPath,
+          page_location: thankYouUrl,
+          page_path: '/thank-you/',
           page_title: 'Admission Thank You'
         });
       }
 
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: 'offline_admission_submit', admission_id: admId, fee_paid: !!isPaid });
-
-      // Address bar wapas original URL par (refresh karne par form hi khule)
-      setTimeout(function () {
-        try { history.replaceState(history.state, '', originalUrl); } catch (e) { }
-      }, 1500);
     } catch (err) {
-      // Tracking kabhi bhi admission ko nahi rokega
       if (window.console) console.warn('Admission tracking error', err);
     }
   }
@@ -1020,7 +1009,7 @@ document.addEventListener('DOMContentLoaded', function () {
   window.closeAdmissionModal = function () {
     var modal = document.getElementById('adm-success-modal');
     if (modal) modal.style.display = 'none';
-    window.location.href = '../portal/';
+    window.location.href = '/portal/';
   };
 
   function escapeHtml(str) {

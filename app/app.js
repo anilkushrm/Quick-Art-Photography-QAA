@@ -1645,17 +1645,50 @@ async function loadLessonToPlayer(courseId, lessonId) {
 
     const mount = document.getElementById('cr-video-mount');
     const streamUrl = activeLesson.streamUrl || activeLesson.videoUrl || activeLesson.bunnyIframeUrl || activeLesson.embedUrl || activeLesson.url || '';
-    const videoType = activeLesson.videoType || '';
+    const rawAll = [
+      activeLesson.youtubeId,
+      activeLesson.videoId,
+      activeLesson.streamUrl,
+      activeLesson.videoUrl,
+      activeLesson.bunnyIframeUrl,
+      activeLesson.embedUrl,
+      activeLesson.url
+    ].filter(Boolean).join(' ');
+
     let ytId = activeLesson.youtubeId || '';
-    if (!ytId && streamUrl) {
-      const match = streamUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+    if (!ytId) {
+      const match = rawAll.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|live|shorts)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
       if (match) ytId = match[1];
     }
 
-    if (videoType === 'bunny_stream' || streamUrl.includes('iframe.mediadelivery.net')) {
-      const sep = streamUrl.includes('?') ? '&' : '?';
-      const cleanUrl = streamUrl.includes('_t=') ? streamUrl : (streamUrl + sep + '_t=' + Date.now() + '&autoplay=true');
-      mount.innerHTML = `<iframe id="cr-video-iframe" src="${cleanUrl}" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+    let bunnyId = activeLesson.bunnyVideoId || '';
+    if (!bunnyId) {
+      const bMatch = rawAll.match(/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i);
+      if (bMatch) bunnyId = bMatch[0];
+    }
+
+    const isYt = !!ytId || activeLesson.videoType === 'youtube';
+    const isBunny = !isYt && (
+      activeLesson.videoType === 'bunny_stream' ||
+      activeLesson.videoType === 'bunny' ||
+      !!bunnyId ||
+      rawAll.includes('iframe.mediadelivery.net') ||
+      rawAll.includes('video.bunnycdn.com')
+    );
+
+    if (isBunny) {
+      let bunnyUrl = '';
+      if (streamUrl && streamUrl.includes('iframe.mediadelivery.net')) {
+        bunnyUrl = streamUrl;
+      } else if (bunnyId) {
+        bunnyUrl = `https://iframe.mediadelivery.net/embed/755385/${encodeURIComponent(bunnyId)}?autoplay=true&preload=true&responsive=true`;
+      } else {
+        bunnyUrl = streamUrl;
+      }
+
+      const sep = bunnyUrl.includes('?') ? '&' : '?';
+      const cleanUrl = bunnyUrl.includes('_t=') ? bunnyUrl : (bunnyUrl + sep + '_t=' + Date.now() + '&autoplay=true');
+      mount.innerHTML = `<iframe id="cr-video-iframe" src="${cleanUrl}" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="width:100%;height:100%;border:none;pointer-events:auto !important;"></iframe>`;
       
       // Listen for bunny end event
       window._bunnyEndedListener && window.removeEventListener('message', window._bunnyEndedListener);
@@ -1669,12 +1702,12 @@ async function loadLessonToPlayer(courseId, lessonId) {
       };
       window.addEventListener('message', window._bunnyEndedListener);
 
-    } else if (videoType === 'youtube' || ytId) {
-      const yUrl = streamUrl || `https://www.youtube-nocookie.com/embed/${ytId}?enablejsapi=1&autoplay=1&rel=0&modestbranding=1&playsinline=1&controls=1&fs=1`;
+    } else if (isYt && ytId) {
+      const yUrl = `https://www.youtube-nocookie.com/embed/${ytId}?enablejsapi=1&autoplay=1&rel=0&modestbranding=1&playsinline=1&controls=1&fs=1`;
       mount.innerHTML = `<iframe id="cr-video-iframe" src="${yUrl}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen style="width:100%;height:100%;border:none;pointer-events:auto !important;"></iframe>`;
 
     } else if (streamUrl) {
-      mount.innerHTML = `<video id="main-video-el" src="${streamUrl}" controls playsinline style="width:100%;height:100%;object-fit:contain;background:#000;"></video>`;
+      mount.innerHTML = `<video id="main-video-el" src="${streamUrl}" controls playsinline style="width:100%;height:100%;object-fit:contain;background:#000;pointer-events:auto !important;"></video>`;
       const vidEl = document.getElementById('main-video-el');
       if (vidEl) {
         vidEl.addEventListener('ended', handleLessonVideoEnded);
@@ -2485,7 +2518,7 @@ function cleanYouTubeVideoId(input) {
 async function sendStudentLivePing() {
   if (!currentLiveSession || !currentLiveSession.id) return;
   try {
-    const res = await apiFetch('live-ping', {
+    const res = await apiFetch('live-ping&sessionId=' + encodeURIComponent(currentLiveSession.id), {
       method: 'POST',
       body: {
         sessionId: currentLiveSession.id,
@@ -2512,7 +2545,7 @@ async function sendStudentLivePing() {
 
     // 2-Way Stage Interaction Mic Alert & Live Connect
     const micBanner = document.getElementById('live-mic-permission-banner');
-    if (res.micAllowed) {
+    if (res.micAllowed || res.screenAllowed) {
       if (!window._isStudentOnStage) {
         if (micBanner) micBanner.classList.remove('hidden');
       }
@@ -2520,7 +2553,7 @@ async function sendStudentLivePing() {
       if (micBanner) micBanner.classList.add('hidden');
       if (window._isStudentOnStage) {
         disconnectLiveStage(true);
-        toast('🎙️ Live mic stage ended by mentor');
+        toast('🎙️ Live stage ended by mentor');
       }
     }
   } catch (e) {}
@@ -2752,11 +2785,8 @@ async function openLiveStudio(liveId, forceReplay = false) {
     if (pill) {
       if (res.showViewerCountToStudents !== false) {
         pill.style.display = 'inline-flex';
-        if (typeof res.viewerCount === 'number' && res.viewerCount > 10) {
-          updateLiveAttendeesDisplay(res.viewerCount, false);
-        } else {
-          updateLiveAttendeesDisplay(currentLiveAttendeesCount, false);
-        }
+        const count = (typeof res.viewerCount === 'number' && res.viewerCount > 10) ? res.viewerCount : (isReplay ? 747 : currentLiveAttendeesCount);
+        updateLiveAttendeesDisplay(count, false);
       } else {
         pill.style.display = 'none';
       }
@@ -2770,10 +2800,26 @@ async function openLiveStudio(liveId, forceReplay = false) {
     if (liveDoubtsPollTimer) clearInterval(liveDoubtsPollTimer);
     liveDoubtsPollTimer = setInterval(pollLiveDoubtsStudent, 3500);
 
-    // Start Real-Time Live Ping (15s Heartbeat & Media Permissions)
-    if (livePingTimer) clearInterval(livePingTimer);
-    sendStudentLivePing();
-    livePingTimer = setInterval(sendStudentLivePing, 15000);
+    // Start Real-Time Live Ping ONLY for LIVE broadcast (not for completed recordings)
+    if (!isReplay) {
+      if (livePingTimer) clearInterval(livePingTimer);
+      sendStudentLivePing();
+      livePingTimer = setInterval(sendStudentLivePing, 15000);
+      try {
+        if (typeof startLiveAttendeesCounter === 'function') {
+          startLiveAttendeesCounter();
+        }
+      } catch (cntErr) {
+        console.warn('Live counter init:', cntErr);
+      }
+    } else {
+      if (livePingTimer) { clearInterval(livePingTimer); livePingTimer = null; }
+      try {
+        if (typeof stopLiveAttendeesCounter === 'function') {
+          stopLiveAttendeesCounter();
+        }
+      } catch (_) {}
+    }
 
     toast(isReplay ? `📼 Opened Recording: ${res.title}` : `🔴 Joined Live: ${res.title}`);
   } catch (err) {
@@ -2863,6 +2909,7 @@ function embedLiveStream(streamId, replayUrl, status, bunnyVideoId, isReplay = f
   const startMask = document.getElementById('live-start-mask');
   if (!mount) return;
 
+  const session = (typeof currentLiveSession !== 'undefined') ? currentLiveSession : null;
   const isCompleted = isReplay || status === 'completed';
 
   // Toggle click shield: In LIVE mode shield prevents pausing and seeking. In COMPLETED replay mode, user has full playback controls!
@@ -2876,11 +2923,218 @@ function embedLiveStream(streamId, replayUrl, status, bunnyVideoId, isReplay = f
     }
   }
 
+  // Live class has NO pause/play/seek controls. Recorded replays use native player controls!
+  const liveBox = document.getElementById('live-video-box');
+  if (liveBox) liveBox.classList.toggle('is-replay', isCompleted);
+  const liveDock = document.getElementById('live-cinema-control-dock');
+  if (liveDock) liveDock.style.display = 'none';
+  const liveBottomDeck = document.getElementById('live-cinema-bottom-deck');
+  if (liveBottomDeck) liveBottomDeck.style.display = 'none';
+
   if (startMask && isCompleted) {
     startMask.style.display = 'none';
   }
 
-  // 1. CHECK FOR BUNNY.NET STREAM (BOTH LIVE & REPLAY • ZERO YOUTUBE)
+  // ── 0A. GOOGLE MEET 2-WAY LIVE CLASSROOM ──
+  const meetUrl = (session && session.meetUrl) || (session && session.streamType === 'google_meet' ? (session.streamId || '') : '') || (streamId && streamId.includes('meet.google.com') ? streamId : '');
+  if ((session && session.streamType === 'google_meet') || (meetUrl && meetUrl.includes('meet.google.com'))) {
+    if (shield) { shield.style.display = 'none'; shield.style.pointerEvents = 'none'; }
+    if (startMask) { startMask.style.display = 'none'; }
+
+    mount.innerHTML = `
+      <div class="two-way-meeting-card meet-theme" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;box-sizing:border-box;background:radial-gradient(circle at top center, rgba(34,197,94,0.22), #060a14 75%);text-align:center;color:#fff;position:relative;overflow:hidden">
+        <div style="width:64px;height:64px;border-radius:20px;background:rgba(34,197,94,0.15);border:2px solid rgba(34,197,94,0.4);display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:14px;box-shadow:0 8px 30px rgba(34,197,94,0.25)">
+          🟢
+        </div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#86efac;padding:4px 12px;border-radius:20px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);margin-bottom:10px;display:inline-flex;align-items:center;gap:6px">
+          <span style="width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 10px #22c55e"></span>
+          2-Way Interactive Classroom Live
+        </div>
+        <h2 style="font-size:18px;font-weight:800;color:#fff;margin:0 0 8px 0;line-height:1.3">
+          ${escapeHtml(session?.title || 'Interactive Live Doubt Session')}
+        </h2>
+        <p style="font-size:12.5px;color:#cbd5e1;margin:0 0 20px 0;line-height:1.5">
+          Mentor <strong>Anil Sharma</strong> ke sath direct audio-video &amp; screen share karke DaVinci Resolve aur Premiere Pro timeline doubt clear karein.
+        </p>
+        <div style="display:flex;flex-direction:column;width:100%;max-width:280px;gap:10px;margin-bottom:16px">
+          <a href="${escapeHtml(meetUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-gold" style="background:#22c55e;color:#052e16;font-size:14px;font-weight:800;padding:12px 20px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;box-shadow:0 6px 20px rgba(34,197,94,0.4)">
+            <span>🚀 Join Google Meet Class</span>
+            <span style="font-size:15px">➔</span>
+          </a>
+          <button type="button" onclick="copyText('${escapeHtml(meetUrl)}')" class="btn" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px">
+            <span>📋 Copy Meet Link</span>
+          </button>
+        </div>
+        <div style="display:flex;gap:12px;font-size:11px;color:#94a3b8;flex-wrap:wrap;justify-content:center">
+          <span>🎤 Mic Unmute</span>
+          <span>•</span>
+          <span>🖥️ Screen Share</span>
+          <span>•</span>
+          <span>⚡ Instant Join</span>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // ── 0B. ZOOM MEETING (DIRECT SEAMLESS 100% IN-PLAYER EMBED) ──
+  const zoomUrl = (session && session.zoomUrl) || (session && session.streamType === 'zoom' ? (session.streamId || '') : '') || (streamId && streamId.includes('zoom.us') ? streamId : '');
+  let zoomMeetingId = (session && session.zoomMeetingId) || '';
+  let zoomPasscode = (session && session.zoomPasscode) || '';
+
+  let encryptedPwdHash = '';
+
+  if (zoomUrl) {
+    const mMid = zoomUrl.match(/\/j\/(\d{9,12})/i) || zoomUrl.match(/\/wc\/(\d{9,12})/i) || zoomUrl.match(/(\d{9,12})/);
+    if (!zoomMeetingId && mMid) zoomMeetingId = mMid[1];
+
+    const mPwd = zoomUrl.match(/[?&]pwd=([^&#]+)/i);
+    if (mPwd) {
+      encryptedPwdHash = mPwd[1];
+    }
+  }
+
+  // If plain passcode was missing, try fallback
+  if (!zoomPasscode && encryptedPwdHash) {
+    zoomPasscode = encryptedPwdHash;
+  }
+
+  const isZoomSession = (session && session.streamType === 'zoom') || (zoomUrl && zoomUrl.includes('zoom.us')) || Boolean(zoomMeetingId);
+
+  if (isZoomSession) {
+    if (shield) { shield.style.display = 'none'; shield.style.pointerEvents = 'none'; }
+    if (startMask) { startMask.style.display = 'none'; }
+
+    // Clean screen: Hide redundant website controls so Zoom native controls have full focus
+    const streamBar = document.querySelector('.live-stream-bar');
+    if (streamBar) streamBar.style.display = 'none';
+    const cinemaDock = document.getElementById('live-cinema-control-dock');
+    if (cinemaDock) cinemaDock.style.display = 'none';
+
+    const cleanMeetingId = (zoomMeetingId || '').replace(/\s+/g, '');
+    const studentName = (typeof currentStudent !== 'undefined' && currentStudent && currentStudent.name)
+      ? currentStudent.name
+      : (localStorage.getItem('qa_user_name') || localStorage.getItem('qaa_student_name') || 'Student');
+    const encName = encodeURIComponent(studentName);
+
+    // Zoom URL query 'pwd' strictly requires the encrypted token hash from the zoom URL when available.
+    const tokenToPass = encryptedPwdHash || zoomPasscode || '';
+    const plainPass = zoomPasscode || '';
+
+    // Direct Join Link: Bypasses mobile iframe 3rd-party cookie blocking so mobile NEVER asks for password
+    const directJoinLink = zoomUrl || (cleanMeetingId ? `https://us05web.zoom.us/j/${cleanMeetingId}${tokenToPass ? `?pwd=${tokenToPass}` : ''}` : '');
+
+    const zoomEmbedUrl = `https://app.zoom.us/wc/${encodeURIComponent(cleanMeetingId)}/join?prefer=1${tokenToPass ? `&pwd=${encodeURIComponent(tokenToPass)}` : ''}${plainPass ? `&passcode=${encodeURIComponent(plainPass)}&password=${encodeURIComponent(plainPass)}` : ''}&uname=${encName}&un=${encName}&name=${encName}&display_name=${encName}`;
+
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (window.innerWidth <= 768);
+
+    if (isMobileDevice) {
+      mount.innerHTML = `
+        <div class="zoom-mobile-launcher" style="position:relative;width:100%;height:100%;min-height:300px;background:radial-gradient(circle at center, #0f1c3f 0%, #060a14 85%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;box-sizing:border-box;text-align:center;color:#fff">
+          <div style="width:62px;height:62px;border-radius:18px;background:rgba(37,99,235,0.22);border:2px solid rgba(59,130,246,0.45);display:flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:12px;box-shadow:0 8px 24px rgba(37,99,235,0.35)">
+            🔷
+          </div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#93c5fd;margin-bottom:6px">
+            Live 2-Way Interactive Class
+          </div>
+          <h3 style="font-size:17px;font-weight:800;color:#fff;margin:0 0 16px 0;line-height:1.3;max-width:320px">
+            ${escapeHtml(session?.title || 'Interactive Live Session')}
+          </h3>
+
+          <div style="display:flex;flex-direction:column;width:100%;max-width:290px;gap:10px;margin-bottom:14px">
+            <a href="${escapeHtml(directJoinLink)}" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(135deg, #2563eb, #1d4ed8);color:#fff;font-size:14px;font-weight:800;padding:13px 20px;border-radius:12px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 25px rgba(37,99,235,0.5)">
+              <span>🚀 1-Tap Join (Bina Password)</span>
+              <span style="font-size:16px">➔</span>
+            </a>
+            <button type="button" onclick="loadZoomIframeDirectly()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.18);color:#cbd5e1;font-size:12px;padding:9px 12px;border-radius:8px;cursor:pointer">
+              🖥️ Yahi Browser Me Chalayein
+            </button>
+          </div>
+
+          <!-- Credentials info for convenience -->
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#94a3b8;background:rgba(15,23,42,0.85);padding:6px 14px;border-radius:20px;border:1px solid rgba(59,130,246,0.3)">
+            <span>Passcode: <strong style="color:#60a5fa;font-family:monospace;font-size:13px">${escapeHtml(plainPass || '808310')}</strong></span>
+            <button type="button" onclick="copyText('${escapeHtml(plainPass || '808310')}', 'Passcode')" style="background:rgba(59,130,246,0.25);border:1px solid rgba(59,130,246,0.5);color:#93c5fd;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:6px;cursor:pointer">📋 Copy</button>
+          </div>
+        </div>
+      `;
+
+      window.loadZoomIframeDirectly = function() {
+        mount.innerHTML = `
+          <div style="position:relative;width:100%;height:100%;background:#000;overflow:hidden">
+            <iframe 
+              id="live-stream-iframe"
+              class="zoom-embed-frame interactive-frame"
+              src="${zoomEmbedUrl}" 
+              style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;outline:0;pointer-events:auto !important;" 
+              allow="camera *; microphone *; fullscreen *; display-capture *; autoplay *; clipboard-write *" 
+              allowfullscreen="true">
+            </iframe>
+          </div>
+        `;
+      };
+      return;
+    }
+
+    // DESKTOP: Direct seamless 100% in-player embed (Zero clicks, auto-joined)
+    mount.innerHTML = `
+      <div style="position:relative;width:100%;height:100%;background:#000;overflow:hidden">
+        <iframe 
+          id="live-stream-iframe"
+          class="zoom-embed-frame interactive-frame"
+          src="${zoomEmbedUrl}" 
+          style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;outline:0;pointer-events:auto !important;" 
+          allow="camera *; microphone *; fullscreen *; display-capture *; autoplay *; clipboard-write *" 
+          allowfullscreen="true">
+        </iframe>
+      </div>
+    `;
+    return;
+  } else {
+    const streamBar = document.querySelector('.live-stream-bar');
+    if (streamBar) streamBar.style.display = '';
+  }
+
+  // 1. CHECK FOR CLOUDFLARE STREAM (BOTH LIVE & REPLAY • 100% PRIVATE • ZERO YOUTUBE)
+  const isCfSession = (session && session.streamType === 'cloudflare') ||
+                      (session && session.cloudflareVideoId) ||
+                      (streamId && (streamId.includes('videodelivery.net') || streamId.includes('cloudflarestream.com') || /^[a-zA-Z0-9]{32}$/.test(streamId))) ||
+                      (replayUrl && (replayUrl.includes('videodelivery.net') || replayUrl.includes('cloudflarestream.com')));
+
+  if (isCfSession) {
+    // Cloudflare Stream is 100% white-label (zero YouTube branding).
+    // Shields must NOT block clicks so students can unmute and interact.
+    if (shield) {
+      shield.style.display = 'none';
+      shield.style.pointerEvents = 'none';
+    }
+    if (startMask) {
+      startMask.style.display = 'none';
+    }
+
+    let cfUid = (session && session.cloudflareVideoId) ? session.cloudflareVideoId : (streamId || replayUrl || '');
+    const mCf = (cfUid || '').match(/videodelivery\.net\/([a-zA-Z0-9]{32})/i) || (cfUid || '').match(/cloudflarestream\.com\/([a-zA-Z0-9]{32})/i);
+    if (mCf) cfUid = mCf[1];
+    cfUid = (cfUid || '').trim();
+
+    // Controls=true enables student unmute and fullscreen; autoplay=true & muted=true bypasses browser autoplay block
+    const cfEmbedUrl = `https://iframe.videodelivery.net/${encodeURIComponent(cfUid)}?autoplay=true&preload=true&responsive=true&controls=true`;
+    mount.innerHTML = `
+      <div style="position:relative;width:100%;height:100%;background:#000;">
+        <iframe 
+          id="live-stream-iframe"
+          src="${cfEmbedUrl}" 
+          loading="lazy" 
+          style="border:0;width:100%;height:100%;pointer-events:auto !important;" 
+          allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen" 
+          allowfullscreen="true">
+        </iframe>
+      </div>
+    `;
+    return;
+  }
+
+  // 2. CHECK FOR BUNNY.NET STREAM (BOTH LIVE & REPLAY • ZERO YOUTUBE)
   let bunnyUrl = '';
   const isBunnySession = (session && session.streamType === 'bunny') || 
                          (bunnyVideoId && /^[a-zA-Z0-9_-]{36}$/.test(bunnyVideoId)) ||
@@ -2888,22 +3142,12 @@ function embedLiveStream(streamId, replayUrl, status, bunnyVideoId, isReplay = f
                          (replayUrl && (replayUrl.includes('iframe.mediadelivery.net') || replayUrl.includes('video.bunnycdn.com')));
 
   if (isBunnySession) {
-    if (isCompleted) {
-      if (shield) {
-        shield.style.display = 'none';
-        shield.style.pointerEvents = 'none';
-      }
-      if (startMask) {
-        startMask.style.display = 'none';
-      }
-    } else {
-      if (shield) {
-        shield.style.display = 'block';
-        shield.style.pointerEvents = 'auto';
-      }
-      if (startMask) {
-        startMask.style.display = 'none';
-      }
+    if (shield) {
+      shield.style.display = 'none';
+      shield.style.pointerEvents = 'none';
+    }
+    if (startMask) {
+      startMask.style.display = 'none';
     }
 
     if (replayUrl && (replayUrl.includes('iframe.mediadelivery.net') || replayUrl.includes('video.bunnycdn.com'))) {
@@ -2972,24 +3216,66 @@ function embedLiveStream(streamId, replayUrl, status, bunnyVideoId, isReplay = f
       </iframe>
     `;
   } else {
-    // Pure Live Mode: Zero controls, pointer-events none, non-stop broadcast
-    const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&playsinline=1&enablejsapi=1&origin=${originStr}`;
+    // Pure Live Mode: 100% Autoplay with mobile-safe mute + instant touch-to-unmute
+    const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0&showinfo=0&disablekb=0&playsinline=1&enablejsapi=1&fs=1&origin=${originStr}`;
     mount.innerHTML = `
-      <iframe 
-        id="live-stream-iframe"
-        src="${embedUrl}" 
-        title="Quick Art Photography Academy Live Stream" 
-        frameborder="0" 
-        sandbox="allow-scripts allow-same-origin allow-presentation"
-        tabindex="-1"
-        style="pointer-events:none !important;"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen>
-      </iframe>
+      <div style="position:relative;width:100%;height:100%;background:#000;">
+        <iframe 
+          id="live-stream-iframe"
+          src="${embedUrl}" 
+          title="Quick Art Photography Academy Live Stream" 
+          frameborder="0" 
+          style="width:100%;height:100%;border:none;pointer-events:auto !important;"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" 
+          allowfullscreen>
+        </iframe>
+        <!-- Floating Sound Helper Badge on Mobile -->
+        <button id="live-unmute-tap-badge" type="button" onclick="unmuteLiveStream()" style="position:absolute;bottom:16px;left:16px;z-index:20;background:rgba(15,23,42,0.92);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:8px 16px;border-radius:30px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.6);font-family:inherit">
+          <span>🔊</span>
+          <span>Awaaz Kholein (Tap For Sound)</span>
+        </button>
+      </div>
     `;
+
+    // Global gesture listener: On mobile, student's first tap anywhere un-mutes automatically
+    const autoUnmuteOnFirstTouch = () => {
+      if (typeof window.unmuteLiveStream === 'function') window.unmuteLiveStream();
+      window.removeEventListener('touchstart', autoUnmuteOnFirstTouch, { capture: true });
+      window.removeEventListener('click', autoUnmuteOnFirstTouch, { capture: true });
+    };
+    window.addEventListener('touchstart', autoUnmuteOnFirstTouch, { capture: true, once: true });
+    window.addEventListener('click', autoUnmuteOnFirstTouch, { capture: true, once: true });
+
+    // Also attempt un-mute after 1.5s in case browser policy permits
+    setTimeout(() => {
+      try {
+        const iframe = document.getElementById('live-stream-iframe');
+        if (iframe && iframe.contentWindow) {
+          iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo' }), '*');
+        }
+      } catch (e) {}
+    }, 1500);
+
     revealLiveOverlayControls(6500, true);
   }
 }
+
+window.unmuteLiveStream = function() {
+  const iframe = document.getElementById('live-stream-iframe');
+  if (iframe && iframe.contentWindow) {
+    try {
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute' }), '*');
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [100] }), '*');
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo' }), '*');
+    } catch (e) {}
+  }
+  const badge = document.getElementById('live-unmute-tap-badge');
+  if (badge) {
+    badge.style.opacity = '0';
+    badge.style.pointerEvents = 'none';
+    setTimeout(() => badge.remove(), 300);
+  }
+};
 
 // Zero-Pause Continuous Broadcast Guard (Only active in Pure Live Mode)
 window.addEventListener('message', (event) => {
@@ -3107,10 +3393,20 @@ function seekLessonVideo(deltaSeconds) {
 
   if (iframe && iframe.contentWindow) {
     lessonVideoEstTime = Math.max(0, lessonVideoEstTime + deltaSeconds);
+    // YouTube
     iframe.contentWindow.postMessage(JSON.stringify({
       event: 'command',
       func: 'seekTo',
       args: [lessonVideoEstTime, true]
+    }), '*');
+    // Bunny.net
+    iframe.contentWindow.postMessage(JSON.stringify({
+      method: 'setCurrentTime',
+      value: lessonVideoEstTime
+    }), '*');
+    iframe.contentWindow.postMessage(JSON.stringify({
+      event: 'setCurrentTime',
+      time: lessonVideoEstTime
     }), '*');
     toast(deltaSeconds < 0 ? `⏪ ${Math.abs(deltaSeconds)}s Pichhe` : `⏩ ${deltaSeconds}s Aage`);
   }
@@ -3136,17 +3432,41 @@ function togglePlayPauseLessonVideo() {
 
   if (iframe && iframe.contentWindow) {
     if (lessonVideoIsPlaying) {
+      // YouTube
       iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'pauseVideo' }), '*');
+      // Bunny.net
+      iframe.contentWindow.postMessage(JSON.stringify({ method: 'pause' }), '*');
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'pause' }), '*');
       lessonVideoIsPlaying = false;
       if (btn) btn.innerHTML = '▶';
       toast('⏸ Paused');
     } else {
+      // YouTube
       iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo' }), '*');
+      // Bunny.net
+      iframe.contentWindow.postMessage(JSON.stringify({ method: 'play' }), '*');
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'play' }), '*');
       lessonVideoIsPlaying = true;
       if (btn) btn.innerHTML = '⏸️';
       toast('▶ Playing');
     }
   }
+}
+
+function setLessonVideoSpeed(speed) {
+  const rate = parseFloat(speed) || 1;
+  const vid = document.getElementById('main-video-el');
+  const iframe = document.getElementById('cr-video-iframe');
+
+  if (vid) {
+    vid.playbackRate = rate;
+  }
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setPlaybackRate', args: [rate] }), '*');
+    iframe.contentWindow.postMessage(JSON.stringify({ method: 'setPlaybackRate', value: rate }), '*');
+    iframe.contentWindow.postMessage(JSON.stringify({ event: 'setPlaybackRate', rate: rate }), '*');
+  }
+  toast(`⚡ Speed: ${rate}x`);
 }
 
 function toggleLiveAudioMute() {
@@ -3345,6 +3665,11 @@ function updateLiveFullscreenUI() {
   });
 });
 
+function initOrganicLiveAttendees() {
+  if (typeof startLiveAttendeesCounter === 'function') startLiveAttendeesCounter();
+}
+window.initOrganicLiveAttendees = initOrganicLiveAttendees;
+
 function startLiveAttendeesCounter() {
   stopLiveAttendeesCounter();
   try {
@@ -3403,22 +3728,40 @@ function fluctuateLiveAttendees() {
 }
 
 function updateLiveAttendeesDisplay(count, animated = true) {
+  const isReplay = !!(typeof currentLiveSession !== 'undefined' && currentLiveSession && (currentLiveSession.status === 'completed' || currentLiveSession.replayUrl));
   const formatted = count.toLocaleString('en-IN');
   const countEl = document.getElementById('live-viewer-count-mini');
   if (countEl) {
     countEl.textContent = formatted;
-    if (animated) {
+    if (animated && !isReplay) {
       countEl.classList.remove('count-bump');
       void countEl.offsetWidth;
       countEl.classList.add('count-bump');
     }
   }
 
+  const words = document.querySelectorAll('.watching-word');
+  words.forEach(w => {
+    if (w) w.textContent = isReplay ? 'Attended' : 'Watching';
+  });
+
   const pill = document.getElementById('live-attendees-pill-mini');
-  if (pill && animated) {
-    pill.classList.remove('pulse-pill');
-    void pill.offsetWidth;
-    pill.classList.add('pulse-pill');
+  if (pill) {
+    if (isReplay) {
+      pill.classList.remove('pulse-pill');
+      pill.style.background = 'rgba(216, 161, 83, 0.12)';
+      pill.style.borderColor = 'rgba(216, 161, 83, 0.28)';
+      pill.style.color = '#d8a153';
+    } else {
+      pill.style.background = '';
+      pill.style.borderColor = '';
+      pill.style.color = '';
+      if (animated) {
+        pill.classList.remove('pulse-pill');
+        void pill.offsetWidth;
+        pill.classList.add('pulse-pill');
+      }
+    }
   }
 }
 
@@ -4498,6 +4841,37 @@ function toast(msg, isSuccess = true) {
     toastEl.classList.remove('active');
   }, 3200);
 }
+
+window.copyText = function(txt, label) {
+  if (!txt) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(() => {
+      toast((label || '📋 Copied') + ' ✅');
+    }).catch(() => {
+      prompt('Copy:', txt);
+    });
+  } else {
+    prompt('Copy:', txt);
+  }
+};
+
+window.toggleZoomInBrowser = function(showEmbed) {
+  const card = document.getElementById('zoom-card-view');
+  const embed = document.getElementById('zoom-embed-view');
+  const iframe = document.getElementById('zoom-web-iframe');
+  if (card && embed) {
+    if (showEmbed) {
+      card.style.display = 'none';
+      embed.style.display = 'flex';
+      if (iframe && iframe.dataset.src && (!iframe.src || iframe.src === 'about:blank')) {
+        iframe.src = iframe.dataset.src;
+      }
+    } else {
+      card.style.display = 'flex';
+      embed.style.display = 'none';
+    }
+  }
+};
 
 function escHtml(str) {
   if (!str) return '';

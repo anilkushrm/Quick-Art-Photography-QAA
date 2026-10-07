@@ -1668,6 +1668,55 @@ fbq('track', 'PageView');
           </div>
         </div>
 
+        <!-- Cloudflare Stream Live Settings (Real-Time OBS Broadcast) -->
+        <div style="margin-top:24px;padding:20px;background:#0d1527;border:1px solid rgba(249,115,22,0.3);border-radius:18px">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+            <h3 style="font-size:15px;margin:0;color:#f97316;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:8px">
+              ☁️ Cloudflare Stream Live (OBS Studio Real-Time Live Streaming)
+            </h3>
+            <span style="font-size:11px;background:rgba(249,115,22,0.15);color:#fb923c;padding:3px 10px;border-radius:12px;font-weight:600;border:1px solid rgba(249,115,22,0.3)">
+              100% White-Label • Real-Time • Zero YouTube
+            </span>
+          </div>
+          <p style="font-size:12.5px;color:#94a3b8;margin:0 0 16px;line-height:1.5">
+            Cloudflare Stream ke zariye OBS Studio se direct live aane ke liye Account ID aur API Token yahan save karein. Live class create karte waqt <strong>[⚡ Auto-Create Live Key]</strong> button dabate hi Stream Key apne-aap ban jayegi!
+          </p>
+
+          <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px">
+            <div>
+              <label for="cloudflareAccountId">Cloudflare Account ID</label>
+              <input type="text" id="cloudflareAccountId" placeholder="e.g. 5240c0f8824147f8976b32810a08e1a1" />
+              <div class="muted" style="font-size:11px;margin-top:4px">dash.cloudflare.com → Login ke baad right side me "Account ID"</div>
+            </div>
+            <div>
+              <label for="cloudflareApiToken">Cloudflare Stream API Token</label>
+              <input type="password" id="cloudflareApiToken" placeholder="e.g. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+              <div class="muted" style="font-size:11px;margin-top:4px">My Profile → API Tokens → Create Token (Stream Read/Write)</div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <button type="button" onclick="testCloudflareConnection()" class="btn btn-outline" id="btn-test-cloudflare" style="display:inline-flex;align-items:center;gap:6px;border-color:rgba(249,115,22,0.4);color:#fb923c">
+              ⚡ Test Cloudflare Connection
+            </button>
+            <span id="cloudflare-status-badge" style="font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,0.06);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);display:inline-flex;align-items:center;gap:6px">
+              <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#94a3b8"></span> Ready to verify
+            </span>
+          </div>
+
+          <div id="cloudflare-status-box" style="display:none;margin-top:14px;padding:16px 20px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.3);border-radius:16px;font-size:13px;color:var(--ink)">
+            <div style="font-weight:700;color:#fb923c;margin-bottom:8px;display:flex;align-items:center;gap:8px">
+              <span>☁️ Cloudflare Stream Active &amp; Verified</span>
+              <span style="margin-left:auto;font-size:11px;background:#10b981;color:#fff;padding:3px 10px;border-radius:12px;font-weight:700">Live Ready</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:12px;margin-top:10px">
+              <div><span style="color:#94a3b8">Account ID:</span> <b id="cf-acc-display" style="color:#fff"></b></div>
+              <div><span style="color:#94a3b8">Live Ingest Server:</span> <code style="color:#38bdf8">rtmps://live.cloudflare.com:443/live/</code></div>
+              <div><span style="color:#94a3b8">Live Inputs:</span> <b id="cf-inputs-count" style="color:#fff">0</b></div>
+            </div>
+          </div>
+        </div>
+
         <div style="margin-top:24px;padding:20px;background:#0d1527;border:1px solid rgba(255,255,255,0.08);border-radius:18px">
           <h3 style="font-size:15px;margin:0 0 10px;color:var(--gold);font-family:'Outfit',sans-serif">🛡️ Screen Recording &amp; Video Protection</h3>
           <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:0;color:#f8fafc;font-weight:500">
@@ -1677,7 +1726,7 @@ fbq('track', 'PageView');
         </div>
 
         <div style="margin-top:24px">
-          <button onclick="saveLmsSettingsForm()" class="btn btn-gold">💾 Save LMS &amp; Bunny Settings</button>
+          <button onclick="saveLmsSettingsForm()" class="btn btn-gold">💾 Save All Settings (Bunny &amp; Cloudflare)</button>
         </div>
 
         <!-- Course Video Collections in Bunny.net -->
@@ -2700,15 +2749,93 @@ fbq('track', 'PageView');
         <label style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:6px;display:block">
           📡 Live Streaming Platform *
         </label>
-        <select id="liveStreamType" onchange="onLiveStreamTypeChange()" style="width:100%;padding:11px 14px;background:#060a14;border:1.5px solid rgba(99,102,241,0.6);color:#fff;border-radius:10px;font-size:13.5px;font-weight:700;box-sizing:border-box">
-          <option value="bunny">🐰 Bunny.net Live Stream (Clean • 100% Private • Zero YouTube)</option>
-          <option value="youtube">🔴 YouTube Live (Unlisted Stream)</option>
+        <select id="liveStreamType" onchange="onLiveStreamTypeChange()" style="width:100%;padding:11px 14px;background:#060a14;border:1.5px solid rgba(34,197,94,0.6);color:#fff;border-radius:10px;font-size:13.5px;font-weight:700;box-sizing:border-box">
+          <option value="youtube">🔴 YouTube Live (Unlisted Stream • 100% Free &amp; Stable)</option>
+          <option value="zoom">🔷 Zoom Meeting (2-Way Audio, Video &amp; Screen Share)</option>
+          <option value="google_meet">🟢 Google Meet (2-Way Mic &amp; Screen Share)</option>
+          <option value="bunny">🐰 Bunny.net Video / Lecture (Library 755385)</option>
         </select>
       </div>
 
-      <!-- 1. Bunny.net Live Stream Box -->
-      <!-- 1. Bunny.net Live Stream Box -->
-      <div id="boxBunnyStream" style="background:rgba(99,102,241,0.09);border:1.5px solid rgba(99,102,241,0.35);border-radius:12px;padding:16px;margin-bottom:16px">
+      <!-- 0. Google Meet Classroom Box -->
+      <div id="boxGoogleMeet" style="display:block;background:rgba(34,197,94,0.08);border:1.5px solid rgba(34,197,94,0.4);border-radius:12px;padding:16px;margin-bottom:16px">
+        <label style="font-size:13px;font-weight:700;color:#86efac;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+          🟢 Google Meet Classroom Link *
+        </label>
+        <input type="url" id="liveGoogleMeetUrl" placeholder="e.g. https://meet.google.com/abc-defg-hij" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box" />
+        <div style="font-size:11.5px;color:#94a3b8;margin-top:6px;line-height:1.4">
+          💡 <strong>Sabse Asan:</strong> meet.google.com pe "New Meeting" banayein aur uska link yahan paste karein. Student website/app pe "Join Google Meet" daba kar bina kisi app ke turant microphone aur screen share ke sath connect ho jayega!
+        </div>
+      </div>
+
+      <!-- 0. Zoom Meeting Box -->
+      <div id="boxZoomMeeting" style="display:none;background:rgba(59,130,246,0.08);border:1.5px solid rgba(59,130,246,0.4);border-radius:12px;padding:16px;margin-bottom:16px">
+        <label style="font-size:13px;font-weight:700;color:#93c5fd;margin-bottom:8px;display:flex;align-items:center;gap:6px">
+          🔷 Zoom Meeting Details *
+        </label>
+        <div style="margin-bottom:10px">
+          <label style="font-size:11.5px;color:#cbd5e1;margin-bottom:4px;display:block">Zoom Direct Join Link *</label>
+          <input type="url" id="liveZoomUrl" placeholder="e.g. https://us05web.zoom.us/j/1234567890?pwd=xxxx" style="width:100%;padding:10px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:8px;font-size:12.5px;box-sizing:border-box" />
+        </div>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px">
+          <div>
+            <label style="font-size:11.5px;color:#cbd5e1;margin-bottom:4px;display:block">Meeting ID</label>
+            <input type="text" id="liveZoomMeetingId" placeholder="e.g. 845 1234 5678" style="width:100%;padding:10px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:8px;font-size:12.5px;box-sizing:border-box" />
+          </div>
+          <div>
+            <label style="font-size:11.5px;color:#cbd5e1;margin-bottom:4px;display:block">Passcode (Password)</label>
+            <input type="text" id="liveZoomPasscode" placeholder="e.g. 123456" style="width:100%;padding:10px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:8px;font-size:12.5px;box-sizing:border-box" />
+          </div>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#e2e8f0;cursor:pointer">
+          <input type="checkbox" id="liveZoomEmbedMode" checked />
+          <span>🖥️ <strong>Zoom Web Client Embed</strong> (Website ke player me direct chalayein)</span>
+        </label>
+        <div style="font-size:11.5px;color:#94a3b8;margin-top:6px;line-height:1.4">
+          💡 Student ko website ke player me Zoom Web Client bhi milega aur 1-click "Open Zoom App" button bhi!
+        </div>
+      </div>
+
+      <!-- 1. Cloudflare Stream Live Box -->
+      <div id="boxCloudflareStream" style="display:none;background:rgba(249,115,22,0.08);border:1.5px solid rgba(249,115,22,0.4);border-radius:12px;padding:16px;margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <label style="font-size:13px;font-weight:700;color:#fdba74;margin:0;display:flex;align-items:center;gap:6px">
+            ☁️ Cloudflare Stream Live (Video UID / Live Input ID) *
+          </label>
+          <button type="button" onclick="autoGenerateCloudflareStream(event)" class="btn btn-sm" style="background:#f97316;color:#fff;font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;font-weight:700;box-shadow:0 2px 8px rgba(249,115,22,0.4)">⚡ Auto-Create Live Key</button>
+        </div>
+
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div>
+            <label style="font-size:11.5px;color:#cbd5e1;margin-bottom:4px;display:block">Cloudflare Video UID *</label>
+            <input type="text" id="liveCloudflareVideoId" placeholder="e.g. 5240c0f8824147f8976b32810a08e1a1" style="width:100%;padding:10px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:8px;font-size:12.5px;box-sizing:border-box" />
+          </div>
+          <div>
+            <label style="font-size:11.5px;color:#cbd5e1;margin-bottom:4px;display:block">Live Input RTMPS Stream Key (For OBS)</label>
+            <div style="display:flex;gap:6px">
+              <input type="text" id="liveCloudflareStreamKey" placeholder="Paste your OBS Stream Key here" style="flex:1;padding:10px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:8px;font-size:12.5px;box-sizing:border-box" />
+              <button type="button" onclick="copyElVal('liveCloudflareStreamKey')" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:0 12px;border-radius:8px;cursor:pointer">📋 Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- OBS Connection Box -->
+        <div style="background:rgba(0,0,0,0.35);border:1px dashed rgba(249,115,22,0.35);border-radius:10px;padding:12px;font-size:12px;color:#cbd5e1;line-height:1.5">
+          <div style="font-weight:700;color:#fdba74;margin-bottom:6px">📡 OBS Studio me Cloudflare Connect Karne ke Steps:</div>
+          <div style="margin-bottom:4px">1. <strong>Server:</strong> <code id="cfRtmpsUrl" style="background:rgba(0,0,0,0.5);color:#38bdf8;padding:2px 6px;border-radius:4px">rtmps://live.cloudflare.com:443/live/</code> <button type="button" onclick="copyText('rtmps://live.cloudflare.com:443/live/')" style="background:none;border:none;color:#38bdf8;cursor:pointer;font-size:11px;text-decoration:underline">Copy RTMPS</button></div>
+          <div style="margin-bottom:4px;color:#94a3b8">👉 <em>Agar Reconnect ho raha ho, to standard RTMP use karein:</em> <code style="background:rgba(0,0,0,0.5);color:#a5f3fc;padding:2px 6px;border-radius:4px">rtmp://live.cloudflare.com:1935/live/</code> <button type="button" onclick="copyText('rtmp://live.cloudflare.com:1935/live/')" style="background:none;border:none;color:#38bdf8;cursor:pointer;font-size:11px;text-decoration:underline">Copy RTMP</button></div>
+          <div style="margin-bottom:4px">2. <strong>Stream Key:</strong> Cloudflare Live Input se mili <code>RTMPS Stream Key</code> paste karein (UID paste na karein).</div>
+          <div style="margin-bottom:4px;color:#fde047">⚠️ <strong>Zaroori OBS Settings (Reconnect se bachne ke liye):</strong></div>
+          <ul style="margin:2px 0 6px 18px;padding:0;color:#e2e8f0;font-size:11.5px">
+            <li><strong>Keyframe Interval:</strong> <code>2 s</code> (OBS Output me '0 (Auto)' ki jagah '2' likhein, warna Cloudflare drop kar deta hai)</li>
+            <li><strong>Rate Control:</strong> <code>CBR</code> (Constant Bitrate)</li>
+            <li><strong>Encoder:</strong> <code>x264</code> ya <code>NVIDIA NVENC H.264</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 2. Bunny.net Live Stream Box -->
+      <div id="boxBunnyStream" style="display:none;background:rgba(99,102,241,0.09);border:1.5px solid rgba(99,102,241,0.35);border-radius:12px;padding:16px;margin-bottom:16px">
         <label style="font-size:13px;font-weight:700;color:#a5b4fc;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
           <span>🎬 Bunny.net Video / Lecture Chunein (Library 755385) *</span>
           <div style="display:flex;gap:6px">
@@ -6132,9 +6259,14 @@ async function loadLmsSettings() {
     document.getElementById('watermarkEnabled').checked = s.watermarkEnabled !== false;
     document.getElementById('otpDemoMode').checked = s.otpDemoMode !== false;
     if (document.getElementById('aibotflowApiKey')) document.getElementById('aibotflowApiKey').value = s.aibotflowApiKey || '';
+    if (document.getElementById('cloudflareAccountId')) document.getElementById('cloudflareAccountId').value = s.cloudflareAccountId || '';
+    if (document.getElementById('cloudflareApiToken')) document.getElementById('cloudflareApiToken').value = s.cloudflareApiToken || '';
 
     if (s.bunnyLibraryId) {
       testBunnyConnection(true);
+    }
+    if (s.cloudflareAccountId && s.cloudflareApiToken) {
+      testCloudflareConnection(true);
     }
   } catch (err) {
     toast(`Could not load LMS settings: ${err.message}`, false);
@@ -6177,6 +6309,51 @@ async function testBunnyConnection(silent = false) {
     if (!silent) toast(`Test failed: ${err.message}`, false);
   } finally {
     if (btn) btn.textContent = '⚡ Test Bunny.net Connection';
+  }
+}
+
+async function testCloudflareConnection(silent = false) {
+  const btn = document.getElementById('btn-test-cloudflare');
+  const badge = document.getElementById('cloudflare-status-badge');
+  const box = document.getElementById('cloudflare-status-box');
+  const accId = (document.getElementById('cloudflareAccountId')?.value || '').trim();
+  const apiToken = (document.getElementById('cloudflareApiToken')?.value || '').trim();
+
+  if (!accId || !apiToken) {
+    if (!silent) toast('⚠️ Please enter both Cloudflare Account ID and Stream API Token', false);
+    return;
+  }
+
+  if (btn) btn.textContent = 'Testing Stream…';
+  try {
+    const res = await lmsAdmin('test-cloudflare', {
+      method: 'POST',
+      body: { cloudflareAccountId: accId, cloudflareApiToken: apiToken }
+    });
+    if (res.ok && res.connected) {
+      badge.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 6px #10b981"></span> Live Ready &amp; Connected';
+      badge.style.background = 'rgba(16,185,129,0.15)';
+      badge.style.color = '#34d399';
+      badge.style.border = '1px solid rgba(16,185,129,0.3)';
+      box.style.display = 'block';
+      if (document.getElementById('cf-acc-display')) document.getElementById('cf-acc-display').textContent = res.accountId || accId;
+      if (document.getElementById('cf-inputs-count')) document.getElementById('cf-inputs-count').textContent = res.liveInputsCount ?? 0;
+      if (!silent) toast('🎉 Cloudflare Stream Live successfully verified! OBS Real-Time Ready.');
+    } else {
+      badge.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444"></span> Connection Issue';
+      badge.style.background = 'rgba(239,68,68,0.15)';
+      badge.style.color = '#f87171';
+      badge.style.border = '1px solid rgba(239,68,68,0.3)';
+      if (!silent) toast(res.message || 'Cloudflare connection test failed', false);
+    }
+  } catch (err) {
+    badge.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444"></span> Error';
+    badge.style.background = 'rgba(239,68,68,0.15)';
+    badge.style.color = '#f87171';
+    badge.style.border = '1px solid rgba(239,68,68,0.3)';
+    if (!silent) toast(`Test failed: ${err.message}`, false);
+  } finally {
+    if (btn) btn.textContent = '⚡ Test Cloudflare Connection';
   }
 }
 
@@ -6570,6 +6747,8 @@ async function saveLmsSettingsForm() {
     bunnyApiKey: document.getElementById('bunnyApiKey').value.trim(),
     bunnyTokenAuthKey: document.getElementById('bunnyTokenAuthKey').value.trim(),
     bunnyHostname: document.getElementById('bunnyHostname').value.trim(),
+    cloudflareAccountId: (document.getElementById('cloudflareAccountId')?.value || '').trim(),
+    cloudflareApiToken: (document.getElementById('cloudflareApiToken')?.value || '').trim(),
     watermarkEnabled: document.getElementById('watermarkEnabled').checked,
     otpDemoMode: document.getElementById('otpDemoMode').checked,
     aibotflowApiKey: (document.getElementById('aibotflowApiKey')?.value || '').trim()
@@ -6577,8 +6756,11 @@ async function saveLmsSettingsForm() {
 
   try {
     await lmsAdmin('save-lms-settings', { method: 'POST', body });
-    toast('✅ Bunny.net & LMS settings saved!');
+    toast('✅ Bunny & Cloudflare settings saved successfully!');
     testBunnyConnection(false);
+    if (body.cloudflareAccountId && body.cloudflareApiToken) {
+      testCloudflareConnection(false);
+    }
   } catch (err) {
     toast(`Failed to save: ${err.message}`, false);
   }
@@ -6859,27 +7041,83 @@ function openScheduleLiveModal() {
 
   populateLiveCourseDropdown();
   onLiveTypeChange();
+  if (document.getElementById('liveGoogleMeetUrl')) document.getElementById('liveGoogleMeetUrl').value = '';
+  if (document.getElementById('liveZoomUrl')) document.getElementById('liveZoomUrl').value = '';
+  if (document.getElementById('liveZoomMeetingId')) document.getElementById('liveZoomMeetingId').value = '';
+  if (document.getElementById('liveZoomPasscode')) document.getElementById('liveZoomPasscode').value = '';
+  if (document.getElementById('liveZoomEmbedMode')) document.getElementById('liveZoomEmbedMode').checked = true;
+  if (document.getElementById('liveCloudflareVideoId')) document.getElementById('liveCloudflareVideoId').value = '';
+  if (document.getElementById('liveCloudflareStreamKey')) document.getElementById('liveCloudflareStreamKey').value = '';
   const streamTypeEl = document.getElementById('liveStreamType');
-  if (streamTypeEl) streamTypeEl.value = 'bunny';
+  if (streamTypeEl) streamTypeEl.value = 'youtube';
   onLiveStreamTypeChange();
   loadBunnyVideosForLiveDropdown('');
   document.getElementById('scheduleLiveModal').classList.add('show');
 }
 
 function onLiveStreamTypeChange() {
-  const type = document.getElementById('liveStreamType') ? document.getElementById('liveStreamType').value : 'bunny';
+  const type = document.getElementById('liveStreamType') ? document.getElementById('liveStreamType').value : 'youtube';
+  const boxMeet = document.getElementById('boxGoogleMeet');
+  const boxZoom = document.getElementById('boxZoomMeeting');
+  const boxCf = document.getElementById('boxCloudflareStream');
   const boxBunny = document.getElementById('boxBunnyStream');
   const boxYt = document.getElementById('boxYoutubeStream');
-  if (boxBunny && boxYt) {
-    if (type === 'bunny') {
-      boxBunny.style.display = 'block';
-      boxYt.style.display = 'none';
-      if (!allBunnyVideos.length) {
-        loadBunnyVideosForLiveDropdown();
+
+  if (boxMeet) boxMeet.style.display = (type === 'google_meet') ? 'block' : 'none';
+  if (boxZoom) boxZoom.style.display = (type === 'zoom') ? 'block' : 'none';
+  if (boxCf) boxCf.style.display = 'none';
+  if (boxBunny) {
+    boxBunny.style.display = (type === 'bunny') ? 'block' : 'none';
+    if (type === 'bunny' && !allBunnyVideos.length) {
+      loadBunnyVideosForLiveDropdown();
+    }
+  }
+  if (boxYt) boxYt.style.display = (type === 'youtube') ? 'block' : 'none';
+}
+
+function copyElVal(id) {
+  const el = document.getElementById(id);
+  if (el && el.value) {
+    navigator.clipboard.writeText(el.value).then(() => toast('📋 Stream Key Copied!'));
+  }
+}
+
+function copyText(txt) {
+  navigator.clipboard.writeText(txt).then(() => toast('📋 URL Copied: ' + txt));
+}
+
+async function autoGenerateCloudflareStream(e) {
+  const btn = (e && (e.currentTarget || e.target)) || document.querySelector('#boxCloudflareStream button');
+  const title = (document.getElementById('liveTitle')?.value || 'Live Masterclass').trim();
+  const origText = btn ? btn.textContent : '⚡ Auto-Create Live Key';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '⏳ Creating…';
+  }
+
+  try {
+    const res = await lmsAdmin('create-cloudflare-live-input', {
+      method: 'POST',
+      body: { title }
+    });
+
+    if (res.ok && res.videoId) {
+      if (document.getElementById('liveCloudflareVideoId')) {
+        document.getElementById('liveCloudflareVideoId').value = res.videoId;
       }
+      if (document.getElementById('liveCloudflareStreamKey')) {
+        document.getElementById('liveCloudflareStreamKey').value = res.streamKey || '';
+      }
+      toast('🎉 Cloudflare Live Key Generated! OBS me paste karke Live shuru karein.');
     } else {
-      boxBunny.style.display = 'none';
-      boxYt.style.display = 'block';
+      throw new Error(res.error || 'Failed to create Cloudflare Live input');
+    }
+  } catch(e) {
+    alert(e.message + '\n\n💡 Tip: Agar API Token set nahi hai to aap Cloudflare Dashboard (dash.cloudflare.com -> Stream -> Live Inputs) se direct Video UID aur Stream Key copy karke yahan daal sakte hain!');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = origText;
     }
   }
 }
@@ -6902,15 +7140,22 @@ function editLiveClassAdmin(id) {
   document.getElementById('liveDuration').value = c.duration || '90 Mins';
   document.getElementById('liveStreamId').value = c.streamId || '';
   document.getElementById('liveReplayUrl').value = c.replayUrl || '';
+  if (document.getElementById('liveGoogleMeetUrl')) document.getElementById('liveGoogleMeetUrl').value = c.meetUrl || (c.streamType === 'google_meet' ? c.streamId : '') || '';
+  if (document.getElementById('liveZoomUrl')) document.getElementById('liveZoomUrl').value = c.zoomUrl || (c.streamType === 'zoom' ? c.streamId : '') || '';
+  if (document.getElementById('liveZoomMeetingId')) document.getElementById('liveZoomMeetingId').value = c.zoomMeetingId || '';
+  if (document.getElementById('liveZoomPasscode')) document.getElementById('liveZoomPasscode').value = c.zoomPasscode || '';
+  if (document.getElementById('liveZoomEmbedMode')) document.getElementById('liveZoomEmbedMode').checked = c.zoomEmbedMode !== false;
   if (document.getElementById('liveBunnyVideoId')) document.getElementById('liveBunnyVideoId').value = c.bunnyVideoId || '';
+  if (document.getElementById('liveCloudflareVideoId')) document.getElementById('liveCloudflareVideoId').value = c.cloudflareVideoId || (c.streamType === 'cloudflare' ? c.streamId : '') || '';
+  if (document.getElementById('liveCloudflareStreamKey')) document.getElementById('liveCloudflareStreamKey').value = c.cloudflareStreamKey || '';
   if (document.getElementById('liveShowViewerCountToStudents')) document.getElementById('liveShowViewerCountToStudents').checked = c.showViewerCountToStudents === true;
   if (document.getElementById('liveAllowStudentMic')) document.getElementById('liveAllowStudentMic').checked = c.allowStudentMic !== false;
   if (document.getElementById('liveAllowStudentScreen')) document.getElementById('liveAllowStudentScreen').checked = !!c.allowStudentScreen;
   document.getElementById('liveChatEnabled').checked = c.chatEnabled !== false;
 
-  const isBunny = c.streamType === 'bunny' || (!!c.bunnyVideoId && (!c.streamId || c.streamId === c.bunnyVideoId));
   const stTypeEl = document.getElementById('liveStreamType');
-  if (stTypeEl) stTypeEl.value = isBunny ? 'bunny' : 'youtube';
+  const typeVal = c.streamType || (c.meetUrl ? 'google_meet' : (c.zoomUrl || c.zoomMeetingId ? 'zoom' : (c.cloudflareVideoId ? 'cloudflare' : (c.bunnyVideoId ? 'bunny' : 'youtube'))));
+  if (stTypeEl) stTypeEl.value = typeVal;
   onLiveStreamTypeChange();
 
   const statusEl = document.getElementById('liveStatus');
@@ -7103,7 +7348,14 @@ async function saveLiveClassAdmin() {
     return;
   }
 
-  const streamType = document.getElementById('liveStreamType') ? document.getElementById('liveStreamType').value : 'bunny';
+  const streamType = document.getElementById('liveStreamType') ? document.getElementById('liveStreamType').value : 'google_meet';
+  const meetUrl = document.getElementById('liveGoogleMeetUrl') ? document.getElementById('liveGoogleMeetUrl').value.trim() : '';
+  const zoomUrl = document.getElementById('liveZoomUrl') ? document.getElementById('liveZoomUrl').value.trim() : '';
+  const zoomMeetingId = document.getElementById('liveZoomMeetingId') ? document.getElementById('liveZoomMeetingId').value.trim() : '';
+  const zoomPasscode = document.getElementById('liveZoomPasscode') ? document.getElementById('liveZoomPasscode').value.trim() : '';
+  const zoomEmbedMode = document.getElementById('liveZoomEmbedMode') ? document.getElementById('liveZoomEmbedMode').checked : true;
+  const cloudflareVideoId = document.getElementById('liveCloudflareVideoId') ? document.getElementById('liveCloudflareVideoId').value.trim() : '';
+  const cloudflareStreamKey = document.getElementById('liveCloudflareStreamKey') ? document.getElementById('liveCloudflareStreamKey').value.trim() : '';
   let bunnyVideoId = document.getElementById('liveBunnyVideoId') ? document.getElementById('liveBunnyVideoId').value.trim() : '';
   const selEl = document.getElementById('liveBunnyVideoSelect');
   if (!bunnyVideoId && selEl && selEl.value && selEl.value !== 'custom') {
@@ -7112,7 +7364,29 @@ async function saveLiveClassAdmin() {
   }
   const rawStreamVal = (document.getElementById('liveStreamId').value || '').trim();
 
-  if (streamType === 'bunny') {
+  if (streamType === 'google_meet') {
+    if (!meetUrl) {
+      alert('Kripya Google Meet Link daalein (e.g. https://meet.google.com/xxx-xxxx-xxx)!');
+      if (document.getElementById('liveGoogleMeetUrl')) document.getElementById('liveGoogleMeetUrl').focus();
+      return;
+    }
+  } else if (streamType === 'zoom') {
+    if (!zoomUrl && !zoomMeetingId) {
+      alert('Kripya Zoom Direct Join Link ya Zoom Meeting ID daalein!');
+      if (document.getElementById('liveZoomUrl')) document.getElementById('liveZoomUrl').focus();
+      return;
+    }
+  } else if (streamType === 'cloudflare') {
+    if (!cloudflareVideoId) {
+      const doAuto = confirm("Cloudflare Video UID khali hai!\n\nKya aap chahte hain ki hum 1-click me abhi turant Cloudflare Live Input aur OBS Stream Key auto-generate kar dein?");
+      if (doAuto) {
+        await autoGenerateCloudflareStream();
+      } else {
+        if (document.getElementById('liveCloudflareVideoId')) document.getElementById('liveCloudflareVideoId').focus();
+      }
+      return;
+    }
+  } else if (streamType === 'bunny') {
     if (!bunnyVideoId) {
       alert('Kripya dropdown se Bunny.net Video chunein ya [📤 Nayi Video Upload] karein!');
       if (document.getElementById('liveBunnyVideoSelect')) document.getElementById('liveBunnyVideoSelect').focus();
@@ -7125,7 +7399,7 @@ async function saveLiveClassAdmin() {
       return;
     }
     if (rawStreamVal.startsWith('rtmp://') || rawStreamVal.startsWith('rtmps://')) {
-      alert("⚠️ Galat Stream Link!\n\nAapne OBS ka RTMP Server URL daala hai:\n" + rawStreamVal + "\n\nWeb browser me RTMP stream nahi chal sakti.\nKripya YouTube Studio me jakar Live Video ka 'Share' Link paste karein ya upar Bunny.net Live Stream select karein.");
+      alert("⚠️ Galat Stream Link!\n\nAapne OBS ka RTMP Server URL daala hai:\n" + rawStreamVal + "\n\nWeb browser me RTMP stream nahi chal sakti.\nKripya YouTube Studio me jakar Live Video ka 'Share' Link paste karein ya upar Cloudflare Stream Live select karein.");
       document.getElementById('liveStreamId').focus();
       return;
     }
@@ -7163,6 +7437,13 @@ async function saveLiveClassAdmin() {
 
   const statusVal = document.getElementById('liveStatus') ? document.getElementById('liveStatus').value : 'scheduled';
 
+  let effStreamId = '';
+  if (streamType === 'google_meet') effStreamId = meetUrl;
+  else if (streamType === 'zoom') effStreamId = zoomUrl || zoomMeetingId;
+  else if (streamType === 'cloudflare') effStreamId = cloudflareVideoId;
+  else if (streamType === 'bunny') effStreamId = bunnyVideoId;
+  else effStreamId = cleanYtId(rawStreamVal);
+
   const liveClass = {
     id: document.getElementById('liveSessionId').value.trim(),
     title,
@@ -7175,8 +7456,15 @@ async function saveLiveClassAdmin() {
     scheduledAt: document.getElementById('liveScheduledAt').value ? new Date(document.getElementById('liveScheduledAt').value).toISOString() : new Date().toISOString(),
     duration: document.getElementById('liveDuration').value.trim() || '90 Mins',
     status: statusVal,
-    streamId: streamType === 'bunny' ? bunnyVideoId : cleanYtId(rawStreamVal),
+    streamId: effStreamId,
+    meetUrl,
+    zoomUrl,
+    zoomMeetingId,
+    zoomPasscode,
+    zoomEmbedMode,
     bunnyVideoId,
+    cloudflareVideoId,
+    cloudflareStreamKey,
     replayUrl: (document.getElementById('liveReplayUrl') ? document.getElementById('liveReplayUrl').value.trim() : ''),
     showViewerCountToStudents: document.getElementById('liveShowViewerCountToStudents') ? document.getElementById('liveShowViewerCountToStudents').checked : true,
     allowStudentMic: document.getElementById('liveAllowStudentMic') ? document.getElementById('liveAllowStudentMic').checked : true,
@@ -7344,7 +7632,7 @@ function renderControlRoomViewers() {
   if (countEl) countEl.textContent = filtered.length;
 
   if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:#64748b">Filhal koi registered ya live student active nahi hai. Jaise hi students judenge, yahan live list aa jayegi.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:#94a3b8">Filhal koi live student judda nahi hai. Jaise hi students live stream dekhna shuru karenge, unka naam aur real-time controls yahan aa jayenge.</td></tr>';
     return;
   }
 

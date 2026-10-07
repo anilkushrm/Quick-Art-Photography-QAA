@@ -2510,7 +2510,7 @@ a {
 
 /* ================= Video Playback Controls — Studio Deck ================= */
 .video-playback-controls {
-  display: flex;
+  display: none !important;
   justify-content: space-between;
   align-items: center;
   padding: 10px 18px;
@@ -4565,75 +4565,335 @@ video::-webkit-media-controls-download-button {
   border-radius: inherit;
 }
 
-/* ── Course Video Anti-Leak Protection Shields ── */
-.course-click-shield {
+/* ── Course Video Anti-Leak Protection Shields Disabled for Full Player Controls ── */
+.course-click-shield,
+.course-click-shield-corner,
+.course-pause-shield {
+  display: none !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* ── Clean Single-Control Player Mode: Ensure zero duplicate overlay controls on video player ── */
+.cinema-bottom-deck,
+.cinema-center-pause-cue {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+.video-container:hover .cinema-bottom-deck,
+.video-container.show-controls .cinema-bottom-deck,
+.video-container.is-paused .cinema-bottom-deck,
+.video-container.is-paused .cinema-center-pause-cue {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* 1. Interactive Timeline Scrubber */
+.cinema-progress-area {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.cinema-progress-track {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  transition: height 0.15s ease;
+  overflow: visible;
+}
+
+.cinema-progress-area:hover .cinema-progress-track {
+  height: 6px;
+}
+
+.cinema-progress-buffer {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 72px; /* Shields top bar: title, channel avatar, share, watch later */
-  z-index: 12;
-  background: transparent;
-  cursor: pointer;
+  height: 100%;
+  width: 0%;
+  background: rgba(255, 255, 255, 0.38);
+  border-radius: inherit;
+  pointer-events: none;
 }
 
-.course-click-shield-corner {
+.cinema-progress-played {
   position: absolute;
-  bottom: 0;
-  right: 48px; /* Leaves the native/overlay fullscreen button accessible */
-  width: 82px;  /* Shields bottom-right YouTube logo and Watch on YouTube button */
-  height: 48px;
-  z-index: 12;
-  background: transparent;
-  cursor: pointer;
-}
-
-.course-pause-shield {
-  position: absolute;
-  top: 72px;
+  top: 0;
   left: 0;
-  right: 0;
-  bottom: 48px;
-  z-index: 14;
-  background: rgba(7, 11, 20, 0.55);
-  backdrop-filter: blur(3px);
-  display: none; /* Active only when video is paused */
-  flex-direction: column;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #d8a153 0%, #f59e0b 100%);
+  border-radius: inherit;
+  box-shadow: 0 0 10px rgba(216, 161, 83, 0.65);
+  pointer-events: none;
+}
+
+.cinema-progress-thumb {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #d8a153;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
+  transition: transform 0.15s ease;
+  pointer-events: none;
+}
+
+.cinema-progress-area:hover .cinema-progress-thumb {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.cinema-progress-tooltip {
+  position: absolute;
+  bottom: 22px;
+  left: 0;
+  transform: translateX(-50%);
+  background: rgba(9, 13, 22, 0.94);
+  color: #f8fafc;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(216, 161, 83, 0.35);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
+}
+
+/* 2. Controls Row */
+.cinema-ctrl-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.cinema-ctrl-left,
+.cinema-ctrl-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cinema-btn {
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  cursor: pointer;
+  padding: 5px 7px;
+  border-radius: 8px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  cursor: pointer;
-  transition: opacity 0.25s ease;
+  gap: 3px;
+  transition: all 0.18s ease;
+  outline: none;
 }
 
-.course-pause-btn {
-  width: 64px;
-  height: 64px;
+.cinema-btn:hover {
+  color: #d8a153;
+  background: rgba(255, 255, 255, 0.08);
+  transform: scale(1.06);
+}
+
+.cinema-btn:active {
+  transform: scale(0.95);
+}
+
+.cinema-btn-play {
+  color: #ffffff;
+  width: 34px;
+  height: 34px;
+}
+
+.cinema-btn-play:hover {
+  color: #d8a153;
+}
+
+.cinema-btn-skip {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cinema-btn-skip:hover {
+  background: rgba(216, 161, 83, 0.15);
+  border-color: rgba(216, 161, 83, 0.4);
+}
+
+.cinema-skip-lbl {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+
+/* Time Readout */
+.cinema-time-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-variant-numeric: tabular-nums;
+  color: #cbd5e1;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.cinema-time-current {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.cinema-time-sep {
+  color: #64748b;
+  font-size: 11px;
+}
+
+.cinema-time-total {
+  color: #94a3b8;
+}
+
+.cinema-time-rem {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #d8a153;
+  background: rgba(216, 161, 83, 0.12);
+  border: 1px solid rgba(216, 161, 83, 0.28);
+  padding: 2px 7px;
+  border-radius: 999px;
+  margin-left: 6px;
+  letter-spacing: 0.2px;
+}
+
+/* Speed Dropdown Pill */
+.cinema-speed-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 3px 8px;
+  border-radius: 999px;
+  height: 28px;
+  transition: all 0.2s ease;
+}
+
+.cinema-speed-pill:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(216, 161, 83, 0.4);
+}
+
+.cinema-speed-icon {
+  font-size: 10px;
+}
+
+.cinema-speed-select {
+  background: transparent;
+  border: none;
+  color: #f8fafc;
+  font-size: 11.5px;
+  font-weight: 700;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+}
+
+.cinema-speed-select option {
+  background: #090e1a;
+  color: #fff;
+}
+
+/* Center Cue When Paused (Light, Delicate & Unobtrusive) */
+.cinema-center-pause-cue {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.video-container.is-paused .cinema-center-pause-cue {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.cinema-center-play-circle {
+  width: 66px;
+  height: 66px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #d8a153 0%, #b88636 100%);
-  color: #070b14;
+  background: rgba(8, 12, 20, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(216, 161, 83, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(216, 161, 83, 0.25);
+  color: #d8a153;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 30px rgba(216, 161, 83, 0.45);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
-.course-pause-shield:hover .course-pause-btn {
-  transform: scale(1.1);
-  box-shadow: 0 14px 36px rgba(216, 161, 83, 0.65);
+.cinema-center-play-circle svg {
+  margin-left: 3px;
 }
 
-.course-pause-btn svg {
-  margin-left: 4px;
+.cinema-center-play-circle:hover {
+  transform: scale(1.12);
+  background: rgba(8, 12, 20, 0.85);
+  border-color: #f59e0b;
+  color: #ffffff;
 }
 
-.course-pause-txt {
-  font-size: 13.5px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: #fcd34d;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+#video-mount,
+#video-mount iframe,
+#video-mount video,
+#video-mount #yt-player-target {
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: auto !important;
+}
+
+@media (max-width: 640px) {
+  .cinema-bottom-deck {
+    padding: 24px 10px 8px 10px;
+  }
+  .cinema-time-rem {
+    display: none;
+  }
+  .cinema-btn-skip {
+    display: none;
+  }
 }
 
 /* Floating Fullscreen button on course video */
@@ -7563,7 +7823,16 @@ video::-webkit-media-controls-download-button {
   height: 100%;
   border: none;
   outline: none;
-  pointer-events: none !important; /* Zero click-through to YouTube: prevents pause/play, seekbar, and external redirects */
+}
+.live-video-box.yt-live iframe {
+  pointer-events: none !important; /* Zero click-through to YouTube */
+}
+.live-video-box iframe.interactive-frame,
+.live-video-box iframe.zoom-embed-frame,
+.live-video-box iframe.cf-embed-frame,
+.live-video-box iframe.bunny-embed-frame,
+.live-video-box.is-interactive iframe {
+  pointer-events: auto !important;
 }
 
 /* ── Enhanced HTML5 & Mobile/Tablet Fullscreen Support ── */
@@ -7741,21 +8010,10 @@ body.live-fs-open {
 /* ── Video Overlay Interactive Controls (Comments & Fullscreen) ── */
 .live-video-overlay-fs,
 .fs-chat-toggle-btn {
-  opacity: 0;
-  pointer-events: none;
-  visibility: hidden;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s ease, visibility 0.3s ease;
-  transform: translateY(8px);
-}
-
-.live-video-box:hover .live-video-overlay-fs,
-.live-video-box:hover .fs-chat-toggle-btn,
-.live-video-box.show-controls .live-video-overlay-fs,
-.live-video-box.show-controls .fs-chat-toggle-btn {
-  opacity: 1;
-  pointer-events: auto;
-  visibility: visible;
-  transform: translateY(0);
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
 }
 
 /* ── Live Video Overlay Fullscreen Button ── */
@@ -7786,6 +8044,176 @@ body.live-fs-open {
   transform: scale(1.08) !important;
 }
 
+/* ── Live Replay Cinema Bottom Control Deck (Timeline & Controls) ── */
+.live-cinema-bottom-deck {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 25;
+  padding: 34px 18px 12px 18px;
+  background: linear-gradient(to top, rgba(6, 9, 15, 0.94) 0%, rgba(6, 9, 15, 0.6) 55%, transparent 100%);
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+.live-cinema-bottom-deck,
+.live-center-pause-cue,
+.live-cinema-control-dock {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+.live-video-box.is-replay .live-cinema-bottom-deck,
+.live-video-box.is-replay:hover .live-cinema-bottom-deck,
+.live-video-box.is-replay.show-controls .live-cinema-bottom-deck,
+.live-video-box.is-replay.is-paused .live-cinema-bottom-deck,
+.live-video-box.is-replay .live-center-pause-cue,
+.live-video-box.is-replay.is-paused .live-center-pause-cue,
+.live-video-box.is-replay .fs-chat-toggle-btn,
+.live-video-box.is-replay .live-video-overlay-fs {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+.dock-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  outline: none;
+}
+
+.dock-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: scale(1.08);
+}
+
+.dock-btn:active {
+  transform: scale(0.96);
+}
+
+/* Seek Buttons (-10s / +10s) */
+.dock-btn-seek {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.dock-seek-label {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  color: #f1f5f9;
+  line-height: 1;
+  margin-top: -2px;
+}
+
+.dock-btn-seek:hover .dock-seek-label {
+  color: #d8a153;
+}
+
+/* Center Prominent Play/Pause Button */
+.dock-btn-play {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #d8a153 0%, #b88628 100%) !important;
+  border: 2px solid rgba(255, 255, 255, 0.35) !important;
+  color: #000 !important;
+  box-shadow: 0 4px 20px rgba(216, 161, 83, 0.45);
+}
+
+.dock-btn-play:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 6px 28px rgba(216, 161, 83, 0.65) !important;
+  filter: brightness(1.08);
+}
+
+.dock-btn-play:active {
+  transform: scale(0.98) !important;
+}
+
+/* Speed Selector Pill */
+.dock-speed-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 4px 10px;
+  border-radius: 999px;
+  height: 36px;
+  transition: all 0.2s ease;
+}
+
+.dock-speed-pill:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(216, 161, 83, 0.4);
+}
+
+.dock-speed-icon {
+  font-size: 11px;
+}
+
+.dock-speed-select {
+  background: transparent;
+  border: none;
+  color: #f8fafc;
+  font-size: 11.5px;
+  font-weight: 700;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  padding-right: 2px;
+}
+
+.dock-speed-select option {
+  background: #090e1a;
+  color: #fff;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+  .live-cinema-control-dock {
+    gap: 8px;
+    padding: 6px 12px;
+  }
+  .dock-btn-seek {
+    width: 38px;
+    height: 38px;
+  }
+  .dock-btn-play {
+    width: 48px;
+    height: 48px;
+  }
+  .dock-btn-play svg {
+    width: 20px;
+    height: 20px;
+  }
+  .dock-speed-pill {
+    height: 32px;
+    padding: 2px 8px;
+  }
+  .dock-speed-select {
+    font-size: 11px;
+  }
+}
+
 /* ── Invisible Full-Screen Anti-Leak & Continuous Broadcast Shield (Disables Pause/Play & blocks YouTube redirects) ── */
 .live-full-shield,
 .live-click-shield {
@@ -7802,67 +8230,13 @@ body.live-fs-open {
   touch-action: manipulation;
 }
 
-/* ── Fullscreen Live Comments Toggle Button ── */
-.fs-chat-toggle-btn {
-  position: absolute;
-  bottom: 14px;
-  right: 68px;
-  z-index: 25;
-  height: 42px;
-  padding: 0 16px;
-  border-radius: 10px;
-  background: rgba(10, 15, 26, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
-  font-family: inherit;
-}
-.fs-chat-toggle-btn:hover {
-  background: rgba(216, 161, 83, 0.35);
-  border-color: var(--gold, #d8a153);
-  color: #fff;
-  transform: scale(1.05);
-}
-.fs-chat-badge-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 8px #10b981;
-  animation: pulse-dot-anim 1.8s infinite;
-}
-
-/* ── Mobile Compact Sizing for On-Display Overlay Buttons (Only Mobile, PC stays original) ── */
-@media (max-width: 640px), (max-height: 500px) and (orientation: landscape) {
-  .live-video-overlay-fs {
-    width: 38px !important;
-    height: 38px !important;
-    bottom: 12px !important;
-    right: 12px !important;
-    font-size: 16px !important;
-    border-radius: 8px !important;
-  }
-  .fs-chat-toggle-btn {
-    height: 38px !important;
-    padding: 0 12px !important;
-    bottom: 12px !important;
-    right: 58px !important;
-    font-size: 12px !important;
-    border-radius: 8px !important;
-    gap: 6px !important;
-  }
-  .fs-chat-badge-dot {
-    width: 6px !important;
-    height: 6px !important;
-  }
+/* ── Fullscreen Live Comments & Video Overlay Buttons (Permanently Removed for Clean Screen) ── */
+.fs-chat-toggle-btn,
+.live-video-overlay-fs {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 /* ── Fullscreen Live Chat & Comments Drawer (Overlay inside Fullscreen) ── */

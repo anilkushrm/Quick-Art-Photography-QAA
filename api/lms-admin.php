@@ -658,6 +658,8 @@ if ($action === 'save-lms-settings' && $method === 'POST') {
         'bunnyTokenAuthKey' => isset($body['bunnyTokenAuthKey']) ? trim($body['bunnyTokenAuthKey']) : ($currSettings['bunnyTokenAuthKey'] ?? '436c7112-8150-409c-b5f3-d29a1856b06b'),
         'bunnyHostname' => isset($body['bunnyHostname']) ? trim($body['bunnyHostname']) : ($currSettings['bunnyHostname'] ?? 'iframe.mediadelivery.net'),
         'bunnyAccountApiKey' => isset($body['bunnyAccountApiKey']) ? trim($body['bunnyAccountApiKey']) : ($currSettings['bunnyAccountApiKey'] ?? '174c5167-ecb1-4d9d-9b47-d085ebf2e098dd0da2e5-9071-45ad-b088-9683075c7ed1'),
+        'cloudflareAccountId' => isset($body['cloudflareAccountId']) ? trim($body['cloudflareAccountId']) : ($currSettings['cloudflareAccountId'] ?? ''),
+        'cloudflareApiToken' => isset($body['cloudflareApiToken']) ? trim($body['cloudflareApiToken']) : ($currSettings['cloudflareApiToken'] ?? ''),
         'razorpayEnabled' => isset($body['razorpayEnabled']) ? !empty($body['razorpayEnabled']) : ($currSettings['razorpayEnabled'] ?? false),
         'razorpayKeyId' => isset($body['razorpayKeyId']) ? trim($body['razorpayKeyId']) : ($currSettings['razorpayKeyId'] ?? ''),
         'razorpayKeySecret' => isset($body['razorpayKeySecret']) ? trim($body['razorpayKeySecret']) : ($currSettings['razorpayKeySecret'] ?? ''),
@@ -737,6 +739,50 @@ if ($action === 'test-bunny' && ($method === 'GET' || $method === 'POST')) {
         json_ok([
             'connected' => false,
             'message' => 'Bunny.net API response code: ' . $httpCode
+        ]);
+    }
+}
+
+// 8.1B Test Cloudflare Stream Connection Handshake
+if ($action === 'test-cloudflare' && ($method === 'GET' || $method === 'POST')) {
+    $body = read_json_body();
+    $settings = file_exists(LMS_SETTINGS_FILE) ? json_decode(file_get_contents(LMS_SETTINGS_FILE), true) : [];
+
+    $accId = trim($body['cloudflareAccountId'] ?? ($settings['cloudflareAccountId'] ?? ''));
+    $apiToken = trim($body['cloudflareApiToken'] ?? ($settings['cloudflareApiToken'] ?? ''));
+
+    if (!$accId || !$apiToken) {
+        json_ok([
+            'connected' => false,
+            'message' => 'Cloudflare Account ID ya API Token field khali hai. Kripya dono daalein.'
+        ]);
+    }
+
+    $ch = curl_init("https://api.cloudflare.com/client/v4/accounts/{$accId}/stream/live_inputs");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer {$apiToken}",
+        "Content-Type: application/json"
+    ]);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    $res = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    $json = $res ? json_decode($res, true) : null;
+    if ($httpCode >= 200 && $httpCode < 300 && !empty($json['success'])) {
+        $inputs = $json['result'] ?? [];
+        json_ok([
+            'connected' => true,
+            'accountId' => $accId,
+            'liveInputsCount' => count($inputs),
+            'status' => 'Active & Live Ready'
+        ]);
+    } else {
+        $errMsg = $json['errors'][0]['message'] ?? ('HTTP ' . $httpCode);
+        json_ok([
+            'connected' => false,
+            'message' => 'Cloudflare Error: ' . $errMsg
         ]);
     }
 }
@@ -962,6 +1008,55 @@ if ($action === 'create-bunny-video' && $method === 'POST') {
         ]);
     } else {
         json_err('Failed to create video on Bunny.net (HTTP ' . $httpCode . ')', 500);
+    }
+}
+
+// 12B. Create Cloudflare Stream Live Input via API (Automatic DVR & OBS Stream Key)
+if ($action === 'create-cloudflare-live-input' && $method === 'POST') {
+    $body = read_json_body();
+    $title = trim($body['title'] ?? 'Live Masterclass');
+
+    $settings = load_lms_settings();
+    $accId = trim($settings['cloudflareAccountId'] ?? '');
+    $apiToken = trim($settings['cloudflareApiToken'] ?? '');
+
+    if (!$accId || !$apiToken) {
+        json_err('Cloudflare Account ID ya API Token LMS Settings me configured nahi hai. Kripya Admin Settings me daalein ya Cloudflare Dashboard se Live Input banayein.', 400);
+    }
+
+    $ch = curl_init("https://api.cloudflare.com/client/v4/accounts/{$accId}/stream/live_inputs");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'meta' => ['name' => $title],
+        'recording' => [
+            'mode' => 'automatic',
+            'timeoutSeconds' => 300,
+            'requireSignedURLs' => false
+        ]
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer {$apiToken}",
+        "Content-Type: application/json"
+    ]);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $res = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    $json = $res ? json_decode($res, true) : null;
+    if ($httpCode >= 200 && $httpCode < 300 && !empty($json['success']) && !empty($json['result'])) {
+        $r = $json['result'];
+        json_ok([
+            'created' => true,
+            'videoId' => $r['uid'] ?? '',
+            'streamKey' => $r['rtmps']['streamKey'] ?? '',
+            'rtmpsUrl' => $r['rtmps']['url'] ?? 'rtmps://live.cloudflare.com:443/live/',
+            'webrtcUrl' => $r['webRTC']['url'] ?? ''
+        ]);
+    } else {
+        $errMsg = $json['errors'][0]['message'] ?? ('HTTP ' . $httpCode);
+        json_err('Cloudflare Live Input Creation Failed: ' . $errMsg, 400);
     }
 }
 
@@ -1216,10 +1311,17 @@ if ($action === 'save-live-class' && $method === 'POST') {
         'scheduledAt'               => trim($item['scheduledAt'] ?? date('c')),
         'duration'                  => trim($item['duration'] ?? '90 Mins'),
         'status'                    => in_array($item['status'] ?? '', ['scheduled', 'live', 'completed']) ? $item['status'] : 'scheduled',
-        'streamType'                => trim($item['streamType'] ?? (!empty($item['bunnyVideoId']) && empty($rawStream) ? 'bunny' : 'youtube')),
+        'streamType'                => trim($item['streamType'] ?? (!empty($item['bunnyVideoId']) && empty($rawStream) ? 'bunny' : 'cloudflare')),
         'streamId'                  => $rawStream,
         'replayUrl'                 => trim($item['replayUrl'] ?? ''),
         'bunnyVideoId'              => trim($item['bunnyVideoId'] ?? ''),
+        'cloudflareVideoId'         => trim($item['cloudflareVideoId'] ?? ''),
+        'cloudflareStreamKey'       => trim($item['cloudflareStreamKey'] ?? ''),
+        'meetUrl'                   => trim($item['meetUrl'] ?? ''),
+        'zoomUrl'                   => trim($item['zoomUrl'] ?? ''),
+        'zoomMeetingId'             => trim($item['zoomMeetingId'] ?? ''),
+        'zoomPasscode'              => trim($item['zoomPasscode'] ?? ''),
+        'zoomEmbedMode'             => !empty($item['zoomEmbedMode']),
         'showViewerCountToStudents' => !empty($item['showViewerCountToStudents']),
         'allowStudentMic'           => !empty($item['allowStudentMic']),
         'allowStudentScreen'        => !empty($item['allowStudentScreen']),
@@ -1346,7 +1448,8 @@ if ($action === 'get-live-viewers' && ($method === 'GET' || $method === 'POST'))
 
     foreach ($viewers as $p => $v) {
         $pClean = clean_phone($p);
-        if (($now - ($v['lastSeen'] ?? 0)) <= 45) {
+        if (!$pClean) $pClean = (string)$p;
+        if (($now - ($v['lastSeen'] ?? 0)) <= 60) {
             $v['isOnline'] = true;
             $v['phone'] = $pClean;
             $activeMap[$pClean] = $v;
@@ -1365,69 +1468,83 @@ if ($action === 'get-live-viewers' && ($method === 'GET' || $method === 'POST'))
     $offFile = DATA_DIR . '/offline-admissions.json';
     $offAdmissions = file_exists($offFile) ? (json_decode(file_get_contents($offFile), true) ?: []) : [];
 
+    $targetCourseId = $targetClass['courseId'] ?? '';
+    $isWorkshop = ($targetClass['type'] ?? 'workshop') === 'workshop';
+    $includeOffline = !empty($_GET['includeOffline']);
+
+    // Calculate total enrolled count
+    $enrolledCount = 0;
+    foreach ($allStudents as $st) {
+        $p = clean_phone($st['phone'] ?? '');
+        if (!$p) continue;
+        $courses = $st['enrolledCourses'] ?? [];
+        if ($p === '9939800780' || $isWorkshop || in_array($sessionId, $courses) || ($targetCourseId && in_array($targetCourseId, $courses))) {
+            $enrolledCount++;
+        }
+    }
+    $enrolledCount += count($offAdmissions);
+
     $rosterMap = [];
 
-    // First add active pingers
+    // Add only active online pingers by default
     foreach ($activeMap as $p => $v) {
         $rosterMap[$p] = $v;
     }
 
-    // Next add students registered in students.json
-    $targetCourseId = $targetClass['courseId'] ?? '';
-    $isWorkshop = ($targetClass['type'] ?? 'workshop') === 'workshop';
+    // Only add offline/registered students if explicitly requested
+    if ($includeOffline) {
+        foreach ($allStudents as $st) {
+            $p = clean_phone($st['phone'] ?? '');
+            if (!$p) continue;
 
-    foreach ($allStudents as $st) {
-        $p = clean_phone($st['phone'] ?? '');
-        if (!$p) continue;
+            $courses = $st['enrolledCourses'] ?? [];
+            $isEnrolled = false;
 
-        $courses = $st['enrolledCourses'] ?? [];
-        $isEnrolled = false;
+            if ($p === '9939800780') {
+                $isEnrolled = true;
+            } elseif ($isWorkshop) {
+                $isEnrolled = in_array($sessionId, $courses) || in_array('masterclass-live', $courses) || in_array('live_demo_01', $courses) || count($courses) > 0;
+            } else {
+                $isEnrolled = in_array($sessionId, $courses) || ($targetCourseId && in_array($targetCourseId, $courses));
+            }
 
-        if ($p === '9939800780') {
-            $isEnrolled = true;
-        } elseif ($isWorkshop) {
-            $isEnrolled = in_array($sessionId, $courses) || in_array('masterclass-live', $courses) || in_array('live_demo_01', $courses) || count($courses) > 0;
-        } else {
-            $isEnrolled = in_array($sessionId, $courses) || ($targetCourseId && in_array($targetCourseId, $courses));
+            if ($isEnrolled && !isset($rosterMap[$p])) {
+                $rosterMap[$p] = [
+                    'phone'         => $p,
+                    'name'          => $st['name'] ?? 'Student',
+                    'city'          => $st['city'] ?? ($st['workCity'] ?? 'India'),
+                    'isOnline'      => false,
+                    'handRaised'    => false,
+                    'micAllowed'    => false,
+                    'screenAllowed' => false,
+                    'joinedAt'      => $st['enrolledAt'] ?? ($st['registeredAt'] ?? ''),
+                    'status'        => 'registered'
+                ];
+            }
         }
 
-        if ($isEnrolled && !isset($rosterMap[$p])) {
-            $rosterMap[$p] = [
-                'phone'         => $p,
-                'name'          => $st['name'] ?? 'Student',
-                'city'          => $st['city'] ?? ($st['workCity'] ?? 'India'),
-                'isOnline'      => false,
-                'handRaised'    => false,
-                'micAllowed'    => false,
-                'screenAllowed' => false,
-                'joinedAt'      => $st['enrolledAt'] ?? ($st['registeredAt'] ?? ''),
-                'status'        => 'registered'
-            ];
-        }
-    }
-
-    // Add offline admissions if workshop or batch
-    foreach ($offAdmissions as $adm) {
-        $p = clean_phone($adm['phone'] ?? '');
-        if (!$p) continue;
-        if (!isset($rosterMap[$p])) {
-            $rosterMap[$p] = [
-                'phone'         => $p,
-                'name'          => $adm['name'] ?? 'Offline Student',
-                'city'          => $adm['city'] ?? ($adm['workCity'] ?? 'India'),
-                'isOnline'      => false,
-                'handRaised'    => false,
-                'micAllowed'    => false,
-                'screenAllowed' => false,
-                'joinedAt'      => $adm['registeredAt'] ?? '',
-                'status'        => 'registered'
-            ];
+        foreach ($offAdmissions as $adm) {
+            $p = clean_phone($adm['phone'] ?? '');
+            if (!$p) continue;
+            if (!isset($rosterMap[$p])) {
+                $rosterMap[$p] = [
+                    'phone'         => $p,
+                    'name'          => $adm['name'] ?? 'Offline Student',
+                    'city'          => $adm['city'] ?? ($adm['workCity'] ?? 'India'),
+                    'isOnline'      => false,
+                    'handRaised'    => false,
+                    'micAllowed'    => false,
+                    'screenAllowed' => false,
+                    'joinedAt'      => $adm['registeredAt'] ?? '',
+                    'status'        => 'registered'
+                ];
+            }
         }
     }
 
     $rosterList = array_values($rosterMap);
 
-    // Sort: Hand Raised first, then Online Watching, then Registered
+    // Sort: Hand Raised first, then Online Watching
     usort($rosterList, function($a, $b) {
         if (!empty($a['handRaised']) !== !empty($b['handRaised'])) {
             return !empty($b['handRaised']) ? 1 : -1;
@@ -1439,7 +1556,6 @@ if ($action === 'get-live-viewers' && ($method === 'GET' || $method === 'POST'))
     });
 
     $activeCount = count($activeMap);
-    $enrolledCount = count($rosterList);
 
     $stageRoom = 'qaa_stage_' . substr(md5('qaa_stage_salt_' . $sessionId), 0, 12);
     $stageObsUrl = "https://vdo.ninja/?room={$stageRoom}&view={$stageRoom}&transparent=1&cleanoutput=1&audioonly=0";

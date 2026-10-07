@@ -120,7 +120,8 @@ function load_lms_settings() {
         'otpDemoMode' => false,
         'defaultOtp' => '123456',
         'aibotflowApiKey' => '',
-        'aibotflowOtpTemplate' => 'quickart_login_otp',
+        'cloudflareAccountId' => '',
+        'cloudflareApiToken' => '',
         'academyName' => 'Quick Art Photography Academy',
         'mentorName' => 'Anil Sharma'
     ];
@@ -182,7 +183,10 @@ function save_sessions($s) {
 }
 function purge_expired_sessions(&$sessions) {
     $now = time();
-    foreach ($sessions as $tok => $exp) if ($exp < $now) unset($sessions[$tok]);
+    foreach ($sessions as $tok => $exp) {
+        $expTime = is_array($exp) ? ($exp['expiresAt'] ?? 0) : (int)$exp;
+        if ($expTime < $now) unset($sessions[$tok]);
+    }
 }
 function create_session() {
     $token = bin2hex(random_bytes(24));
@@ -198,7 +202,8 @@ function is_valid_session($token) {
     purge_expired_sessions($sessions);
     // Timing-safe check
     foreach ($sessions as $t => $exp) {
-        if (hash_equals($t, $token) && $exp >= time()) return true;
+        $expTime = is_array($exp) ? ($exp['expiresAt'] ?? 0) : (int)$exp;
+        if (hash_equals($t, $token) && $expTime >= time()) return true;
     }
     return false;
 }
@@ -249,6 +254,10 @@ function read_json_body() {
     $raw = file_get_contents('php://input');
     if (!$raw) return [];
     $data = json_decode($raw, true);
+    if (is_string($data)) {
+        $data2 = json_decode($data, true);
+        if (is_array($data2)) return $data2;
+    }
     return is_array($data) ? $data : [];
 }
 

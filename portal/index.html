@@ -798,49 +798,113 @@
                   <span id="watermark-text" class="watermark-tag" style="display: none !important;"></span>
                 </div>
 
-                <!-- Invisible Anti-Leak Click Shield (Top bar: blocks title, channel link, share, watch later) -->
-                <div id="course-click-shield" class="course-click-shield" oncontextmenu="return false;"
-                  title="Quick Art Academy Player" onclick="toggleCourseVideoPlayPause()"></div>
-
-                <!-- Invisible Anti-Leak Corner Shield (Bottom-right: blocks YouTube logo link) -->
-                <div id="course-click-shield-corner" class="course-click-shield-corner" oncontextmenu="return false;"
-                  title="Quick Art Academy Player" onclick="toggleCourseVideoPlayPause()"></div>
-
-                <!-- Pause State Click Shield & Custom Resume Overlay -->
-                <div id="course-pause-shield" class="course-pause-shield" onclick="toggleCourseVideoPlayPause()"
-                  title="Click to Resume Video">
-                  <div class="course-pause-btn">
-                    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                <!-- Center Play Cue (Appears only when paused, disappears when playing) -->
+                <div class="cinema-center-pause-cue" id="cinema-center-pause-cue" onclick="toggleCourseVideoPlayPause()" title="Play Video (Space)">
+                  <div class="cinema-center-play-circle">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="6 4 20 12 6 20 6 4"></polygon>
                     </svg>
                   </div>
-                  <span class="course-pause-txt">Click to Resume Lesson</span>
                 </div>
 
-                <!-- Floating Video Overlay Fullscreen Button -->
-                <button type="button" class="course-video-overlay-fs live-fs-btn"
-                  onclick="toggleCourseCinemaFullscreen()" title="Fullscreen Mode (Press F)">
-                  ⛶
-                </button>
+                <!-- Ultra-Sleek MasterClass Cinema Bottom Control Deck (Timeline & Controls) -->
+                <div class="cinema-bottom-deck" id="cinema-bottom-deck" role="toolbar" aria-label="Course Player Timeline & Controls">
+                  <!-- 1. Interactive Timeline Scrubber -->
+                  <div class="cinema-progress-area" id="cinema-progress-area"
+                    onclick="seekCinemaTimeline(event)"
+                    onmousemove="hoverCinemaTimeline(event)"
+                    onmouseleave="leaveCinemaTimeline()"
+                    title="Seek Video (Click or Drag)">
+                    <div class="cinema-progress-track" id="cinema-progress-track">
+                      <div class="cinema-progress-buffer" id="cinema-progress-buffer"></div>
+                      <div class="cinema-progress-played" id="cinema-progress-played"></div>
+                      <div class="cinema-progress-thumb" id="cinema-progress-thumb"></div>
+                    </div>
+                    <div class="cinema-progress-tooltip" id="cinema-progress-tooltip">00:00</div>
+                  </div>
+
+                  <!-- 2. Controls Row -->
+                  <div class="cinema-ctrl-row">
+                    <!-- Left: Play/Pause, -10s, +10s, Volume, Time Display -->
+                    <div class="cinema-ctrl-left">
+                      <!-- Play / Pause -->
+                      <button type="button" class="cinema-btn cinema-btn-play" id="cinema-btn-play-pause"
+                        onclick="toggleCourseVideoPlayPause()" title="Play / Pause (Space)" aria-label="Play / Pause">
+                        <svg class="cinema-icon-play" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                          <polygon points="6 4 20 12 6 20 6 4"></polygon>
+                        </svg>
+                        <svg class="cinema-icon-pause" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+                          <rect x="6" y="4" width="4" height="16" rx="1.5"></rect>
+                          <rect x="14" y="4" width="4" height="16" rx="1.5"></rect>
+                        </svg>
+                      </button>
+
+                      <!-- Rewind 10s -->
+                      <button type="button" class="cinema-btn cinema-btn-skip" onclick="skipVideo(-10)" title="10s Rewind (10 सेकंड पीछे)" aria-label="Rewind 10s">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="11 17 6 12 11 7"></polyline>
+                          <polyline points="18 17 13 12 18 7"></polyline>
+                        </svg>
+                        <span class="cinema-skip-lbl">10s</span>
+                      </button>
+
+                      <!-- Forward 10s -->
+                      <button type="button" class="cinema-btn cinema-btn-skip" onclick="skipVideo(10)" title="10s Forward (10 सेकंड आगे)" aria-label="Forward 10s">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="13 17 18 12 13 7"></polyline>
+                          <polyline points="6 17 11 12 6 7"></polyline>
+                        </svg>
+                        <span class="cinema-skip-lbl">10s</span>
+                      </button>
+
+                      <!-- Volume / Mute -->
+                      <button type="button" class="cinema-btn cinema-btn-vol" id="cinema-btn-volume" onclick="toggleCourseVolumeMute()" title="Mute / Unmute (M)" aria-label="Volume">
+                        <svg class="cinema-icon-vol-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                        </svg>
+                        <svg class="cinema-icon-vol-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                          <line x1="23" y1="9" x2="17" y2="15"></line>
+                          <line x1="17" y1="9" x2="23" y2="15"></line>
+                        </svg>
+                      </button>
+
+                      <!-- Time Counter: Current / Total + Remaining Tag -->
+                      <div class="cinema-time-box">
+                        <span class="cinema-time-current" id="cinema-time-current">00:00</span>
+                        <span class="cinema-time-sep">/</span>
+                        <span class="cinema-time-total" id="cinema-time-total">00:00</span>
+                        <span class="cinema-time-rem" id="cinema-time-remaining">--:-- baki</span>
+                      </div>
+                    </div>
+
+                    <!-- Right: Speed, Fullscreen -->
+                    <div class="cinema-ctrl-right">
+                      <!-- Playback Speed -->
+                      <div class="cinema-speed-pill" title="Playback Speed">
+                        <span class="cinema-speed-icon">⚡</span>
+                        <select id="cinema-select-speed" onchange="setVideoSpeed(parseFloat(this.value))" class="cinema-speed-select" aria-label="Playback Speed">
+                          <option value="0.75">0.75x</option>
+                          <option value="1" selected>1.0x</option>
+                          <option value="1.25">1.25x</option>
+                          <option value="1.5">1.5x</option>
+                          <option value="2">2.0x</option>
+                        </select>
+                      </div>
+
+                      <!-- Fullscreen -->
+                      <button type="button" class="cinema-btn cinema-btn-fs" onclick="toggleCourseCinemaFullscreen()" title="Fullscreen Mode (F)" aria-label="Fullscreen">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
                 <!-- Video Element or Iframe will be injected here -->
                 <div id="video-mount"></div>
-              </div>
-            </div>
-
-            <!-- Video Quick Controls Bar -->
-            <div class="video-playback-controls">
-              <div class="playback-speed-group">
-                <span class="speed-lbl">Playback Speed:</span>
-                <button type="button" class="speed-btn" onclick="setVideoSpeed(0.75)">0.75x</button>
-                <button type="button" class="speed-btn active" onclick="setVideoSpeed(1)">1.0x</button>
-                <button type="button" class="speed-btn" onclick="setVideoSpeed(1.25)">1.25x</button>
-                <button type="button" class="speed-btn" onclick="setVideoSpeed(1.5)">1.5x</button>
-                <button type="button" class="speed-btn" onclick="setVideoSpeed(2)">2.0x</button>
-              </div>
-              <div class="playback-skip-group">
-                <button type="button" class="skip-btn" onclick="skipVideo(-10)" title="Rewind 10 seconds">↺ 10s</button>
-                <button type="button" class="skip-btn" onclick="skipVideo(10)" title="Forward 10 seconds">10s ↻</button>
               </div>
             </div>
 
@@ -1075,18 +1139,110 @@
                 ontouchstart="handleLiveShieldTouch(event)" ondblclick="toggleLiveCinemaFullscreen()"
                 title="Quick Art Academy Continuous Live Broadcast"></div>
 
-              <!-- 3. Floating Fullscreen Live Comments Toggle Button (Auto-hides after 3.5s or mouse inactivity) -->
-              <button type="button" class="fs-chat-toggle-btn" id="fs-chat-toggle-btn"
-                onclick="toggleFullscreenChatDrawer()" title="Live Doubts &amp; Comments (Press C)">
-                <span class="fs-chat-badge-dot"></span>
-                <span>💬 Comments</span>
-              </button>
+              <!-- 3. Center Play Cue (Appears only when paused during replay, disappears when playing) -->
+              <div class="live-center-pause-cue" id="live-center-pause-cue" onclick="toggleLiveReplayPlayPause()" title="Play Replay (Space)">
+                <div class="cinema-center-play-circle">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="6 4 20 12 6 20 6 4"></polygon>
+                  </svg>
+                </div>
+              </div>
 
-              <!-- 4. Floating Video Overlay Fullscreen Button (Auto-hides after 3.5s or mouse inactivity) -->
-              <button type="button" class="live-video-overlay-fs live-fs-btn" onclick="toggleLiveCinemaFullscreen()"
-                title="Fullscreen Mode (Press F)">
-                ⛶
-              </button>
+              <!-- 4. Ultra-Sleek MasterClass Replay Cinema Bottom Control Deck (Timeline & Controls) -->
+              <div class="live-cinema-bottom-deck" id="live-cinema-bottom-deck" role="toolbar" aria-label="Replay Player Timeline & Controls">
+                <!-- 1. Interactive Timeline Scrubber -->
+                <div class="cinema-progress-area" id="live-progress-area"
+                  onclick="seekLiveTimeline(event)"
+                  onmousemove="hoverLiveTimeline(event)"
+                  onmouseleave="leaveLiveTimeline()"
+                  title="Seek Replay (Click or Drag)">
+                  <div class="cinema-progress-track" id="live-progress-track">
+                    <div class="cinema-progress-buffer" id="live-progress-buffer"></div>
+                    <div class="cinema-progress-played" id="live-progress-played"></div>
+                    <div class="cinema-progress-thumb" id="live-progress-thumb"></div>
+                  </div>
+                  <div class="cinema-progress-tooltip" id="live-progress-tooltip">00:00</div>
+                </div>
+
+                <!-- 2. Controls Row -->
+                <div class="cinema-ctrl-row">
+                  <!-- Left: Play/Pause, -10s, +10s, Volume, Time Display -->
+                  <div class="cinema-ctrl-left">
+                    <!-- Play / Pause -->
+                    <button type="button" class="cinema-btn cinema-btn-play" id="live-deck-btn-play-pause"
+                      onclick="toggleLiveReplayPlayPause()" title="Play / Pause (Space)" aria-label="Play / Pause">
+                      <svg class="live-deck-icon-play" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="6 4 20 12 6 20 6 4"></polygon>
+                      </svg>
+                      <svg class="live-deck-icon-pause" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+                        <rect x="6" y="4" width="4" height="16" rx="1.5"></rect>
+                        <rect x="14" y="4" width="4" height="16" rx="1.5"></rect>
+                      </svg>
+                    </button>
+
+                    <!-- Rewind 10s -->
+                    <button type="button" class="cinema-btn cinema-btn-skip" onclick="seekLiveReplay(-10)" title="10s Rewind (10 सेकंड पीछे)" aria-label="Rewind 10s">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="11 17 6 12 11 7"></polyline>
+                        <polyline points="18 17 13 12 18 7"></polyline>
+                      </svg>
+                      <span class="cinema-skip-lbl">10s</span>
+                    </button>
+
+                    <!-- Forward 10s -->
+                    <button type="button" class="cinema-btn cinema-btn-skip" onclick="seekLiveReplay(10)" title="10s Forward (10 सेकंड आगे)" aria-label="Forward 10s">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="13 17 18 12 13 7"></polyline>
+                        <polyline points="6 17 11 12 6 7"></polyline>
+                      </svg>
+                      <span class="cinema-skip-lbl">10s</span>
+                    </button>
+
+                    <!-- Volume / Mute -->
+                    <button type="button" class="cinema-btn cinema-btn-vol" id="live-deck-btn-vol" onclick="toggleLiveAudioMute()" title="Mute / Unmute (M)" aria-label="Volume">
+                      <svg class="live-deck-icon-vol-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                      </svg>
+                      <svg class="live-deck-icon-vol-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                      </svg>
+                    </button>
+
+                    <!-- Time Counter: Current / Total + Remaining Tag -->
+                    <div class="cinema-time-box">
+                      <span class="cinema-time-current" id="live-time-current">00:00</span>
+                      <span class="cinema-time-sep">/</span>
+                      <span class="cinema-time-total" id="live-time-total">00:00</span>
+                      <span class="cinema-time-rem" id="live-time-remaining">--:-- baki</span>
+                    </div>
+                  </div>
+
+                  <!-- Right: Speed, Comments, Fullscreen -->
+                  <div class="cinema-ctrl-right">
+                    <!-- Playback Speed -->
+                    <div class="cinema-speed-pill" title="Playback Speed">
+                      <span class="cinema-speed-icon">⚡</span>
+                      <select id="live-deck-select-speed" onchange="setLiveReplaySpeed(this.value)" class="cinema-speed-select" aria-label="Playback Speed">
+                        <option value="0.75">0.75x</option>
+                        <option value="1" selected>1.0x</option>
+                        <option value="1.25">1.25x</option>
+                        <option value="1.5">1.5x</option>
+                        <option value="2">2.0x</option>
+                      </select>
+                    </div>
+
+                    <!-- Fullscreen -->
+                    <button type="button" class="cinema-btn cinema-btn-fs" onclick="toggleLiveCinemaFullscreen()" title="Fullscreen Mode (F)" aria-label="Fullscreen">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
 
               <!-- 5. Fullscreen Live Chat & Comments Drawer (Visible in Fullscreen Mode) -->
               <div id="fs-chat-drawer" class="fs-chat-drawer hidden">
@@ -1139,24 +1295,6 @@
                 </span>
               </div>
               <div class="live-stream-actions">
-                <!-- Replay Playback Controls (Active in Recording / Replay Mode) -->
-                <div id="live-replay-controls" class="live-replay-controls" style="display:none;align-items:center;gap:6px">
-                  <button type="button" class="live-icon-btn" onclick="seekLiveReplay(-10)" title="Rewind 10s (Pichhe)">
-                    ⏪ <span style="font-size:10px;font-weight:700">10s</span>
-                  </button>
-                  <button type="button" class="live-icon-btn" id="btn-replay-play-pause" onclick="toggleLiveReplayPlayPause()" title="Play / Pause Video">
-                    ⏯️
-                  </button>
-                  <button type="button" class="live-icon-btn" onclick="seekLiveReplay(10)" title="Forward 10s (Aage)">
-                    ⏩ <span style="font-size:10px;font-weight:700">10s</span>
-                  </button>
-                  <select id="select-replay-speed" onchange="setLiveReplaySpeed(this.value)" class="live-icon-btn" style="background:#0b1120;color:#fff;border:1px solid rgba(255,255,255,0.2);padding:4px 6px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer" title="Playback Speed">
-                    <option value="1">1x</option>
-                    <option value="1.25">1.25x</option>
-                    <option value="1.5">1.5x</option>
-                    <option value="2">2x</option>
-                  </select>
-                </div>
                 <!-- 0. Raise Hand / Ask to Speak Button (Live Mode Only) -->
                 <button type="button" class="live-icon-btn" id="live-raise-hand-btn"
                   onclick="toggleLiveRaiseHand()" title="Raise Hand / Request to Speak" aria-label="Raise Hand">
@@ -1779,7 +1917,7 @@
       <script src="qrcode.min.js"></script>
       <script src="html2canvas.min.js"></script>
       <script src="/qa-purchase-tracking.js"></script>
-      <script src="portal.js?v=20261001_cinematic"></script>
+      <script src="portal.js?v=20261007_pingfix"></script>
       <script src="/meta-events.js?v=5" defer></script>
 </body>
 

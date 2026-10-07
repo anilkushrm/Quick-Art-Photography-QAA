@@ -1216,6 +1216,7 @@ if ($action === 'save-live-class' && $method === 'POST') {
         'scheduledAt'               => trim($item['scheduledAt'] ?? date('c')),
         'duration'                  => trim($item['duration'] ?? '90 Mins'),
         'status'                    => in_array($item['status'] ?? '', ['scheduled', 'live', 'completed']) ? $item['status'] : 'scheduled',
+        'streamType'                => trim($item['streamType'] ?? (!empty($item['bunnyVideoId']) && empty($rawStream) ? 'bunny' : 'youtube')),
         'streamId'                  => $rawStream,
         'replayUrl'                 => trim($item['replayUrl'] ?? ''),
         'bunnyVideoId'              => trim($item['bunnyVideoId'] ?? ''),

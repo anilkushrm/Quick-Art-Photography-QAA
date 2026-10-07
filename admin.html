@@ -2695,35 +2695,47 @@ fbq('track', 'PageView');
         </div>
       </div>
 
-      <div style="background:rgba(216,161,83,0.08);border:1px solid rgba(216,161,83,0.3);border-radius:12px;padding:14px;margin-bottom:16px">
+      <!-- Live Streaming Platform Switcher -->
+      <div style="margin-bottom:16px">
+        <label style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:6px;display:block">
+          📡 Live Streaming Platform *
+        </label>
+        <select id="liveStreamType" onchange="onLiveStreamTypeChange()" style="width:100%;padding:11px 14px;background:#060a14;border:1.5px solid rgba(99,102,241,0.6);color:#fff;border-radius:10px;font-size:13.5px;font-weight:700;box-sizing:border-box">
+          <option value="bunny">🐰 Bunny.net Live Stream (Clean • 100% Private • Zero YouTube)</option>
+          <option value="youtube">🔴 YouTube Live (Unlisted Stream)</option>
+        </select>
+      </div>
+
+      <!-- 1. Bunny.net Live Stream Box -->
+      <div id="boxBunnyStream" style="background:rgba(99,102,241,0.09);border:1.5px solid rgba(99,102,241,0.35);border-radius:12px;padding:16px;margin-bottom:16px">
+        <label style="font-size:13px;font-weight:700;color:#a5b4fc;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
+          <span>🐰 Bunny.net Video GUID / Live Stream ID (Library 755385) *</span>
+          <button type="button" onclick="pickBunnyVideoForLive()" class="btn btn-sm" style="background:#6366f1;color:#fff;font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;font-weight:700;box-shadow:0 2px 8px rgba(99,102,241,0.4)">📂 Pick from Bunny.net</button>
+        </label>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label style="font-size:11.5px;color:#cbd5e1;margin-bottom:4px;display:block">Bunny Video GUID *</label>
+            <input type="text" id="liveBunnyVideoId" placeholder="e.g. 7f893a21-xxxx-xxxx-xxxx" style="width:100%;padding:10px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:8px;font-size:12.5px;box-sizing:border-box" />
+          </div>
+          <div>
+            <label style="font-size:11.5px;color:#cbd5e1;margin-bottom:4px;display:block">Replay URL (Auto-Generated / Optional)</label>
+            <input type="text" id="liveReplayUrl" placeholder="Auto-generated or custom embed URL" style="width:100%;padding:10px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:8px;font-size:12.5px;box-sizing:border-box" />
+          </div>
+        </div>
+        <div style="font-size:12px;color:#94a3b8;margin-top:10px;line-height:1.5;background:rgba(0,0,0,0.3);padding:10px 12px;border-radius:8px;border-left:3px solid #6366f1">
+          ✨ <strong>Zero YouTube &amp; 100% White-Label:</strong> YouTube ka koi link ya logo nahi dikhega. Stream direct Bunny.net CDN se ultra-fast 1080p me deliver hogi aur class khatam hote hi recording yahi save rahegi.
+        </div>
+      </div>
+
+      <!-- 2. YouTube Stream Box -->
+      <div id="boxYoutubeStream" style="display:none;background:rgba(216,161,83,0.08);border:1px solid rgba(216,161,83,0.3);border-radius:12px;padding:14px;margin-bottom:16px">
         <label style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:6px;display:flex;align-items:center;gap:6px">
           🎥 YouTube Unlisted Live Stream ID / Watch URL *
         </label>
         <input type="text" id="liveStreamId" oninput="validateLiveStreamUrl(this.value)" placeholder="Paste YouTube Live URL (e.g. https://youtube.com/live/xxx or https://youtu.be/xxx)" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box" />
         <div id="liveStreamWarning" style="display:none;background:rgba(239,68,68,0.15);border:1px solid #ef4444;color:#fca5a5;padding:8px 12px;border-radius:8px;font-size:12px;margin-top:8px;font-weight:600"></div>
         <div style="font-size:11.5px;color:#94a3b8;margin-top:6px;line-height:1.4">
-          💡 YouTube Studio me Live Stream shuru karke <strong>Share</strong> button par click karein aur Watch Link (jaise <code>https://youtube.com/live/...</code> ya <code>https://youtu.be/...</code>) copy karke yahan daalein. <strong>OBS ka RTMP URL yahan mat daalein</strong>.
-        </div>
-      </div>
-
-      <!-- Bunny.net Stream Storage & Replay VOD Selector -->
-      <div style="background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.3);border-radius:12px;padding:14px;margin-bottom:16px">
-        <label style="font-size:13px;font-weight:700;color:#a5b4fc;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
-          <span>🐰 Bunny.net Live Replay / Recording (Library 755385)</span>
-          <button type="button" onclick="pickBunnyVideoForLive()" class="btn btn-sm" style="background:#6366f1;color:#fff;font-size:11px;padding:4px 9px;border-radius:6px;cursor:pointer;font-weight:600">📂 Pick from Bunny.net</button>
-        </label>
-        <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
-          <div>
-            <label style="font-size:11.5px;color:#94a3b8;margin-bottom:3px;display:block">Bunny Video GUID</label>
-            <input type="text" id="liveBunnyVideoId" placeholder="e.g. 7f893a21-xxxx-xxxx-xxxx" style="width:100%;padding:9px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:8px;font-size:12.5px;box-sizing:border-box" />
-          </div>
-          <div>
-            <label style="font-size:11.5px;color:#94a3b8;margin-bottom:3px;display:block">Replay URL (Auto-Generated from Bunny)</label>
-            <input type="text" id="liveReplayUrl" placeholder="Optional custom embed or signed URL" style="width:100%;padding:9px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:8px;font-size:12.5px;box-sizing:border-box" />
-          </div>
-        </div>
-        <div style="font-size:11.5px;color:#94a3b8;margin-top:6px;line-height:1.4">
-          ⚡ <strong>Bunny.net Storage:</strong> Live class khatam hone ke baad uski recording Bunny.net pe safe store hoti hai. Bunny player se replay me Pause, Play, 10s Skip, Speed (1x-2x), aur Quality switcher saare controls aayenge.
+          💡 YouTube Studio me Live Stream shuru karke <strong>Share</strong> button par click karein aur Watch Link copy karke yahan daalein.
         </div>
       </div>
 
@@ -6819,7 +6831,25 @@ function openScheduleLiveModal() {
 
   populateLiveCourseDropdown();
   onLiveTypeChange();
+  const streamTypeEl = document.getElementById('liveStreamType');
+  if (streamTypeEl) streamTypeEl.value = 'bunny';
+  onLiveStreamTypeChange();
   document.getElementById('scheduleLiveModal').classList.add('show');
+}
+
+function onLiveStreamTypeChange() {
+  const type = document.getElementById('liveStreamType') ? document.getElementById('liveStreamType').value : 'bunny';
+  const boxBunny = document.getElementById('boxBunnyStream');
+  const boxYt = document.getElementById('boxYoutubeStream');
+  if (boxBunny && boxYt) {
+    if (type === 'bunny') {
+      boxBunny.style.display = 'block';
+      boxYt.style.display = 'none';
+    } else {
+      boxBunny.style.display = 'none';
+      boxYt.style.display = 'block';
+    }
+  }
 }
 
 function closeScheduleLiveModal() {
@@ -6845,6 +6875,11 @@ function editLiveClassAdmin(id) {
   if (document.getElementById('liveAllowStudentMic')) document.getElementById('liveAllowStudentMic').checked = c.allowStudentMic !== false;
   if (document.getElementById('liveAllowStudentScreen')) document.getElementById('liveAllowStudentScreen').checked = !!c.allowStudentScreen;
   document.getElementById('liveChatEnabled').checked = c.chatEnabled !== false;
+
+  const isBunny = c.streamType === 'bunny' || (!!c.bunnyVideoId && (!c.streamId || c.streamId === c.bunnyVideoId));
+  const stTypeEl = document.getElementById('liveStreamType');
+  if (stTypeEl) stTypeEl.value = isBunny ? 'bunny' : 'youtube';
+  onLiveStreamTypeChange();
 
   const statusEl = document.getElementById('liveStatus');
   if (statusEl) statusEl.value = c.status || 'scheduled';
@@ -6906,11 +6941,27 @@ async function saveLiveClassAdmin() {
     return;
   }
 
+  const streamType = document.getElementById('liveStreamType') ? document.getElementById('liveStreamType').value : 'bunny';
+  const bunnyVideoId = document.getElementById('liveBunnyVideoId') ? document.getElementById('liveBunnyVideoId').value.trim() : '';
   const rawStreamVal = (document.getElementById('liveStreamId').value || '').trim();
-  if (rawStreamVal.startsWith('rtmp://') || rawStreamVal.startsWith('rtmps://')) {
-    alert("⚠️ Galat Stream Link!\n\nAapne OBS ka RTMP Server URL daala hai:\n" + rawStreamVal + "\n\nWeb browser me RTMP stream nahi chal sakti.\nKripya YouTube Studio me jakar Live Video ka 'Share' Link (jaise https://youtube.com/live/xxxx ya Video ID) yahan paste karein.");
-    document.getElementById('liveStreamId').focus();
-    return;
+
+  if (streamType === 'bunny') {
+    if (!bunnyVideoId) {
+      alert('Kripya Bunny.net Video GUID daalein ya [📂 Pick from Bunny.net] button se video select karein!');
+      if (document.getElementById('liveBunnyVideoId')) document.getElementById('liveBunnyVideoId').focus();
+      return;
+    }
+  } else {
+    if (!rawStreamVal) {
+      alert('Kripya YouTube Live Stream URL daalein!');
+      if (document.getElementById('liveStreamId')) document.getElementById('liveStreamId').focus();
+      return;
+    }
+    if (rawStreamVal.startsWith('rtmp://') || rawStreamVal.startsWith('rtmps://')) {
+      alert("⚠️ Galat Stream Link!\n\nAapne OBS ka RTMP Server URL daala hai:\n" + rawStreamVal + "\n\nWeb browser me RTMP stream nahi chal sakti.\nKripya YouTube Studio me jakar Live Video ka 'Share' Link paste karein ya upar Bunny.net Live Stream select karein.");
+      document.getElementById('liveStreamId').focus();
+      return;
+    }
   }
 
   const rawResources = document.getElementById('liveResources').value.trim();
@@ -6950,14 +7001,15 @@ async function saveLiveClassAdmin() {
     title,
     description: document.getElementById('liveDesc').value.trim(),
     type: document.getElementById('liveType').value,
+    streamType,
     courseId: document.getElementById('liveCourseId').value,
     ticketPrice: parseInt(document.getElementById('liveTicketPrice').value, 10) || 0,
     originalPrice: parseInt(document.getElementById('liveOriginalPrice').value, 10) || 0,
     scheduledAt: document.getElementById('liveScheduledAt').value ? new Date(document.getElementById('liveScheduledAt').value).toISOString() : new Date().toISOString(),
     duration: document.getElementById('liveDuration').value.trim() || '90 Mins',
     status: statusVal,
-    streamId: cleanYtId(rawStreamVal),
-    bunnyVideoId: document.getElementById('liveBunnyVideoId') ? document.getElementById('liveBunnyVideoId').value.trim() : '',
+    streamId: streamType === 'bunny' ? bunnyVideoId : cleanYtId(rawStreamVal),
+    bunnyVideoId,
     replayUrl: (document.getElementById('liveReplayUrl') ? document.getElementById('liveReplayUrl').value.trim() : ''),
     showViewerCountToStudents: document.getElementById('liveShowViewerCountToStudents') ? document.getElementById('liveShowViewerCountToStudents').checked : true,
     allowStudentMic: document.getElementById('liveAllowStudentMic') ? document.getElementById('liveAllowStudentMic').checked : true,

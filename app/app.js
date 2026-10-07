@@ -2880,13 +2880,30 @@ function embedLiveStream(streamId, replayUrl, status, bunnyVideoId, isReplay = f
     startMask.style.display = 'none';
   }
 
-  // REPLAY MODE: Check if Bunny.net Video is available (Library 755385)
-  if (isCompleted) {
-    let bunnyUrl = '';
+  // 1. CHECK FOR BUNNY.NET STREAM (BOTH LIVE & REPLAY • ZERO YOUTUBE)
+  let bunnyUrl = '';
+  const isBunnySession = (session && session.streamType === 'bunny') || 
+                         (bunnyVideoId && /^[a-zA-Z0-9_-]{36}$/.test(bunnyVideoId)) ||
+                         (streamId && (streamId.includes('iframe.mediadelivery.net') || streamId.includes('video.bunnycdn.com') || /^[a-zA-Z0-9_-]{36}$/.test(streamId))) ||
+                         (replayUrl && (replayUrl.includes('iframe.mediadelivery.net') || replayUrl.includes('video.bunnycdn.com')));
+
+  if (isBunnySession) {
+    if (shield) {
+      shield.style.display = 'none';
+      shield.style.pointerEvents = 'none';
+    }
+    if (startMask) {
+      startMask.style.display = 'none';
+    }
+
     if (replayUrl && (replayUrl.includes('iframe.mediadelivery.net') || replayUrl.includes('video.bunnycdn.com'))) {
       bunnyUrl = replayUrl;
     } else if (bunnyVideoId && /^[a-zA-Z0-9_-]{36}$/.test(bunnyVideoId)) {
       bunnyUrl = `https://iframe.mediadelivery.net/embed/755385/${encodeURIComponent(bunnyVideoId)}?autoplay=true&preload=true&responsive=true`;
+    } else if (streamId && (streamId.includes('iframe.mediadelivery.net') || streamId.includes('video.bunnycdn.com'))) {
+      bunnyUrl = streamId;
+    } else if (streamId && /^[a-zA-Z0-9_-]{36}$/.test(streamId)) {
+      bunnyUrl = `https://iframe.mediadelivery.net/embed/755385/${encodeURIComponent(streamId)}?autoplay=true&preload=true&responsive=true`;
     } else if (replayUrl && /^[a-zA-Z0-9_-]{36}$/.test(replayUrl)) {
       bunnyUrl = `https://iframe.mediadelivery.net/embed/755385/${encodeURIComponent(replayUrl)}?autoplay=true&preload=true&responsive=true`;
     }

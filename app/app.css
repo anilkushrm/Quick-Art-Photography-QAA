@@ -3085,22 +3085,9 @@ body.live-fs-open {
   right: 0 !important;
 }
 
-/* ── Initial 5-Second Cinematic Letterbox Bars (Full Coverage for YouTube Overlays) ── */
+/* ── Initial 5-Second Cinematic Letterbox Bars (Removed as requested) ── */
 .live-start-mask {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 18;
-  pointer-events: none;
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s ease;
-}
-
-.live-start-mask.faded {
-  opacity: 0;
-  visibility: hidden;
+  display: none !important;
 }
 
 /* 1. Top Cinematic Bar */

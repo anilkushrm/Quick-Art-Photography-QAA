@@ -2462,6 +2462,8 @@ let liveWatermarkInterval = null;
 let liveAttendeesTimer = null;
 let currentLiveAttendeesCount = 428;
 let liveOverlayHideTimeout = null;
+let livePingTimer = null;
+let isStudentHandRaised = false;
 window._isLiveInitialIntro = false;
 
 function cleanYouTubeVideoId(input) {
@@ -2478,6 +2480,59 @@ function cleanYouTubeVideoId(input) {
   const mEmbed = input.match(/embed\/([a-zA-Z0-9_-]{11})/i);
   if (mEmbed) return mEmbed[1];
   return input;
+}
+
+async function sendStudentLivePing() {
+  if (!currentLiveSession || !currentLiveSession.id) return;
+  try {
+    const res = await apiFetch('live-ping', {
+      method: 'POST',
+      body: {
+        sessionId: currentLiveSession.id,
+        handRaised: isStudentHandRaised
+      }
+    });
+
+    // Update Viewer Count Display (Classroom Mode vs Stealth Webinar Mode)
+    const pill = document.getElementById('live-attendees-pill-mini');
+    if (pill) {
+      if (res.showViewerCount) {
+        pill.style.display = 'inline-flex';
+        if (typeof res.viewerCount === 'number') {
+          updateLiveAttendeesDisplay(res.viewerCount, false);
+        }
+      } else {
+        pill.style.display = 'none';
+      }
+    }
+
+    // 2-Way Stage Interaction Mic Alert
+    const micBanner = document.getElementById('live-mic-permission-banner');
+    if (micBanner) {
+      if (res.micAllowed) {
+        micBanner.classList.remove('hidden');
+      } else {
+        micBanner.classList.add('hidden');
+      }
+    }
+  } catch (e) {}
+}
+
+function toggleLiveRaiseHand() {
+  isStudentHandRaised = !isStudentHandRaised;
+  const btn = document.getElementById('live-raise-hand-btn');
+  if (btn) {
+    if (isStudentHandRaised) {
+      btn.classList.add('hand-active');
+      btn.title = 'Hand Raised (Click to lower)';
+      toast('✋ Hand raised! Mentor Anil Sharma ko request bhej di gayi hai.');
+    } else {
+      btn.classList.remove('hand-active');
+      btn.title = 'Raise Hand / Request to Speak';
+      toast('✋ Hand lowered');
+    }
+  }
+  sendStudentLivePing();
 }
 
 async function openLiveStudio(liveId) {
@@ -2558,13 +2613,29 @@ async function openLiveStudio(liveId) {
       }
     }
 
-    // Embed Video Stream with Anti-Leak Protection
-    embedLiveStream(res.streamId, res.replayUrl, res.status);
+    // Classroom Mode vs Webinar Mode: Viewer pill visibility
+    const pill = document.getElementById('live-attendees-pill-mini');
+    if (pill) {
+      if (res.showViewerCountToStudents) {
+        pill.style.display = 'inline-flex';
+        if (typeof res.viewerCount === 'number') updateLiveAttendeesDisplay(res.viewerCount, false);
+      } else {
+        pill.style.display = 'none';
+      }
+    }
+
+    // Embed Video Stream with Anti-Leak Protection & Bunny Replay VOD Support
+    embedLiveStream(res.streamId, res.replayUrl, res.status, res.bunnyVideoId);
 
     // Start Live Doubts Polling
     pollLiveDoubtsStudent();
     if (liveDoubtsPollTimer) clearInterval(liveDoubtsPollTimer);
     liveDoubtsPollTimer = setInterval(pollLiveDoubtsStudent, 3500);
+
+    // Start Real-Time Live Ping (15s Heartbeat & Media Permissions)
+    if (livePingTimer) clearInterval(livePingTimer);
+    sendStudentLivePing();
+    livePingTimer = setInterval(sendStudentLivePing, 15000);
 
     toast(`🔴 Joined Live: ${res.title}`);
   } catch (err) {
@@ -2648,12 +2719,54 @@ function handleLiveShieldTouch(e) {
   revealLiveOverlayControls(5000);
 }
 
-function embedLiveStream(streamId, replayUrl, status) {
+function embedLiveStream(streamId, replayUrl, status, bunnyVideoId) {
   const mount = document.getElementById('live-video-mount');
+  const shield = document.getElementById('live-full-shield');
   if (!mount) return;
 
+  const isCompleted = status === 'completed';
+
+  // Toggle click shield: In LIVE mode shield prevents pausing and seeking. In COMPLETED replay mode, user has full playback controls!
+  if (shield) {
+    if (isCompleted) {
+      shield.style.display = 'none';
+    } else {
+      shield.style.display = 'block';
+    }
+  }
+
+  // REPLAY MODE: Check if Bunny.net Video is available (Library 755385)
+  if (isCompleted) {
+    let bunnyUrl = '';
+    if (replayUrl && (replayUrl.includes('iframe.mediadelivery.net') || replayUrl.includes('video.bunnycdn.com'))) {
+      bunnyUrl = replayUrl;
+    } else if (bunnyVideoId && /^[a-zA-Z0-9_-]{36}$/.test(bunnyVideoId)) {
+      bunnyUrl = `https://iframe.mediadelivery.net/embed/755385/${encodeURIComponent(bunnyVideoId)}?autoplay=true&preload=true&responsive=true`;
+    } else if (replayUrl && /^[a-zA-Z0-9_-]{36}$/.test(replayUrl)) {
+      bunnyUrl = `https://iframe.mediadelivery.net/embed/755385/${encodeURIComponent(replayUrl)}?autoplay=true&preload=true&responsive=true`;
+    }
+
+    if (bunnyUrl) {
+      mount.innerHTML = `
+        <div style="position:relative;padding-top:56.25%;width:100%;height:100%;background:#000;">
+          <iframe 
+            id="live-stream-iframe"
+            src="${bunnyUrl}" 
+            loading="lazy" 
+            style="border:0;position:absolute;top:0;left:0;height:100%;width:100%;" 
+            allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" 
+            allowfullscreen="true">
+          </iframe>
+        </div>
+      `;
+      revealLiveOverlayControls(4000, true);
+      return;
+    }
+  }
+
+  // LIVE OR YOUTUBE STREAM
   let rawId = streamId;
-  if (status === 'completed' && replayUrl) {
+  if (isCompleted && replayUrl) {
     rawId = replayUrl;
   }
 
@@ -2673,21 +2786,37 @@ function embedLiveStream(streamId, replayUrl, status) {
   }
 
   const originStr = encodeURIComponent(window.location.origin);
-  const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&playsinline=1&enablejsapi=1&origin=${originStr}`;
-
-  mount.innerHTML = `
-    <iframe 
-      id="live-stream-iframe"
-      src="${embedUrl}" 
-      title="Quick Art Photography Academy Live Stream" 
-      frameborder="0" 
-      sandbox="allow-scripts allow-same-origin allow-presentation"
-      tabindex="-1"
-      style="pointer-events:none !important;"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-      allowfullscreen>
-    </iframe>
-  `;
+  if (isCompleted) {
+    // Replay Mode: Controls enabled, seekbar active, pause/play enabled
+    const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&controls=1&modestbranding=1&rel=0&showinfo=0&disablekb=0&playsinline=1&enablejsapi=1&origin=${originStr}`;
+    mount.innerHTML = `
+      <iframe 
+        id="live-stream-iframe"
+        src="${embedUrl}" 
+        title="Quick Art Photography Academy Masterclass Replay" 
+        frameborder="0" 
+        sandbox="allow-scripts allow-same-origin allow-presentation"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    `;
+  } else {
+    // Pure Live Mode: Zero controls, pointer-events none, non-stop broadcast
+    const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&playsinline=1&enablejsapi=1&origin=${originStr}`;
+    mount.innerHTML = `
+      <iframe 
+        id="live-stream-iframe"
+        src="${embedUrl}" 
+        title="Quick Art Photography Academy Live Stream" 
+        frameborder="0" 
+        sandbox="allow-scripts allow-same-origin allow-presentation"
+        tabindex="-1"
+        style="pointer-events:none !important;"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    `;
+  }
 
   revealLiveOverlayControls(6500, true);
 
@@ -3104,6 +3233,18 @@ function exitLiveStudio() {
     clearInterval(liveWatermarkInterval);
     liveWatermarkInterval = null;
   }
+  if (livePingTimer) {
+    clearInterval(livePingTimer);
+    livePingTimer = null;
+  }
+  isStudentHandRaised = false;
+  const handBtn = document.getElementById('live-raise-hand-btn');
+  if (handBtn) {
+    handBtn.classList.remove('hand-active');
+    handBtn.title = 'Raise Hand / Request to Speak';
+  }
+  const micBanner = document.getElementById('live-mic-permission-banner');
+  if (micBanner) micBanner.classList.add('hidden');
 
   const mount = document.getElementById('live-video-mount');
   if (mount) mount.innerHTML = '';

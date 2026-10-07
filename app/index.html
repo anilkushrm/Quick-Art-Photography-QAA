@@ -608,6 +608,15 @@
       </div>
     </div>
 
+    <!-- Live 2-Way Stage Interaction Alert Banner -->
+    <div id="live-mic-permission-banner" class="hidden" style="margin: 8px 16px; background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(5,150,105,0.3)); border: 1px solid #10b981; color: #a7f3d0; padding: 10px 14px; border-radius: 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:18px;">🎙️</span>
+        <span>Mentor Anil Sharma ne aapko mic / bolne ki permission di hai! Aap live stream me interact kar sakte hain.</span>
+      </div>
+      <button type="button" onclick="document.getElementById('live-mic-permission-banner').classList.add('hidden')" style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer;padding:2px 6px;">✕</button>
+    </div>
+
     <!-- Cinema Layout Grid -->
     <div class="live-studio-layout" id="live-studio-layout">
 
@@ -706,6 +715,11 @@
             </span>
           </div>
           <div class="live-stream-actions">
+            <!-- 0. Raise Hand / Ask to Speak Button -->
+            <button type="button" class="live-icon-btn" id="live-raise-hand-btn"
+              onclick="toggleLiveRaiseHand()" title="Raise Hand / Request to Speak" aria-label="Raise Hand">
+              ✋
+            </button>
             <!-- 1. Comment Logo Button -->
             <button type="button" class="live-icon-btn" id="live-bar-comment-btn"
               onclick="handleCommentButtonClick()" title="Live Doubts &amp; Comments" aria-label="Comments">

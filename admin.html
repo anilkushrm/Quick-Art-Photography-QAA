@@ -2706,9 +2706,25 @@ fbq('track', 'PageView');
         </div>
       </div>
 
-      <div style="margin-bottom:16px">
-        <label style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:6px;display:block">Replay Video URL / Bunny GUID (Optional for Completed class)</label>
-        <input type="text" id="liveReplayUrl" placeholder="Leave blank to auto-use stream recording, or enter custom Bunny GUID" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:10px;font-size:13px;box-sizing:border-box" />
+      <!-- Bunny.net Stream Storage & Replay VOD Selector -->
+      <div style="background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.3);border-radius:12px;padding:14px;margin-bottom:16px">
+        <label style="font-size:13px;font-weight:700;color:#a5b4fc;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
+          <span>🐰 Bunny.net Live Replay / Recording (Library 755385)</span>
+          <button type="button" onclick="pickBunnyVideoForLive()" class="btn btn-sm" style="background:#6366f1;color:#fff;font-size:11px;padding:4px 9px;border-radius:6px;cursor:pointer;font-weight:600">📂 Pick from Bunny.net</button>
+        </label>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <label style="font-size:11.5px;color:#94a3b8;margin-bottom:3px;display:block">Bunny Video GUID</label>
+            <input type="text" id="liveBunnyVideoId" placeholder="e.g. 7f893a21-xxxx-xxxx-xxxx" style="width:100%;padding:9px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:8px;font-size:12.5px;box-sizing:border-box" />
+          </div>
+          <div>
+            <label style="font-size:11.5px;color:#94a3b8;margin-bottom:3px;display:block">Replay URL (Auto-Generated from Bunny)</label>
+            <input type="text" id="liveReplayUrl" placeholder="Optional custom embed or signed URL" style="width:100%;padding:9px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:8px;font-size:12.5px;box-sizing:border-box" />
+          </div>
+        </div>
+        <div style="font-size:11.5px;color:#94a3b8;margin-top:6px;line-height:1.4">
+          ⚡ <strong>Bunny.net Storage:</strong> Live class khatam hone ke baad uski recording Bunny.net pe safe store hoti hai. Bunny player se replay me Pause, Play, 10s Skip, Speed (1x-2x), aur Quality switcher saare controls aayenge.
+        </div>
       </div>
 
       <div style="margin-bottom:18px">
@@ -2716,9 +2732,37 @@ fbq('track', 'PageView');
         <textarea id="liveResources" rows="2" placeholder="Practice Footage 4K | https://quickartphotography.in/downloads/raw.zip" style="width:100%;padding:11px 14px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:10px;font-size:12.5px;box-sizing:border-box"></textarea>
       </div>
 
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
-        <input type="checkbox" id="liveChatEnabled" checked style="width:18px;height:18px;accent-color:#10b981" />
-        <label for="liveChatEnabled" style="font-size:13px;color:#f1f5f9;cursor:pointer">Enable Real-Time Student Doubts &amp; Live Chat Box</label>
+      <!-- Live Interactivity & Audience Mode Settings -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:20px">
+        <div style="font-size:12.5px;font-weight:700;color:#e2e8f0;margin-bottom:10px">🎛️ Live Interactivity &amp; Audience Settings:</div>
+
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
+          <input type="checkbox" id="liveShowViewerCountToStudents" checked style="width:18px;height:18px;accent-color:#10b981;margin-top:2px" />
+          <label for="liveShowViewerCountToStudents" style="font-size:13px;color:#f1f5f9;cursor:pointer;line-height:1.4">
+            👥 <strong>Classroom Mode:</strong> Students ko live viewer counter dikhayen. (Uncheck karne par <strong>Stealth Webinar Mode</strong> on hoga jisme counter sirf Admin ko dikhega).
+          </label>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
+          <input type="checkbox" id="liveAllowStudentMic" checked style="width:18px;height:18px;accent-color:#10b981;margin-top:2px" />
+          <label for="liveAllowStudentMic" style="font-size:13px;color:#f1f5f9;cursor:pointer;line-height:1.4">
+            🎙️ <strong>2-Way Audio Stage:</strong> Students live me "✋ Raise Hand" kar sakein aur Admin unka mic on kar sake.
+          </label>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
+          <input type="checkbox" id="liveAllowStudentScreen" style="width:18px;height:18px;accent-color:#10b981;margin-top:2px" />
+          <label for="liveAllowStudentScreen" style="font-size:13px;color:#f1f5f9;cursor:pointer;line-height:1.4">
+            🖥️ <strong>Screen Sharing:</strong> Student apna timeline / editing screen share kar sake (Admin permission se).
+          </label>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px">
+          <input type="checkbox" id="liveChatEnabled" checked style="width:18px;height:18px;accent-color:#10b981" />
+          <label for="liveChatEnabled" style="font-size:13px;color:#f1f5f9;cursor:pointer">
+            💬 <strong>Live Doubts &amp; Chat Box:</strong> Student doubts aur discussion enable rakhein.
+          </label>
+        </div>
       </div>
 
       <div style="display:flex;justify-content:flex-end;gap:10px">
@@ -2754,6 +2798,87 @@ fbq('track', 'PageView');
     <div style="padding:14px 18px;border-top:1px solid rgba(255,255,255,0.08);background:#090e1b;display:flex;gap:10px;align-items:center">
       <input type="text" id="mentorReplyInput" placeholder="Type answer or announcement as Mentor Anil Sharma..." onkeydown="if(event.key==='Enter')sendMentorDoubtReply()" style="flex:1;padding:11px 14px;background:#040711;border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:10px;font-size:13.5px;box-sizing:border-box" />
       <button onclick="sendMentorDoubtReply()" class="btn btn-gold" style="font-weight:700">Send 🚀</button>
+    </div>
+  </div>
+</div>
+
+<!-- 2.5 LIVE CONTROL ROOM MODAL (REAL-TIME ATTENDEES & 2-WAY STAGE CONTROL) -->
+<div id="liveControlRoomModal" class="modal" onclick="if(event.target.id==='liveControlRoomModal')closeLiveControlRoom()">
+  <div class="modal-inner" style="max-width:960px;background:#090e1a;border:1.5px solid rgba(56,189,248,0.3);color:#fff;border-radius:20px;display:flex;flex-direction:column;height:86vh;box-shadow:0 30px 80px rgba(0,0,0,0.9)">
+    <div class="modal-hdr" style="border-bottom:1px solid rgba(255,255,255,0.08);padding:18px 24px;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <h2 id="crSessionTitle" style="margin:0;font-size:18px;color:#fff;display:flex;align-items:center;gap:8px">
+            <span style="color:#ef4444">🔴</span> Live Studio Control Room
+          </h2>
+          <span id="crLiveBadge" class="badge" style="background:#ef4444;color:#fff">LIVE NOW</span>
+          <span id="crModeBadge" class="badge" style="background:rgba(16,185,129,0.2);color:#34d399;border:1px solid rgba(16,185,129,0.4)">Classroom Mode (Count Visible)</span>
+        </div>
+        <div class="muted" style="font-size:12px;margin-top:4px">Real-time live attendance, 2-way audio/video permissions &amp; audience mode control</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button type="button" onclick="pollControlRoomViewers()" class="btn btn-sm btn-outline" style="font-size:11.5px;padding:5px 10px" title="Refresh Now">🔄 Refresh</button>
+        <button type="button" onclick="closeLiveControlRoom()" class="icon-btn" style="color:#94a3b8">✕</button>
+      </div>
+    </div>
+
+    <!-- Metric Bar & Mode Controller -->
+    <div style="background:#050811;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px">
+      <div style="display:flex;align-items:center;gap:24px">
+        <div>
+          <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;font-weight:700;letter-spacing:0.5px">Active Students Watching</div>
+          <div style="font-size:26px;font-weight:900;color:#38bdf8;display:flex;align-items:center;gap:8px">
+            <span id="crTotalViewers">0</span>
+            <span style="font-size:13px;font-weight:600;color:#64748b">Live Viewers</span>
+          </div>
+        </div>
+        <div style="border-left:1px solid rgba(255,255,255,0.1);padding-left:20px">
+          <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;font-weight:700;letter-spacing:0.5px">Hands Raised (Asking to Speak)</div>
+          <div style="font-size:26px;font-weight:900;color:#fbbf24;display:flex;align-items:center;gap:8px">
+            <span id="crHandsRaisedCount">0</span>
+            <span style="font-size:13px;font-weight:600;color:#64748b">Students</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mode Switcher Action Button -->
+      <div style="display:flex;align-items:center;gap:10px">
+        <button type="button" id="crToggleModeBtn" onclick="toggleControlRoomViewerMode()" class="btn btn-sm" style="padding:9px 14px;border-radius:10px;font-size:12.5px;font-weight:700;background:rgba(216,161,83,0.15);border:1px solid var(--gold);color:var(--gold);display:flex;align-items:center;gap:6px">
+          <span>🔒 Switch to Stealth Webinar Mode (Hide Count)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Viewers Table -->
+    <div style="flex:1;overflow-y:auto;padding:16px 24px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-size:13px;font-weight:700;color:#cbd5e1">Live Attendance Roster (<span id="crTableCount">0</span>)</div>
+        <input type="text" id="crSearchInput" oninput="filterControlRoomTable()" placeholder="Search student name or phone…" style="padding:6px 12px;background:#060a14;border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:8px;font-size:12px;width:220px" />
+      </div>
+
+      <div class="table-wrap" style="background:#050811;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead>
+            <tr style="background:#0c1222;border-bottom:1px solid rgba(255,255,255,0.08);color:#94a3b8;font-size:12px;text-align:left">
+              <th style="padding:10px 14px">Student</th>
+              <th style="padding:10px 14px">Phone</th>
+              <th style="padding:10px 14px">City</th>
+              <th style="padding:10px 14px">Joined At</th>
+              <th style="padding:10px 14px">Interaction Status</th>
+              <th style="padding:10px 14px;text-align:right">Stage Controls</th>
+            </tr>
+          </thead>
+          <tbody id="crViewersTbody">
+            <tr><td colspan="6" style="text-align:center;padding:36px;color:#64748b">Loading real-time attendees…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer Note -->
+    <div style="padding:12px 24px;border-top:1px solid rgba(255,255,255,0.08);background:#070b16;font-size:11.5px;color:#94a3b8;display:flex;justify-content:space-between;align-items:center">
+      <span>⚡ Live heartbeat pings every 15s • Viewers inactive &gt;35s auto-pruned</span>
+      <span style="color:#10b981">● Auto-syncing live data</span>
     </div>
   </div>
 </div>
@@ -6586,6 +6711,7 @@ function renderLiveClassesAdmin() {
         <td style="font-size:13px">${priceText}</td>
         <td>${streamDisplay}</td>
         <td style="text-align:right;white-space:nowrap">
+          <button onclick="openLiveControlRoom('${c.id}', '${escapeHtml(c.title)}')" class="btn btn-outline" style="padding:5px 9px;font-size:11.5px;margin-right:4px;color:#38bdf8;border-color:rgba(56,189,248,0.4)" title="Live Control Room & Real-Time Attendees">👥 Control Room</button>
           <button onclick="openLiveDoubtsModal('${c.id}', '${escapeHtml(c.title)}')" class="btn btn-outline" style="padding:5px 9px;font-size:11.5px;margin-right:4px" title="Live Doubts & Chat">💬 Doubts</button>
           <button onclick="editLiveClassAdmin('${c.id}')" class="btn btn-outline" style="padding:5px 9px;font-size:11.5px;margin-right:4px">✏️ Edit</button>
           <button onclick="deleteLiveClassAdmin('${c.id}')" class="btn btn-outline" style="padding:5px 9px;font-size:11.5px;color:#ef4444" title="Delete Session">🗑️</button>
@@ -6642,6 +6768,10 @@ function openScheduleLiveModal() {
   document.getElementById('liveDuration').value = '90 Mins';
   document.getElementById('liveStreamId').value = '';
   document.getElementById('liveReplayUrl').value = '';
+  if (document.getElementById('liveBunnyVideoId')) document.getElementById('liveBunnyVideoId').value = '';
+  if (document.getElementById('liveShowViewerCountToStudents')) document.getElementById('liveShowViewerCountToStudents').checked = true;
+  if (document.getElementById('liveAllowStudentMic')) document.getElementById('liveAllowStudentMic').checked = true;
+  if (document.getElementById('liveAllowStudentScreen')) document.getElementById('liveAllowStudentScreen').checked = false;
   document.getElementById('liveResources').value = '';
   document.getElementById('liveChatEnabled').checked = true;
 
@@ -6679,6 +6809,10 @@ function editLiveClassAdmin(id) {
   document.getElementById('liveDuration').value = c.duration || '90 Mins';
   document.getElementById('liveStreamId').value = c.streamId || '';
   document.getElementById('liveReplayUrl').value = c.replayUrl || '';
+  if (document.getElementById('liveBunnyVideoId')) document.getElementById('liveBunnyVideoId').value = c.bunnyVideoId || '';
+  if (document.getElementById('liveShowViewerCountToStudents')) document.getElementById('liveShowViewerCountToStudents').checked = c.showViewerCountToStudents !== false;
+  if (document.getElementById('liveAllowStudentMic')) document.getElementById('liveAllowStudentMic').checked = c.allowStudentMic !== false;
+  if (document.getElementById('liveAllowStudentScreen')) document.getElementById('liveAllowStudentScreen').checked = !!c.allowStudentScreen;
   document.getElementById('liveChatEnabled').checked = c.chatEnabled !== false;
 
   const statusEl = document.getElementById('liveStatus');
@@ -6706,6 +6840,32 @@ function editLiveClassAdmin(id) {
   populateLiveCourseDropdown(c.courseId || '');
   onLiveTypeChange();
   document.getElementById('scheduleLiveModal').classList.add('show');
+}
+
+async function pickBunnyVideoForLive() {
+  if (!allBunnyVideos.length) {
+    try {
+      const res = await lmsAdmin('list-bunny-videos');
+      allBunnyVideos = res.videos || [];
+    } catch(e) {
+      alert('Bunny.net videos load nahi ho payi: ' + e.message);
+      return;
+    }
+  }
+  if (!allBunnyVideos.length) {
+    alert('Bunny.net Library 755385 me abhi tak koi video uploaded nahi hai.');
+    return;
+  }
+  const listStr = allBunnyVideos.map((v, i) => `${i + 1}. ${v.title || 'Untitled'} (${(v.guid || '').slice(0, 8)}…)`).join('\n');
+  const pick = prompt(`Bunny.net Live Recording / VOD select karein (Number enter karein 1 se ${allBunnyVideos.length}):\n\n${listStr}\n\nNumber type karein:`);
+  if (!pick) return;
+  const idx = parseInt(pick.trim(), 10) - 1;
+  if (idx >= 0 && allBunnyVideos[idx]) {
+    const chosen = allBunnyVideos[idx];
+    const bunnyInp = document.getElementById('liveBunnyVideoId');
+    if (bunnyInp) bunnyInp.value = chosen.guid;
+    toast(`✅ Bunny Video Selected: ${chosen.title}`);
+  }
 }
 
 async function saveLiveClassAdmin() {
@@ -6766,7 +6926,11 @@ async function saveLiveClassAdmin() {
     duration: document.getElementById('liveDuration').value.trim() || '90 Mins',
     status: statusVal,
     streamId: cleanYtId(rawStreamVal),
-    replayUrl: cleanYtId(document.getElementById('liveReplayUrl').value),
+    bunnyVideoId: document.getElementById('liveBunnyVideoId') ? document.getElementById('liveBunnyVideoId').value.trim() : '',
+    replayUrl: (document.getElementById('liveReplayUrl') ? document.getElementById('liveReplayUrl').value.trim() : ''),
+    showViewerCountToStudents: document.getElementById('liveShowViewerCountToStudents') ? document.getElementById('liveShowViewerCountToStudents').checked : true,
+    allowStudentMic: document.getElementById('liveAllowStudentMic') ? document.getElementById('liveAllowStudentMic').checked : true,
+    allowStudentScreen: document.getElementById('liveAllowStudentScreen') ? document.getElementById('liveAllowStudentScreen').checked : false,
     chatEnabled: document.getElementById('liveChatEnabled').checked,
     resources
   };
@@ -6801,6 +6965,227 @@ async function updateLiveStatusAdmin(id, newStatus) {
   } catch (err) {
     alert('Status update failed: ' + err.message);
     loadLiveClassesAdmin();
+  }
+}
+
+// ==========================================================================
+// LIVE STUDIO CONTROL ROOM ENGINE (REAL-TIME ATTENDEES & 2-WAY STAGE)
+// ==========================================================================
+let currentControlRoomSessionId = null;
+let currentControlRoomSessionTitle = '';
+let controlRoomPollTimer = null;
+let currentControlRoomViewers = [];
+let currentControlRoomMode = true; // true = Classroom mode, false = Stealth webinar mode
+
+async function openLiveControlRoom(sessionId, sessionTitle) {
+  currentControlRoomSessionId = sessionId;
+  currentControlRoomSessionTitle = sessionTitle || 'Live Masterclass';
+
+  const modal = document.getElementById('liveControlRoomModal');
+  if (!modal) return;
+
+  const titleEl = document.getElementById('crSessionTitle');
+  if (titleEl) titleEl.innerHTML = `<span style="color:#ef4444">🔴</span> Live Control Room: ${escapeHtml(currentControlRoomSessionTitle)}`;
+
+  modal.classList.add('show');
+
+  await pollControlRoomViewers();
+  if (controlRoomPollTimer) clearInterval(controlRoomPollTimer);
+  controlRoomPollTimer = setInterval(pollControlRoomViewers, 5000);
+}
+
+function closeLiveControlRoom() {
+  if (controlRoomPollTimer) {
+    clearInterval(controlRoomPollTimer);
+    controlRoomPollTimer = null;
+  }
+  currentControlRoomSessionId = null;
+  const modal = document.getElementById('liveControlRoomModal');
+  if (modal) modal.classList.remove('show');
+}
+
+async function pollControlRoomViewers() {
+  if (!currentControlRoomSessionId) return;
+  try {
+    const res = await lmsAdmin(`get-live-viewers&sessionId=${encodeURIComponent(currentControlRoomSessionId)}`);
+    currentControlRoomViewers = res.viewers || [];
+    currentControlRoomMode = res.showViewerCountToStudents !== false;
+
+    // Metrics
+    const totEl = document.getElementById('crTotalViewers');
+    if (totEl) totEl.textContent = res.totalViewers || currentControlRoomViewers.length;
+
+    const handsCount = currentControlRoomViewers.filter(v => !!v.handRaised).length;
+    const handsEl = document.getElementById('crHandsRaisedCount');
+    if (handsEl) handsEl.textContent = handsCount;
+
+    // Status badge
+    const liveBadge = document.getElementById('crLiveBadge');
+    if (liveBadge) {
+      if (res.status === 'live') {
+        liveBadge.className = 'badge';
+        liveBadge.style.background = '#ef4444';
+        liveBadge.style.color = '#fff';
+        liveBadge.textContent = 'LIVE NOW';
+      } else if (res.status === 'completed') {
+        liveBadge.className = 'badge';
+        liveBadge.style.background = '#10b981';
+        liveBadge.style.color = '#fff';
+        liveBadge.textContent = 'COMPLETED';
+      } else {
+        liveBadge.className = 'badge';
+        liveBadge.style.background = '#f59e0b';
+        liveBadge.style.color = '#1e1b4b';
+        liveBadge.textContent = 'SCHEDULED';
+      }
+    }
+
+    // Mode Badge & Toggle Button
+    const modeBadge = document.getElementById('crModeBadge');
+    const toggleBtn = document.getElementById('crToggleModeBtn');
+    if (currentControlRoomMode) {
+      if (modeBadge) {
+        modeBadge.style.background = 'rgba(16,185,129,0.2)';
+        modeBadge.style.color = '#34d399';
+        modeBadge.style.border = '1px solid rgba(16,185,129,0.4)';
+        modeBadge.textContent = 'Classroom Mode (Count Visible)';
+      }
+      if (toggleBtn) {
+        toggleBtn.innerHTML = '<span>🔒 Switch to Stealth Webinar Mode (Hide Count)</span>';
+        toggleBtn.style.color = 'var(--gold)';
+        toggleBtn.style.borderColor = 'var(--gold)';
+        toggleBtn.style.background = 'rgba(216,161,83,0.15)';
+      }
+    } else {
+      if (modeBadge) {
+        modeBadge.style.background = 'rgba(99,102,241,0.2)';
+        modeBadge.style.color = '#a5b4fc';
+        modeBadge.style.border = '1px solid rgba(99,102,241,0.4)';
+        modeBadge.textContent = 'Stealth Webinar Mode (Count Hidden)';
+      }
+      if (toggleBtn) {
+        toggleBtn.innerHTML = '<span>🌐 Switch to Classroom Mode (Show Count)</span>';
+        toggleBtn.style.color = '#34d399';
+        toggleBtn.style.borderColor = '#10b981';
+        toggleBtn.style.background = 'rgba(16,185,129,0.15)';
+      }
+    }
+
+    renderControlRoomViewers();
+  } catch(e) {}
+}
+
+function renderControlRoomViewers() {
+  const tbody = document.getElementById('crViewersTbody');
+  const countEl = document.getElementById('crTableCount');
+  if (!tbody) return;
+
+  const q = (document.getElementById('crSearchInput')?.value || '').toLowerCase().trim();
+  const filtered = currentControlRoomViewers.filter(v => {
+    if (!q) return true;
+    return (v.name || '').toLowerCase().includes(q) || (v.phone || '').includes(q) || (v.city || '').toLowerCase().includes(q);
+  });
+
+  if (countEl) countEl.textContent = filtered.length;
+
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:#64748b">Filhal koi live student active nahi hai. Jaise hi students judenge, yahan live list aa jayegi.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(v => {
+    const isHandRaised = !!v.handRaised;
+    const isMicAllowed = !!v.micAllowed;
+    const isScreenAllowed = !!v.screenAllowed;
+
+    let interactionBadges = [];
+    if (isHandRaised) {
+      interactionBadges.push('<span class="badge" style="background:#fbbf24;color:#000;font-weight:700">✋ Hand Raised!</span>');
+    }
+    if (isMicAllowed) {
+      interactionBadges.push('<span class="badge" style="background:#10b981;color:#fff">🎙️ Mic On</span>');
+    }
+    if (isScreenAllowed) {
+      interactionBadges.push('<span class="badge" style="background:#6366f1;color:#fff">🖥️ Screen On</span>');
+    }
+    if (!interactionBadges.length) {
+      interactionBadges.push('<span class="muted" style="font-size:11.5px">👀 Listening Live</span>');
+    }
+
+    const joinTime = v.joinedAt ? new Date(v.joinedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now';
+
+    return `
+      <tr style="${isHandRaised ? 'background:rgba(251,191,36,0.08);border-left:3px solid #fbbf24' : ''}">
+        <td style="padding:10px 14px">
+          <div style="font-weight:700;color:#fff">${escapeHtml(v.name || 'Student')}</div>
+        </td>
+        <td style="padding:10px 14px;color:#94a3b8;font-size:12.5px">+91 ${escapeHtml(v.phone || '')}</td>
+        <td style="padding:10px 14px;color:#cbd5e1;font-size:12.5px">${escapeHtml(v.city || 'India')}</td>
+        <td style="padding:10px 14px;color:#94a3b8;font-size:12px">${joinTime}</td>
+        <td style="padding:10px 14px">${interactionBadges.join(' ')}</td>
+        <td style="padding:10px 14px;text-align:right;white-space:nowrap">
+          <button onclick="setStudentMediaPermissionAdmin('${escapeHtml(v.phone)}', 'mic', ${!isMicAllowed})" 
+            class="btn btn-sm" 
+            style="padding:4px 8px;font-size:11px;margin-right:4px;${isMicAllowed ? 'background:#ef4444;color:#fff' : 'background:rgba(16,185,129,0.15);color:#34d399;border:1px solid #10b981'}">
+            ${isMicAllowed ? '🔇 Mute Mic' : '🎙️ Allow Mic'}
+          </button>
+          <button onclick="setStudentMediaPermissionAdmin('${escapeHtml(v.phone)}', 'screen', ${!isScreenAllowed})" 
+            class="btn btn-sm" 
+            style="padding:4px 8px;font-size:11px;margin-right:4px;${isScreenAllowed ? 'background:#ef4444;color:#fff' : 'background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid #6366f1'}">
+            ${isScreenAllowed ? '✕ Stop Screen' : '🖥️ Allow Screen'}
+          </button>
+          ${isHandRaised ? `
+            <button onclick="setStudentMediaPermissionAdmin('${escapeHtml(v.phone)}', 'lower_hand', true)" 
+              class="btn btn-sm btn-outline" 
+              style="padding:4px 7px;font-size:11px;color:#fbbf24;border-color:#fbbf24" title="Lower Student Hand">
+              ✕ Hand
+            </button>
+          ` : ''}
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function filterControlRoomTable() {
+  renderControlRoomViewers();
+}
+
+async function toggleControlRoomViewerMode() {
+  if (!currentControlRoomSessionId) return;
+  const newMode = !currentControlRoomMode;
+  try {
+    await lmsAdmin('toggle-live-viewer-mode', {
+      method: 'POST',
+      body: {
+        sessionId: currentControlRoomSessionId,
+        showViewerCountToStudents: newMode
+      }
+    });
+    currentControlRoomMode = newMode;
+    toast(newMode ? '🌐 Classroom Mode Activated (Students can see viewer count)' : '🔒 Stealth Webinar Mode Activated (Viewer count hidden from students)');
+    pollControlRoomViewers();
+  } catch(e) {
+    alert('Failed to toggle mode: ' + e.message);
+  }
+}
+
+async function setStudentMediaPermissionAdmin(phone, permission, allowed) {
+  if (!currentControlRoomSessionId || !phone) return;
+  try {
+    await lmsAdmin('set-student-media-permission', {
+      method: 'POST',
+      body: {
+        sessionId: currentControlRoomSessionId,
+        phone,
+        permission,
+        allowed
+      }
+    });
+    toast(`✓ Permission updated for +91 ${phone}`);
+    pollControlRoomViewers();
+  } catch(e) {
+    alert('Failed to update permission: ' + e.message);
   }
 }
 

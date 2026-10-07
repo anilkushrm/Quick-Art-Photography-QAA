@@ -2668,20 +2668,51 @@ if ($action === 'get-live-session' && ($method === 'GET' || $method === 'POST'))
     $cleanName = !empty($stu['name']) ? $stu['name'] : 'Student';
     $watermarkText = "{$cleanName} | +91-{$stu['phone']} | " . ($stu['id'] ?? 'QA-STU');
 
+    $bunnyVid = trim($target['bunnyVideoId'] ?? '');
+    $finalReplayUrl = trim($target['replayUrl'] ?? '');
+    if ($bunnyVid) {
+        $lmsSettings = load_lms_settings();
+        $libId = $lmsSettings['bunnyLibraryId'] ?? '755385';
+        $tokenKey = $lmsSettings['bunnyTokenAuthKey'] ?? '';
+        $finalReplayUrl = generate_bunny_video_url($libId, $bunnyVid, $tokenKey);
+    }
+
+    $showViewers = !empty($target['showViewerCountToStudents']);
+    $viewerCount = null;
+    if ($showViewers) {
+        $attendanceFile = DATA_DIR . '/live-viewers-' . preg_replace('/[^a-zA-Z0-9_-]/', '', $target['id']) . '.json';
+        if (file_exists($attendanceFile)) {
+            $attData = json_decode(file_get_contents($attendanceFile), true) ?: [];
+            $now = time();
+            $cnt = 0;
+            foreach ($attData['viewers'] ?? [] as $v) {
+                if (($now - ($v['lastSeen'] ?? 0)) <= 35) $cnt++;
+            }
+            $viewerCount = max(1, $cnt);
+        } else {
+            $viewerCount = 1;
+        }
+    }
+
     json_ok([
-        'id'            => $target['id'],
-        'title'         => $target['title'],
-        'description'   => $target['description'] ?? '',
-        'type'          => $target['type'] ?? 'workshop',
-        'status'        => $target['status'] ?? 'scheduled',
-        'scheduledAt'   => $target['scheduledAt'] ?? '',
-        'duration'      => $target['duration'] ?? '90 Mins',
-        'streamId'      => $target['streamId'] ?? '',
-        'replayUrl'     => $target['replayUrl'] ?? '',
-        'chatEnabled'   => !empty($target['chatEnabled']),
-        'resources'     => $target['resources'] ?? [],
-        'watermark'     => $watermarkText,
-        'student'       => [
+        'id'                        => $target['id'],
+        'title'                     => $target['title'],
+        'description'               => $target['description'] ?? '',
+        'type'                      => $target['type'] ?? 'workshop',
+        'status'                    => $target['status'] ?? 'scheduled',
+        'scheduledAt'               => $target['scheduledAt'] ?? '',
+        'duration'                  => $target['duration'] ?? '90 Mins',
+        'streamId'                  => $target['streamId'] ?? '',
+        'replayUrl'                 => $finalReplayUrl,
+        'bunnyVideoId'              => $bunnyVid,
+        'showViewerCountToStudents' => $showViewers,
+        'viewerCount'               => $viewerCount,
+        'allowStudentMic'           => !empty($target['allowStudentMic']),
+        'allowStudentScreen'        => !empty($target['allowStudentScreen']),
+        'chatEnabled'               => !empty($target['chatEnabled']),
+        'resources'                 => $target['resources'] ?? [],
+        'watermark'                 => $watermarkText,
+        'student'                   => [
             'id'    => $stu['id'] ?? '',
             'name'  => $stu['name'] ?? '',
             'phone' => $stu['phone'] ?? ''
@@ -2730,6 +2761,83 @@ if ($action === 'send-live-doubt' && $method === 'POST') {
     }
     save_all_live_chats($chats);
     json_ok(['sent' => true, 'message' => $newMsg]);
+}
+
+// 21.41 Student Live Attendance Heartbeat & Interactivity Ping
+if ($action === 'live-ping' && $method === 'POST') {
+    $stu = require_student();
+    $body = read_json_body() ?: $_POST;
+    $sessionId = trim($body['sessionId'] ?? '');
+    if (!$sessionId) json_err('Session ID required', 400);
+
+    $handRaised = !empty($body['handRaised']);
+    $stuPhone = clean_phone($stu['phone'] ?? '');
+
+    $attendanceFile = DATA_DIR . '/live-viewers-' . preg_replace('/[^a-zA-Z0-9_-]/', '', $sessionId) . '.json';
+    $data = file_exists($attendanceFile) ? (json_decode(file_get_contents($attendanceFile), true) ?: []) : [];
+
+    $now = time();
+    $viewers = $data['viewers'] ?? [];
+    $activeViewers = [];
+
+    // Prune viewers older than 35s
+    foreach ($viewers as $p => $v) {
+        if (($now - ($v['lastSeen'] ?? 0)) <= 35) {
+            $activeViewers[$p] = $v;
+        }
+    }
+
+    $existing = $activeViewers[$stuPhone] ?? [];
+    $micAllowed = !empty($existing['micAllowed']);
+    $cameraAllowed = !empty($existing['cameraAllowed']);
+    $screenAllowed = !empty($existing['screenAllowed']);
+
+    // If student manually cancelled hand raise
+    if (isset($body['handRaised'])) {
+        $finalHandRaised = $handRaised;
+    } else {
+        $finalHandRaised = !empty($existing['handRaised']);
+    }
+
+    $activeViewers[$stuPhone] = [
+        'phone'         => $stuPhone,
+        'name'          => $stu['name'] ?? 'Student',
+        'city'          => $stu['city'] ?? ($stu['workCity'] ?? 'India'),
+        'avatar'        => $stu['photoUrl'] ?? ($stu['avatar'] ?? ''),
+        'joinedAt'      => $existing['joinedAt'] ?? date('c'),
+        'lastSeen'      => $now,
+        'handRaised'    => $finalHandRaised,
+        'micAllowed'    => $micAllowed,
+        'cameraAllowed' => $cameraAllowed,
+        'screenAllowed' => $screenAllowed
+    ];
+
+    $data['viewers'] = $activeViewers;
+    $data['lastUpdated'] = date('c');
+    file_put_contents($attendanceFile, json_encode($data, JSON_PRETTY_PRINT), LOCK_EX);
+
+    // Get session settings
+    $allClasses = get_all_live_classes();
+    $targetClass = null;
+    foreach ($allClasses as $c) {
+        if ($c['id'] === $sessionId) {
+            $targetClass = $c;
+            break;
+        }
+    }
+
+    $showViewerCount = !empty($targetClass['showViewerCountToStudents']);
+    $totalCount = count($activeViewers);
+
+    json_ok([
+        'showViewerCount' => $showViewerCount,
+        'viewerCount'     => $showViewerCount ? $totalCount : null,
+        'micAllowed'      => $micAllowed,
+        'cameraAllowed'   => $cameraAllowed,
+        'screenAllowed'   => $screenAllowed,
+        'handRaised'      => $finalHandRaised,
+        'status'          => $targetClass['status'] ?? 'live'
+    ]);
 }
 
 // 21.45 Get Masterclass Landing Page Customization (Public)

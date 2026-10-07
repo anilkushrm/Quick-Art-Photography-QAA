@@ -1212,16 +1212,28 @@ if ($action === 'save-live-class' && $method === 'POST') {
         'type'          => $liveType,
         'courseId'      => $cId,
         'ticketPrice'   => (int)($item['ticketPrice'] ?? 0),
-        'originalPrice' => (int)($item['originalPrice'] ?? 0),
-        'scheduledAt'   => trim($item['scheduledAt'] ?? date('c')),
-        'duration'      => trim($item['duration'] ?? '90 Mins'),
-        'status'        => in_array($item['status'] ?? '', ['scheduled', 'live', 'completed']) ? $item['status'] : 'scheduled',
-        'streamId'      => $rawStream,
-        'replayUrl'     => trim($item['replayUrl'] ?? ''),
-        'chatEnabled'   => !empty($item['chatEnabled']),
-        'resources'     => is_array($item['resources'] ?? null) ? $item['resources'] : [],
-        'updatedAt'     => date('c')
+        'originalPrice'             => (int)($item['originalPrice'] ?? 0),
+        'scheduledAt'               => trim($item['scheduledAt'] ?? date('c')),
+        'duration'                  => trim($item['duration'] ?? '90 Mins'),
+        'status'                    => in_array($item['status'] ?? '', ['scheduled', 'live', 'completed']) ? $item['status'] : 'scheduled',
+        'streamId'                  => $rawStream,
+        'replayUrl'                 => trim($item['replayUrl'] ?? ''),
+        'bunnyVideoId'              => trim($item['bunnyVideoId'] ?? ''),
+        'showViewerCountToStudents' => !empty($item['showViewerCountToStudents']),
+        'allowStudentMic'           => !empty($item['allowStudentMic']),
+        'allowStudentScreen'        => !empty($item['allowStudentScreen']),
+        'chatEnabled'               => !empty($item['chatEnabled']),
+        'resources'                 => is_array($item['resources'] ?? null) ? $item['resources'] : [],
+        'updatedAt'                 => date('c')
     ];
+
+    // If Bunny Video ID specified, auto-resolve replay URL
+    if (!empty($record['bunnyVideoId']) && empty($record['replayUrl'])) {
+        $lmsSettings = load_lms_settings();
+        $libId = $lmsSettings['bunnyLibraryId'] ?? '755385';
+        $tokenKey = $lmsSettings['bunnyTokenAuthKey'] ?? '';
+        $record['replayUrl'] = generate_bunny_video_url($libId, $record['bunnyVideoId'], $tokenKey);
+    }
 
     $found = false;
     foreach ($classes as $idx => $c) {
@@ -1317,6 +1329,106 @@ if ($action === 'update-live-status' && $method === 'POST') {
         'pushSent' => ($notifInfo && !empty($notifInfo['ok'])) ? true : false,
         'recipientCount' => $notifInfo['recipientCount'] ?? 0
     ]);
+}
+
+// 20.5 Get Real-Time Live Viewers & Attendees (Admin Control Room)
+if ($action === 'get-live-viewers' && ($method === 'GET' || $method === 'POST')) {
+    $sessionId = trim($_GET['sessionId'] ?? ($_POST['sessionId'] ?? ''));
+    if (!$sessionId) json_err('Session ID required', 400);
+
+    $attendanceFile = DATA_DIR . '/live-viewers-' . preg_replace('/[^a-zA-Z0-9_-]/', '', $sessionId) . '.json';
+    $data = file_exists($attendanceFile) ? (json_decode(file_get_contents($attendanceFile), true) ?: []) : [];
+
+    $now = time();
+    $viewers = $data['viewers'] ?? [];
+    $activeList = [];
+
+    foreach ($viewers as $p => $v) {
+        if (($now - ($v['lastSeen'] ?? 0)) <= 35) {
+            $activeList[] = $v;
+        }
+    }
+
+    // Sort so students with hand raised are on top
+    usort($activeList, function($a, $b) {
+        if (!empty($a['handRaised']) !== !empty($b['handRaised'])) {
+            return !empty($b['handRaised']) ? 1 : -1;
+        }
+        return strcmp($b['joinedAt'] ?? '', $a['joinedAt'] ?? '');
+    });
+
+    $allClasses = get_all_live_classes();
+    $targetClass = null;
+    foreach ($allClasses as $c) {
+        if ($c['id'] === $sessionId) { $targetClass = $c; break; }
+    }
+
+    json_ok([
+        'totalViewers'              => count($activeList),
+        'viewers'                   => $activeList,
+        'showViewerCountToStudents' => !empty($targetClass['showViewerCountToStudents']),
+        'allowStudentMic'           => !empty($targetClass['allowStudentMic']),
+        'allowStudentScreen'        => !empty($targetClass['allowStudentScreen']),
+        'status'                    => $targetClass['status'] ?? 'scheduled',
+        'bunnyVideoId'              => $targetClass['bunnyVideoId'] ?? '',
+        'replayUrl'                 => $targetClass['replayUrl'] ?? ''
+    ]);
+}
+
+// 20.6 Toggle Viewer Count Visibility (Classroom Mode vs Stealth Webinar Mode)
+if ($action === 'toggle-live-viewer-mode' && $method === 'POST') {
+    $body = read_json_body() ?: $_POST;
+    $sessionId = trim($body['sessionId'] ?? '');
+    $showToStudents = !empty($body['showViewerCountToStudents']);
+
+    if (!$sessionId) json_err('Session ID required', 400);
+
+    $classes = get_all_live_classes();
+    $updated = false;
+    foreach ($classes as &$c) {
+        if ($c['id'] === $sessionId) {
+            $c['showViewerCountToStudents'] = $showToStudents;
+            $c['updatedAt'] = date('c');
+            $updated = true;
+            break;
+        }
+    }
+    unset($c);
+
+    if ($updated) {
+        save_all_live_classes($classes);
+        json_ok(['updated' => true, 'showViewerCountToStudents' => $showToStudents]);
+    }
+    json_err('Live session not found', 404);
+}
+
+// 20.7 Set Student Live Media Permission (Allow Mic, Allow Screen, Lower Hand)
+if ($action === 'set-student-media-permission' && $method === 'POST') {
+    $body = read_json_body() ?: $_POST;
+    $sessionId = trim($body['sessionId'] ?? '');
+    $phone = clean_phone($body['phone'] ?? '');
+    $permission = trim($body['permission'] ?? 'mic'); // 'mic', 'screen', 'lower_hand'
+    $allowed = !empty($body['allowed']);
+
+    if (!$sessionId || !$phone) json_err('Session ID and phone required', 400);
+
+    $attendanceFile = DATA_DIR . '/live-viewers-' . preg_replace('/[^a-zA-Z0-9_-]/', '', $sessionId) . '.json';
+    $data = file_exists($attendanceFile) ? (json_decode(file_get_contents($attendanceFile), true) ?: []) : [];
+
+    if (isset($data['viewers'][$phone])) {
+        if ($permission === 'mic') {
+            $data['viewers'][$phone]['micAllowed'] = $allowed;
+            if ($allowed) $data['viewers'][$phone]['handRaised'] = false;
+        } elseif ($permission === 'screen') {
+            $data['viewers'][$phone]['screenAllowed'] = $allowed;
+            if ($allowed) $data['viewers'][$phone]['handRaised'] = false;
+        } elseif ($permission === 'lower_hand') {
+            $data['viewers'][$phone]['handRaised'] = false;
+        }
+        file_put_contents($attendanceFile, json_encode($data, JSON_PRETTY_PRINT), LOCK_EX);
+        json_ok(['updated' => true, 'viewer' => $data['viewers'][$phone]]);
+    }
+    json_err('Viewer not found in active session', 404);
 }
 
 // 20.4b Admin Manual Push Announcement & Class Reminder

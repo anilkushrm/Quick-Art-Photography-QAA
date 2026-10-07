@@ -421,6 +421,7 @@
    const badge=document.createElement('small');badge.className='ref-highlight-badge ref-free-badge';badge.textContent='Free';label.append(badge);
   }
  });
+   let isAnyDropdownOpen = false;
    function set(drop,open){
      const button=drop.querySelector('.ref-toggle');
      if(!button) return;
@@ -429,9 +430,12 @@
      button.setAttribute('aria-expanded',String(open));
      panel.hidden=!open;
      panel.style.display = open ? '' : 'none';
+     if (open) isAnyDropdownOpen = true;
    }
    function closeAll(){
+     if (!isAnyDropdownOpen) return;
      drops.forEach(d => set(d, false));
+     isAnyDropdownOpen = false;
    }
    let hoverTimer = null;
 
@@ -591,6 +595,7 @@
     const oldMenuBtn = header.querySelector('.ref-menu-button');
     if (oldMenuBtn) oldMenuBtn.remove();
 
+    let isClassroomOpen = false;
     function toggleClassroomMenu(open) {
       if (!mobileClassroomWrap) return;
       const toggle = mobileClassroomWrap.querySelector('#ref-mobile-classroom-toggle');
@@ -598,6 +603,7 @@
       if (!toggle || !dropdown) return;
 
       const shouldOpen = open !== undefined ? open : dropdown.hidden;
+      isClassroomOpen = shouldOpen;
       if (shouldOpen) {
         closeMobile();
         closeAll();
@@ -906,7 +912,9 @@
     // Ensure all accordions start closed initially
     menu.querySelectorAll('details').forEach(d => { d.open = false; });
 
+    let isMobileOpen = false;
     function drawerState(open) {
+      isMobileOpen = open;
       backdrop.hidden = !open;
       if (open) {
         backdrop.removeAttribute('hidden');
@@ -920,13 +928,8 @@
     }
 
     function openMobile() {
+      if (isMobileOpen) return;
       toggleClassroomMenu(false);
-      // Ensure all accordions are collapsed so the clean main menu is shown
-      menu.querySelectorAll('details').forEach(d => { d.open = false; });
-      const drawerBody = menu.querySelector('.ref-drawer-body');
-      if (drawerBody) {
-        drawerBody.scrollTop = 0;
-      }
       menu.hidden = false;
       menu.removeAttribute('hidden');
       menu.classList.add('ref-mobile-open');
@@ -935,9 +938,15 @@
         programsBtn.setAttribute('aria-expanded', 'true');
       }
       closeAll();
+      requestAnimationFrame(() => {
+        menu.querySelectorAll('details').forEach(d => { d.open = false; });
+        const drawerBody = menu.querySelector('.ref-drawer-body');
+        if (drawerBody) drawerBody.scrollTop = 0;
+      });
     }
 
     function closeMobile() {
+      if (!isMobileOpen) return;
       menu.hidden = true;
       menu.setAttribute('hidden', '');
       menu.classList.remove('ref-mobile-open');
@@ -945,20 +954,16 @@
       if (programsBtn) {
         programsBtn.setAttribute('aria-expanded', 'false');
       }
-      menu.querySelectorAll('details').forEach(d => { d.open = false; });
+      requestAnimationFrame(() => {
+        menu.querySelectorAll('details').forEach(d => { d.open = false; });
+      });
     }
 
-    let lastToggleTime = 0;
     function toggleMobile(e) {
       if (e) {
-        if (e.cancelable) e.preventDefault();
         e.stopPropagation();
       }
-      const now = Date.now();
-      if (now - lastToggleTime < 350) return;
-      lastToggleTime = now;
-
-      if (menu.hidden || !menu.classList.contains('ref-mobile-open')) {
+      if (!isMobileOpen) {
         openMobile();
       } else {
         closeMobile();
@@ -967,15 +972,9 @@
 
     if (programsBtn) {
       programsBtn.onclick = toggleMobile;
-      programsBtn.ontouchend = toggleMobile;
     }
 
     backdrop.onclick = (e) => {
-      e?.stopPropagation();
-      closeMobile();
-    };
-    backdrop.ontouchend = (e) => {
-      if (e && e.cancelable) e.preventDefault();
       e?.stopPropagation();
       closeMobile();
     };
@@ -983,11 +982,6 @@
     const closeBtn = menu.querySelector('.ref-drawer-close');
     if (closeBtn) {
       closeBtn.onclick = (e) => {
-        e?.stopPropagation();
-        closeMobile();
-      };
-      closeBtn.ontouchend = (e) => {
-        if (e && e.cancelable) e.preventDefault();
         e?.stopPropagation();
         closeMobile();
       };
@@ -1021,14 +1015,16 @@
     });
 
     document.addEventListener('click', event => {
-      if (mobileClassroomWrap && !mobileClassroomWrap.contains(event.target)) {
+      if (isClassroomOpen && mobileClassroomWrap && !mobileClassroomWrap.contains(event.target)) {
         toggleClassroomMenu(false);
       }
-      if (!header.contains(event.target) && !menu.contains(event.target) && !backdrop.contains(event.target)) {
-        closeAll();
-        closeMobile();
+      if (isAnyDropdownOpen || isMobileOpen) {
+        if (!header.contains(event.target) && !menu.contains(event.target) && !backdrop.contains(event.target)) {
+          if (isAnyDropdownOpen) closeAll();
+          if (isMobileOpen) closeMobile();
+        }
       }
-    });
+    }, { passive: true });
 
     if (typeof window !== 'undefined' && window.matchMedia) {
       const mq = window.matchMedia('(min-width:1151px)');

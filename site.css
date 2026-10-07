@@ -1,3 +1,6 @@
+/* Universal Mobile Touch Optimization (Low INP) */
+button, a, input, select, textarea, summary, [role="button"], [role="tab"] { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
 /* Screenshot-inspired gold header and accessible native mega menu. */
 .qa-header {
   position: relative;

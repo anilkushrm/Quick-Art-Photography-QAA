@@ -470,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Universal 10-digit numeric constraint for all phone/whatsapp inputs
+    // Universal 10-digit numeric constraint for all phone/whatsapp inputs (Non-capturing, low INP)
     document.addEventListener('input', e => {
         const t = e.target;
         if (!t || t.tagName !== 'INPUT') return;
@@ -481,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 t.value = digits;
             }
         }
-    }, true);
+    }, { passive: true });
 
     document.addEventListener('paste', e => {
         const t = e.target;
@@ -498,7 +498,7 @@ document.addEventListener('DOMContentLoaded', () => {
             t.value = digits.slice(0, 10);
             t.dispatchEvent(new Event('input', { bubbles: true }));
         }
-    }, true);
+    });
 
     document.addEventListener('keydown', e => {
         const t = e.target;
@@ -510,19 +510,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
             }
         }
-    }, true);
+    });
 
-    // Connect all "Book Free Demo" buttons/links on the page to open the popup form
+    // Connect all "Book Free Demo" buttons/links on the page (Fast-pathed for sub-16ms INP)
     document.addEventListener('click', e => {
         const trigger = e.target.closest('a, button');
         if (!trigger) return;
-        if (trigger.type === 'submit' || trigger.closest('form.qa-enquiry, form.qa-popup-form')) return;
+        if (trigger.type === 'submit' || trigger.closest('form')) return;
 
-        const text = (trigger.textContent || '').trim().replace(/\s+/g, ' ');
-        const isDemoCta = trigger.classList.contains('ref-demo-cta') ||
-            trigger.hasAttribute('data-open-popup') ||
-            /book\s+(?:free\s+)?demo/i.test(text) ||
-            (trigger.classList.contains('qa-demo') && /contact-us.*#enquiry/i.test(trigger.getAttribute('href') || ''));
+        let isDemoCta = false;
+        if (trigger.classList.contains('ref-demo-cta') || trigger.hasAttribute('data-open-popup')) {
+            isDemoCta = true;
+        } else if (trigger.classList.contains('qa-demo')) {
+            isDemoCta = /contact-us.*#enquiry/i.test(trigger.getAttribute('href') || '');
+        } else {
+            const t = trigger.textContent || '';
+            if (t.includes('Demo') || t.includes('demo')) {
+                isDemoCta = /book\s+(?:free\s+)?demo/i.test(t);
+            }
+        }
 
         if (isDemoCta) {
             e.preventDefault();
@@ -1184,6 +1190,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const prefetchedUrls = new Set();
         document.addEventListener('pointerenter', event => {
+            if (event.pointerType === 'touch') return; // Bypass prefetch on mobile touch to preserve INP
             const link = event.target?.closest?.('a[href]');
             if (!link) return;
             const url = link.href;
@@ -1194,7 +1201,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 prefetch.href = url;
                 document.head.appendChild(prefetch);
             }
-        }, { passive: true, capture: true });
+        }, { passive: true });
     };
 
     if (document.readyState === 'loading') {

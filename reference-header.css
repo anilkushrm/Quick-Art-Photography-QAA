@@ -1,3 +1,4 @@
+html, body, button, a, input, select, textarea, summary, [role="button"], [role="tab"] { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .ref-header,.ref-header *{box-sizing:border-box}
 .ref-drawer-backdrop{display:none}
 .ref-header .ref-highlight-badge{display:inline-block;width:fit-content;padding:0;border-radius:0;border:0;background:transparent;color:#c52b32;font:700 11px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.02em;vertical-align:middle;white-space:nowrap}

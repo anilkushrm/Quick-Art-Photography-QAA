@@ -58,22 +58,28 @@
     });
   }
 
-  // 3) Contact - WhatsApp / call click
+  // 3) Contact - WhatsApp / call click (Non-blocking async dispatch for low INP)
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href^="https://wa.me"],a[href^="tel:"]');
     if (!a) return;
     var type = a.href.indexOf('tel:') === 0 ? 'call' : 'whatsapp';
-    fb('track', 'Contact', { method: type, content_name: document.title });
-    ga('event', 'contact_click', { contact_method: type, page_path: path });
-    dataLayer.push({ event: 'contact_click', contact_method: type, page_path: path });
-  }, true);
+    var pageTitle = document.title;
+    setTimeout(function () {
+      fb('track', 'Contact', { method: type, content_name: pageTitle });
+      ga('event', 'contact_click', { contact_method: type, page_path: path });
+      dataLayer.push({ event: 'contact_click', contact_method: type, page_path: path });
+    }, 0);
+  }, { passive: true });
 
-  // 4) InitiateCheckout - online course enroll button
+  // 4) InitiateCheckout - online course enroll button (Non-blocking async dispatch for low INP)
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href*="portal/?enroll="],a[href*="portal/index.html?enroll="]');
     if (!a) return;
-    fb('track', 'InitiateCheckout', { content_name: document.title, currency: 'INR' });
-    ga('event', 'begin_checkout', { currency: 'INR', item_name: document.title });
-    dataLayer.push({ event: 'begin_enroll', page_path: path });
-  }, true);
+    var pageTitle = document.title;
+    setTimeout(function () {
+      fb('track', 'InitiateCheckout', { content_name: pageTitle, currency: 'INR' });
+      ga('event', 'begin_checkout', { currency: 'INR', item_name: pageTitle });
+      dataLayer.push({ event: 'begin_enroll', page_path: path });
+    }, 0);
+  }, { passive: true });
 })();

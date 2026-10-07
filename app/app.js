@@ -2888,12 +2888,22 @@ function embedLiveStream(streamId, replayUrl, status, bunnyVideoId, isReplay = f
                          (replayUrl && (replayUrl.includes('iframe.mediadelivery.net') || replayUrl.includes('video.bunnycdn.com')));
 
   if (isBunnySession) {
-    if (shield) {
-      shield.style.display = 'none';
-      shield.style.pointerEvents = 'none';
-    }
-    if (startMask) {
-      startMask.style.display = 'none';
+    if (isCompleted) {
+      if (shield) {
+        shield.style.display = 'none';
+        shield.style.pointerEvents = 'none';
+      }
+      if (startMask) {
+        startMask.style.display = 'none';
+      }
+    } else {
+      if (shield) {
+        shield.style.display = 'block';
+        shield.style.pointerEvents = 'auto';
+      }
+      if (startMask) {
+        startMask.style.display = 'none';
+      }
     }
 
     if (replayUrl && (replayUrl.includes('iframe.mediadelivery.net') || replayUrl.includes('video.bunnycdn.com'))) {
